@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:showAsAction="always">
+
+
+    <item
+        android:id="@+id/item1"
+        android:title="Connect(Bluetooth)"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/item2"
+        android:title="Done"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/item3"
+        android:title="Print"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/item4"
+        android:title="Edit Reading"
+        app:showAsAction="never"></item>
+
+    <!--<item-->
+    <!--android:id="@+id/item5"-->
+    <!--android:title="Accept Payment"-->
+    <!--app:showAsAction="never"></item>-->
+
+</menu>

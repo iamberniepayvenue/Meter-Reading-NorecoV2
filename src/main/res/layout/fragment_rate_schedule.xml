@@ -1,0 +1,108 @@
+<!--
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:contecom.payvenue.meterreader.Fragments.RateScheduledule" >
+
+     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp">
+    
+    <ListView
+        android:id="@+id/listratesched"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+    </ListView>
+    
+    
+    </HorizontalScrollView>
+
+</RelativeLayout>
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.payvenue.meterreader.Fragments.RateSchedule" >
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TableLayout
+                android:id="@+id/header"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" >
+
+                <TableRow android:padding="10dp" >
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Rate Schedule"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Classification"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Rate Type"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Rate Segment"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Rate Component"
+                        android:textColor="@android:color/black" />
+                    
+                    <TextView
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:text="Amount"
+                        android:textColor="@android:color/black" />
+                    
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
+    </HorizontalScrollView>
+
+</RelativeLayout>

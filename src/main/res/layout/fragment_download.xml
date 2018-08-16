@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="70dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/lblmacaddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="MAC ADDRESS:"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#A1A1A1" />
+
+                <TextView
+                    android:id="@+id/lblmac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="12312312313"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#A1A1A1" />
+
+                <TextView
+                    android:id="@+id/pendingacctname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="HOST:"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#A1A1A1" />
+
+                <!--<EditText-->
+                    <!--android:id="@+id/txthost"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="60dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:layout_weight="5"-->
+                    <!--android:background="@drawable/my_border"-->
+                    <!--android:ems="10"-->
+                    <!--android:gravity="right"-->
+                    <!--android:inputType="textUri"-->
+                    <!--android:maxLength="2000"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="192.168.10.1"-->
+                    <!--android:textColor="#A1A1A1"-->
+                    <!--android:textSize="24dp" />-->
+
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spinnHost"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/my_border"
+                    android:entries="@array/array_hosts">
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+                <TextView
+                    android:id="@+id/txtreadcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="PORT:"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#A1A1A1" />
+
+                <EditText
+                    android:id="@+id/txtport"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="5"
+                    android:background="@drawable/my_border"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:imeOptions="actionDone"
+                    android:inputType="textUri"
+                    android:maxLength="50"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="8080/noreco_api/billing_api.asp"
+                    android:textColor="#A1A1A1"
+                    android:textSize="24dp" />
+            </LinearLayout>
+
+            <!--/mobileapi/mpa_marelco.asp-->
+
+            <Button
+                android:id="@+id/btnDownLoad"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="31dp"
+                android:background="@drawable/button_border"
+                android:text="DOWNLOAD"
+                android:textColor="#fff"
+                android:textSize="30dp" />
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Data For Testing"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/mTvView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dip"
+                android:layout_marginTop="106dp"
+                android:background="#000"
+                android:editable="false"
+                android:ems="10"
+                android:maxLines="15"
+                android:minLines="15"
+                android:textColor="#fff"
+                android:textSize="12sp">
+
+                <requestFocus />
+            </EditText>
+        </TableLayout>
+    </ScrollView>
+
+</RelativeLayout>

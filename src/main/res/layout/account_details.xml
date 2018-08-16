@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp">
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/mSerial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:hint="Serial "
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/mAccountName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Account Name:"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="@+id/mSerial"
+                app:layout_constraintStart_toStartOf="@+id/mSerial"
+                app:layout_constraintTop_toBottomOf="@+id/mSerial" />
+
+            <TextView
+                android:id="@+id/mAccountID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Account ID:"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="@+id/mAccountName"
+                app:layout_constraintStart_toStartOf="@+id/mAccountName"
+                app:layout_constraintTop_toBottomOf="@+id/mAccountName" />
+
+            <TextView
+                android:id="@+id/mAccountClass"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Account Class"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="@+id/mAccountID"
+                app:layout_constraintStart_toStartOf="@+id/mAccountID"
+                app:layout_constraintTop_toBottomOf="@+id/mAccountID" />
+
+            <TextView
+                android:id="@+id/mAccountAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Address"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/mAccountClass"
+                app:layout_constraintStart_toStartOf="@+id/mAccountClass"
+                app:layout_constraintTop_toBottomOf="@+id/mAccountClass" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:minHeight="300dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+            <CheckBox
+                android:id="@+id/mOval"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:onClick="onCheckboxClicked"
+                android:text="Oval Type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/mCycle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:onClick="onCheckboxClicked"
+                android:text="Cycle Reading"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/mOval"
+                app:layout_constraintTop_toTopOf="@+id/mOval" />
+
+            <CheckBox
+                android:id="@+id/mStop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:onClick="onCheckboxClicked"
+                android:text="Stop Meter"
+                app:layout_constraintStart_toStartOf="@+id/mOval"
+                app:layout_constraintTop_toBottomOf="@+id/mOval" />
+
+            <CheckBox
+                android:id="@+id/mChange"
+                android:layout_width="0dp"
+                android:layout_height="29dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:onClick="onCheckboxClicked"
+                android:text="Change Meter"
+                app:layout_constraintBottom_toBottomOf="@+id/mOval"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <EditText
+                android:id="@+id/mReading"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/my_border"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Enter Reading"
+                android:inputType="numberDecimal"
+                android:textColorHint="@color/counter_text_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mReadingCycle" />
+
+            <EditText
+                android:id="@+id/mDemand"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/my_border"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Enter Demand KW"
+                android:inputType="numberDecimal"
+                android:textColorHint="@color/counter_text_bg"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/mReading"
+                app:layout_constraintStart_toStartOf="@+id/mReading"
+                app:layout_constraintTop_toBottomOf="@+id/mReading" />
+
+            <EditText
+                android:id="@+id/mRemarks"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/my_border"
+                android:ellipsize="end"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Enter Remarks"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:singleLine="false"
+                android:textColorHint="@color/counter_text_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mDemand" />
+
+            <EditText
+                android:id="@+id/mReadingCycle"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/my_border"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Enter Max Reading"
+                android:inputType="number"
+                android:textColorHint="@color/counter_text_bg"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mStop" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="18dp"
+            android:paddingBottom="20dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+            <Button
+                android:id="@+id/btnGenerate"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/button_border"
+                android:text="Generate"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnTakePic"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_border"
+                android:text="Take Picture"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnGenerate" />
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>
+

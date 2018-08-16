@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/imgMeme"
+            android:layout_width="44dp"
+            android:layout_height="38dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:scaleType="center"
+            android:src="@drawable/ic_meter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/serialmeter" />
+
+        <ImageButton
+            android:id="@+id/imgSelect"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
+            android:layout_alignBottom="@+id/address"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="#fff"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="right"
+            android:src="@drawable/ic_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/serialmeter" />
+
+
+        <TextView
+            android:id="@+id/accountname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/imgSelect"
+            android:layout_toRightOf="@+id/imgMeme"
+            android:autoLink="web"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="true"
+            android:text="Name"
+            android:textColor="#616161"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/imgSelect"
+            app:layout_constraintStart_toEndOf="@+id/imgMeme"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/accountid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/accountname"
+            android:layout_below="@+id/accountname"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/imgMeme"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="Accountid"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/accountname"
+            app:layout_constraintStart_toStartOf="@+id/accountname"
+            app:layout_constraintTop_toBottomOf="@+id/accountname" />
+
+        <TextView
+            android:id="@+id/serialmeter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/address"
+            android:layout_below="@+id/accountid"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/imgSelect"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="Meter Serial"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/accountid"
+            app:layout_constraintStart_toStartOf="@+id/accountid"
+            app:layout_constraintTop_toBottomOf="@+id/accountid" />
+
+        <TextView
+            android:id="@+id/accountstatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/accountid"
+            android:layout_below="@+id/serialmeter"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/imgMeme"
+            android:autoLink="web"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="true"
+            android:text="Account Status"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#616161"
+            app:layout_constraintEnd_toEndOf="@+id/serialmeter"
+            app:layout_constraintStart_toStartOf="@+id/serialmeter"
+            app:layout_constraintTop_toBottomOf="@+id/serialmeter" />
+
+        <TextView
+            android:id="@+id/accountsubclass"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/accountid"
+            android:layout_below="@+id/accountstatus"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/imgMeme"
+            android:autoLink="web"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="true"
+            android:text="SubClass"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#616161"
+            app:layout_constraintEnd_toEndOf="@+id/accountstatus"
+            app:layout_constraintStart_toStartOf="@+id/accountstatus"
+            app:layout_constraintTop_toBottomOf="@+id/accountstatus" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/accountid"
+            android:layout_below="@+id/accountsubclass"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/imgMeme"
+            android:autoLink="web"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:singleLine="true"
+            android:text="Address"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#616161"
+            app:layout_constraintEnd_toEndOf="@+id/accountsubclass"
+            app:layout_constraintStart_toStartOf="@+id/accountsubclass"
+            app:layout_constraintTop_toBottomOf="@+id/accountsubclass" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</RelativeLayout>

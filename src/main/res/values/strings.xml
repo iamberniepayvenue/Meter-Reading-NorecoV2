@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">METER READER</string>
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>METER READER</item>
+        <item>PENDING ACCOUNTS</item>
+        <item>READ ACCOUNTS</item>
+        <item>PRINTED </item>
+        <item>NOT FOUND</item>
+        <item>FOUND</item>
+        <item>DOWNLOAD</item>
+        <item>UPLOAD</item>
+        <item>INFO</item>
+        <item>RATES</item>
+        <item>EXIT</item>
+    </string-array>
+
+    <string-array name="array_hosts">
+        <item>192.168.5.240</item>
+        <item>121.96.68.14:8181</item>
+        <item>"http://dev.teslasuite.com"</item>
+    </string-array>
+
+
+
+    <!--
+        <item>dev2-commit.mybudgetload.com</item>  -->
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_reader</item>
+        <item>@drawable/ic_accounts</item>
+        <item>@drawable/ic_read_accounts</item>
+        <item>@drawable/ic_accounts</item>
+        <item>@drawable/ic_printed</item>
+        <item>@drawable/ic_read_accounts</item>
+        <item>@drawable/ic_download</item>
+        <item>@drawable/ic_upload</item>
+        <item>@drawable/ic_info</item>
+        <item>@drawable/ic_rates</item>
+        <item>@drawable/ic_exit</item>
+    </array>
+    <array name="nav_drawer_icons_on">
+        <item>@drawable/ic_onreader</item>
+        <item>@drawable/ic_onaccounts</item>  <!-- pending -->
+        <item>@drawable/ic_read_onaccounts</item> <!-- read -->
+        <item>@drawable/ic_onaccounts</item><!-- printed -->
+        <item>@drawable/ic_printed</item> <!-- not found -->
+        <item>@drawable/ic_read_onaccounts</item> <!-- Found -->
+        <item>@drawable/ic_ondownload</item>
+        <item>@drawable/ic_onupload</item>
+        <item>@drawable/ic_oninfo</item>
+        <item>@drawable/ic_onrates</item>
+        <item>@drawable/ic_onexit</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+    <string name="title_activity_search_result">SearchResult</string>
+    <string name="title_activity_account_details">METER READING</string>
+    <string name="title_activity_capture_barcode">Scan Barcode</string>
+    <string name="title_activity_view_details">Account Details</string>
+    <string name="title_activity_pending__accounts">Pending Accounts</string>
+    <string name="title_activity_splash">METER READER</string>
+    <string name="title_activity_rates_fragment">RatesFragment</string>
+    <string name="title_activity_rate_component">RateComponent</string>
+    <string name="title_activity_rate_code">RateCode</string>
+    <string name="title_activity_rate_segment">RateSegment</string>
+    <string name="title_activity_rate_schedule">RateSchedule</string>
+    <string name="title_activity_billing_policy">BillingPolicy</string>
+    <string name="title_activity_bill">Billing </string>
+    <string name="title_activity_sample">Sample</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_scan">Scan</string>
+    <string name="title_activity_not__found__accounts">Not Found Accounts</string>
+    <string name="title_activity_no_found_accounts">NoFoundAccounts</string>
+    <string name="title_activity_not_found">Not Found</string>
+    <string name="title_activity_fragment_no_found">Not Found</string>
+    <string name="title_activity_not_found_accounts">Accounts</string>
+    <string name="title_activity_printed_so">Printed SOA</string>
+    <string name="title_activity_printed_accounts">Accounts</string>
+    <string name="title_activity_read_list">ReadList</string>
+    <string name="title_activity_found__meters">Found_Meters</string>
+    <string name="title_activity_view_map">Map</string>
+    <string name="title_activity_fragment__payment">Pay Bill</string>
+    <string name="title_activity_bill_payment">Pay Bills</string>
+
+    <string name="scanning">scanning for devices...</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+
+    <string name="connected">connected to a device</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected: </string>
+    <string name="title_not_connected">not connected</string>
+
+    <string name="che_protocol">Protocol</string>
+    <string name="title_activity_paid_accounts">PaidAccounts</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

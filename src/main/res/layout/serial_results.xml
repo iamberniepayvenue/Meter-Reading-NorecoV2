@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical" >
+
+    <!-- android:descendantFocusability="blocksDescendants" -->
+
+    <TextView
+        android:id="@+id/txt_columnid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/address"
+        android:layout_below="@+id/accountname"
+        android:layout_marginRight="20dp"
+        android:text="TextView"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtprevreading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/address"
+        android:layout_below="@+id/address"
+        android:text="Prevreading"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgMeme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:paddingTop="35dp"
+        android:src="@drawable/ic_meter" />
+
+    <ImageButton
+        android:id="@+id/imgSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/address"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#fff"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="right"
+        android:src="@drawable/ic_select" />
+
+    <TextView
+        android:id="@+id/accountname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/imgSelect"
+        android:layout_toRightOf="@+id/imgMeme"
+        android:autoLink="web"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:singleLine="true"
+        android:text="Name"
+        android:textColor="#616161"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/accountid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/accountname"
+        android:layout_below="@+id/accountname"
+        android:layout_toRightOf="@+id/imgMeme"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Accountid"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/serialmeter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/address"
+        android:layout_below="@+id/accountid"
+        android:layout_toLeftOf="@+id/imgSelect"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Meter Serial"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="visible" />
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/accountstatus"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignRight="@+id/accountid"-->
+        <!--android:layout_below="@+id/serialmeter"-->
+        <!--android:layout_toRightOf="@+id/imgMeme"-->
+        <!--android:autoLink="web"-->
+        <!--android:clickable="false"-->
+        <!--android:focusable="false"-->
+        <!--android:focusableInTouchMode="false"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="Account Status"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:textColor="#616161" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/accountsubclass"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignRight="@+id/accountid"-->
+        <!--android:layout_below="@+id/accountstatus"-->
+        <!--android:layout_toRightOf="@+id/imgMeme"-->
+        <!--android:autoLink="web"-->
+        <!--android:clickable="false"-->
+        <!--android:focusable="false"-->
+        <!--android:focusableInTouchMode="false"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="SubClass"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:textColor="#616161" />-->
+
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/accountid"
+        android:layout_below="@+id/serialmeter"
+        android:layout_toRightOf="@+id/imgMeme"
+        android:autoLink="web"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:singleLine="true"
+        android:text="Address"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#616161" />
+
+    <TextView
+        android:id="@+id/txtstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/address"
+        android:layout_alignStart="@+id/address"
+        android:layout_below="@+id/imgSelect"
+        android:layout_toLeftOf="@+id/imgSelect"
+        android:gravity="right" />
+
+
+</RelativeLayout>

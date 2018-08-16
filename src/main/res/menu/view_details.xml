@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/btnEdit"
+        android:title="Edit"
+        app:showAsAction="ifRoom|withText"></item>
+    <item
+        android:id="@+id/btnGen"
+        android:title="Generate"
+        app:showAsAction="ifRoom|withText"></item>
+
+    <item
+        android:id="@+id/btnRead"
+        android:title="Add Reading"
+        app:showAsAction="ifRoom|withText"></item>
+
+</menu>

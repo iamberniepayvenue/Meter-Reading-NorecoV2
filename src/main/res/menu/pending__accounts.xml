@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:showAsAction="always">
+
+    <item
+        android:id="@+id/filter_account"
+        android:title="Filter by Sequence Number"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/filter_name"
+        android:title="Filter by Name"
+        app:showAsAction="never" />
+
+</menu>

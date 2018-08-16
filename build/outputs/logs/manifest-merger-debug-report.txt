@@ -1,0 +1,287 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/7f9f93161c1f5e794f373181cd4ac2dc/AndroidManifest.xml:17:1-22:12
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-13:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/7f726e90a55e61a4d91c636c9657556f/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a47b717e5698cd8e8b7b97312b54cf06/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/f730a005fa2e8c9dfbe2ea14ed7cfd08/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/0c788b124678bec738afe208bc369705/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/27ce15ea3dd9cba21ad3b8475a187a09/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/96b961d96f9b2f74e2dd0e4d37558453/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/ab129764a1027b8d51f1cef74bac8fee/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/08c0061c7e1279c89bb183cff223b7da/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c4b0d245f557b3d8e17d816db3f774c0/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/6773bd642e17a425f96b2651f1f0cd9a/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/7b7459a92a89b359562f604ab83801c9/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/f8672e419b0265e55426e081bb9869e5/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/05d4a9dad3d3fe97c39f7f26aeb3571d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/4a5ae8fb9940ac39e43617ee2cf31bed/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2fc3838c59653db86bba457b23a52c04/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/4bab1288a05fa77c0db9afc5dd726fa0/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/42f518946d029db6dbadbc15b57cf3f0/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/5fad7555b796d6ecdde65f50d6bb0b81/AndroidManifest.xml:17:1-22:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-125:12
+	package
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:3:5-39
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:5:5-30
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+uses-permission#android.permission.BLUETOOTH
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:7:5-68
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:7:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:8:5-74
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:8:22-71
+uses-permission#android.permission.INTERNET
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:9:5-67
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:9:22-64
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:10:5-76
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:10:22-73
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:11:5-76
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:11:22-73
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:12:22-76
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:13:22-76
+uses-permission#android.permission.CAMERA
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:15:5-65
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:15:22-62
+uses-configuration
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:17:5-58
+	android:reqHardKeyboard
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:17:25-55
+uses-feature#android.hardware.camera
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:19:5-21:35
+	android:required
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:21:9-32
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:20:9-47
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:23:5-81
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:23:22-78
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:24:5-75
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:24:22-72
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:25:5-80
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:25:22-77
+uses-feature#android.hardware.camera.autofocus
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:27:5-70
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:27:19-67
+permission#com.noreco.vendor.permission.SCANNER_RESULT_RECEIVER
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:29:5-31:40
+	android:protectionLevel
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:31:5-37
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:30:5-72
+uses-permission#android.permission.BROADCAST_STICKY
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:36:5-75
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:36:22-72
+application
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:42:5-123:19
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-20
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/7f726e90a55e61a4d91c636c9657556f/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/7f726e90a55e61a4d91c636c9657556f/AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/0c788b124678bec738afe208bc369705/AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/0c788b124678bec738afe208bc369705/AndroidManifest.xml:9:5-20
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:45:9-41
+	android:icon
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:44:9-45
+	android:allowBackup
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:43:9-35
+	android:theme
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:46:9-39
+provider#android.support.v4.content.FileProvider
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:47:9-55:20
+	android:grantUriPermissions
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:51:13-47
+	android:authorities
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:49:13-68
+	android:exported
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:50:13-37
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:48:13-67
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:52:13-54:54
+	android:resource
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:54:17-51
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:53:17-67
+receiver#com.payvenue.meterreader.Fragments.FragmentReading$ScanResultReceiver
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:59:9-67:20
+	android:enabled
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:61:13-35
+	android:priority
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:63:13-33
+	android:permission
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:62:13-86
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:60:13-73
+intent-filter#action:name:device.scanner.USERMSG
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:64:13-66:29
+action#device.scanner.USERMSG
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:65:17-65
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:65:25-62
+activity#com.payvenue.meterreader.MainActivity
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:70:9-76:58
+	android:screenOrientation
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:74:13-49
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:72:13-45
+	android:showAsAction
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:75:13-41
+	android:theme
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:76:13-55
+	android:logo
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:73:13-54
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:71:13-41
+activity#com.payvenue.meterreader.Camera.ZBarScannerActivity
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:80:9-82:53
+	android:screenOrientation
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:82:13-50
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:81:13-55
+activity#com.payvenue.meterreader.ViewDetails
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:83:9-87:44
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:85:13-64
+	android:showAsAction
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:87:13-41
+	android:logo
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:86:13-54
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:84:13-40
+activity#com.payvenue.meterreader.AccountListActivity
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:88:9-91:57
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:90:13-37
+	android:logo
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:91:13-54
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:89:13-48
+activity#com.payvenue.meterreader.Splash
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:92:9-110:20
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:94:13-58
+	android:logo
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:95:13-54
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:93:13-35
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:96:13-100:29
+action#android.intent.action.MAIN
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:97:17-69
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:97:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:99:17-77
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:99:27-74
+activity#com.payvenue.meterreader.BillPayment
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:115:9-118:58
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:117:13-64
+	android:theme
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:118:13-55
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:116:13-40
+activity#com.payvenue.meterreader.Accounts
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:119:9-121:79
+	android:label
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:121:13-67
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:120:13-37
+activity#com.payvenue.meterreader.BillPreview
+ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:122:9-58
+	android:name
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:122:19-46
+uses-sdk
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/7f9f93161c1f5e794f373181cd4ac2dc/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/7f9f93161c1f5e794f373181cd4ac2dc/AndroidManifest.xml:20:5-43
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/7f726e90a55e61a4d91c636c9657556f/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/7f726e90a55e61a4d91c636c9657556f/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a47b717e5698cd8e8b7b97312b54cf06/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a47b717e5698cd8e8b7b97312b54cf06/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/f730a005fa2e8c9dfbe2ea14ed7cfd08/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/f730a005fa2e8c9dfbe2ea14ed7cfd08/AndroidManifest.xml:20:5-44
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/0c788b124678bec738afe208bc369705/AndroidManifest.xml:7:5-43
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/0c788b124678bec738afe208bc369705/AndroidManifest.xml:7:5-43
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/27ce15ea3dd9cba21ad3b8475a187a09/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/27ce15ea3dd9cba21ad3b8475a187a09/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/96b961d96f9b2f74e2dd0e4d37558453/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/96b961d96f9b2f74e2dd0e4d37558453/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/ab129764a1027b8d51f1cef74bac8fee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/ab129764a1027b8d51f1cef74bac8fee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/08c0061c7e1279c89bb183cff223b7da/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/08c0061c7e1279c89bb183cff223b7da/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c4b0d245f557b3d8e17d816db3f774c0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c4b0d245f557b3d8e17d816db3f774c0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/6773bd642e17a425f96b2651f1f0cd9a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/6773bd642e17a425f96b2651f1f0cd9a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/7b7459a92a89b359562f604ab83801c9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/7b7459a92a89b359562f604ab83801c9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/f8672e419b0265e55426e081bb9869e5/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/f8672e419b0265e55426e081bb9869e5/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/05d4a9dad3d3fe97c39f7f26aeb3571d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/05d4a9dad3d3fe97c39f7f26aeb3571d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/4a5ae8fb9940ac39e43617ee2cf31bed/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/4a5ae8fb9940ac39e43617ee2cf31bed/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2fc3838c59653db86bba457b23a52c04/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2fc3838c59653db86bba457b23a52c04/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/4bab1288a05fa77c0db9afc5dd726fa0/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/4bab1288a05fa77c0db9afc5dd726fa0/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/42f518946d029db6dbadbc15b57cf3f0/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/42f518946d029db6dbadbc15b57cf3f0/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/5fad7555b796d6ecdde65f50d6bb0b81/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/5fad7555b796d6ecdde65f50d6bb0b81/AndroidManifest.xml:20:5-44
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
+		INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml

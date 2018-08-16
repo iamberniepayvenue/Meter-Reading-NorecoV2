@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/drawer_read"
+        android:title="Read ">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/addreader"
+                    android:icon="@drawable/ic_onreader"
+                    android:title="Meter Reader" />
+            </group>
+        </menu>
+    </item>
+
+    <!--<item-->
+        <!--android:id="@+id/drawer_bill"-->
+        <!--android:title="Payment">-->
+        <!--<menu>-->
+            <!--<group android:checkableBehavior="single">-->
+                <!--<item-->
+                    <!--android:id="@+id/action_payment"-->
+                    <!--android:icon="@drawable/ic_payment"-->
+                    <!--android:title="Pay Bill" />-->
+            <!--</group>-->
+        <!--</menu>-->
+    <!--</item>-->
+
+    <item
+        android:id="@+id/drawer_submenu"
+        android:title="Accounts">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/pendingacct"
+                    android:icon="@drawable/ic_onaccounts"
+                    android:title="Pending Accounts" />
+                <item
+                    android:id="@+id/readacct"
+                    android:icon="@drawable/ic_read_onaccounts"
+                    android:title="Read Accounts" />
+                <item
+                    android:id="@+id/printedacct"
+                    android:icon="@drawable/ic_onaccounts"
+                    android:title="Printed " />
+
+
+                <item
+                    android:id="@+id/notfound"
+                    android:icon="@drawable/ic_onaccounts"
+                    android:title="Not Found" />
+                <item
+                    android:id="@+id/found"
+                    android:icon="@drawable/ic_read_onaccounts"
+                    android:title="Found" />
+            </group>
+        </menu>
+    </item>
+
+    <!--<item-->
+        <!--android:id="@+id/paidaccounts"-->
+        <!--android:icon="@drawable/ic_read_onaccounts"-->
+        <!--android:title="Paid Accounts" />-->
+
+    <item
+        android:id="@+id/drawer_sync"
+        android:title="Sync Data">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/download"
+                    android:icon="@drawable/ic_ondownload"
+                    android:title="Download" />
+                <item
+                    android:id="@+id/upload"
+                    android:icon="@drawable/ic_onupload"
+                    android:title="Upload" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/drawer_rate"
+        android:title="Rate Management">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/rates"
+                    android:icon="@drawable/ic_onrates"
+                    android:title="Rates" />
+            </group>
+        </menu>
+    </item>
+
+
+    <item
+        android:id="@+id/drawer_settings"
+        android:title="App Settings">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/ic_exit"
+                    android:title="Logout" />
+            </group>
+        </menu>
+    </item>
+
+
+</menu>
+

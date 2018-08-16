@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/etaccountnumber"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/my_border"
+        android:digits="01234567890qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM "
+        android:ems="10"
+        android:hint="Account Number"
+        android:inputType="textPersonName"
+        android:padding="5dp" />
+
+
+    <EditText
+        android:id="@+id/etmeterserial"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/my_border"
+        android:digits="01234567890qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM "
+        android:ems="10"
+        android:hint="Meter Serial No"
+        android:inputType="textPersonName"
+        android:padding="5dp" />
+
+    <EditText
+        android:id="@+id/etmeterreading"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/my_border"
+        android:digits="01234567890."
+        android:ems="10"
+        android:hint="Reading"
+        android:inputType="number|numberDecimal"
+        android:padding="5dp" />
+
+    <EditText
+        android:id="@+id/etremarks"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/my_border"
+        android:digits="01234567890qwertzuiopasdfghjklyxcvbnmQWERTZUIOPASDFGHJKLYXCVBNM "
+        android:ems="10"
+        android:hint="Remarks"
+        android:inputType="textPersonName"
+        android:padding="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border"
+            android:text="Cancel"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border"
+            android:text="Save"
+            android:textColor="@color/colorWhite" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

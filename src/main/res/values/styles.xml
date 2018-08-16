@@ -1,0 +1,72 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        Theme.AppCompat.Light.DarkActionBar
+        Theme.AppCompat.DayNight.DarkActionBar
+    -->
+    <style name="MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>
+        <item name="android:actionMenuTextColor">#FFFFFF</item>
+    </style>
+
+    <style name="MyTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:background">#000000</item>
+    </style>
+
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <!-- @android:style/Theme.Holo.Light -->
+    <!-- <item name="android:actionOverflowButtonStyle">@style/MyOverFlow</item>
+
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextAppearance</item>
+     -->
+
+
+    <!-- Application theme.
+    <style name="AppTheme" parent="AppBaseTheme">
+       <item name="homeAsUpIndicator">@drawable/ic_indicator</item>
+         All customizations that are NOT specific to a particular API-level can go here.
+    </style> -->
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- <style name="myCustomMenuTextApearance" parent="@android:style/Widget.Holo.Light.ActionBar">
+    	<item name="android:actionMenuTextColor">#FFF</item>
+    </style> -->
+
+    <style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!-- Styles -->
+    <style name="MyOverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_home</item>
+    </style>
+
+    <style name="MyTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Widget.AppCompat.ActionButton.Overflow -->
+
+
+</resources>
