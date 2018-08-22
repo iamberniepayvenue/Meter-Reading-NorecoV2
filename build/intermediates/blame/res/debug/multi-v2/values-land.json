@@ -4,7 +4,7 @@
             "outputFile": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/incremental/mergeDebugResources/merged.dir/values-land/values-land.xml",
             "map": [
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a47b717e5698cd8e8b7b97312b54cf06/res/values-land/values-land.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/e2265b0bbdca2843647eb11cbe6c83d8/res/values-land/values-land.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/f730a005fa2e8c9dfbe2ea14ed7cfd08/res/values-land/values-land.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/values-land/values-land.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

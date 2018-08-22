@@ -4,7 +4,7 @@
             "outputFile": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/incremental/mergeDebugResources/merged.dir/values-th/values-th.xml",
             "map": [
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/f730a005fa2e8c9dfbe2ea14ed7cfd08/res/values-th/values-th.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/values-th/values-th.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/4a5ae8fb9940ac39e43617ee2cf31bed/res/values-th/values-th.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/6c3ab9a5c5b2e76fa9f11d12a685e3e1/res/values-th/values-th.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

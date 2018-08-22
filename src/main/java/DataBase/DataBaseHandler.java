@@ -622,11 +622,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public int searchNextAccountToRead(DataBaseHandler db, String routeno,String sequenceNumber,int tag) {
         SQLiteDatabase sql = db.getReadableDatabase();
         int seq = Integer.valueOf(sequenceNumber);
-        int count = 0;
-        int finalSequence = -1;
-        String finalAccountID = "";
+        int tmpSequence = 0;
+        String accountID = "";
+        int ctr = 0;
         Cursor cursor;
-        cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,"Unread"},null,null,DBInfo.SequenceNo + " ASC","1");
+        cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,"Unread"},null,null,DBInfo.SequenceNo + " ASC","5");
 
 //        if(tag == 0) {
 //            cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.SequenceNo+">? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,String.valueOf(seq),"Unread"},null,null,DBInfo.SequenceNo + " ASC");
@@ -637,29 +637,33 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             while(cursor.moveToNext()) {
 
-                //int sequence = cursor.getInt(cursor.getColumnIndex(DBInfo.SequenceNo));
-                /**checking bec. there is a tendency that ordering of sequence is not consistent*/
-//                if(finalSequence == -1) {
-//                    finalSequence = sequence;
-//                }
-//
-//                if(finalSequence > sequence) {
-//                    finalSequence = sequence;
-//                    String accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-//                    finalAccountID = accountID;
-//                }
-
                 int sequence = cursor.getInt(cursor.getColumnIndex(DBInfo.SequenceNo));
-                String accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-                 finalAccountID = accountID;
-                Log.e(TAG,sequence +" === "+finalAccountID);
+
+                if(ctr == 0) {
+                    tmpSequence = sequence;
+                }else{
+                    if(tmpSequence < seq) {
+                        if(sequence < tmpSequence) {
+                            tmpSequence = sequence;
+                            accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
+                        }
+                    }else{
+                        if(sequence < tmpSequence) {
+                            tmpSequence = sequence;
+                            accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
+                        }
+                    }
+                }
+
+                Log.e(TAG,sequence +" === "+accountID);
+                ctr++;
             }
-            //count++;
-            getAccountDetails(db,finalAccountID);
-            //break;
+            getAccountDetails(db,accountID);
         }
         return  cursor.getCount();
     }
+
+
 
     public void getAccountDetails(DataBaseHandler db, String accountid) {
 
