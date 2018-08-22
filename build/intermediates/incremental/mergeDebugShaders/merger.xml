@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/johnrychristianpaduhilao/Desktop/Android App Project/Meter-Reading-Noreco/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/johnrychristianpaduhilao/Desktop/Android App Project/Meter-Reading-Noreco/src/debug/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/debug/shaders"/></dataSet></merger>

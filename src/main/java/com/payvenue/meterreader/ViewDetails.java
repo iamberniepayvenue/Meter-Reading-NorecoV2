@@ -344,21 +344,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         String codeName = r.getCodeName();
                         String rateAmount = String.valueOf(r.getRateAmount());
                         String amount = String.valueOf(r.getAmount());
-                        for(Components c: componentsList) {
-                            if(r.getCode().equalsIgnoreCase(c.getRateComponent())) {
-                                codeName = c.getDetails();
-                                if(codeName.length() > 36) {
-                                   codeName = r.getCodeName();
-                                }
-                            }
-                        }
                         int padding = 20 - rateAmount.length() - amount.length();
                         String paddingChar = " ";
-                        //Log.e("Padding", "" + padding + "");
                         for (int p = 0; p < padding; p++) {
                             paddingChar = paddingChar.concat(" ");
                         }
                         String rightText = rateAmount + paddingChar + amount;
+
+                        /** print here */
                         mp.printText(codeName,rightText+"\n");
                     }
                 }
@@ -370,7 +363,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
         mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
         mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
-        mp.printText("Less:Advance Payment:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
+        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
 
         if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
             mp.printText("Life Line Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
