@@ -346,15 +346,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
             componentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
 
-            //componentvat = CommonFunc.calcComponentTax(rateSchedule.getIsVatable(), rateSchedule.getComponentVatRate(), rateMultiplier);
-            //componentftax = CommonFunc.calcComponentTax(rateSchedule.getIsFranchiseTaxable(), rateSchedule.getComponentFTaxRate(), rateMultiplier);
-            //componentltax = CommonFunc.calcComponentTax(rateSchedule.getIsLocalTaxable(), rateSchedule.getComponentLTaxRate(), rateMultiplier);
-            //totalcomponentftax = totalcomponentftax + componentftax;
-            //totalcomponentltax = totalcomponentltax + componentltax;
-            //totalVat = totalVat + componentvat;
-//            if (rateSchedule.getRateComponent().indexOf("VAT") > 0) {
-//                totalVat = totalVat + componentAmount;
-//            }
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
                 scDiscountedAmount = scDiscountedAmount + componentAmount;
@@ -366,13 +357,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
                 totalLifelineDiscount = CommonFunc.round(totalLifelineDiscount + lifelineDiscountAmount,2);
                 Log.e(TAG,"Life Liner Discount :(" +componentAmount +" * " + lifelineDiscountRate +" = "+ lifelineDiscountAmount);
-                //Log.e(TAG,"rate_schedule(RateSegment) LLD:" + scDiscountedAmount);
             }
 
             if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
-                    rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes"))
-            {
-                overUnderRecovery = overUnderRecovery + rateSchedule.getComponentRate();
+                    rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                overUnderRecovery = overUnderRecovery + componentAmount;//rateSchedule.getComponentRate();
                 componentAmount = 0;
                 componentvat = 0;
                 componentftax = 0;
@@ -393,11 +382,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             }
 
             totalComponent = totalComponent + componentAmount;
-
-
-
-
-
             myRates.add(new Rates(rateSchedule.getRateSegment(),
                     rateSchedule.getRateCode(),
                     rateSchedule.getRateComponent(),
@@ -418,6 +402,16 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         float vtax = (float) .12;
         float currentDue = totalComponent;
         totalComponent = CommonFunc.round(totalComponent,2)  - (totalLifelineDiscount + scDiscountedAmount);
+
+        if(overUnderRecovery < 0) {
+            totalComponent = totalComponent + overUnderRecovery;
+            Log.e(TAG,"negative");
+        } else{
+            totalComponent = totalComponent - overUnderRecovery;
+            Log.e(TAG,"positive");
+        }
+
+
         billedAmount = totalComponent + CommonFunc.toDigit(MainActivity.selectedAccount.getPenalty())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPoleRental())
@@ -429,25 +423,19 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         MainActivity.selectedAccount.setTotalSCDiscount(String.valueOf(scDiscountedAmount));
         MainActivity.selectedAccount.setTotalLifeLineDiscount(String.valueOf(totalLifelineDiscount));
         MainActivity.selectedAccount.setOverUnderDiscount(String.valueOf(overUnderRecovery));
-        billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(MainActivity.selectedAccount.getAdvancePayment()),2)  - overUnderRecovery;
+        billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(MainActivity.selectedAccount.getAdvancePayment()),2);
         mBill = new Bill(myRates, CommonFunc.round(currentDue,2), billedAmount);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(mBill);
         MainActivity.selectedAccount.setBill(mBill);
-        //if(!MainActivity.selectedAccount.getReadStatus().equalsIgnoreCase("NotFound")) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Read");
-        //}
+
+        MainActivity.db.updateReadAccount(MainActivity.db, "Read");
+
 
         Log.e(TAG,"Data: " + json);
 
 
-        /**PRINTING SOA*/
-        if (MainActivity.mIsConnected) {
-            preparePrint();
-        } else {
-            Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
     }
 
     private float getLifeLinerPercentage(float consume) {
@@ -660,6 +648,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
 
                 calculateBill();
+                /**PRINTING SOA*/
+                if (MainActivity.mIsConnected) {
+                    preparePrint();
+                } else {
+                    Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
+                }
+
                 Log.e(TAG,"SequenceNumber: "+ MainActivity.selectedAccount.getSequenceNo());
                 Log.e(TAG,"route: "+ MainActivity.selectedAccount.getRouteNo());
                 String route = MainActivity.selectedAccount.getRouteNo();
@@ -674,12 +669,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     return;
                 }
 
-                int count = db.searchNextAccountToRead(db,route,sequenceNumber,0);
+                int count = db.searchNextAccountToRead(db,route,sequenceNumber,MainActivity.selectedAccount.getAccountID());
                 if (count == 0) {
-                    //int c = db.searchNextAccountToRead(db,route,sequenceNumber,1);
-                    //if(c == 0) {
                         this.finish();
-                    //}
                 }
                  Log.e(TAG, "count : "+ count);
                 //Intent intent = new Intent(this, BillPreview.class);

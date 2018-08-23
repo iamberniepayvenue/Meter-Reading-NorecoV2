@@ -619,14 +619,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public int searchNextAccountToRead(DataBaseHandler db, String routeno,String sequenceNumber,int tag) {
+    public int searchNextAccountToRead(DataBaseHandler db, String routeno,String sequenceNumber,String _accountID) {
         SQLiteDatabase sql = db.getReadableDatabase();
         int seq = Integer.valueOf(sequenceNumber);
         int tmpSequence = 0;
         String accountID = "";
         int ctr = 0;
         Cursor cursor;
-        cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,"Unread"},null,null,DBInfo.SequenceNo + " ASC","5");
+        cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,"Unread"},null,null,DBInfo.SequenceNo + " ASC");
 
 //        if(tag == 0) {
 //            cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.SequenceNo+">? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,String.valueOf(seq),"Unread"},null,null,DBInfo.SequenceNo + " ASC");
@@ -639,23 +639,18 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
                 int sequence = cursor.getInt(cursor.getColumnIndex(DBInfo.SequenceNo));
 
+
                 if(ctr == 0) {
                     tmpSequence = sequence;
+                    accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
                 }else{
-                    if(tmpSequence < seq) {
-                        if(sequence < tmpSequence) {
-                            tmpSequence = sequence;
-                            accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-                        }
-                    }else{
-                        if(sequence < tmpSequence) {
-                            tmpSequence = sequence;
-                            accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-                        }
+                    if(sequence < tmpSequence) {
+                        tmpSequence = sequence;
+                        accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
+                        Log.e(TAG,sequence +" === "+accountID);
                     }
                 }
-
-                Log.e(TAG,sequence +" === "+accountID);
+                Log.e(TAG,tmpSequence +" === "+accountID);
                 ctr++;
             }
             getAccountDetails(db,accountID);

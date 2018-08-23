@@ -112,7 +112,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         txtclass.setText(MainActivity.selectedAccount.getAccountClassification());
         txtmeterbrand.setText(MainActivity.selectedAccount.getMeterBrand());
         mReading.setText(MainActivity.selectedAccount.getReading());
-        mPrevReading.setText(MainActivity.selectedAccount.getPrevReading());
+        mPrevReading.setText(MainActivity.selectedAccount.getInitialReading());
         mConsume.setText(MainActivity.selectedAccount.getConsume());
         mLocation.setText(MainActivity.selectedAccount.getLatitude() +","+MainActivity.selectedAccount.getLongitude());
     }
@@ -330,7 +330,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date              Prev                 Pres              KWH"+"\n");
-        mp.printText(MainActivity.selectedAccount.getDateRead() + "         " + MainActivity.selectedAccount.getPrevReading() + "                  " + MainActivity.selectedAccount.getReading() + "                 " + MainActivity.selectedAccount.getConsume()+"\n");
+        mp.printText(MainActivity.selectedAccount.getDateRead() + "        " + MainActivity.selectedAccount.getPrevReading() + "                " + MainActivity.selectedAccount.getReading() + "               " + MainActivity.selectedAccount.getConsume()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         //Cursor cursorRateSegment = db.getRateSegment(db);
         ArrayList<Components> componentsList= db.getRateComponent(db);
