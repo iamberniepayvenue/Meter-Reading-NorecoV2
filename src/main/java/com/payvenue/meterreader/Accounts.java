@@ -290,7 +290,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         /**STOP METER*/
         if(isStopCheck) {
             String strAveraging = MainActivity.selectedAccount.getAveraging();
-            Log.e(TAG,"averaging "+ strAveraging);
+            //Log.e(TAG,"averaging "+ strAveraging);
             try {
                 float flConsumption = 0;
                 JSONObject json = new JSONObject(strAveraging);
@@ -300,7 +300,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 JSONObject finalJson;
 
                 finalArray = jsonArrayNew.length() == 3 ? jsonArrayNew : jsonArrayOld;
-                Log.e(TAG,"isStopCheck "+ finalArray);
+                //Log.e(TAG,"isStopCheck "+ finalArray);
                 for(int i = 0; i < finalArray.length();i++){
                     finalJson = finalArray.getJSONObject(i);
                     String consumption = finalJson.getString("Consumption");
@@ -319,7 +319,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e(TAG,"isStopCheck "+ e.getMessage());
+                //Log.e(TAG,"isStopCheck "+ e.getMessage());
                 Toast.makeText(getApplicationContext(),"No available past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -327,7 +327,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         }
 
 
-        Log.e(TAG,"==========================START while loop(rate schedule) HERE==========================");
+        //Log.e(TAG,"==========================START while loop(rate schedule) HERE==========================");
         while (cursor.moveToNext()) {
             String VATRate = cursor.getString(cursor.getColumnIndex("VATRate")); //componentVatRate
             String FranchiseTaxRate = cursor.getString(cursor.getColumnIndex("FranchiseTaxRate"));
@@ -356,14 +356,14 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
                 scDiscountedAmount = scDiscountedAmount + componentAmount;
-                Log.e(TAG,"Senior Discount :" + scDiscountedAmount);
-                Log.e(TAG,"rate_schedule(RateSegment) SC:" + scDiscountedAmount);
+                //Log.e(TAG,"Senior Discount :" + scDiscountedAmount);
+                //Log.e(TAG,"rate_schedule(RateSegment) SC:" + scDiscountedAmount);
             }
 
             if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().equalsIgnoreCase("Yes")) {
                 lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
                 totalLifelineDiscount = CommonFunc.round(totalLifelineDiscount + lifelineDiscountAmount,2);
-                Log.e(TAG,"Life Liner Discount :(" +componentAmount +" * " + lifelineDiscountRate +" = "+ lifelineDiscountAmount);
+                //Log.e(TAG,"Life Liner Discount :(" +componentAmount +" * " + lifelineDiscountRate +" = "+ lifelineDiscountAmount);
             }
 
             if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
@@ -403,26 +403,26 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
 
         }/**end of loop*/
-        Log.e(TAG,"==========================END while loop HERE==========================");
+        //Log.e(TAG,"==========================END while loop HERE==========================");
 
 
         if (canAvailSCDiscount) {
             scDiscountedAmount = CommonFunc.round(scDiscountedAmount * scPercentage,2);
         }
 
-        Log.e(TAG,"Total component: " + totalComponent);
-        Log.e(TAG, "Total Lifeline Discount Amount: " + totalLifelineDiscount);
-        Log.e(TAG, "Total SC Discount Amount: " + scDiscountedAmount);
+        //Log.e(TAG,"Total component: " + totalComponent);
+        //Log.e(TAG, "Total Lifeline Discount Amount: " + totalLifelineDiscount);
+        //Log.e(TAG, "Total SC Discount Amount: " + scDiscountedAmount);
         float vtax = (float) .12;
         float currentDue = totalComponent;
         totalComponent = CommonFunc.round(totalComponent,2)  - (totalLifelineDiscount + scDiscountedAmount);
 
         if(overUnderRecovery < 0) {
             totalComponent = totalComponent + overUnderRecovery;
-            Log.e(TAG,"negative");
+            //Log.e(TAG,"negative");
         } else{
             totalComponent = totalComponent - overUnderRecovery;
-            Log.e(TAG,"positive");
+            //Log.e(TAG,"positive");
         }
 
 
@@ -440,21 +440,16 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(MainActivity.selectedAccount.getAdvancePayment()),2);
         mBill = new Bill(myRates, CommonFunc.round(currentDue,2), billedAmount);
         Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(mBill);
+        //String json = gson.toJson(mBill);
         MainActivity.selectedAccount.setBill(mBill);
 
         MainActivity.db.updateReadAccount(MainActivity.db, "Read",isStopCheck);
-
-
-        Log.e(TAG,"Data: " + json);
-
-
-
+        //Log.e(TAG,"Data: " + json);
     }
 
     private float getLifeLinerPercentage(float consume) {
         float value = 0f;
-        Log.e(TAG, "consumption in getLifeLinerPercentage(): " + consume);
+        //Log.e(TAG, "consumption in getLifeLinerPercentage(): " + consume);
 
         int kwh = (int)Math.ceil(consume);
 
@@ -571,7 +566,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
         if (MainActivity.selectedAccount.getIsChangeMeter().equals("1")) {
             String strAveraging = MainActivity.selectedAccount.getAveraging();
-            Log.e(TAG,"averaging "+ strAveraging);
+            //Log.e(TAG,"averaging "+ strAveraging);
             try {
                 float flConsumption = 0;
                 JSONObject json = new JSONObject(strAveraging);
@@ -596,7 +591,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e(TAG,"isStopCheck "+ e.getMessage());
+                //Log.e(TAG,"isStopCheck "+ e.getMessage());
                 Toast.makeText(getApplicationContext(),"No availbale past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -669,8 +664,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
                 }
 
-                Log.e(TAG,"SequenceNumber: "+ MainActivity.selectedAccount.getSequenceNo());
-                Log.e(TAG,"route: "+ MainActivity.selectedAccount.getRouteNo());
+                //Log.e(TAG,"SequenceNumber: "+ MainActivity.selectedAccount.getSequenceNo());
+                //Log.e(TAG,"route: "+ MainActivity.selectedAccount.getRouteNo());
                 String route = MainActivity.selectedAccount.getRouteNo();
                 String sequenceNumber = MainActivity.selectedAccount.getSequenceNo();
                 try{
@@ -687,7 +682,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 if (count == 0) {
                         this.finish();
                 }
-                 Log.e(TAG, "count : "+ count);
+                // Log.e(TAG, "count : "+ count);
                 //Intent intent = new Intent(this, BillPreview.class);
                 Intent intent = new Intent(this, Accounts.class);
                 startActivity(intent);
@@ -767,7 +762,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     break;
 
                 case R.id.mRemarks:
-                    Log.e(TAG,"afterTextChanged (mRemarks)" + mRemarks.getText().toString());
+                    //Log.e(TAG,"afterTextChanged (mRemarks)" + mRemarks.getText().toString());
                     strRemarks = mRemarks.getText().toString();
                     break;
             }
@@ -863,7 +858,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     break;
                 case R.id.mRemarks:
                     strRemarks = mRemarks.getText().toString();
-                    Log.e(TAG,"Remarks :" + mRemarks.getText().toString());
+                    //Log.e(TAG,"Remarks :" + mRemarks.getText().toString());
                     break;
             }
             return false;

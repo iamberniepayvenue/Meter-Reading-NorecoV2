@@ -11,37 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df5a9ae9-8316-4839-8819-b750f2897a88" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/DataBase/DataBaseHandler.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/DataBase/DataBaseHandler.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/Model/Account.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/Model/Account.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/Model/ReadingDetailsModel.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/Model/ReadingDetailsModel.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts$ActionListener.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts$ActionListener.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts$TextChangeListener.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts$TextChangeListener.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/Accounts.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/ViewDetails.class" afterPath="$PROJECT_DIR$/build/intermediates/classes/debug/com/payvenue/meterreader/ViewDetails.class" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/DataBase/DataBaseHandler.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/DataBase/DataBaseHandler.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/Model/Account.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/Model/Account.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/Model/ReadingDetailsModel.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/Model/ReadingDetailsModel.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts$ActionListener.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts$ActionListener.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts$TextChangeListener.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts$TextChangeListener.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/Accounts.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/ViewDetails.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/93/com/payvenue/meterreader/ViewDetails.dex" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" />
-      <change beforePath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" afterPath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" afterPath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Account.java" afterPath="$PROJECT_DIR$/src/main/java/Model/Account.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/ReadingDetailsModel.java" afterPath="$PROJECT_DIR$/src/main/java/Model/ReadingDetailsModel.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -87,8 +57,8 @@
       <file leaf-file-name="Accounts.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="433" column="0" lean-forward="false" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
+            <state relative-caret-position="179">
+              <caret line="442" column="10" lean-forward="false" selection-start-line="442" selection-start-column="10" selection-end-line="442" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -154,8 +124,8 @@
       <find>negative</find>
       <find>overUnderRecovery</find>
       <find>afterTextChanged</find>
-      <find>readingDetails</find>
       <find>strRemarks</find>
+      <find>readingDetails</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -2288,9 +2258,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1467" />
-    <option name="width" value="1305" />
-    <option name="height" value="751" />
+    <option name="x" value="1480" />
+    <option name="y" value="26" />
+    <option name="width" value="1280" />
+    <option name="height" value="719" />
   </component>
   <component name="ProjectView">
     <navigator currentView="AndroidView" proportions="" version="1">
@@ -2531,7 +2502,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1467" y="0" width="1305" height="751" extended-state="0" />
+    <frame x="1480" y="26" width="1280" height="719" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2543,7 +2515,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328594" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.55766195" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.55740434" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2765,8 +2737,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="433" column="0" lean-forward="false" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
+        <state relative-caret-position="179">
+          <caret line="442" column="10" lean-forward="false" selection-start-line="442" selection-start-column="10" selection-end-line="442" selection-end-column="10" />
           <folding />
         </state>
       </provider>
