@@ -590,7 +590,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return c;
     }
 
-    public void updateReadAccount(DataBaseHandler db, String status) {
+    public void updateReadAccount(DataBaseHandler db, String status,boolean isStopMeterCheck) {
+        String isStopMeter = "0";
+
+        if(isStopMeterCheck) {
+            isStopMeter = "1";
+        }
+
         SQLiteDatabase sql = db.getReadableDatabase();
         ContentValues cv = new ContentValues();
         Gson gson = new GsonBuilder().create();
@@ -598,8 +604,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ReadingDetailsModel readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(),a.getPrevBilling(),a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
                 a.getPenalty(),a.getRateSched(),a.getMultiplier(),a.getDemandKW(),a.getAdvancePayment(),a.getBillDeposit(),a.getLastReadingDate(),
                 a.getInitialReading(),a.getPrevReading(),a.getPrevFinalReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
-                a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount());
+                a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount(),isStopMeter);
         String readingDetails = gson.toJson(readingDetailsModel);
+        Log.e(TAG,"readingDetails :" + readingDetails);
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.ReadingDetails, readingDetails);
         cv.put(DBInfo.EditCount, CommonFunc.toDigit(MainActivity.selectedAccount.getEditCount()) + 1);

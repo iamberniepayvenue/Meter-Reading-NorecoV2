@@ -69,6 +69,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
     float overUnderRecovery = 0;
 
     boolean canAvailLifelineDiscount = false, canAvailSCDiscount = false;
+    boolean scInvalidDate = false;
     ArrayList<Rates> myRates = new ArrayList<>();
     ArrayList<RateSegmentModel> listRateSegment = new ArrayList<>();
     //public  ArrayList<Components> componentsList = new ArrayList<>();
@@ -201,14 +202,16 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
          *
          */
 
+        MainActivity.selectedAccount.setRemarks(strRemarks);
+        Log.e(TAG,"remar : " +MainActivity.selectedAccount.getRemarks() );
 
         if (MainActivity.selectedAccount.getConsume().equals("0") && !MainActivity.selectedAccount.getRemarks().isEmpty()) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate");
+            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
             return;
         }
 
         if(isChangeCheck) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate");
+            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
             return;
         }
 
@@ -232,7 +235,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         }
 
         if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate");
+            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
             showToast("Cant generate billing for a Higher Voltage classification.");
             return;
         }
@@ -241,10 +244,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         if (MainActivity.selectedAccount.getSeniorCitizenStatus().equals("1") && MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Residential") ) {
 
                 if(CommonFunc.isValidDate(MainActivity.selectedAccount.getSCExpiryDate())) {
+                    Log.e(TAG,"SC DATE is Valid");
                     String consumption = MainActivity.selectedAccount.getConsume();
                     if(Float.valueOf(consumption) <= 100) {
                         canAvailSCDiscount = true;
                     }
+                }else{
+                    scInvalidDate = true;
                 }
         }
 
@@ -310,10 +316,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 rateMultiplier = flConsumption;
 
 
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG,"isStopCheck "+ e.getMessage());
-                Toast.makeText(getApplicationContext(),"No availbale past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"No available past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -381,6 +388,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 componentltax = 0;
             }
 
+            if(scInvalidDate && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                componentAmount = 0;
+                componentvat = 0;
+                componentftax = 0;
+                componentltax = 0;
+            }
+
             totalComponent = totalComponent + componentAmount;
             myRates.add(new Rates(rateSchedule.getRateSegment(),
                     rateSchedule.getRateCode(),
@@ -429,7 +443,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         String json = gson.toJson(mBill);
         MainActivity.selectedAccount.setBill(mBill);
 
-        MainActivity.db.updateReadAccount(MainActivity.db, "Read");
+        MainActivity.db.updateReadAccount(MainActivity.db, "Read",isStopCheck);
 
 
         Log.e(TAG,"Data: " + json);
@@ -753,10 +767,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     break;
 
                 case R.id.mRemarks:
-                    Log.e(TAG,"afterTextChanged (mRemarks)");
-                    if (!mRemarks.getText().toString().isEmpty()) {
-                        strRemarks = mRemarks.getText().toString();
-                    }
+                    Log.e(TAG,"afterTextChanged (mRemarks)" + mRemarks.getText().toString());
+                    strRemarks = mRemarks.getText().toString();
                     break;
             }
 
@@ -848,6 +860,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
                     }
 
+                    break;
+                case R.id.mRemarks:
+                    strRemarks = mRemarks.getText().toString();
+                    Log.e(TAG,"Remarks :" + mRemarks.getText().toString());
                     break;
             }
             return false;

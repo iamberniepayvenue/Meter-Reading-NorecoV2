@@ -269,7 +269,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 MainActivity.selectedAccount.setLatitude(String.valueOf(curlat));
                 MainActivity.selectedAccount.setLongitude(String.valueOf(curlong));
 
-                db.updateReadAccount(db, MainActivity.Modes.MODE_4);
+                db.updateReadAccount(db, MainActivity.Modes.MODE_4,false);
 
                 Toast.makeText(getBaseContext(),
                         "Accounts successfully tagged as not found.", Toast.LENGTH_LONG)
@@ -358,7 +358,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             } // end loop
         }
 
-        mp.printText("Total Amount", MainActivity.dec2.format(mBill.getTotalAmount())+"\n");
+        mp.printText("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount())+"\n");
         mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPenalty()))+"\n");
         mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
         mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
@@ -377,7 +377,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printText("Over Under Recovery", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getOverUnderDiscount()))+"\n");
         }
 
-        mp.printText("Total Billed Amount", MainActivity.dec2.format(mBill.getTotalBilledAmount())+"\n");
+        mp.printText("PAYABLE AMOUNT(AfterDueDate)", MainActivity.dec2.format(mBill.getTotalBilledAmount())+"\n");
 
         //Printed
         db.updateAccountToPrinted(db,"Printed");
