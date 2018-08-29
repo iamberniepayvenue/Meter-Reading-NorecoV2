@@ -657,7 +657,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                         Log.e(TAG,sequence +" === "+accountID);
                     }
                 }
-                Log.e(TAG,tmpSequence +" === "+accountID);
+                //Log.e(TAG,tmpSequence +" === "+accountID);
                 ctr++;
             }
             getAccountDetails(db,accountID);

@@ -22,7 +22,6 @@ import java.util.List;
 
 import DataBase.DataBaseHandler;
 import Model.Bill;
-import Model.Components;
 import Model.RateSegmentModel;
 import Model.Rates;
 import Utility.CommonFunc;
@@ -314,7 +313,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         Bill mBill;
         List<Rates> mRates;
         mBill = MainActivity.selectedAccount.getBill();
-        Rates rates;
+        //Rates rates;
         mRates = mBill.getRates();
         mp.printText("           Negros Oriental II Electric Cooperative\n");
         mp.printText("                  Real St., Dumaguete City\n");
@@ -330,10 +329,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date              Prev                 Pres              KWH"+"\n");
-        mp.printText(MainActivity.selectedAccount.getDateRead() + "        " + MainActivity.selectedAccount.getPrevReading() + "                " + MainActivity.selectedAccount.getReading() + "               " + MainActivity.selectedAccount.getConsume()+"\n");
+        //mp.printText(MainActivity.selectedAccount.getDateRead() + "        " + MainActivity.selectedAccount.getPrevReading() + "                " + MainActivity.selectedAccount.getReading() + "               " + MainActivity.selectedAccount.getConsume()+"\n");
+        mp.printText(MainActivity.selectedAccount.getDateRead(),MainActivity.selectedAccount.getPrevReading(),MainActivity.selectedAccount.getReading(),MainActivity.selectedAccount.getConsume()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         //Cursor cursorRateSegment = db.getRateSegment(db);
-        ArrayList<Components> componentsList= db.getRateComponent(db);
+        //ArrayList<Components> componentsList= db.getRateComponent(db);
         if(listRateSegment.size() > 0) {
             for (RateSegmentModel s: listRateSegment){
                 String segmentName =  s.getRateSegmentName();
@@ -378,7 +378,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         mp.printText("PAYABLE AMOUNT(AfterDueDate)", MainActivity.dec2.format(mBill.getTotalBilledAmount())+"\n");
-
+        mp.printText("REPRINTED" +"\n"+"\n"+"\n");
         //Printed
         db.updateAccountToPrinted(db,"Printed");
     }

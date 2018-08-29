@@ -213,11 +213,12 @@ public class CommonFunc {
 
     public static boolean isValidDate(String date) {
         boolean v = false;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        try {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        try {String d = "8/28/2018";
             Date strDate = sdf.parse(date);
-            if(new Date().after(strDate)) {
+            if(new Date().before(strDate)) {
                 v= true;
+                //Log.e("CommonFunc","" + new Date() + " == " + strDate);
             }
         } catch (ParseException e) {
             e.printStackTrace();

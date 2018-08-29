@@ -107,34 +107,33 @@ public class MobilePrinter {
 
     public void printText(String leftText, String rightText) {
 
-//        byte[] init = {0x1b, '@'};
-//        woosim.controlCommand(init, init.length);
-
-        //Log.e(TAG,"printing: " + leftText + ":  " + rightText);
-        boolean isWoosim = (woosim == null) ? true : false;
-        Log.e(TAG,"MobilePrinter is null? " + isWoosim);
         int padding = LINE_CHARS - leftText.length() - rightText.length();
         String paddingChar = " ";
         for (int i = 0; i < padding; i++) {
             paddingChar = paddingChar.concat(" ");
         }
 
-        int pool = woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
-        int print = woosim.printSpool(true);
-
-        //Log.e(TAG,"save spool: " + pool);
-        //Log.e(TAG,"print spool: " + print);
-
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
+        woosim.printSpool(true);
     }
 
     public void printText(String text) {
         woosim.saveSpool(EUC_KR, text , 0, false);
         woosim.printSpool(true);
     }
+    public void printText(String date,String prev, String pres, String kwh) {
+        int padding = 38 - date.length() - prev.length() - pres.length() - kwh.length();
+        String spaces = " ";
+        for(int i = 0; i < padding; i++) {
+            spaces = spaces.concat(" ");
+        }
+
+        woosim.saveSpool(EUC_KR, date + spaces + prev + spaces + pres + spaces + kwh, 0, false);
+        woosim.printSpool(true);
+    }
 
     public int setConnection(String address) {
-        boolean isWoosim = (woosim == null) ? true : false;
-        //Log.e(TAG,"setConnection-MobilePrinter is null? " + isWoosim);
+
         int reVal = woosim.BTConnection(address, false);
 
         return reVal;
