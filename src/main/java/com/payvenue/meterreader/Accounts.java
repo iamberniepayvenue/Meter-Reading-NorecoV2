@@ -350,7 +350,15 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     Float.valueOf(Amount),//componentRate
                     cursor.getString(cursor.getColumnIndex("IsOverUnder")));
 
-            componentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
+                    String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
+            componentAmount =  CommonFunc.toDigit(strComponentAmount); //CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
+
+//            if(rateSchedule.getRateComponent().equalsIgnoreCase("VAT on System Loss Charges")) {
+//                Log.e(TAG,"Amount :" + componentAmount);
+//                Log.e(TAG,"Rate :" + rateSchedule.getComponentRate());
+//                Log.e(TAG,"Multiplier :" + rateMultiplier);
+//                Log.e(TAG,"print :" + MainActivity.dec.format(componentAmount));
+//            }
 
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
@@ -409,11 +417,12 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             totalComponent = totalComponent - overUnderRecovery;
         }
 
-
+        Log.e(TAG,"Pilferage: " + MainActivity.selectedAccount.getPilferagePenalty());
         billedAmount = totalComponent + CommonFunc.toDigit(MainActivity.selectedAccount.getPenalty())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPoleRental())
-                + CommonFunc.toDigit(MainActivity.selectedAccount.getSpaceRental());
+                + CommonFunc.toDigit(MainActivity.selectedAccount.getSpaceRental()
+                + CommonFunc.toDigit(MainActivity.selectedAccount.getPilferagePenalty()));
 
 
         MainActivity.selectedAccount.setLatitude("" + MainActivity.gps.getLatitude());
@@ -903,6 +912,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
         mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
         mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
+        mp.printText("PilferagePenalty", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPilferagePenalty()))+"\n");
         mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
         if(canAvailLifelineDiscount) {
             mp.printText("Life Line Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");

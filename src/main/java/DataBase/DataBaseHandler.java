@@ -769,6 +769,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setAccountID(c.getString(c.getColumnIndex(DBInfo.AccountID)));
                 account.setPoleRental(c.getString(c.getColumnIndex(DBInfo.PoleRental)));
                 account.setSpaceRental(c.getString(c.getColumnIndex(DBInfo.SpaceRental)));
+                account.setPilferagePenalty(c.getString(c.getColumnIndex(DBInfo.PilferagePenalty)));
                 account.setUnderOverRecovery(c.getString(c.getColumnIndex(DBInfo.UnderOverRecovery)));
                 account.setSubClassification(c.getString(c.getColumnIndex(DBInfo.SubClassification)));
                 account.setMeterSerialNo(c.getString(c.getColumnIndex(DBInfo.MeterSerialNo)));

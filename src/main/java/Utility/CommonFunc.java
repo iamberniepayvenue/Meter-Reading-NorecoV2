@@ -3,6 +3,7 @@ package Utility;
 import android.util.Log;
 
 import java.net.NetworkInterface;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -190,12 +191,13 @@ public class CommonFunc {
     }
 
 
-    public static float calcComponentAmount(float rate, float consumption) {
-
-        Log.d("CALC", "" + rate + "=====" + consumption);
-
-        return round(rate * consumption, 4);
-
+    public static String calcComponentAmount(float rate, float consumption) {
+        DecimalFormat df = new DecimalFormat(".####");
+        float res = rate * consumption;
+        //Log.e("CommonFunc","---- : "+ res);
+        //Log.e("CommonFunc","----str : "+ df.format(res));
+        return df.format(res);
+        //return round(rate * consumption, 4);
     }
 
     public static float calcComponentTax(String isvatable, float amount, float ratemultiplier) {
