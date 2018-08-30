@@ -320,17 +320,12 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         super.onPause(); // Always call the superclass method first
     }
 
-
-
-
-
-
     private void exportDB() {
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
         FileChannel source = null;
         FileChannel destination = null;
-        String currentDBPath = "/data/" + "com.marelco.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
+        String currentDBPath = "/data/" + "com.payvenue.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
         String backupDBPath = "Documents/" + DBInfo.DATABASE_NAME + ".db";
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -345,8 +340,4 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             e.printStackTrace();
         }
     }
-
-
-
-
 }

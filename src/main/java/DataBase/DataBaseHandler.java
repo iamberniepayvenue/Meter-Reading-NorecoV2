@@ -427,8 +427,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.UnderOverRecovery,account.getUnderOverRecovery());
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
-        long y = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
-        //Log.e(TAG,"saving is : " + y);
+        sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
+
         sql.close();
         db.close();
         return  1;
@@ -456,8 +456,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 + " ORDER BY RateSched,Classification ASC";
 
         Cursor c = sql.rawQuery(query, null);
-
-        Log.d("query", query);
 
         return c;
 
@@ -504,9 +502,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String sub = RouteCode.substring(0,3);
         String routeID = RouteCode.replace(sub,"");
 
-        Log.e(TAG,"subString: " + sub);
-        Log.e(TAG,"routeID: " + routeID);
-
         myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where " +
                 " ReadStatus = '" + mode + "' AND  RouteNo = '" + routeID + "' "; //
         //(TownCode||'-'||RouteNo)
@@ -518,8 +513,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         }
 
         Cursor c = sql.rawQuery(myQuery, null);
-
-        Log.e(TAG , " AccountList: " + myQuery);
 
 
         Account account = null;
@@ -556,20 +549,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public Cursor getAccountList(DataBaseHandler db, String mode) {
 
-        ArrayList<Account> myList = new ArrayList<>();
-
         SQLiteDatabase sql = db.getReadableDatabase();
         String myQuery = "";
-        Gson gson = new GsonBuilder().create();
 
         myQuery = "Select a.*,r.DistrictID From " + DBInfo.TBLACCOUNTINFO + " a Left Join " + DBInfo.TBLRoutes + " r On a.RouteNo = r.RouteID Where " +
                 "(a.ReadStatus = '" + mode + "') And UploadStatus = '"+ 0 +"'";
 
 
         Cursor c = sql.rawQuery(myQuery, null);
-
-        Log.e(TAG, "AccountList: " + myQuery);
-
 
         return c;
 
@@ -583,10 +570,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 + " Where " + DBInfo.Classification + " = '" + acctclass + "' Order By RateSegment";
         //+ DBInfo.RateSched + "='" + ratesched + "' AND "
         Cursor c = sql.rawQuery(myQuery, null);
-
-        Log.e(TAG , "RateSched : " + myQuery);
-
-
         return c;
     }
 
@@ -606,7 +589,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 a.getInitialReading(),a.getPrevReading(),a.getPrevFinalReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
                 a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount(),isStopMeter);
         String readingDetails = gson.toJson(readingDetailsModel);
-        Log.e(TAG,"readingDetails :" + readingDetails);
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.ReadingDetails, readingDetails);
         cv.put(DBInfo.EditCount, CommonFunc.toDigit(MainActivity.selectedAccount.getEditCount()) + 1);
@@ -628,18 +610,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public int searchNextAccountToRead(DataBaseHandler db, String routeno,String sequenceNumber,String _accountID) {
         SQLiteDatabase sql = db.getReadableDatabase();
-        int seq = Integer.valueOf(sequenceNumber);
         int tmpSequence = 0;
         String accountID = "";
         int ctr = 0;
         Cursor cursor;
         cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,"Unread"},null,null,DBInfo.SequenceNo + " ASC");
-
-//        if(tag == 0) {
-//            cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.SequenceNo+">? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,String.valueOf(seq),"Unread"},null,null,DBInfo.SequenceNo + " ASC");
-//        }else {
-//            cursor= sql.query(DBInfo.TBLACCOUNTINFO,null,DBInfo.RouteNo+"=? AND "+DBInfo.SequenceNo+"<? AND "+DBInfo.ReadStatus+"=?",new String[]{routeno,String.valueOf(seq),"Unread"},null,null,DBInfo.SequenceNo + " ASC");
-//        }
 
         if(cursor.getCount() > 0){
             while(cursor.moveToNext()) {
@@ -654,10 +629,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     if(sequence < tmpSequence) {
                         tmpSequence = sequence;
                         accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-                        Log.e(TAG,sequence +" === "+accountID);
                     }
                 }
-                //Log.e(TAG,tmpSequence +" === "+accountID);
                 ctr++;
             }
             getAccountDetails(db,accountID);
@@ -677,7 +650,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
         Cursor c = sql.rawQuery(myQuery, null);
 
-        Log.d(TAG + " Query", "" + myQuery);
         String details;
 
         Account account;
@@ -747,7 +719,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             myQuery = myQuery + " Where ReadStatus='" + status + "' AND RouteNo = '" + routeID + "' AND (AccountID Like '%" + searchKey + "%' OR MeterSerialNo Like '%" + searchKey + "%')";
         }
 
-        Log.e(TAG, "searchAccount: " + myQuery);
+
 
         Cursor c = sql.rawQuery(myQuery, null);
 
@@ -813,70 +785,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean IsDisCounted(DataBaseHandler db, String acctclass,
-                                String kwhreading, String policycode, String policytype) {
-
-        boolean result = false;
-
-        SQLiteDatabase sql = db.getReadableDatabase();
-
-        String mysquery = "Select DISTINCT PercentAmount From "
-                + DBInfo.TBLPolicy + " Where CustomerClass Like '" + acctclass
-                + "' AND PolicyCode='" + policycode + "' AND PolicyType='"
-                + policytype + "' AND (('" + kwhreading + "' >= MinkWh AND '"
-                + kwhreading + "' <= MaxkWh) OR (MinkWh = 0 AND MaxkWh=0))";
-        Cursor c = sql.rawQuery(mysquery,
-                null);
-
-
-        Log.d(TAG + "Policy", mysquery);
-
-        if (c.getCount() > 0) {
-            result = true;
-            return result;
-        }
-
-        c.close();
-        sql.close();
-        db.close();
-
-        return result;
-    }
-
-
-    //getPolicyPercentage(db,accountclass, consumption, "SC", "DISCOUNT");
-    public float getPolicyPercentage(DataBaseHandler db, String accountclass,
-                                     String consumption, String policycode, String policytype) {
-
-        float percentAmount = 0;
-
-        SQLiteDatabase sql = db.getReadableDatabase();
-
-        String mysquery = "Select DISTINCT PercentAmount From "
-                + DBInfo.TBLPolicy + " Where CustomerClass Like'" + accountclass
-                + "' AND PolicyCode='" + policycode + "' AND PolicyType='"
-                + policytype + "' AND (('" + consumption + "' >= MinkWh AND '"
-                + consumption + "' <= MaxkWh) OR (MinkWh = 0 AND MaxkWh=0)) Order By PercentAmount DESC Limit 1";
-
-        Cursor c = sql.rawQuery(mysquery,
-                null);
-
-        Log.d("Policy", mysquery);
-
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            do {
-                percentAmount = Float.parseFloat(c.getString(0)) / 100;
-            } while (c.moveToNext());
-        }
-
-        c.close();
-        sql.close();
-        db.close();
-
-        return percentAmount;
-
-    }
 
     public ArrayList<RateSegmentModel> getRateSegment(DataBaseHandler db) {
         ArrayList<RateSegmentModel> list = new ArrayList<>();
@@ -912,7 +820,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         ContentValues cv = new ContentValues();
-        //cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
         cv.put(DBInfo.UploadStatus, flag);
         sql.update(DBInfo.TBLACCOUNTINFO, cv, "_id=" + colid, null);
@@ -975,7 +882,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             strQuery += " Where UploadStatus='1'";
         }
 
-        Log.d(TAG,strQuery);
 
         Cursor c = sql.rawQuery(strQuery, null);
 
@@ -1000,7 +906,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         if(cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 count = cursor.getInt(cursor.getColumnIndex(DBInfo.EditCount));
-                Log.e(TAG,"editCount :"+count);
             }
         }
 

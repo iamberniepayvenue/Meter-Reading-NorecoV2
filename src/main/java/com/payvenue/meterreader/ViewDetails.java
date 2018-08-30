@@ -65,8 +65,6 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             myPurpose = b.getInt("purpose");
         }
 
-        Log.e(TAG,"sc :" + MainActivity.selectedAccount.getTotalSCDiscount());
-        Log.e(TAG,"sc :" + MainActivity.selectedAccount.getTotalLifeLineDiscount());
 
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
@@ -117,7 +115,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void displayButton() {
-        Log.e(TAG,"mode type: " + MainActivity.myMode);
+
         switch (MainActivity.myMode) {
 
             case MainActivity.Modes.MODE_1://2222
@@ -232,7 +230,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         if (id == R.id.btnEdit) {
             int editCount = db.getEditAttemp(db,MainActivity.selectedAccount.getAccountID());
-            Log.e(TAG,"editCount : "+editCount);
+
             if(editCount == 3) {
                 Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
             }else{

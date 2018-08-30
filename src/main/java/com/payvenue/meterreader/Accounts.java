@@ -353,13 +353,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
             componentAmount =  CommonFunc.toDigit(strComponentAmount); //CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
 
-//            if(rateSchedule.getRateComponent().equalsIgnoreCase("VAT on System Loss Charges")) {
-//                Log.e(TAG,"Amount :" + componentAmount);
-//                Log.e(TAG,"Rate :" + rateSchedule.getComponentRate());
-//                Log.e(TAG,"Multiplier :" + rateMultiplier);
-//                Log.e(TAG,"print :" + MainActivity.dec.format(componentAmount));
-//            }
-
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
                 scDiscountedAmount = scDiscountedAmount + componentAmount;
@@ -417,7 +410,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             totalComponent = totalComponent - overUnderRecovery;
         }
 
-        Log.e(TAG,"Pilferage: " + MainActivity.selectedAccount.getPilferagePenalty());
+
         billedAmount = totalComponent + CommonFunc.toDigit(MainActivity.selectedAccount.getPenalty())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPoleRental())
@@ -539,7 +532,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         }
 
 
-        Log.e(TAG,"PrevReading: " + MainActivity.selectedAccount.getInitialReading());
+
         float consume = CommonFunc.round(maxreadingvalue +
                 Double.parseDouble(MainActivity.selectedAccount.getReading()) -
                 Double.parseDouble(MainActivity.selectedAccount.getInitialReading()), 2);
@@ -705,7 +698,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             if (editText.getId() == R.id.mReading)
                 if (isOvalCheck) {
                     mReading.setSelection(i);
-                    Log.e(TAG,"oval checked: "+i);
                 }
         }
 
@@ -745,7 +737,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     break;
 
                 case R.id.mRemarks:
-                    //Log.e(TAG,"afterTextChanged (mRemarks)" + mRemarks.getText().toString());
                     strRemarks = mRemarks.getText().toString();
                     break;
             }
@@ -763,7 +754,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             switch (textView.getId()) {
 
                 case R.id.mReading:
-                    Log.e(TAG,"onEditorAction (mReading)");
                     if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_NEXT) {
 
 
@@ -841,7 +831,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     break;
                 case R.id.mRemarks:
                     strRemarks = mRemarks.getText().toString();
-                    //Log.e(TAG,"Remarks :" + mRemarks.getText().toString());
                     break;
             }
             return false;

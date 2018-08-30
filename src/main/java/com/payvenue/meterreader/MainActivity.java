@@ -28,7 +28,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -292,12 +291,8 @@ public class MainActivity extends AppCompatActivity {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_container, fragment).commit();
-                } else {
-                    // error in creating fragment
-
-                    Log.e("MainActivity", "Error in creating fragment");
-
                 }
+
                 return true;
             }
         });
@@ -305,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
         //endregion
 
         Fragment deffragment = new FragmentReading();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_container, deffragment).commit();
@@ -412,13 +406,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             case REQUEST_READ_PHONE_STATE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //reload my activity with permission granted or use the features what required the permission
-                    //finish();
-                    //startActivity(getIntent());
-
 
                 } else {
-                    // Toast.makeText(this, "The app was not allowed to get your phone state. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
                 }
             }
             case REQUEST_ACCESS_FINE_LOCATION: {
@@ -434,17 +423,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    // Toast.makeText(this, "The app was not allowed to get your location. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
                 }
             }
 
             case REQUEST_WRITE_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    //finish();
-                    //startActivity(getIntent());
                 } else {
-                    //Toast.makeText(this, "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -518,7 +503,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
 
-        super.onDestroy(); // Always call the superclass
+        super.onDestroy();
 
 
         android.os.Debug.stopMethodTracing();
@@ -538,7 +523,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
 
-        super.onPause(); // Always call the superclass method first
+        super.onPause();
 
     }
 
@@ -558,11 +543,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        //Toast.makeText(getBaseContext(), "Hi", Toast.LENGTH_SHORT).show();
-
         if (keyCode == KeyEvent.KEYCODE_MENU) {
 
-            //and so on...
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -572,15 +554,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void InitializedPrinter() {
 
-        Log.e(TAG,"InitializedPrinter");
-
-        //printer = MobilePrinter.getInstance(this);
-
-        // dialog
         dialog = new Dialog(new ContextThemeWrapper(this,
                 android.R.style.Theme_Holo_Light));
-        // dialog.setCancelable(false);
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.device_list);
@@ -641,8 +616,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //region WoosimPrinter
-
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -675,11 +648,9 @@ public class MainActivity extends AppCompatActivity {
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
-            Log.e(TAG,"Address: " + address);
 
             int reVal = printer.setConnection(address);
-            //int reVal = woosim.BTConnection(address,false);
-            Log.e(TAG," mDeviceClickListener: " + reVal );
+
             if (reVal == 1) {
                 Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
                 mIsConnected = true;
@@ -706,173 +677,4 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /**printer init*/
-
-//    public Handler acthandler = new Handler(){
-//
-//        public void handleMessage(Message msg){
-//            if(msg.what == 0x01){
-//                Log.e("+++Activity+++","******0x01");
-//                Object obj1 = msg.obj;
-//                cardData = (byte[]) obj1;
-//                ToastMessage();
-//            }else if(msg.what == 0x02){
-//                //ardData[msg.arg1] = (byte) msg.arg2;
-//                Log.e("+++Activity+++","MSRFAIL: [" + msg.arg1+"]: ");
-//            }else if(msg.what == 0x03){
-//                Log.e("+++Activity+++","******EOT");
-//            }else if(msg.what == 0x04){
-//                Log.e("+++Activity+++","******ETX");
-//            }else if(msg.what == 0x05){
-//                Log.e("+++Activity+++","******NACK");
-//            }
-//        }
-//    };
-
-//    private static Handler getHandler() {
-//
-//        boolean ishandler = (handler ==null) ? true : false;
-//        Log.e(TAG,"handler ? : " + ishandler);
-//        if (handler == null) {
-//             thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Log.e(TAG,"run thread");
-//                    Looper.prepare();
-//                    handler = new Handler() {
-//                        @Override
-//                        public void handleMessage(Message msg) {
-//                            if (msg.what == 0x01) {
-//                                Log.e("+++Activity+++", "******0x01");
-//                                Object obj1 = msg.obj;
-//                                cardData = (byte[]) obj1;
-//                                ToastMessage();
-//                            } else if (msg.what == 0x02) {
-//                                //ardData[msg.arg1] = (byte) msg.arg2;
-//                                Log.e("+++Activity+++", "MSRFAIL: [" + msg.arg1 + "]: ");
-//                            } else if (msg.what == 0x03) {
-//                                Log.e("+++Activity+++", "******EOT");
-//                            } else if (msg.what == 0x04) {
-//                                Log.e("+++Activity+++", "******ETX");
-//                            } else if (msg.what == 0x05) {
-//                                Log.e("+++Activity+++", "******NACK");
-//                            }
-//
-//                            Log.e(TAG, "handle message: " + msg.what);
-//
-//                        }
-//                    };
-//                    Looper.loop();
-//                }
-//            });
-//        }
-//        return handler;
-//    }
-//    private static void ToastMessage() {
-//
-//        byte[] track1Data = new byte[76];
-//        byte[] track2Data = new byte[37];
-//        byte[] track3Data = new byte[104];
-//
-//        int dataLength = woosim.extractCardData(cardData, extractdata);
-//        int i = 0, j = 0, k = 0;
-//        if (dataLength == 76) {
-//            String str = new String(extractdata);
-//        } else if (dataLength == 37) {
-//            String str = new String(extractdata);
-//
-//        } else if (dataLength == 104) {
-//            String str = new String(extractdata);
-//        }
-//        //1,2track
-//        else if (dataLength == 113) {
-//            Log.e("+++Activitiy+++", "dataLength: " + dataLength);
-//            for (i = 0; i < 113; i++) {
-//                if (i < 76) {
-//                    track1Data[i] = extractdata[i];
-//                } else {
-//                    track2Data[j++] = extractdata[i];
-//                }
-//            }
-//        }
-//        //1,3track
-//        else if (dataLength == 180) {
-//            for (i = 0; i < 180; i++) {
-//                if (i < 76) {
-//                    track1Data[i] = extractdata[i];
-//                } else {
-//                    track3Data[j++] = extractdata[i];
-//                }
-//            }
-//
-//
-//        }
-//        //2,3track
-//        else if (dataLength == 141) {
-//            for (i = 0; i < 141; i++) {
-//                if (i < 37) {
-//                    track2Data[i] = extractdata[i];
-//                } else {
-//                    track3Data[j++] = extractdata[i];
-//                }
-//            }
-//
-//        }
-//        //1,2,3track
-//        else if (dataLength == 217) {
-//            for (i = 0; i < 217; i++) {
-//                if (i < 76) {
-//                    track1Data[i] = extractdata[i];
-//                } else if (i >= 76 && i < 113) {
-//                    track2Data[j++] = extractdata[i];
-//                } else {
-//                    track3Data[k++] = extractdata[i];
-//                }
-//            }
-//
-//            String str1 = new String(track1Data);
-//            String str2 = new String(track2Data);
-//            String str3 = new String(track3Data);
-//
-//        }
-//
-//    }
-
-//    public static void printText(String leftText, String rightText) {
-//
-//        //byte[] init = {0x1b, '@'};
-//        //woosim.controlCommand(init, init.length);
-//
-//        Log.e(TAG,"printing: " + leftText + ":  " + rightText);
-//        boolean isWoosim = (woosim == null) ? true : false;
-//        Log.e(TAG,"MobilePrinter is null? " + isWoosim);
-//        int padding = LINE_CHARS - leftText.length() - rightText.length();
-//        String paddingChar = " ";
-//        for (int i = 0; i < padding; i++) {
-//            paddingChar = paddingChar.concat(" ");
-//        }
-//
-//        int pool = woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
-//        int print = woosim.printSpool(true);
-//
-//        Log.e(TAG,"save spool: " + pool);
-//        Log.e(TAG,"print spool: " + print);
-//
-//    }
-
-//    public static void printText(String text) {
-//
-//        Log.e(TAG,"printing: " + text );
-//        byte[] init = {0x1b, '@'};
-//        woosim.controlCommand(init, init.length);
-//
-//        int pool = woosim.saveSpool(EUC_KR, text, 0, false);
-//
-//        int print = woosim.printSpool(true);
-//
-//        Log.e(TAG,"byte" + init);
-//        Log.e(TAG,"byte_length" + init.length);
-//        Log.e(TAG,"save spool1: " + pool);
-//        Log.e(TAG,"print spool1: " + print);
-//    }
 }

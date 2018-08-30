@@ -194,10 +194,7 @@ public class CommonFunc {
     public static String calcComponentAmount(float rate, float consumption) {
         DecimalFormat df = new DecimalFormat(".####");
         float res = rate * consumption;
-        //Log.e("CommonFunc","---- : "+ res);
-        //Log.e("CommonFunc","----str : "+ df.format(res));
         return df.format(res);
-        //return round(rate * consumption, 4);
     }
 
     public static float calcComponentTax(String isvatable, float amount, float ratemultiplier) {
@@ -206,7 +203,6 @@ public class CommonFunc {
         if (isvatable.equalsIgnoreCase("Yes")) {
             ratemultiplier = ratemultiplier / 100;
             result = amount * ratemultiplier;
-            Log.d("Result", "" + result);
             return Math.round(result);
         }
         return result;
@@ -220,7 +216,6 @@ public class CommonFunc {
             Date strDate = sdf.parse(date);
             if(new Date().before(strDate)) {
                 v= true;
-                //Log.e("CommonFunc","" + new Date() + " == " + strDate);
             }
         } catch (ParseException e) {
             e.printStackTrace();

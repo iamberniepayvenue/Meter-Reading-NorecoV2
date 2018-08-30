@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +41,7 @@ public class AccountListActivity extends AppCompatActivity {
         // Grab the data to display on this activity
         Bundle b = getIntent().getExtras();
         routecode = b.getString("RouteCode");
-        Log.e(TAG,"routecode: " + routecode);
-        Log.e(TAG,"Current Page");
+
         listvew = (ListView) findViewById(R.id.list);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
