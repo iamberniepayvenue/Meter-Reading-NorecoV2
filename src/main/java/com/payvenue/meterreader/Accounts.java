@@ -412,10 +412,14 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
 
         billedAmount = totalComponent + CommonFunc.toDigit(MainActivity.selectedAccount.getPenalty())
-                + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling())
-                + CommonFunc.toDigit(MainActivity.selectedAccount.getPoleRental())
+                + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling());
+
+        /** Not included */
+        /*
+        + CommonFunc.toDigit(MainActivity.selectedAccount.getPoleRental())
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getSpaceRental()
-                + CommonFunc.toDigit(MainActivity.selectedAccount.getPilferagePenalty()));
+                        + CommonFunc.toDigit(MainActivity.selectedAccount.getPilferagePenalty())
+                */
 
 
         MainActivity.selectedAccount.setLatitude("" + MainActivity.gps.getLatitude());
@@ -899,9 +903,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         mp.printText("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount())+"\n");
         mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPenalty()))+"\n");
         mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
-        mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
-        mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
-        mp.printText("PilferagePenalty", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPilferagePenalty()))+"\n");
+        //mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
+        //mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
+        //mp.printText("PilferagePenalty", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPilferagePenalty()))+"\n");
         mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
         if(canAvailLifelineDiscount) {
             mp.printText("Life Line Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
