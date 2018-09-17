@@ -85,6 +85,11 @@ public class RateSchedule extends Fragment {
 				TextView txtratecomponent = new TextView(getActivity());
 				txtratecomponent.setText(cursor.getString(3));
 
+				TextView txtisLifeline = new TextView(getActivity());
+				txtisLifeline.setText(cursor.getString(cursor.getColumnIndex("IsLifeLine")));
+
+                TextView txtisSenior = new TextView(getActivity());
+                txtisSenior.setText(cursor.getString(cursor.getColumnIndex("IsSCDiscount")));
 
 				Float ratevalue = Float.parseFloat(cursor.getString(8));
 
@@ -97,6 +102,8 @@ public class RateSchedule extends Fragment {
 				row.addView(txtratesegment);
 				row.addView(txtratecomponent);
 				row.addView(txtamount);
+				row.addView(txtisLifeline);
+                row.addView(txtisSenior);
 
 				table.addView(row, lastTxtParams);
 

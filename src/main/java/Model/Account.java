@@ -69,9 +69,24 @@ public class Account extends Person {
     private String TotalLifeLineDiscount;
     private Object Averaging;
     private String OverUnderDiscount;
+    private String ActualConsumption;
+    private String CoreLoss;
 
+    public String getCoreLoss() {
+        return CoreLoss;
+    }
 
+    public void setCoreLoss(String coreLoss) {
+        CoreLoss = coreLoss;
+    }
 
+    public String getActualConsumption() {
+        return ActualConsumption;
+    }
+
+    public void setActualConsumption(String actualConsumption) {
+        ActualConsumption = actualConsumption;
+    }
 
     public String getDateRead() {
         return DateRead;

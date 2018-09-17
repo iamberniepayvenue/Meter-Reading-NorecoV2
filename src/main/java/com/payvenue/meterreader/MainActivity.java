@@ -13,8 +13,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.StrictMode;
@@ -28,6 +31,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -50,6 +54,10 @@ import com.payvenue.meterreader.Fragments.FragmentUpload;
 import com.payvenue.meterreader.Fragments.RatesFragment;
 import com.woosim.bt.WoosimPrinter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Set;
 
@@ -155,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.option);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         dec = new DecimalFormat("#,###,###,###.####");
         dec.setMinimumFractionDigits(4);
@@ -310,10 +317,53 @@ public class MainActivity extends AppCompatActivity {
         CheckPermissions();
         setReader();
         setConnSettings();
-
+        exportLogo();
 
     }//end of create
 
+    private void exportLogo() {
+        File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"Documents");
+        if(!f.exists()) {
+            f.mkdirs();
+        }
+
+        Bitmap bm = BitmapFactory.decodeResource( getResources(), R.drawable.woosim);
+        String extStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Documents";
+        FileOutputStream outStream;
+        File file = new File(extStorageDirectory, "woosim.bmp");
+        try {
+            outStream = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.e(TAG,"exportLogo: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"exportLogo: " + e.getMessage());
+        }
+
+
+//        File sd = Environment.getExternalStorageDirectory();
+//        File data = Environment.getDataDirectory();
+//        FileChannel source = null;
+//        FileChannel destination = null;
+//        String currentDBPath = "android.resource://"+ BuildConfig.APPLICATION_ID+ R.drawable.woosim;
+//        String backupDBPath = "Documents/noreco2_logo";
+//        File currentDB = new File(data, currentDBPath);
+//        File backupDB = new File(sd, backupDBPath);
+//        try {
+//            source = new FileInputStream(currentDB).getChannel();
+//            destination = new FileOutputStream(backupDB).getChannel();
+//            destination.transferFrom(source, 0, source.size());
+//            source.close();
+//            destination.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.e(TAG,"exportLogo: " + e.getMessage());
+//        }
+    }
 
     public static void setConnSettings() {
         Cursor conn_dr = db.getConnectionSettings(db);

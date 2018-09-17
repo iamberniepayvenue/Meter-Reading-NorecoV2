@@ -1,6 +1,10 @@
 package Utility;
 
+import android.net.Uri;
 import android.util.Log;
+
+import com.payvenue.meterreader.BuildConfig;
+import com.payvenue.meterreader.R;
 
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
@@ -72,46 +76,13 @@ public class CommonFunc {
                 if (res1.length() > 0) {
                     res1.deleteCharAt(res1.length() - 1);
                 }
-                //return res1.toString().toLowerCase();
-                return "0:fd:20:44:bb:55";
+                return res1.toString().toLowerCase();
+                //return "0:fd:20:44:bb:55";
             }
         } catch (Exception ex) {
         }
         return "";
     }
-
-
-//    public static String getMacAddress() {
-//        try {
-//            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-//            for (NetworkInterface nif : all) {
-//                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-//
-//                byte[] macBytes = nif.getHardwareAddress();
-//                if (macBytes == null) {
-//                    return "";
-//                }
-//
-//                StringBuilder res1 = new StringBuilder();
-//                for (byte b : macBytes) {
-//                    res1.append(Integer.toHexString(b & 0xFF) + ":");
-//                }
-//
-//                if (res1.length() > 0) {
-//                    res1.deleteCharAt(res1.length() - 1);
-//                }
-//                return res1.toString();
-//            }
-//        } catch (Exception ex) {
-//            //handle exception
-//        }
-//
-//        //return "00:24:06:f2:4f:6f";
-//        //return "1C:48:Ce:4C:22:A7";
-//        //return "No mac address";
-//        return "5C:70:A3:3C:F3:8C";//"00:24:06:f2:4f:5d";//"No mac address";
-//    }
-
 
     public static String getDateOnly() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -223,5 +194,71 @@ public class CommonFunc {
         }
 
         return v;
+    }
+
+    public static String changeDateFormat(String sourcedatevalue) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date sourceDate = null;
+        try {
+            sourceDate = dateFormat.parse(sourcedatevalue);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat targetFormat = new SimpleDateFormat("MM/dd/yyyy");
+        return targetFormat.format(sourceDate);
+    }
+
+    public static String monthAbrev(String billMonth) {
+        String sub = billMonth.substring(0,2);
+        String val = "";
+        Log.e("CommonFunc","sub: " + sub);
+        switch (sub) {
+            case "01":
+                val = "JAN";
+                break;
+            case "02":
+                val = "FEB";
+                break;
+            case "03":
+                val = "MAR";
+                break;
+            case "04":
+                val = "APR";
+                break;
+            case "05":
+                val = "MAY";
+                break;
+            case "06":
+                val = "JUN";
+                break;
+            case "07":
+                val = "JUL";
+                break;
+            case "08":
+                val = "AUG";
+                break;
+            case "09":
+                val = "SEPT";
+                break;
+            case "10":
+                val = "OCT";
+                break;
+            case "11":
+                val = "NOV";
+                break;
+            case "12":
+                val = "DEC";
+                break;
+        }
+        Log.e("CommonFunc","sub: " + val);
+        return val;
+    }
+
+    public static String getDrawablePath() {
+
+
+        Uri path = Uri.parse("android.resource://"+ BuildConfig.APPLICATION_ID+ R.drawable.woosim);
+        return path.toString();
     }
 }

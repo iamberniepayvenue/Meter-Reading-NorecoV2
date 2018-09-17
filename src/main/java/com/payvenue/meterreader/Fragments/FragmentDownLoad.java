@@ -39,6 +39,8 @@ import Model.Account;
 import Model.Reader;
 import Model.Route;
 import Utility.CommonFunc;
+import Utility.Constant;
+import Utility.MyPreferences;
 import Utility.NetworkUtil;
 
 public class FragmentDownLoad extends Fragment implements OnClickListener, IVolleyListener {
@@ -50,7 +52,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
 
     TextView lblMAC, mTvView;
-    String txtPort, txtHost, baseurl, dueDate;
+    EditText txtPort;
+    String strPort, txtHost, baseurl, dueDate;
     private String tagRoutid = "";
     Spinner spinHost;
     ProgressDialog mDialog;
@@ -62,11 +65,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     private int numberOfTimesDeletingTable = 0;
     private static final String TAG = "FragmentDownLoad";
     private boolean ifRouteExist = false;
+    private MyPreferences myPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        myPreferences = MyPreferences.getInstance(getActivity());
         DB = new DataBaseHandler(getActivity());
         ctx = this.getActivity();
         rootView = inflater.inflate(R.layout.fragment_download, container, false);
@@ -93,8 +98,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         initViews();
 
         lblMAC.setText(mac);
-
-
+        txtPort.setText(Constant.PORT);
         BtnDownLoad.setOnClickListener(this);
         BtnDelete.setOnClickListener(this);
 
@@ -123,6 +127,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         lblMAC = (TextView) rootView.findViewById(R.id.lblmac);
         BtnDownLoad = (Button) rootView.findViewById(R.id.btnDownLoad);
         BtnDelete = (Button) rootView.findViewById(R.id.button1);
+        txtPort = ((EditText) rootView.findViewById(R.id.txtport));
     }
 
     public void enableButton() {
@@ -137,6 +142,17 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
         MainActivity.db.errorDownLoad(MainActivity.db);
         numberOfTimesDeletingTable++;
+
+        myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,0);
+        myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,0);
+        myPreferences.savePrefInt(Constant.COOP_DETAILS_COUNT,0);
+        myPreferences.savePrefInt(Constant.RATE_COMPONENT_COUNT,0);
+        myPreferences.savePrefInt(Constant.RATE_SEGMENT_COUNT,0);
+        myPreferences.savePrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT,0);
+        myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,0);
+        myPreferences.savePrefInt(Constant.LIFELINE_POLICY_COUNT,0);
+        myPreferences.savePrefInt(Constant.RATE_CODE_COUNT,0);
+
         if (mDialog.isShowing()) {
             mDialog.dismiss();
         }
@@ -154,8 +170,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
             case R.id.btnDownLoad:
 
 
-                txtPort = ((EditText) rootView.findViewById(R.id.txtport)).getText().toString();
-                if (txtPort.trim().length() == 0) {//|| txtHost.trim().length() == 0
+                strPort = txtPort.getText().toString();
+                if (strPort.trim().length() == 0) {//|| txtHost.trim().length() == 0
                     Toast.makeText(ctx, "Please provide a Host and Port to download data.", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -170,10 +186,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     return;
                 }
 
-                baseurl =  txtHost + ":" + txtPort;
+                baseurl =  "http://" + txtHost + ":" + strPort;
                 String cmdRoute = baseurl + "?cmd=getRoutes&mac=" + mac;
                 MainActivity.webRequest.sendRequest(cmdRoute, "dlRoutes", "","","", this);
-
+                Log.e(TAG,"route: " + cmdRoute);
                 break;
 
             case R.id.button1:
@@ -209,7 +225,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                 String coopID = null, readerID = null, readerName = null,
                         accountIDFrom = null, accountIDTo = null,
-                        districtID = null, routeID = null, cmdAccounts;
+                        districtID = null, routeID = null, cmdAccounts,tagClass = null;
 
                 try {
                     JSONArray jsonArray = new JSONArray(response);
@@ -229,7 +245,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             accountIDFrom = obj.getString("AccountIDFrom");
                             accountIDTo = obj.getString("AccountIDTo");
                             dueDate = obj.getString("DueDate");
-
+                            tagClass = obj.getString("TagClass");
                             route = gson.fromJson(obj.toString(), Route.class);
 
                             /**check to avoid duplication of routes and accounts*/
@@ -239,22 +255,22 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 DB.saveRoute(DB, route);
                             }
 
-                            //DB.saveRoute(DB, route);
-                            Log.e(TAG,"Process 1");
                             cmdAccounts = baseurl + "?cmd=getaccounts&coopid=" + coopID
                                     + "&districtid=" + URLEncoder.encode(districtID)
                                     + "&routeid=" + URLEncoder.encode(routeID)
                                     + "&idFrom=" + accountIDFrom
                                     + "&idTo=" + accountIDTo
                                     + "&mac=" + mac
+                                    + "&tagclass=" + tagClass
                                     + "&offset=0";
                             String urlParam = baseurl + "?cmd=getaccounts&coopid=" + coopID
                                     + "&districtid=" + URLEncoder.encode(districtID)
                                     + "&routeid=" + URLEncoder.encode(routeID)
                                     + "&idFrom=" + accountIDFrom
                                     + "&idTo=" + accountIDTo
-                                    + "&mac=" + mac;
-
+                                    + "&mac=" + mac
+                                    + "&tagclass=" + tagClass;
+                            Log.e(TAG,urlParam);
                             if(numberOfRoutesPassing == 0) {
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
@@ -264,7 +280,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                         Reader reader = new Reader(coopID, readerID, readerName);
 
                         DB.syncSettingsInfo(DB, reader);
-                        DB.saveConnection(DB, coopID, txtHost, txtPort);
+                        DB.saveConnection(DB, coopID, txtHost, strPort);
 
                         MainActivity.setConnSettings();
 
@@ -293,29 +309,59 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                  1 params indicates that user click more times in download button
                  check the reader table from clouds where the IsDownloadStatus = 0
                  */
-                if(numberOfRoutesPassing == 0) {
+
+
                     String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=" + coopID + "&mac=" + mac;
                     String cmdCoopDetails = baseurl + "?cmd=getCoopDetails&coopid=" + coopID + "&mac=" + mac;
                     String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=" + coopID + "&mac=" + mac;
                     String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=" + coopID + "&mac=" + mac;
-                    String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac;
-                    String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac;
+                    String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
+                    String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
                     String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + coopID;
 
-                    MainActivity.webRequest.sendRequest(cmdRateCode, "Code", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdCoopDetails, "Coop", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdRateComponent, "Component", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdRateSegment, "Segment", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
-                    MainActivity.webRequest.sendRequest(cmdLifeLineDiscount, "LifeLineDiscount", "","","", this);
-                }
+                    if(myPreferences.getPrefInt(Constant.RATE_CODE_COUNT) == 0) {
+                        MainActivity.webRequest.sendRequest(cmdRateCode, "Code", "","","", this);
+                    }
+
+                    if(myPreferences.getPrefInt(Constant.COOP_DETAILS_COUNT) == 0) {
+                        MainActivity.webRequest.sendRequest(cmdCoopDetails, "Coop", "","","", this);
+                    }
+
+                    if(myPreferences.getPrefInt(Constant.RATE_COMPONENT_COUNT) == 0) {
+                        MainActivity.webRequest.sendRequest(cmdRateComponent, "Component", "","","", this);
+                    }
+
+                    if(myPreferences.getPrefInt(Constant.RATE_SEGMENT_COUNT) == 0) {
+                        MainActivity.webRequest.sendRequest(cmdRateSegment, "Segment", "","","", this);
+                    }
+
+                    if(tagClass == "1"){
+                        if (myPreferences.getPrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "", "", "", this);
+
+                        }
+
+                        if(myPreferences.getPrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
+                        }
+                    }else {
+                        if (myPreferences.getPrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "", "", "", this);
+                        }
+
+                        if(myPreferences.getPrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
+                        }
+                    }
+
+                    if(myPreferences.getPrefInt(Constant.LIFELINE_POLICY_COUNT) == 0) {
+                        MainActivity.webRequest.sendRequest(cmdLifeLineDiscount, "LifeLineDiscount", "","","", this);
+                    }
 
                 break;
 
 
             case "Code":
-                Log.e(TAG,"Process 3");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -331,7 +377,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                         String IsActive = obj.getString("IsActive");
 
 
-                        DB.saveRateCode(DB, CoopID, CoopName, RateCode, Details, IsActive);
+                        int save = DB.saveRateCode(DB, CoopID, CoopName, RateCode, Details, IsActive);
+                        myPreferences.savePrefInt(Constant.RATE_CODE_COUNT,save);
                     }
 
                 } catch (JSONException e) {
@@ -342,7 +389,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 break;
 
             case "Coop":
-                Log.e(TAG,"Process 4");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -364,9 +410,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String telno = obj.getString("TelNo");
                             String tinno = obj.getString("Extra2");
 
-                            DB.saveCoopDetails(DB, CoopID, CoopName, CoopType,
+                            int save = DB.saveCoopDetails(DB, CoopID, CoopName, CoopType,
                                     Classification, ReadingToDueDate, Acronym,
                                     BillingCode, businessaddress, telno, tinno);
+
+                            myPreferences.savePrefInt(Constant.COOP_DETAILS_COUNT,save);
                         }
                     }
                 } catch (JSONException e) {
@@ -376,7 +424,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 break;
 
             case "Component":
-                Log.e(TAG,"Process 5");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -391,7 +438,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String Details = obj.getString("Details");
                             String IsActive = obj.getString("IsActive");
                             String Notes1 = obj.getString("Notes1");
-                            DB.saveRateComponent(DB, CoopID, CoopName, RateComponent, Details, IsActive, Notes1);
+                            int save = DB.saveRateComponent(DB, CoopID, CoopName, RateComponent, Details, IsActive, Notes1);
+                            myPreferences.savePrefInt(Constant.RATE_COMPONENT_COUNT,save);
                         }
 
                     } else {
@@ -405,7 +453,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 break;
 
             case "Segment":
-                Log.e(TAG,"Process 6");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -425,9 +472,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String IsActive = obj.getString("IsActive");
 
 
-                            DB.saveRateSegment(DB, CoopID, RateSegmentCode,
+                            int save = DB.saveRateSegment(DB, CoopID, RateSegmentCode,
                                     RateSegmentName, Details, IsActive);
-
+                            myPreferences.savePrefInt(Constant.RATE_SEGMENT_COUNT,save);
                         }
 
                     } else {
@@ -442,7 +489,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 break;
 
             case "Policy":
-                Log.e(TAG,"Process 7");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -467,13 +513,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String PercentAmount = obj
                                     .getString("PercentAmount");
 
-
-                            DB.saveBillingPolicy(DB, CoopID, CoopName,
+                            int save = DB.saveBillingPolicy(DB, CoopID, CoopName,
                                     PolicyCode, PolicyName, PolicyType,
                                     CustomerClass, SubClass, MinkWh, MaxkWh,
                                     PercentAmount);
-
-
+                            if(CustomerClass.equalsIgnoreCase("Higher Voltage")) {
+                                myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,save);
+                            }else{
+                                myPreferences.savePrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT,save);
+                            }
                         }
 
                     } else {
@@ -486,7 +534,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 break;
 
             case "Schedule":
-                Log.e(TAG,"Process 8");
                 try {
 
                     JSONArray array = new JSONArray(response);
@@ -522,7 +569,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String extra1 = obj.getString("Extra1");
 
 
-                            DB.saveRateSchedule(DB, coopid, ratesegment,
+                            int save = DB.saveRateSchedule(DB, coopid, ratesegment,
                                     ratecomponent, printorder, classification,
                                     ratesched, rateschedtype, amount, vatrate,
                                     vatamount, franchisetaxrate,
@@ -531,6 +578,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     isfranchisetax, islocaltax, islifeline,
                                     isscdiscount, ratestatus, dateadded, extra1);
 
+                            if(classification.equalsIgnoreCase("Higher Voltage")) {
+                                myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,save);
+                            }else {
+                                myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,save);
+                            }
                         }
                     } else {
                         showToast("No Available Rates, Please check Rate Schedule");
@@ -551,7 +603,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String lifeLineKwh = object.getString(DBInfo.LifelineConsumption);
                             String percent = object.getString(DBInfo.LifelinePercentage);
                             String decimal = object.getString(DBInfo.LifelineInDecimal);
-                            DB.saveLifeLifePolicy(DB,lifeLineKwh,percent,decimal);
+                            int save = DB.saveLifeLifePolicy(DB,lifeLineKwh,percent,decimal);
+                            myPreferences.savePrefInt(Constant.LIFELINE_POLICY_COUNT,save);
                         }
                     }
                 } catch (JSONException e) {
@@ -562,17 +615,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
             case "Accounts":
                 int DownloadCount;
                 int DownloadSave = 0;
-                Log.e(TAG,"Process 2");
                 try {
 
                     Account account;
 
                     JSONArray array = new JSONArray(response);
-                    Log.e(TAG,"routeID: "+params);
                     if (array.length() > 0) {
 
                         DownloadCount = array.length();
-                        Log.e(TAG,"account-size: "+DownloadCount);
                         JSONObject details;
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
@@ -582,10 +632,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 details.put("BillMonth","");
                                 details.put("PrevBilling", obj.getString("PrevBilling"));
                                 details.put("Address", obj.getString("Address"));
-                                //details.put("SeniorCitizenID", obj.getString("SeniorCitizenID"));
                                 details.put("SeniorCitizenStatus", obj.getString("SeniorCitizenStatus"));
                                 details.put("SCExpiryDate", obj.getString("SCExpiryDate"));
-                                //details.put("Disconnection", obj.getString("Disconnection"));
                                 details.put("Penalty", obj.getString("Penalty"));
                                 details.put("RateSched", obj.getString("RateSched"));
                                 details.put("Multiplier", obj.getString("Multiplier"));
@@ -601,19 +649,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 details.put("Consume", "0");
                                 details.put("Reading", "0");
                                 details.put("Remarks", "");
-                                //details.put("Averaging",obj.getString("Averaging").toString());
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 account.setDueDate(param2);
                                 DownloadSave = DownloadSave + DB.saveAccount(DB, account, details.toString(),params);
-                                Log.e(TAG,"save-count: "+DownloadSave);
                                 if (DownloadSave == DownloadCount) {
                                     long offset = DB.getAccountSaveCount(DB,params);
-                                    Log.e(TAG,"offset :" + offset + " routeid : "+params );
-                                    //Log.e(TAG,"accountsave-size: "+DownloadSave);
                                     String url = param3 + "&offset=" + offset;
-                                    Log.e(TAG,"fetch account :" + url);
                                     /**
-                                     * numberOfRoutesPassing means counter for failed request
+                                     * numberOfRoutesPassing means counter of failing request
                                      * */
                                     if(numberOfRoutesPassing == 0) {
                                         MainActivity.webRequest.sendRequest(url, "Accounts", params, dueDate, param3, this);
@@ -621,7 +664,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     }
                                 }
                             }else{
-                                numberOfAccountSavingPerRoutes++;
+                                int accountCount = DB.getDataCountThisRoute(DB,params);
+                                if(accountCount > 0) {
+                                    numberOfAccountSavingPerRoutes++;
+                                }
                             }
                         }
                     } else {

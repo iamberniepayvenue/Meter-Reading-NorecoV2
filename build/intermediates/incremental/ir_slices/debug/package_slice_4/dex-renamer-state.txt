@@ -1,4 +1,0 @@
-#Wed Jul 18 09:39:59 PHT 2018
-base.0=/Users/johnrychristianpaduhilao/Desktop/Android App Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/debug/4
-path.0=classes.dex
-renamed.0=classes.dex

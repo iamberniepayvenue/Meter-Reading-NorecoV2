@@ -254,18 +254,20 @@ public class FragmentFound extends Fragment {
 
             try {
                 myobj.put("MeterSerialNo", c.getString(c.getColumnIndex("MeterSerialNo")));
-                myobj.put("Reading", c.getString(c.getColumnIndex("Reading")));
+                myobj.put("NewReading", c.getString(c.getColumnIndex("Reading")));
                 myobj.put("DateRead", c.getString(c.getColumnIndex("DateRead")));
                 myobj.put("Remarks", c.getString(c.getColumnIndex("Remarks")));
-                myobj.put("Coordinates", c.getString(c.getColumnIndex("Coordinates")));
+                myobj.put("Latitude", c.getString(c.getColumnIndex("Latitude")));
+                myobj.put("Longitude", c.getString(c.getColumnIndex("Longitude")));
                 myobj.put("ReaderID", MainActivity.reader.getReaderID());
+                myobj.put("ReadStatus","Found");
                 myArray.put(myobj);
 
                 columnid = c.getString(0);
 
                 JSONObject FinalData = new JSONObject();
                 try {
-                    FinalData.put("FoundMeter", myArray);
+                    FinalData.put("readAccounts", myArray);
                     FinalData.put("columnid", columnid);
 
                 } catch (JSONException e) {
@@ -321,12 +323,12 @@ public class FragmentFound extends Fragment {
             String json = myData.toString();
 
 
-            final StringBuilder request = new StringBuilder(MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadFoundMeter");
+            final StringBuilder request = new StringBuilder(MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData");
             request.append("&data=").append(URLEncoder.encode(json));
             request.append("&coopid=").append(MainActivity.connSettings.getCoopID());
             request.append("&mac=").append(MainActivity.macAddress);
 
-            Log.d(TAG,"url : " + request.toString());
+            Log.e(TAG,"Upload Found meters : " + request.toString());
 
             String uploadResult;
 

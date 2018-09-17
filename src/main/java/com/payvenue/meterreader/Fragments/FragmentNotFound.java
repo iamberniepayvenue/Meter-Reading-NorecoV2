@@ -128,7 +128,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, MainActivity.myMode);
         String columnid = "";
 
-        String strRequest = MainActivity.connSettings.getHost() + ":"
+        String strRequest = "http://" + MainActivity.connSettings.getHost() + ":"
                 + MainActivity.connSettings.getPort()
                 + "?cmd=uploadData"
                 + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
@@ -137,6 +137,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             Toast.makeText(getActivity(), "No Data to upload.", Toast.LENGTH_SHORT).show();
             return;
         }
+
         mDialog.setMessage("Uploading data.Please wait.");
         mDialog.show();
         JSONArray resultSet;
@@ -194,14 +195,13 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             }
 
 
-            Log.e(TAG, "Data: " + FinalData.toString());
+            Log.e(TAG, "Upload Not Found " + FinalData.toString());
 
-            strRequest = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
+            String url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
 
-            MainActivity.webRequest.sendRequest(strRequest, "NotFound", FinalData.toString(),"","", this);
+            MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
 
         }
-
 
     }
 

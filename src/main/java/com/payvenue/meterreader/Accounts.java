@@ -2,10 +2,16 @@ package com.payvenue.meterreader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +29,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.payvenue.meterreader.Camera.ZBarScannerActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +46,9 @@ import Model.RateSegmentModel;
 import Model.Rates;
 import Utility.CommonFunc;
 import Utility.MobilePrinter;
+import ZBar.ZBarConstants;
+
+import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
 
 
 /**
@@ -63,6 +74,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             scDiscountRate, lifelineDiscountRate, scSubsidyAmount, scDiscountedAmount,
             lifelineDiscountAmount, DistributionVat, totaldistributionvat, totalLifelineDiscount,
             totalVat, totalComponent, billedAmount;
+    float totalSeniorDiscount;
     float overUnderRecovery = 0;
 
     boolean canAvailLifelineDiscount = false, canAvailSCDiscount = false;
@@ -76,7 +88,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
     public DataBaseHandler db;
     InputMethodManager imm;
 
-
+    private Snackbar snackbar;
+    private String initialRead;
+    private String coreLoss;
 
 
     @Override
@@ -112,6 +126,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
         Log.e(TAG,"Current Page");
     }
+
+
 
 
     //region Functions
@@ -173,9 +189,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
     public void calculateBill() {
 
-
-        //Toast.makeText(mcontext, MainActivity.selectedAccount.getReading() + "===" + MainActivity.selectedAccount.getInitialReading() + "=====" + MainActivity.selectedAccount.getConsume(), Toast.LENGTH_SHORT).show();
-
         /**
          *
          * Algorithm for Generation of Bill
@@ -198,10 +211,23 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
          *       If Account can avail the SC Discount we dont dont calculate for the SCS(Senior Citizen Subsidy)
          * .
          *
+         *
+         * if 16 - 20 kwh for senior seniordiscount = (totallifeline - (totalLifeLine * lifelinerate)) * .05
          */
 
+        float totalLifelineComponentAmount = 0;
+        String a_class = MainActivity.selectedAccount.getAccountClassification();
+        if(a_class.contains("Voltage") || a_class.contains("voltage")) {
+            a_class = a_class.replace(" "," ");
+        }
+
+        if(a_class.equalsIgnoreCase(a_class.toUpperCase())) {
+            a_class = a_class.substring(0,1).toUpperCase() + a_class.substring(1).toLowerCase();
+            Log.e(TAG,"calculateBill: "+ a_class);
+        }
+
+
         MainActivity.selectedAccount.setRemarks(strRemarks);
-        Log.e(TAG,"remar : " +MainActivity.selectedAccount.getRemarks() );
 
         if (MainActivity.selectedAccount.getConsume().equals("0") && !MainActivity.selectedAccount.getRemarks().isEmpty()) {
             MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
@@ -213,33 +239,24 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             return;
         }
 
+        /** initialRead is Previous Reading more details in checkingReading method*/
+        if(initialRead.equalsIgnoreCase("") || initialRead.equalsIgnoreCase(".")) {
+            initialRead = "0";
+        }
 
-        //getLastReadingDate()
-        Log.e(TAG,"Date Read : " + MainActivity.selectedAccount.getDateRead());
-//        if (MainActivity.selectedAccount.getDateRead() != null) {
-////            if (!CommonFunc.isLegalDate(MainActivity.selectedAccount.getDateRead())) {
-////
-////                showToast("Last Reading Date is not valid Date.");
-////                return;
-////            }
-////        } else {
-////            showToast("Last Reading Date is blank.");
-////            return;
-////        }
-
-        if (Float.parseFloat(MainActivity.selectedAccount.getInitialReading()) < 0) {
+        if (Float.parseFloat(initialRead) < 0) {
             showToast("Previous Reading is invalid.");
             return;
         }
 
-        if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
-            showToast("Cant generate billing for a Higher Voltage classification.");
-            return;
-        }
+//        if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
+//            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
+//            showToast("Cant generate billing for a Higher Voltage classification.");
+//            return;
+//        }
 
         /**Check Senior Status Discount*/
-        if (MainActivity.selectedAccount.getSeniorCitizenStatus().equals("1") && MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Residential") ) {
+        if (MainActivity.selectedAccount.getSeniorCitizenStatus().equals("1") && a_class.equalsIgnoreCase("Residential") ) {
             Log.e(TAG,"SC expiry date: " + MainActivity.selectedAccount.getSCExpiryDate());
                 if(CommonFunc.isValidDate(MainActivity.selectedAccount.getSCExpiryDate())) {
                     Log.e(TAG,"SC DATE is Valid");
@@ -255,21 +272,12 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 }
         }
 
-        /**Check Lifeliner*/
-        if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Residential")) {
-            String consumption = MainActivity.selectedAccount.getConsume();
-            lifelineDiscountRate = getLifeLinerPercentage(Float.valueOf(consumption));
-            if(lifelineDiscountRate > 0) {
-                canAvailLifelineDiscount = true;
-            }
 
-            Log.e(TAG,"Lifeline Discount :"+lifelineDiscountRate);
-        }
 
 
         Cursor cursor = MainActivity.db.getRateSched(MainActivity.db,
                 MainActivity.selectedAccount.getRateSched(),
-                MainActivity.selectedAccount.getAccountClassification());
+                a_class);
 
         if (cursor.getCount() <= 0) {
             showToast("No Rateschedule Created for this Classification");
@@ -282,11 +290,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         billMonth = CommonFunc.getBillMonth(); //+ "-" + MainActivity.selectedAccount.getRouteNo() + "-" + MainActivity.selectedAccount.getAccountID();
         MainActivity.selectedAccount.setBillMonth(billMonth);
         MainActivity.selectedAccount.setDateRead(CommonFunc.getDateOnly());
-        String strMultiplier = MainActivity.selectedAccount.getMultiplier();
-        float flMultiplier = Float.parseFloat(strMultiplier);
+
         String strConsume = MainActivity.selectedAccount.getConsume();
         float flConsume = Float.parseFloat(strConsume);
-        rateMultiplier = flConsume * flMultiplier;
+        rateMultiplier = flConsume;
+
 
         /**STOP METER*/
         if(isStopCheck) {
@@ -306,7 +314,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     finalJson = finalArray.getJSONObject(i);
                     String consumption = finalJson.getString("Consumption");
                     flConsumption = flConsumption + Float.valueOf(consumption);
-
                 }
 
                 if(finalArray.length() == 3) {
@@ -327,12 +334,26 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
         }
 
+
+        /**Check Lifeliner*/
+        if (a_class.equalsIgnoreCase("Residential")) {
+
+            lifelineDiscountRate = getLifeLinerPercentage(rateMultiplier);
+            if(lifelineDiscountRate > 0) {
+                canAvailLifelineDiscount = true;
+            }
+
+            Log.e(TAG,"Lifeline Discount :"+lifelineDiscountRate);
+        }
+
+
+
         while (cursor.moveToNext()) {
             String VATRate = cursor.getString(cursor.getColumnIndex("VATRate")); //componentVatRate
             String FranchiseTaxRate = cursor.getString(cursor.getColumnIndex("FranchiseTaxRate"));
             String LocalTaxRate = cursor.getString(cursor.getColumnIndex("LocalTaxRate"));
             String Amount = cursor.getString(cursor.getColumnIndex("Amount"));
-
+            String printOrder = cursor.getString(cursor.getColumnIndex("PrintOrder"));
                     rateSchedule = new RateSchedule(
                     cursor.getString(cursor.getColumnIndex("RateSegment")),
                     cursor.getString(cursor.getColumnIndex("RateComponent")),//Rate Code
@@ -350,22 +371,53 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     Float.valueOf(Amount),//componentRate
                     cursor.getString(cursor.getColumnIndex("IsOverUnder")));
 
-                    String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
-            componentAmount =  CommonFunc.toDigit(strComponentAmount); //CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
 
+
+            /** Lower Voltage and Higher Voltage
+             *
+             * FIXED
+             *  Supply Retail Customer Charge
+             *  Supply System Charge
+             *  Metering Retail Customer Charge
+             * */
+            int fixed = 0;
+            if(a_class.equalsIgnoreCase("Lower Voltage") || a_class.equalsIgnoreCase("Higher Voltage")){
+                if(rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge")
+                        || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge")
+                        || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                    componentAmount =  rateSchedule.getComponentRate();
+                    fixed = 1;
+                }
+            }else{
+                if(rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                    componentAmount =  rateSchedule.getComponentRate();
+                    fixed = 1;
+                }
+            }
+
+            if(fixed == 0) {
+                String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
+                componentAmount =  CommonFunc.toDigit(strComponentAmount);
+            }
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
-                scDiscountedAmount = scDiscountedAmount + componentAmount;
+                scDiscountedAmount = componentAmount * scPercentage;
+                Log.e(TAG,"senior :" + scDiscountedAmount);
+                totalSeniorDiscount = totalSeniorDiscount + scDiscountedAmount;
             }
 
             if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().equalsIgnoreCase("Yes")) {
                 lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
-                totalLifelineDiscount = CommonFunc.round(totalLifelineDiscount + lifelineDiscountAmount,2);
+                totalLifelineComponentAmount = totalLifelineComponentAmount + componentAmount;
+                totalLifelineDiscount = totalLifelineDiscount + lifelineDiscountAmount;
+                Log.e(TAG,"lifeline :("+componentAmount+" * "+ lifelineDiscountRate +") = " + lifelineDiscountAmount);
+                Log.e(TAG,"total :("+totalLifelineComponentAmount);
+                Log.e(TAG,"totaldiscount :("+totalLifelineDiscount);
             }
 
-            if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
+            if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
                     rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
-                overUnderRecovery = overUnderRecovery + componentAmount;//rateSchedule.getComponentRate();
+
                 componentAmount = 0;
                 componentvat = 0;
                 componentftax = 0;
@@ -378,40 +430,68 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 componentftax = 0;
                 componentltax = 0;
             }
-            if ((canAvailSCDiscount|| scInvalidDate || isSCOverPolicy) && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+
+            if(canAvailLifelineDiscount && (rateSchedule.getRateCode().equalsIgnoreCase("ICCS")
+                    || rateSchedule.getRateCode().equalsIgnoreCase("OLRA")
+                  || rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                componentAmount = 0;
+            }
+
+            if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                //rateSchedule.getRateCode().equalsIgnoreCase("SOL"))
                 componentAmount = 0;
                 componentvat = 0;
                 componentftax = 0;
                 componentltax = 0;
             }
 
+            if (canAvailSCDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                componentAmount = 0;
+                componentvat = 0;
+                componentftax = 0;
+                componentltax = 0;
+            }
+
+
+
+
+
+
             totalComponent = totalComponent + componentAmount;
             myRates.add(new Rates(rateSchedule.getRateSegment(),
                     rateSchedule.getRateCode(),
                     rateSchedule.getRateComponent(),
-                    rateSchedule.getComponentRate(),rateSchedule.getIsLifeline(),rateSchedule.getIsSCDiscount(), componentAmount, componentvat, componentftax, componentltax));
+                    Amount,rateSchedule.getIsLifeline(),rateSchedule.getIsSCDiscount(), componentAmount, componentvat, componentftax, componentltax));
 
 
         }/**end of loop*/
 
 
+        if(canAvailSCDiscount) {
+            int kwh = (int)Math.ceil(rateMultiplier);
 
-        if (canAvailSCDiscount) {
-            scDiscountedAmount = CommonFunc.round(scDiscountedAmount * scPercentage,2);
+            if (kwh >= 1 && kwh <= 20) {
+                totalSeniorDiscount = (totalLifelineComponentAmount - totalLifelineDiscount) * scPercentage;
+            }
+            /**
+             *  Formula for senior if 1 to 20
+             * seniordiscount = (totallifeline - (totalLifeLine * lifelinerate)) * .05
+             *
+             *
+            **/
         }
+        Log.e(TAG,"senior: " + totalSeniorDiscount);
 
-        float vtax = (float) .12;
         float currentDue = totalComponent;
-        totalComponent = CommonFunc.round(totalComponent,2)  - (totalLifelineDiscount + scDiscountedAmount);
-
-        if(overUnderRecovery < 0) {
-            totalComponent = totalComponent + overUnderRecovery;
-        } else{
-            totalComponent = totalComponent - overUnderRecovery;
+        totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);//CommonFunc.round(totalComponent,2)  - (totalLifelineDiscount + totalSeniorDiscount);
+        String penalty = MainActivity.selectedAccount.getPenalty();
+        if(!penalty.equalsIgnoreCase("0")) {
+            penalty = "0";
         }
 
 
-        billedAmount = totalComponent + CommonFunc.toDigit(MainActivity.selectedAccount.getPenalty())
+
+        billedAmount = totalComponent + CommonFunc.toDigit(penalty)
                 + CommonFunc.toDigit(MainActivity.selectedAccount.getPrevBilling());
 
         /** Not included */
@@ -422,16 +502,20 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                 */
 
 
+
+
         MainActivity.selectedAccount.setLatitude("" + MainActivity.gps.getLatitude());
         MainActivity.selectedAccount.setLongitude("" + MainActivity.gps.getLongitude());
-        MainActivity.selectedAccount.setTotalSCDiscount(String.valueOf(scDiscountedAmount));
+        MainActivity.selectedAccount.setTotalSCDiscount(String.valueOf(totalSeniorDiscount));
         MainActivity.selectedAccount.setTotalLifeLineDiscount(String.valueOf(totalLifelineDiscount));
         MainActivity.selectedAccount.setOverUnderDiscount(String.valueOf(overUnderRecovery));
         billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(MainActivity.selectedAccount.getAdvancePayment()),2);
-        mBill = new Bill(myRates, CommonFunc.round(currentDue,2), billedAmount);
+        mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount);
         MainActivity.selectedAccount.setBill(mBill);
         MainActivity.db.updateReadAccount(MainActivity.db, "Read",isStopCheck);
     }
+
+
 
     private float getLifeLinerPercentage(float consume) {
         float value = 0f;
@@ -524,22 +608,28 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
     public void checkReading() {
 
-
         MainActivity.selectedAccount.setReading(strReading);
 
-        //check if Higher Voltage
+        initialRead = MainActivity.selectedAccount.getInitialReading();
+        if(initialRead.equalsIgnoreCase("") || initialRead.equalsIgnoreCase(".")) {
+            initialRead = "0";
+        }
+
+//        coreLoss = MainActivity.selectedAccount.getCoreLoss();
+//        if(coreLoss.equalsIgnoreCase("") || coreLoss.equalsIgnoreCase(".")) {
+//            coreLoss = "0";
+//        }
+
+        float consume = CommonFunc.round(maxreadingvalue +
+                Double.parseDouble(MainActivity.selectedAccount.getReading()) -
+                Double.parseDouble(initialRead), 2);
+
         if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
             if (strDemands.isEmpty()) {
                 showToast("Please add Demand Reading");
                 return;
             }
         }
-
-
-
-        float consume = CommonFunc.round(maxreadingvalue +
-                Double.parseDouble(MainActivity.selectedAccount.getReading()) -
-                Double.parseDouble(MainActivity.selectedAccount.getInitialReading()), 2);
 
         if (consume < 0) {
             showToast("Invalid Reading. Current reading is less than the Previous Reading");
@@ -566,21 +656,21 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                     flConsumption = flConsumption + Float.valueOf(consumption);
                 }
 
-                if(finalArray.length() == 3) {
-                    consume = flConsumption / 3;
-                }else{
-                    consume = flConsumption;
-                }
+                consume = finalArray.length() == 3 ? flConsumption/3 : flConsumption;
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e(TAG,"isStopCheck "+ e.getMessage());
                 Toast.makeText(getApplicationContext(),"No availbale past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        MainActivity.selectedAccount.setConsume(String.valueOf(consume));
+
+        float kwh = consume * Float.valueOf(MainActivity.selectedAccount.getMultiplier()); // + coreLoss
+        Log.e(TAG,"new Reading : " + strReading);
+        Log.e(TAG,"consumption * multiplier: " + kwh);
+        MainActivity.selectedAccount.setConsume(String.valueOf(kwh));
+        MainActivity.selectedAccount.setActualConsumption(String.valueOf(consume));
         displayButtons();
 
     }
@@ -598,11 +688,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
     //region Triggers
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_settings).setVisible(false);
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.action_settings).setVisible(false);
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -617,10 +707,50 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
             // return true;
             this.finish();
         }
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.menu_scanner) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "You declined to allow the app to access your camera", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+
+            if (isCameraAvailable()) {
+                Intent intent = new Intent(this, ZBarScannerActivity.class);
+                startActivityForResult(intent, ZBAR_SCANNER_REQUEST);
+            } else {
+                Toast.makeText(this, "Rear Facing Camera Unavailable",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isCameraAvailable() {
+        PackageManager pm = this.getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ZBAR_SCANNER_REQUEST:
+                if (resultCode == this.RESULT_OK) {
+
+                    ToneGenerator toneG = new ToneGenerator(
+                            AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+
+                    if (data != null) {
+                        mSerial.setText(data
+                                .getStringExtra(ZBarConstants.SCAN_RESULT));
+                        db.updateSerialNumber(db,MainActivity.selectedAccount.getAccountID(),data
+                                .getStringExtra(ZBarConstants.SCAN_RESULT));
+                    }
+                }
+
+                break;
+        }
     }
 
     @Override
@@ -843,27 +973,56 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
 
     public void preparePrint() {
-        List<Rates> mRates;
-        Bill mBill = MainActivity.selectedAccount.getBill();
-        Rates rates;
-        mRates = mBill.getRates();
-        MobilePrinter mp = MobilePrinter.getInstance(this);
-        mp.printText("           Negros Oriental II Electric Cooperative\n");
-        mp.printText("                  Real St., Dumaguete City\n");
-        mp.printText("                         (NORECO2)\n");
-        mp.printText("                   STATEMENT OF ACCOUNT\n");
-        mp.printText("================================================================\n");
-        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + MainActivity.selectedAccount.getAccountClassification()+"\n");
-        mp.printText("Account No:" + MainActivity.selectedAccount.getAccountID(), "BillMonth:" + MainActivity.selectedAccount.getBillMonth()+"\n");
-        mp.printText("Account Name:"+MainActivity.selectedAccount.getLastName()+"\n");
+
+        ArrayList<String> vatListCode = new ArrayList<>();
+        ArrayList<String> vatListValue = new ArrayList<>();
+        String name = MainActivity.selectedAccount.getLastName();
+        if(MainActivity.selectedAccount.getFirstName().equalsIgnoreCase(".")
+                || MainActivity.selectedAccount.getMiddleName().equalsIgnoreCase(".")){
+            name = MainActivity.selectedAccount.getLastName() + ", " + MainActivity.selectedAccount.getFirstName()
+                    + MainActivity.selectedAccount.getMiddleName();
+        }
+
+        String penalty = MainActivity.selectedAccount.getPenalty();
+        if(penalty.equalsIgnoreCase("-") || penalty.equalsIgnoreCase(".")) {
+            penalty = "0";
+        }
+
+        try{
+            List<Rates> mRates;
+            Bill mBill = MainActivity.selectedAccount.getBill();
+            mRates = mBill.getRates();
+            MobilePrinter mp = MobilePrinter.getInstance(this);
+            String a_class = MainActivity.selectedAccount.getAccountClassification();
+            if(a_class.equalsIgnoreCase("RESIDENTIAL") || a_class.equalsIgnoreCase("Residential")) {
+                a_class = "Res";
+            } else if(a_class.equalsIgnoreCase("Lower Voltage")) {
+                a_class = "LowerV";
+            }else if (a_class.equalsIgnoreCase("Higher Voltage")) {
+                a_class = "HigherV";
+            }
+
+            mp.printText("           Negros Oriental II Electric Cooperative\n");
+            mp.printText("                  Real St., Dumaguete City\n");
+            mp.printText("                         (NORECO2)\n");
+            mp.printText("                   STATEMENT OF ACCOUNT\n");
+            mp.printText("================================================================\n");
+            mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class +"\n");
+            mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
+            mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
+            mp.printTextBoldRight("Account Name:",name+"\n");
         mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
-        mp.printText("Period Covered: "+MainActivity.selectedAccount.getLastReadingDate() + " to " + MainActivity.selectedAccount.getDateRead()+"\n");
+        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
         mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
+        mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
+        mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date              Prev                 Pres              KWH"+"\n");
-        //mp.printText(MainActivity.selectedAccount.getDateRead() + "         " + MainActivity.selectedAccount.getPrevReading() + "              " + MainActivity.selectedAccount.getReading() + "              " + MainActivity.selectedAccount.getConsume()+"\n");
-        mp.printText(MainActivity.selectedAccount.getDateRead(),MainActivity.selectedAccount.getPrevReading(),MainActivity.selectedAccount.getReading(),MainActivity.selectedAccount.getConsume()+"\n");
+        mp.printText(MainActivity.selectedAccount.getDateRead()
+                + "         " + initialRead
+                + "                " + MainActivity.selectedAccount.getReading()
+                + "          " + MainActivity.selectedAccount.getConsume()+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
 
         /**
@@ -872,13 +1031,15 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
          * */
 
         if(listRateSegment.size() > 0){
-            //int s = 0; s < listRateSegment.size(); s++
             for (RateSegmentModel seg: listRateSegment){
                 String segmentName = seg.getRateSegmentName();
                 String rateSegmentCode =  seg.getRateSegmentCode();
 
                 /** print here */
-                mp.printText(segmentName+"\n");
+                if(!segmentName.equalsIgnoreCase("FIT-ALL")) {
+                    mp.printText(segmentName+"\n");
+                }
+
 
                 for(Rates r: mRates) {
                     if(r.getRateSegment().equals(rateSegmentCode)) {
@@ -892,36 +1053,61 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
                         }
                         String rightText = rateAmount + paddingChar + amount;
 
+                        if(codeName.contains("VAT on")) {
+                            vatListCode.add(codeName);
+                            vatListValue.add(rightText);
+                        }
+
                         /** print here */
-                        mp.printText(codeName,rightText+"\n");
+                        if(codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
+
+                            if(canAvailLifelineDiscount) {
+                                mp.printText("  Lifeline Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
+                            }else{
+                                mp.printText("  "+codeName,rightText+"\n");
+                            }
+                        }
+
+                        if(codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
+                            if(canAvailSCDiscount) {
+                                mp.printText("  Senior Citizens Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
+                            }else{
+                                mp.printText("  "+codeName,rightText+"\n");
+                            }
+                        }
+
+
+                        if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") &&
+                           !codeName.equalsIgnoreCase("Senior Citizens Subsidy") &&
+                           !codeName.contains("VAT on")) {
+                            mp.printText("  "+codeName,rightText+"\n");
+                        }
+
                     }
                 }
             } // end loop
         }
 
+        mp.printText("VAT Charges"+"\n");
+        for(int i = 0; i < vatListCode.size();i++) {
+            mp.printText("  "+vatListCode.get(i).toString(),vatListValue.get(i).toString()+"\n");
+        }
 
-        mp.printText("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount())+"\n");
-        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPenalty()))+"\n");
+        mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
+        mp.printText("",""+"\n");
+        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty))+"\n");
         mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
-        //mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
-        //mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
-        //mp.printText("PilferagePenalty", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPilferagePenalty()))+"\n");
         mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
-        if(canAvailLifelineDiscount) {
-            mp.printText("Life Line Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
-        }
-        if(canAvailSCDiscount) {
-            mp.printText("SC Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
-        }
-        if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("1")) {
-            mp.printText("Over Under Recovery", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getOverUnderDiscount()))+"\n");
-        }
-
-
-        mp.printText("PAYABLE AMOUNT(AfterDueDate)", MainActivity.dec2.format(mBill.getTotalBilledAmount())+"\n\n\n");
-
+        mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
+        mp.printText("",""+"\n");
+        mp.printText("",""+"\n");
+        mp.printText("",""+"\n");
+        mp.printText("",""+"\n");
         //Printed
         db.updateAccountToPrinted(db,"Printed");
-    }
 
+        }catch (NullPointerException e) {
+            Log.e(TAG,"preparePrint : "+ e.getMessage());
+        }
+    }
 }

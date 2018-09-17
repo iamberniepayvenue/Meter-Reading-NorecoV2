@@ -4,7 +4,7 @@ public class Rates extends RateSchedule {
 
     private String Code;
     private String CodeName;
-    private float RateAmount;
+    private String RateAmount;
     private float Amount;
     private float VatAmount;
     private float FranchiseTax;
@@ -15,7 +15,7 @@ public class Rates extends RateSchedule {
 
     }
 
-    public Rates(String segment, String code, String codeName, float rateAmount,String isLifeLine,String isSCDiscount, float amount, float vatAmount, float franchiseTax, float locatlTax) {
+    public Rates(String segment, String code, String codeName, String rateAmount,String isLifeLine,String isSCDiscount, float amount, float vatAmount, float franchiseTax, float locatlTax) {
 
         super(segment,isLifeLine,isSCDiscount);
 
@@ -37,7 +37,7 @@ public class Rates extends RateSchedule {
         return CodeName;
     }
 
-    public float getRateAmount() {
+    public String getRateAmount() {
         return RateAmount;
     }
 

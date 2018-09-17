@@ -11,14 +11,16 @@ public class Route extends Reader {
     private String AccountIDTo;
     private String AccountIDFrom;
     private String DueDate;
+    private String TagClass;
 
 
-    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate) {
+    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass) {
         DistrictID = districtID;
         RouteID = routeID;
         AccountIDTo = accountIDTo;
         AccountIDFrom = accountIDFrom;
         DueDate = dueDate;
+        TagClass = tagClass;
     }
 
 
@@ -40,5 +42,9 @@ public class Route extends Reader {
 
     public String getDueDate() {
         return DueDate;
+    }
+
+    public String getTagClass() {
+        return TagClass;
     }
 }

@@ -129,6 +129,8 @@ public class DBInfo implements BaseColumns {
     public static String DateRead = "DateRead";
     public static String LastReadingDate = "LastReadingDate";
     public static String Coordinates = "Coordinates";
+    public static String Latitude = "Latitude";
+    public static String Longitude = "Longitude";
     public static String Remarks = "Remarks";
 
 
@@ -138,6 +140,9 @@ public class DBInfo implements BaseColumns {
     public static String Extra4 = "Extra4";
     public static String Notes1 = "Notes1";
     public static String Notes2 = "Notes2";
+
+
+
 
 
     public static final String CREATE_LIFELINEDISCOUNT = " CREATE TABLE " + TBLLifeLineDiscount
@@ -225,7 +230,7 @@ public class DBInfo implements BaseColumns {
     public static final String CREATE_FOUNDMETERS = "CREATE TABLE " + TBlFound_Meters + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + AccountID + " STRING, "
             + MeterSerialNo + " STRING, " + Reading + " STRING," + DateRead + " STRING, "
-            + Coordinates + " STRING, " + Remarks + " STRING, "
+            + Latitude + " STRING, "+ Longitude + " STRING," + Remarks + " STRING, "
             + Extra1 + " STRING, " + Extra2 + " STRING)";
 
 

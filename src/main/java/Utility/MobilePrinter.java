@@ -7,19 +7,20 @@ import android.util.Log;
 
 import com.woosim.bt.WoosimPrinter;
 
+import java.io.IOException;
+
 
 public class MobilePrinter {
 
     Context c;
     private static MobilePrinter mobilePrinter;
     private static WoosimPrinter woosim;
-    //private static Handler handler;
     static private byte[] cardData;
     static private byte[] extractdata = new byte[300];
     static String EUC_KR = "EUC-KR";
     static final int LINE_CHARS = 63;
     private static final String TAG = "MobilePrinter";
-    private static Thread thread;
+
 
 
     public MobilePrinter(Context c) {
@@ -35,8 +36,6 @@ public class MobilePrinter {
     }
 
     private WoosimPrinter getWoosimPrinter() {
-        boolean isWoosim = (woosim == null) ? true : false;
-        //Log.e(TAG,"getWoosimPrinter: " + isWoosim);
         if (woosim == null) {
             woosim = new WoosimPrinter();
             woosim.setHandle(acthandler);
@@ -65,45 +64,6 @@ public class MobilePrinter {
         }
     };
 
-//    private static Handler getHandler() {
-//        final Handler[] handler = {null};
-//        boolean ishandler = (handler[0] ==null) ? true : false;
-//        Log.e(TAG,"handler ? : " + ishandler);
-//        if (handler[0] == null) {
-//            thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Log.e(TAG,"run thread");
-//                    Looper.prepare();
-//                    handler[0] = new Handler() {
-//                        @Override
-//                        public void handleMessage(Message msg) {
-//                            if (msg.what == 0x01) {
-//                                Log.e("+++Activity+++", "******0x01");
-//                                Object obj1 = msg.obj;
-//                                cardData = (byte[]) obj1;
-//                                ToastMessage();
-//                            } else if (msg.what == 0x02) {
-//                                //ardData[msg.arg1] = (byte) msg.arg2;
-//                                Log.e("+++Activity+++", "MSRFAIL: [" + msg.arg1 + "]: ");
-//                            } else if (msg.what == 0x03) {
-//                                Log.e("+++Activity+++", "******EOT");
-//                            } else if (msg.what == 0x04) {
-//                                Log.e("+++Activity+++", "******ETX");
-//                            } else if (msg.what == 0x05) {
-//                                Log.e("+++Activity+++", "******NACK");
-//                            }
-//
-//                            Log.e(TAG, "handle message: " + msg.what);
-//
-//                        }
-//                    };
-//                    Looper.loop();
-//                }
-//            });
-//        }
-//        return handler[0];
-//    }
 
     public void printText(String leftText, String rightText) {
 
@@ -113,7 +73,46 @@ public class MobilePrinter {
             paddingChar = paddingChar.concat(" ");
         }
 
-        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
+        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")) {
+            woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
+            woosim.printSpool(true);
+        }else {
+            woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
+            woosim.printSpool(true);
+        }
+    }
+
+    public void printTextExceptLeft(String leftText, String rightText) {
+
+        int padding = LINE_CHARS - leftText.length() - rightText.length();
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
+        }
+
+        woosim.saveSpool(EUC_KR, paddingChar + rightText, 0, false);
+        woosim.printSpool(true);
+    }
+
+    public void printTextEmphasized(String leftText, String rightText) {
+        int padding = 30 - leftText.length() - rightText.length();
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
+        }
+
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
+        woosim.printSpool(true);
+    }
+
+    public void printTextEmphasized1(String leftText, String rightText) {
+        int padding = 31 - leftText.length() - rightText.length() ;
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
+        }
+
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
         woosim.printSpool(true);
     }
 
@@ -121,15 +120,28 @@ public class MobilePrinter {
         woosim.saveSpool(EUC_KR, text , 0, false);
         woosim.printSpool(true);
     }
-    public void printText(String date,String prev, String pres, String kwh) {
-        int padding = 38 - date.length() - prev.length() - pres.length() - kwh.length();
-        String spaces = " ";
-        for(int i = 0; i < padding; i++) {
-            spaces = spaces.concat(" ");
-        }
-
-        woosim.saveSpool(EUC_KR, date + spaces + prev + spaces + pres + spaces + kwh, 0, false);
+    public void printTextBoldRight(String leftText, String rightText) {
+        woosim.saveSpool(EUC_KR, leftText, 0, false);
+        woosim.saveSpool(EUC_KR, rightText, 0, true);
         woosim.printSpool(true);
+    }
+
+    public void printBitmap(String path) {
+        try {
+            //woosim.saveSpool(EUC_KR, , 0, false);
+            int r = woosim.printBitmap(path);
+            byte[] lf = {0x0a};
+            woosim.controlCommand(lf, lf.length);
+            woosim.controlCommand(lf, lf.length);
+            woosim.controlCommand(lf, lf.length);
+            byte[] ff = {0x0c};
+            woosim.controlCommand(ff, 1);
+            woosim.printSpool(true);
+            Log.e(TAG,"return: " + r);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"printBitmap : " + e.getMessage());
+        }
     }
 
     public int setConnection(String address) {

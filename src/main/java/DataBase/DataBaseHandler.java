@@ -196,7 +196,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void saveRateCode(DataBaseHandler db, String coopid,
+    public int saveRateCode(DataBaseHandler db, String coopid,
                              String coopname, String ratecode, String details, String isactive) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
@@ -214,13 +214,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Notes1, ".");
         data.put(DBInfo.Notes2, ".");
 
-        sql.insert(DBInfo.TBLRateCode, null, data);
+        long save = sql.insert(DBInfo.TBLRateCode, null, data);
         sql.close();
         db.close();
 
+        return  (int)save;
     }
 
-    public void saveCoopDetails(DataBaseHandler db, String coopid,
+    public int saveCoopDetails(DataBaseHandler db, String coopid,
                                 String coopname, String cooptype, String classification,
                                 String readingduedate, String acronym, String billingcode,
                                 String businessaddress, String telnum, String tinnum) {
@@ -240,13 +241,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.TelNo, telnum);
         cv.put(DBInfo.TinNo, tinnum);
 
-        sql.insert(DBInfo.TBLUtility, null, cv);
+        long save = sql.insert(DBInfo.TBLUtility, null, cv);
         sql.close();
         db.close();
-
+        return (int)save;
     }
 
-    public void saveRateComponent(DataBaseHandler db, String coopid,
+    public int saveRateComponent(DataBaseHandler db, String coopid,
                                   String coopname, String ratecomponent, String details,
                                   String isactive, String notes1) {
 
@@ -265,10 +266,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Notes1, notes1);
         data.put(DBInfo.Notes2, ".");
 
-        sql.insert(DBInfo.TBlRateComponent, null, data);
+        long save = sql.insert(DBInfo.TBlRateComponent, null, data);
         sql.close();
         db.close();
-
+        return (int)save;
     }
 
     public ArrayList<Components> getRateComponent(DataBaseHandler db) {
@@ -289,7 +290,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return list;
     }
 
-    public void saveRateSegment(DataBaseHandler db, String coopid,
+    public int saveRateSegment(DataBaseHandler db, String coopid,
                                 String ratesegmentcode, String ratesegmentname, String details,
                                 String isactive) {
 
@@ -308,13 +309,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Notes1, ".");
         data.put(DBInfo.Notes2, ".");
 
-        sql.insert(DBInfo.TBLRateSegment, null, data);
+        long save = sql.insert(DBInfo.TBLRateSegment, null, data);
         sql.close();
         db.close();
-
+        return (int)save;
     }
 
-    public void saveBillingPolicy(DataBaseHandler db, String coopid,
+    public int saveBillingPolicy(DataBaseHandler db, String coopid,
                                   String coopname, String policycode, String policyname,
                                   String policytype, String customerclass, String subclass,
                                   String minkwh, String maxkwh, String percentamount) {
@@ -335,13 +336,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.MaxkWh, maxkwh);
         data.put(DBInfo.PercentAmount, percentamount);
 
-        sql.insert(DBInfo.TBLPolicy, null, data);
+        long save = sql.insert(DBInfo.TBLPolicy, null, data);
         sql.close();
         db.close();
-
+        return (int)save;
     }
 
-    public void saveRateSchedule(DataBaseHandler db, String coopid,
+    public int saveRateSchedule(DataBaseHandler db, String coopid,
                                  String ratesegment, String ratecomponent, String printorder,
                                  String classification, String ratesched, String rateschedtype,
                                  String amount, String vatrate, String vatamount,
@@ -385,10 +386,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Notes1, ".");
         data.put(DBInfo.Notes2, ".");
 
-        sql.insert(DBInfo.TBlRateSchedule, null, data);
+        long save = sql.insert(DBInfo.TBlRateSchedule, null, data);
         sql.close();
         db.close();
-
+        return (int)save;
     }
 
 
@@ -432,6 +433,15 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.close();
         db.close();
         return  1;
+    }
+
+    public void updateSerialNumber(DataBaseHandler db,String accountID,String newMeterSerial) {
+        SQLiteDatabase sql = db.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBInfo.Extra1,newMeterSerial);
+        sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + accountID + "'", null);
+        db.close();
+        sql.close();
     }
 
     public long getAccountSaveCount(DataBaseHandler db, String routeId) {
@@ -567,11 +577,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
 
         String myQuery = "SELECT * From " + DBInfo.TBlRateSchedule
-                + " Where " + DBInfo.Classification + " = '" + acctclass + "' Order By RateSegment";
+                + " Where " + DBInfo.Classification + "='" + acctclass + "' Order By RateSegment,PrintOrder";
         //+ DBInfo.RateSched + "='" + ratesched + "' AND "
+        Log.e(TAG,"ratesked :" + myQuery);
         Cursor c = sql.rawQuery(myQuery, null);
         return c;
-    }
+    } //'%" + searchKey + "%'
 
     public void updateReadAccount(DataBaseHandler db, String status,boolean isStopMeterCheck) {
         String isStopMeter = "0";
@@ -592,6 +603,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.ReadingDetails, readingDetails);
         cv.put(DBInfo.EditCount, CommonFunc.toDigit(MainActivity.selectedAccount.getEditCount()) + 1);
+        cv.put(DBInfo.Extra2,MainActivity.selectedAccount.getActualConsumption());
         sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + MainActivity.selectedAccount.getAccountID() + "'", null);
         sql.close();
         db.close();
@@ -663,6 +675,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setPrintCount(c.getString(c.getColumnIndex("PrintCount")));
                 account.setEditCount(c.getString(c.getColumnIndex("EditCount")));
                 account.setLastName(c.getString(c.getColumnIndex("LastName")));
+                account.setFirstName(c.getString(c.getColumnIndex(DBInfo.FirstName)));
+                account.setMiddleName(c.getString(c.getColumnIndex(DBInfo.MiddleName)));
                 account.setAccountID(c.getString(c.getColumnIndex("AccountID")));
                 account.setMeterSerialNo(c.getString(c.getColumnIndex("MeterSerialNo")));
                 account.setAccountStatus(c.getString(c.getColumnIndex("AccountStatus")));
@@ -677,6 +691,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setRouteNo(c.getString(c.getColumnIndex(DBInfo.RouteNo)));
                 account.setDateRead(c.getString(c.getColumnIndex(DBInfo.DateRead)));
                 account.setReadStatus(c.getString(c.getColumnIndex(DBInfo.ReadStatus)));
+                account.setActualConsumption(c.getString(c.getColumnIndex(DBInfo.Extra2)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
 
                 try {
@@ -738,6 +753,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setAccountClassification(c.getString(c.getColumnIndex(DBInfo.AccountClassification)));
                 account.setSubClassification(c.getString(c.getColumnIndex(DBInfo.SubClassification)));
                 account.setLastName(c.getString(c.getColumnIndex(DBInfo.LastName)));
+                account.setMiddleName(c.getString(c.getColumnIndex(DBInfo.MiddleName)));
+                account.setFirstName(c.getString(c.getColumnIndex(DBInfo.FirstName)));
                 account.setAccountID(c.getString(c.getColumnIndex(DBInfo.AccountID)));
                 account.setPoleRental(c.getString(c.getColumnIndex(DBInfo.PoleRental)));
                 account.setSpaceRental(c.getString(c.getColumnIndex(DBInfo.SpaceRental)));
@@ -848,9 +865,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Reading, reading);
         data.put(DBInfo.DateRead, CommonFunc.getDateOnly());
         data.put(DBInfo.Remarks, remarks);
-        data.put(DBInfo.Coordinates, latitude + ";" + longitude);
+        data.put(DBInfo.Latitude, latitude);
+        data.put(DBInfo.Longitude,longitude);
         data.put(DBInfo.Extra1, 0);
-
 
         sql.insert(DBInfo.TBlFound_Meters, null, data);
 
@@ -865,6 +882,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.update(DBInfo.TBlFound_Meters, data, "_id=" + columnid, null);
         sql.close();
         db.close();
+    }
+
+    public int getDataCountThisRoute(DataBaseHandler db,String routeID) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String strQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where RouteNo = '"+routeID+"'";
+        Cursor c = sql.rawQuery(strQuery, null);
+        return c.getCount();
     }
 
     public int getDataCount(DataBaseHandler db, String status) {
@@ -887,6 +911,22 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         return c.getCount();
 
+    }
+
+    public int getRateScheduleCountNonHigherVoltage(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String strQuery = "Select * From " + DBInfo.TBlRateSchedule + " Where " + DBInfo.Classification + " != 'Higher Voltage'" ;
+        Cursor c = sql.rawQuery(strQuery, null);
+        db.close();
+        return c.getCount();
+    }
+
+    public int getRateScheduleCountHigherVoltage(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String strQuery = "Select * From " + DBInfo.TBlRateSchedule + " Where " + DBInfo.Classification + " = 'Higher Voltage'" ;
+        Cursor c = sql.rawQuery(strQuery, null);
+        db.close();
+        return c.getCount();
     }
 
     public void resetAllAccounts(DataBaseHandler db) {
@@ -914,15 +954,16 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     /**Life Liner/ Lifeline Subsidy*/
 
-    public void saveLifeLifePolicy(DataBaseHandler db,String kwh,String percent,String decimal) {
+    public int saveLifeLifePolicy(DataBaseHandler db,String kwh,String percent,String decimal) {
         SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(DBInfo.LifelineConsumption,kwh);
         cv.put(DBInfo.LifelinePercentage,percent);
         cv.put(DBInfo.LifelineInDecimal,decimal);
-        sql.insert(DBInfo.TBLLifeLineDiscount,null,cv);
+        long save = sql.insert(DBInfo.TBLLifeLineDiscount,null,cv);
         sql.close();
         db.close();
+        return (int)save;
     }
 
     public ArrayList<LifeLineSubsidyModel> getLifeLinePolicy(DataBaseHandler db) {

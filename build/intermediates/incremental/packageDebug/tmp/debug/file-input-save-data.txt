@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Aug 22 10:23:08 PHT 2018
+#Mon Sep 10 17:36:56 PHT 2018
 17.baseType=DIRECTORY
 4.path=lib/arm64-v8a/libzbarjni.so
 8.set=DEX

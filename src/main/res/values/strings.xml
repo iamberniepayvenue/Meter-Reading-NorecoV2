@@ -22,12 +22,11 @@
     </string-array>
 
     <string-array name="array_hosts">
-        <item>192.168.5.240</item>
+        <item>192.168.20.254</item>
+        <!--192.168.5.240-->
         <item>121.96.68.14:8181</item>
         <item>"http://dev.teslasuite.com"</item>
     </string-array>
-
-
 
     <!--
         <item>dev2-commit.mybudgetload.com</item>  -->

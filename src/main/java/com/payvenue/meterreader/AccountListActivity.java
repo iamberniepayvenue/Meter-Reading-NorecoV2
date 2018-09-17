@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,11 +66,14 @@ public class AccountListActivity extends AppCompatActivity {
 
     private void getSearchData(String routecode, String filter) {
 
-        myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter);
+        try{
+            myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter);
 
-        AccountAdapter adapter = new AccountAdapter(myAccounts);
-        listvew.setAdapter(adapter);
-
+            AccountAdapter adapter = new AccountAdapter(myAccounts);
+            listvew.setAdapter(adapter);
+        }catch (NullPointerException e) {
+            Log.e(TAG,e.getMessage());
+        }
     }
 
     @Override
@@ -77,7 +81,6 @@ public class AccountListActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
 
         switch (requestCode) {
-
 
             case 1:
 

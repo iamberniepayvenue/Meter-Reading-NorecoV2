@@ -40,6 +40,7 @@ import java.nio.channels.FileChannel;
 import DataBase.DBInfo;
 import Model.Account;
 import Utility.CommonFunc;
+import Utility.Constant;
 import Utility.NetworkUtil;
 
 import static com.payvenue.meterreader.R.id.btnResetUpload;
@@ -62,6 +63,8 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     ProgressDialog mDialog;
     String mac;
     Context mcontext;
+    String strPort;
+    EditText txtPort;
 
     private static final String TAG = "FragmentUpload";
 
@@ -75,7 +78,8 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         rootView = inflater.inflate(R.layout.fragment_upload, container, false);
 
         mcontext = getActivity();
-
+        txtPort = rootView.findViewById(R.id.txtupPort);
+        txtPort.setText(Constant.PORT);
         mDialog = new ProgressDialog(this.getActivity());
         mDialog.setCancelable(false);
         mDialog.setMessage("Compressing Data. Please wait...");
@@ -167,9 +171,9 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     public void prepareData() {
 
 
-        PortNumber = ((EditText) rootView.findViewById(R.id.txtupPort)).getText().toString();
-
-        String strRequest = HostName + ":"
+        //PortNumber = ((EditText) rootView.findViewById(R.id.txtupPort)).getText().toString();
+        PortNumber = txtPort.getText().toString();
+        String strRequest = "http://" + HostName + ":"
                 + PortNumber
                 + "?cmd=uploadData"
                 + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
@@ -242,6 +246,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("ReadStatus",cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus)));
                     rowObject.put("Remarks",account.getRemarks());
                     rowObject.put("DueDate",cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
+                    rowObject.put("NewMeterSerial",cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
 
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
@@ -321,6 +326,11 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     }
 
     private void exportDB() {
+        File f = new File(Environment.getExternalStorageDirectory(),"Documents");
+        if(!f.exists()) {
+            f.mkdirs();
+        }
+
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
         FileChannel source = null;

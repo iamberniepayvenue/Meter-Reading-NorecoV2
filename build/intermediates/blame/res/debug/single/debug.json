@@ -180,6 +180,10 @@
         "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/menu/rate_schedule.xml"
     },
     {
+        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_noreco_logo.bmp.flat",
+        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/noreco_logo.bmp"
+    },
+    {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable-v21_abc_btn_colored_material.xml.flat",
         "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/drawable-v21/abc_btn_colored_material.xml"
     },
@@ -2170,6 +2174,10 @@
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/menu_reader.xml.flat",
         "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/menu/reader.xml"
+    },
+    {
+        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_woosim.bmp.flat",
+        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/woosim.bmp"
     },
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/layout_device_name.xml.flat",

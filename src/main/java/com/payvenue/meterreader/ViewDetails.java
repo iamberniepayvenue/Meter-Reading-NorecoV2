@@ -3,6 +3,7 @@ package com.payvenue.meterreader;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.mapswithme.maps.api.MapsWithMeApi;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,7 +148,6 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         switch (requestCode) {
 
-
             case 1:
                 this.finish();
                 break;
@@ -231,12 +232,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         if (id == R.id.btnEdit) {
             int editCount = db.getEditAttemp(db,MainActivity.selectedAccount.getAccountID());
 
-            if(editCount == 3) {
-                Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
-            }else{
+//            if(editCount == 3) {
+//                Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
+//            }else{
                 Intent intent = new Intent(this, Accounts.class);
                 startActivityForResult(intent, 5);
-            }
+//            }
+
+
         }
 
         if (id == R.id.btnRead)
@@ -307,78 +310,140 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void preparePrint() {
+        ArrayList<String> vatListCode = new ArrayList<>();
+        ArrayList<String> vatListValue = new ArrayList<>();
+        String name = MainActivity.selectedAccount.getLastName();
+        if(MainActivity.selectedAccount.getFirstName().equalsIgnoreCase(".")
+                || MainActivity.selectedAccount.getMiddleName().equalsIgnoreCase(".")){
+            name = MainActivity.selectedAccount.getLastName() + ", " + MainActivity.selectedAccount.getFirstName()
+                    + MainActivity.selectedAccount.getMiddleName();
+        }
+
+        String penalty = MainActivity.selectedAccount.getPenalty();
+        if(penalty.equalsIgnoreCase("-") || penalty.equalsIgnoreCase(".")) {
+            penalty = "0";
+        }
+
         MobilePrinter mp = MobilePrinter.getInstance(this);
         Bill mBill;
         List<Rates> mRates;
         mBill = MainActivity.selectedAccount.getBill();
+        String a_class = MainActivity.selectedAccount.getAccountClassification();
+        if(a_class.equalsIgnoreCase("RESIDENTIAL") || a_class.equalsIgnoreCase("Residential")) {
+            a_class = "Res";
+        } else if(a_class.equalsIgnoreCase("Lower Voltage")) {
+            a_class = "LowerV";
+        }else if (a_class.equalsIgnoreCase("Higher Voltage")) {
+            a_class = "HigherV";
+        }
         //Rates rates;
         mRates = mBill.getRates();
-        mp.printText("           Negros Oriental II Electric Cooperative\n");
-        mp.printText("                  Real St., Dumaguete City\n");
-        mp.printText("                         (NORECO2)\n");
-        mp.printText("                   STATEMENT OF ACCOUNT\n");
-        mp.printText("================================================================\n");
-        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + MainActivity.selectedAccount.getAccountClassification()+"\n");
-        mp.printText("Account No:" + MainActivity.selectedAccount.getAccountID(), "BillMonth:" + MainActivity.selectedAccount.getBillMonth()+"\n");
-        mp.printText("Account Name:"+MainActivity.selectedAccount.getLastName()+"\n");
-        mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
-        mp.printText("Period Covered: "+MainActivity.selectedAccount.getLastReadingDate() + " to " + MainActivity.selectedAccount.getDateRead()+"\n");
-        mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
-        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-        mp.printText("--------------------------------------------------------------"+"\n");
-        mp.printText("Date              Prev                 Pres              KWH"+"\n");
-        //mp.printText(MainActivity.selectedAccount.getDateRead() + "        " + MainActivity.selectedAccount.getPrevReading() + "                " + MainActivity.selectedAccount.getReading() + "               " + MainActivity.selectedAccount.getConsume()+"\n");
-        mp.printText(MainActivity.selectedAccount.getDateRead(),MainActivity.selectedAccount.getPrevReading(),MainActivity.selectedAccount.getReading(),MainActivity.selectedAccount.getConsume()+"\n");
-        mp.printText("--------------------------------------------------------------"+"\n");
-        //Cursor cursorRateSegment = db.getRateSegment(db);
-        //ArrayList<Components> componentsList= db.getRateComponent(db);
-        if(listRateSegment.size() > 0) {
-            for (RateSegmentModel s: listRateSegment){
-                String segmentName =  s.getRateSegmentName();
-                String rateSegmentCode = s.getRateSegmentCode();
-                mp.printText(segmentName+"\n");
-                for(Rates r: mRates) {
-                    if(r.getRateSegment().equals(rateSegmentCode)) {
-                        String codeName = r.getCodeName();
-                        String rateAmount = String.valueOf(r.getRateAmount());
-                        String amount = String.valueOf(r.getAmount());
-                        int padding = 20 - rateAmount.length() - amount.length();
-                        String paddingChar = " ";
-                        for (int p = 0; p < padding; p++) {
-                            paddingChar = paddingChar.concat(" ");
-                        }
-                        String rightText = rateAmount + paddingChar + amount;
+//        mp.printText("           Negros Oriental II Electric Cooperative\n");
+//        mp.printText("                  Real St., Dumaguete City\n");
+//        mp.printText("                         (NORECO2)\n");
+//        mp.printText("                   STATEMENT OF ACCOUNT\n");
 
-                        /** print here */
-                        mp.printText(codeName,rightText+"\n");
-                    }
-                }
-            } // end loop
+        String extStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Documents";
+        File path=new File(extStorageDirectory,"woosim.bmp");
+
+
+        if(path.exists()) {
+            Log.e(TAG,"path: " + path);
+            mp.printBitmap(path.toString());
+        }else {
+            Log.e("Not Exist","Not Exist");
         }
 
-        mp.printText("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount())+"\n");
-        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPenalty()))+"\n");
-        mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
-        //mp.printText("Pole Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPoleRental()))+"\n");
-        //mp.printText("Space Rental", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getSpaceRental()))+"\n");
-        //mp.printText("PilferagePenalty", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPilferagePenalty()))+"\n");
-        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
 
-        if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
-            mp.printText("Life Line Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
-        }
-
-        if(!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
-            mp.printText("SC Discount(R)", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
-        }
-
-        if(MainActivity.selectedAccount.getUnderOverRecovery().equalsIgnoreCase("1")) {
-            mp.printText("Over Under Recovery", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getOverUnderDiscount()))+"\n");
-        }
-
-        mp.printText("PAYABLE AMOUNT(AfterDueDate)", MainActivity.dec2.format(mBill.getTotalBilledAmount())+"\n");
-        mp.printText("REPRINTED" +"\n"+"\n"+"\n");
-        //Printed
-        db.updateAccountToPrinted(db,"Printed");
+//        mp.printText("================================================================\n");
+//        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
+//        mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
+//        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
+//        mp.printTextBoldRight("Account Name:",name+"\n");
+//        mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
+//        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
+//        mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
+//        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
+//        mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
+//        mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
+//        mp.printText("--------------------------------------------------------------"+"\n");
+//        mp.printText("Date              Prev                 Pres              KWH"+"\n");
+//        mp.printText(MainActivity.selectedAccount.getDateRead()
+//                + "         " + MainActivity.selectedAccount.getInitialReading()
+//                + "                " + MainActivity.selectedAccount.getReading()
+//                + "          " + MainActivity.selectedAccount.getConsume()+"\n");
+//        mp.printText("--------------------------------------------------------------"+"\n");
+//        //Cursor cursorRateSegment = db.getRateSegment(db);
+//        //ArrayList<Components> componentsList= db.getRateComponent(db);
+//        if(listRateSegment.size() > 0) {
+//            for (RateSegmentModel s: listRateSegment){
+//                String segmentName =  s.getRateSegmentName();
+//                String rateSegmentCode = s.getRateSegmentCode();
+//                if(!segmentName.equalsIgnoreCase("FIT-ALL")) {
+//                    mp.printText(segmentName+"\n");
+//                }
+//                for(Rates r: mRates) {
+//                    if(r.getRateSegment().equals(rateSegmentCode)) {
+//                        String codeName = r.getCodeName();
+//                        String rateAmount = String.valueOf(r.getRateAmount());
+//                        String amount = String.valueOf(r.getAmount());
+//                        int padding = 20 - rateAmount.length() - amount.length();
+//                        String paddingChar = " ";
+//                        for (int p = 0; p < padding; p++) {
+//                            paddingChar = paddingChar.concat(" ");
+//                        }
+//                        String rightText = rateAmount + paddingChar + amount;
+//
+//                        if(codeName.contains("VAT on")) {
+//                            vatListCode.add(codeName);
+//                            vatListValue.add(rightText);
+//                        }
+//
+//                        /** print here */
+//                        if(codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
+//
+//                            if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
+//                                mp.printText("  Lifeline Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
+//                            }else{
+//                                mp.printText("  "+codeName,rightText+"\n");
+//                            }
+//                        }
+//
+//                        if(codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
+//
+//                            if(!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
+//                                mp.printText("  Senior Citizens Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
+//                            }else{
+//                                mp.printText("  "+codeName,rightText+"\n");
+//                            }
+//                        }
+//
+//
+//                        if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
+//                            mp.printText("  "+codeName,rightText+"\n");
+//                        }
+//                    }
+//                }
+//            } // end loop
+//        }
+//
+//        mp.printText("VAT Charges"+"\n");
+//        for(int i = 0; i < vatListCode.size();i++) {
+//            mp.printText("  "+vatListCode.get(i).toString(),vatListValue.get(i).toString()+"\n");
+//        }
+//
+//        mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
+//        mp.printText("",""+"\n");
+//        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty))+"\n");
+//        mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
+//        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
+//        mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
+//        mp.printText("",""+"\n");
+//        mp.printText("REPRINTED" +"\n");
+//        mp.printText("",""+"\n");
+//        mp.printText("",""+"\n");
+//        mp.printText("",""+"\n");
+//        //Printed
+//        db.updateAccountToPrinted(db,"Printed");
     }
 }
