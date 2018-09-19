@@ -97,6 +97,19 @@
                 app:layout_constraintStart_toStartOf="@+id/mAccountClass"
                 app:layout_constraintTop_toBottomOf="@+id/mAccountClass" />
 
+            <TextView
+                android:id="@+id/mPrevReading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/mAccountAddress"
+                app:layout_constraintStart_toStartOf="@+id/mAccountAddress"
+                app:layout_constraintTop_toBottomOf="@+id/mAccountAddress" />
+
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -140,11 +153,13 @@
                 android:id="@+id/mStop"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:onClick="onCheckboxClicked"
                 android:text="Stop Meter"
-                app:layout_constraintStart_toStartOf="@+id/mOval"
-                app:layout_constraintTop_toBottomOf="@+id/mOval" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/mChange"
@@ -154,16 +169,17 @@
                 android:layout_marginRight="16dp"
                 android:onClick="onCheckboxClicked"
                 android:text="Change Meter"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/mOval"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <EditText
                 android:id="@+id/mReading"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="32dp"
                 android:background="@drawable/my_border"
                 android:ems="10"
                 android:gravity="center"

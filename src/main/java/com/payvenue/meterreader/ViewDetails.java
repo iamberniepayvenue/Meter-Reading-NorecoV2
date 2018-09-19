@@ -3,7 +3,6 @@ package com.payvenue.meterreader;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import com.mapswithme.maps.api.MapsWithMeApi;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -343,107 +341,101 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        mp.printText("                         (NORECO2)\n");
 //        mp.printText("                   STATEMENT OF ACCOUNT\n");
 
-        String extStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Documents";
-        File path=new File(extStorageDirectory,"woosim.bmp");
+
+        String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
+
+        mp.printBitmap(path);
 
 
-        if(path.exists()) {
-            Log.e(TAG,"path: " + path);
-            mp.printBitmap(path.toString());
-        }else {
-            Log.e("Not Exist","Not Exist");
+        mp.printText("================================================================\n");
+        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
+        mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
+        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
+        mp.printTextBoldRight("Account Name:",name+"\n");
+        mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
+        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
+        mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
+        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
+        mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
+        mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
+        mp.printText("--------------------------------------------------------------"+"\n");
+        mp.printText("Date              Prev                 Pres              KWH"+"\n");
+        mp.printText(MainActivity.selectedAccount.getDateRead()
+                + "         " + MainActivity.selectedAccount.getInitialReading()
+                + "                " + MainActivity.selectedAccount.getReading()
+                + "          " + MainActivity.selectedAccount.getConsume()+"\n");
+        mp.printText("--------------------------------------------------------------"+"\n");
+        //Cursor cursorRateSegment = db.getRateSegment(db);
+        //ArrayList<Components> componentsList= db.getRateComponent(db);
+        if(listRateSegment.size() > 0) {
+            for (RateSegmentModel s: listRateSegment){
+                String segmentName =  s.getRateSegmentName();
+                String rateSegmentCode = s.getRateSegmentCode();
+                if(!segmentName.equalsIgnoreCase("FIT-ALL")) {
+                    mp.printText(segmentName+"\n");
+                }
+                for(Rates r: mRates) {
+                    if(r.getRateSegment().equals(rateSegmentCode)) {
+                        String codeName = r.getCodeName();
+                        String rateAmount = String.valueOf(r.getRateAmount());
+                        String amount = String.valueOf(r.getAmount());
+                        int padding = 20 - rateAmount.length() - amount.length();
+                        String paddingChar = " ";
+                        for (int p = 0; p < padding; p++) {
+                            paddingChar = paddingChar.concat(" ");
+                        }
+                        String rightText = rateAmount + paddingChar + amount;
+
+                        if(codeName.contains("VAT on")) {
+                            vatListCode.add(codeName);
+                            vatListValue.add(rightText);
+                        }
+
+                        /** print here */
+                        if(codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
+
+                            if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
+                                mp.printText("  Lifeline Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
+                            }else{
+                                mp.printText("  "+codeName,rightText+"\n");
+                            }
+                        }
+
+                        if(codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
+
+                            if(!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
+                                mp.printText("  Senior Citizens Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
+                            }else{
+                                mp.printText("  "+codeName,rightText+"\n");
+                            }
+                        }
+
+
+                        if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
+                            mp.printText("  "+codeName,rightText+"\n");
+                        }
+                    }
+                }
+            } // end loop
         }
 
+        mp.printText("VAT Charges"+"\n");
+        for(int i = 0; i < vatListCode.size();i++) {
+            mp.printText("  "+vatListCode.get(i).toString(),vatListValue.get(i).toString()+"\n");
+        }
 
-//        mp.printText("================================================================\n");
-//        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
-//        mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
-//        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
-//        mp.printTextBoldRight("Account Name:",name+"\n");
-//        mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
-//        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
-//        mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
-//        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-//        mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
-//        mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
-//        mp.printText("--------------------------------------------------------------"+"\n");
-//        mp.printText("Date              Prev                 Pres              KWH"+"\n");
-//        mp.printText(MainActivity.selectedAccount.getDateRead()
-//                + "         " + MainActivity.selectedAccount.getInitialReading()
-//                + "                " + MainActivity.selectedAccount.getReading()
-//                + "          " + MainActivity.selectedAccount.getConsume()+"\n");
-//        mp.printText("--------------------------------------------------------------"+"\n");
-//        //Cursor cursorRateSegment = db.getRateSegment(db);
-//        //ArrayList<Components> componentsList= db.getRateComponent(db);
-//        if(listRateSegment.size() > 0) {
-//            for (RateSegmentModel s: listRateSegment){
-//                String segmentName =  s.getRateSegmentName();
-//                String rateSegmentCode = s.getRateSegmentCode();
-//                if(!segmentName.equalsIgnoreCase("FIT-ALL")) {
-//                    mp.printText(segmentName+"\n");
-//                }
-//                for(Rates r: mRates) {
-//                    if(r.getRateSegment().equals(rateSegmentCode)) {
-//                        String codeName = r.getCodeName();
-//                        String rateAmount = String.valueOf(r.getRateAmount());
-//                        String amount = String.valueOf(r.getAmount());
-//                        int padding = 20 - rateAmount.length() - amount.length();
-//                        String paddingChar = " ";
-//                        for (int p = 0; p < padding; p++) {
-//                            paddingChar = paddingChar.concat(" ");
-//                        }
-//                        String rightText = rateAmount + paddingChar + amount;
-//
-//                        if(codeName.contains("VAT on")) {
-//                            vatListCode.add(codeName);
-//                            vatListValue.add(rightText);
-//                        }
-//
-//                        /** print here */
-//                        if(codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
-//
-//                            if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
-//                                mp.printText("  Lifeline Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
-//                            }else{
-//                                mp.printText("  "+codeName,rightText+"\n");
-//                            }
-//                        }
-//
-//                        if(codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
-//
-//                            if(!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
-//                                mp.printText("  Senior Citizens Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
-//                            }else{
-//                                mp.printText("  "+codeName,rightText+"\n");
-//                            }
-//                        }
-//
-//
-//                        if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
-//                            mp.printText("  "+codeName,rightText+"\n");
-//                        }
-//                    }
-//                }
-//            } // end loop
-//        }
-//
-//        mp.printText("VAT Charges"+"\n");
-//        for(int i = 0; i < vatListCode.size();i++) {
-//            mp.printText("  "+vatListCode.get(i).toString(),vatListValue.get(i).toString()+"\n");
-//        }
-//
-//        mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
-//        mp.printText("",""+"\n");
-//        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty))+"\n");
-//        mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
-//        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
-//        mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
-//        mp.printText("",""+"\n");
-//        mp.printText("REPRINTED" +"\n");
-//        mp.printText("",""+"\n");
-//        mp.printText("",""+"\n");
-//        mp.printText("",""+"\n");
-//        //Printed
-//        db.updateAccountToPrinted(db,"Printed");
+        mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
+        mp.printText("",""+"\n");
+        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty))+"\n");
+        mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
+        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
+        mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
+        mp.printText("",""+"\n");
+        mp.printText("REPRINTED" +"\n");
+        mp.printText("",""+"\n");
+        mp.printText("",""+"\n");
+        mp.printText("",""+"\n");
+        //Printed
+        db.updateAccountToPrinted(db,"Printed");
     }
 }

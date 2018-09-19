@@ -128,20 +128,27 @@ public class MobilePrinter {
 
     public void printBitmap(String path) {
         try {
-            //woosim.saveSpool(EUC_KR, , 0, false);
             int r = woosim.printBitmap(path);
-            byte[] lf = {0x0a};
-            woosim.controlCommand(lf, lf.length);
-            woosim.controlCommand(lf, lf.length);
-            woosim.controlCommand(lf, lf.length);
-            byte[] ff = {0x0c};
+            //byte[] lf = {0x0a};
+            byte[] ff ={0x0c};
+            //woosim.controlCommand(lf, lf.length);
             woosim.controlCommand(ff, 1);
             woosim.printSpool(true);
-            Log.e(TAG,"return: " + r);
+            Log.e(TAG,"printBitmap : " + r);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG,"printBitmap : " + e.getMessage());
         }
+    }
+
+    public void printBitmap(byte[] bmpBuff, int bmpLength) {
+        int r = woosim.printBitmap(bmpBuff,bmpLength);
+        byte[] lf = {0x0a};
+        byte[] ff ={0x0c};
+        woosim.controlCommand(lf, lf.length);
+        woosim.controlCommand(ff, bmpLength);
+        woosim.printSpool(true);
+        Log.e(TAG,"printBitmap : " + r);
     }
 
     public int setConnection(String address) {

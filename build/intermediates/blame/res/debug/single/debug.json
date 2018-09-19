@@ -160,6 +160,10 @@
         "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable-xhdpi/row_border.xml"
     },
     {
+        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_logonoreco.bmp.flat",
+        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/logonoreco.bmp"
+    },
+    {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_list_selector_disabled_holo_light.9.png.flat",
         "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/drawable-hdpi-v4/abc_list_selector_disabled_holo_light.9.png"
     },
@@ -178,10 +182,6 @@
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/menu_rate_schedule.xml.flat",
         "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/menu/rate_schedule.xml"
-    },
-    {
-        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_noreco_logo.bmp.flat",
-        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/noreco_logo.bmp"
     },
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable-v21_abc_btn_colored_material.xml.flat",
@@ -976,6 +976,10 @@
         "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/drawable-xxhdpi-v4/abc_textfield_default_mtrl_alpha.9.png"
     },
     {
+        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_noreco.bmp.flat",
+        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/noreco.bmp"
+    },
+    {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",
         "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/drawable-xhdpi-v4/abc_list_divider_mtrl_alpha.9.png"
     },
@@ -1334,6 +1338,10 @@
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/color-v21_abc_btn_colored_borderless_text_material.xml.flat",
         "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/res/color-v21/abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable_noreco_logo.png.flat",
+        "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/drawable/noreco_logo.png"
     },
     {
         "merged": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/res/merged/debug/drawable-hdpi-v4_abc_list_focused_holo.9.png.flat",

@@ -1,11 +1,17 @@
 package Utility;
 
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 
-import com.payvenue.meterreader.BuildConfig;
 import com.payvenue.meterreader.R;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -212,7 +218,6 @@ public class CommonFunc {
     public static String monthAbrev(String billMonth) {
         String sub = billMonth.substring(0,2);
         String val = "";
-        Log.e("CommonFunc","sub: " + sub);
         switch (sub) {
             case "01":
                 val = "JAN";
@@ -251,14 +256,50 @@ public class CommonFunc {
                 val = "DEC";
                 break;
         }
-        Log.e("CommonFunc","sub: " + val);
         return val;
     }
 
-    public static String getDrawablePath() {
+    public static void createExternalStoragePrivateFile(Context context) {
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            File file = new File(context.getExternalFilesDir(
+                    null), "noreco_logo.bmp");
+            try {
+                //Bitmap bitmap = BitmapFactory.decodeResource(context.getApplicationContext().getResources(),R.drawable.noreco_logo);
 
-        Uri path = Uri.parse("android.resource://"+ BuildConfig.APPLICATION_ID+ R.drawable.woosim);
-        return path.toString();
+                @SuppressLint("ResourceType")
+                InputStream is = context.getResources().openRawResource(R.drawable.noreco);
+                OutputStream os = new FileOutputStream(file);
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                os.write(data);
+                is.close();
+                os.close();
+            } catch (FileNotFoundException e) {
+                Log.e("CommonFunc","createExternalStoragePrivateFile: " + e.getMessage());
+            }catch (IOException e) {
+                Log.e("CommonFunc","createExternalStoragePrivateFile(IOException): " + e.getMessage());
+            }
+        }
+    }
+
+    public static File getPrivateAlbumStorageDir(Context context, String albumName) {
+        // Get the directory for the app's private pictures directory.
+        File file = new File(context.getExternalFilesDir(
+                null), albumName);
+        if (!file.mkdirs()) {
+            Log.e("CommonFunc", "Directory not created");
+        }
+        return file;
+    }
+
+    public static boolean hasExternalStoragePrivateFile(Context context, String albumName) {
+        // Get path for the file on external storage.  If external
+        // storage is not currently mounted this will fail.
+        File file = new File(context.getExternalFilesDir(null), albumName);
+        if (file != null) {
+            return file.exists();
+        }
+        return false;
     }
 }

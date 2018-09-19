@@ -60,7 +60,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
 
     private static final String TAG = "Accounts";
     ConstraintLayout constraintButton;
-    TextView mSerial, mAccountName, mAccountID, mAccountClass, mAccountAddress;
+    TextView mSerial, mAccountName, mAccountID, mAccountClass, mAccountAddress,mPrevReading;
     CheckBox mOval, mCycle, mStop, mChange;
     EditText mReading, mDemand, mRemarks, mReadingCycle;
     Button btnGenerate, btnTakePic;
@@ -145,6 +145,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         mStop = (CheckBox) findViewById(R.id.mStop);
         mChange = (CheckBox) findViewById(R.id.mChange);
         mReading = (EditText) findViewById(R.id.mReading);
+        mPrevReading = findViewById(R.id.mPrevReading);
         mDemand = (EditText) findViewById(R.id.mDemand);
         mRemarks = (EditText) findViewById(R.id.mRemarks);
         mReadingCycle = findViewById(R.id.mReadingCycle);
@@ -176,6 +177,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener 
         mAccountID.setText(MainActivity.selectedAccount.getAccountID());
         mAccountClass.setText(MainActivity.selectedAccount.getAccountClassification());
         mAccountAddress.setText(MainActivity.selectedAccount.getAddress());
+        String prevReading = MainActivity.selectedAccount.getInitialReading();
+        if(prevReading.equalsIgnoreCase(".") || prevReading.equalsIgnoreCase("")) {
+            mPrevReading.setText(" Previous Reading: 0 kwh");
+        }else{
+            mPrevReading.setText(" Previous Reading: "+prevReading+" kwh");
+        }
+
 
     }
 
