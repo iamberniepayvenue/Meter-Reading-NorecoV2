@@ -644,10 +644,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 details.put("InitialReading",obj.getString("InitialReading"));
                                 details.put("PrevReading", obj.getString("PrevReading"));
                                 details.put("PrevFinalReading", obj.getString("PrevFinalReading"));
+                                details.put("ExportPreviousReading", obj.getString("ExportReading"));
                                 details.put("IsChangeMeter", obj.getString("IsChangeMeter"));
                                 details.put("MeterBrand", obj.getString("MeterBrand"));
                                 details.put("Consume", "0");
+                                details.put("ExportConsume","0");
                                 details.put("Reading", "0");
+                                details.put("ExportReading","0");
                                 details.put("Remarks", "");
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 account.setDueDate(param2);

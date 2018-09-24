@@ -284,6 +284,25 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
         getDataCount();
         setValues();
+
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            if (jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    String result = obj.getString("result");
+                    if(result.equalsIgnoreCase("01")) {
+                        Log.e(TAG,"response after upload: " + result);
+                    }
+
+                    if(result.equalsIgnoreCase("02")) {
+                        Log.e(TAG,"response after upload: " + result);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

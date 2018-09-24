@@ -9,13 +9,14 @@ public class Rates extends RateSchedule {
     private float VatAmount;
     private float FranchiseTax;
     private float LocatlTax;
+    private float AmountDueExport;
 
 
     public Rates() {
 
     }
 
-    public Rates(String segment, String code, String codeName, String rateAmount,String isLifeLine,String isSCDiscount, float amount, float vatAmount, float franchiseTax, float locatlTax) {
+    public Rates(String segment, String code, String codeName, String rateAmount,String isLifeLine,String isSCDiscount, float amount, float vatAmount, float franchiseTax, float locatlTax,float amountDueExport) {
 
         super(segment,isLifeLine,isSCDiscount);
 
@@ -26,6 +27,7 @@ public class Rates extends RateSchedule {
         VatAmount = vatAmount;
         FranchiseTax = franchiseTax;
         LocatlTax = locatlTax;
+        AmountDueExport = amountDueExport;
     }
 
 
@@ -59,5 +61,9 @@ public class Rates extends RateSchedule {
 
     public void setIsSeniorCitizen(String isSeniorCitizen) {
 
+    }
+
+    public float getAmountDueExport() {
+        return AmountDueExport;
     }
 }

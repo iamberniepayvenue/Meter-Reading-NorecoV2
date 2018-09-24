@@ -70,15 +70,23 @@ public class Account extends Person {
     private Object Averaging;
     private String OverUnderDiscount;
     private String ActualConsumption;
-    private String CoreLoss;
+    private String Coreloss;
+    private String ExportConsume;
+    private String ExportReading;
+    private String MotherMeter;
+    private String SubMeter;
+    private String ExportPreviousReading;
+    private String ActualExportConsume;
 
-    public String getCoreLoss() {
-        return CoreLoss;
+
+    public String getCoreloss() {
+        return Coreloss;
     }
 
-    public void setCoreLoss(String coreLoss) {
-        CoreLoss = coreLoss;
+    public void setCoreloss(String coreLoss) {
+        Coreloss = coreLoss;
     }
+
 
     public String getActualConsumption() {
         return ActualConsumption;
@@ -592,5 +600,49 @@ public class Account extends Person {
 
     public void setOverUnderDiscount(String overUnderDiscount) {
         OverUnderDiscount = overUnderDiscount;
+    }
+
+    public String getExportConsume() {
+        return ExportConsume;
+    }
+
+    public String getExportReading() {
+        return ExportReading;
+    }
+
+    public void setExportConsume(String exportConsume) {
+        ExportConsume = exportConsume;
+    }
+
+    public void setExportReading(String exportReading) {
+        ExportReading = exportReading;
+    }
+
+    public String getActualExportConsume() {
+        return ActualExportConsume;
+    }
+
+    public void setActualExportConsume(String actualExportConsume) {
+        ActualExportConsume = actualExportConsume;
+    }
+
+    public String getMotherMeter() {
+        return MotherMeter;
+    }
+
+    public String getSubMeter() {
+        return SubMeter;
+    }
+
+    public void setMotherMeter(String motherMeter) {
+        MotherMeter = motherMeter;
+    }
+
+    public void setSubMeter(String subMeter) {
+        SubMeter = subMeter;
+    }
+
+    public String getExportPreviousReading() {
+        return ExportPreviousReading;
     }
 }

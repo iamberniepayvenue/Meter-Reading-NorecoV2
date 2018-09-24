@@ -74,6 +74,7 @@ public class FragmentReading extends Fragment implements OnClickListener {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         Log.e(TAG,"Current Page");
+
         return rootView;
     }
 

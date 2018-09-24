@@ -428,6 +428,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.UnderOverRecovery,account.getUnderOverRecovery());
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
+        cv.put(DBInfo.IsNetMetering,account.getIsNetMetering());
+        cv.put(DBInfo.MotherMeter,account.getMotherMeter());
+        cv.put(DBInfo.SubMeter,account.getSubMeter());
+        cv.put(DBInfo.Coreloss,account.getCoreloss());
         sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
 
         sql.close();
@@ -578,11 +582,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         String myQuery = "SELECT * From " + DBInfo.TBlRateSchedule
                 + " Where " + DBInfo.Classification + "='" + acctclass + "' Order By RateSegment,PrintOrder";
-        //+ DBInfo.RateSched + "='" + ratesched + "' AND "
-        Log.e(TAG,"ratesked :" + myQuery);
         Cursor c = sql.rawQuery(myQuery, null);
         return c;
-    } //'%" + searchKey + "%'
+    }
 
     public void updateReadAccount(DataBaseHandler db, String status,boolean isStopMeterCheck) {
         String isStopMeter = "0";
@@ -693,6 +695,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setReadStatus(c.getString(c.getColumnIndex(DBInfo.ReadStatus)));
                 account.setActualConsumption(c.getString(c.getColumnIndex(DBInfo.Extra2)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
+                account.setMotherMeter(c.getString(c.getColumnIndex(DBInfo.MotherMeter)));
+                account.setSubMeter(c.getString(c.getColumnIndex(DBInfo.SubMeter)));
+                account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
+                account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
 
                 try {
                     JSONObject object = new JSONObject(ave);
@@ -765,6 +771,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setSequenceNo(c.getString(c.getColumnIndex(DBInfo.SequenceNo)));
                 account.setRouteNo(c.getString(c.getColumnIndex(DBInfo.RouteNo)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
+                account.setMotherMeter(c.getString(c.getColumnIndex(DBInfo.MotherMeter)));
+                account.setSubMeter(c.getString(c.getColumnIndex(DBInfo.SubMeter)));
+                account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
+                account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
                 try {
                     JSONObject object = new JSONObject(ave);
                     account.setAveraging(object);

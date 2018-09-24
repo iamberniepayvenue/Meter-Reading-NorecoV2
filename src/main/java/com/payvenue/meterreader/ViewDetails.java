@@ -310,6 +310,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     public void preparePrint() {
         ArrayList<String> vatListCode = new ArrayList<>();
         ArrayList<String> vatListValue = new ArrayList<>();
+        ArrayList<String> rateComponentForExport = new ArrayList<>();
+        ArrayList<String> exportRateDueAmount = new ArrayList<>();
         String name = MainActivity.selectedAccount.getLastName();
         if(MainActivity.selectedAccount.getFirstName().equalsIgnoreCase(".")
                 || MainActivity.selectedAccount.getMiddleName().equalsIgnoreCase(".")){
@@ -340,14 +342,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        mp.printText("                  Real St., Dumaguete City\n");
 //        mp.printText("                         (NORECO2)\n");
 //        mp.printText("                   STATEMENT OF ACCOUNT\n");
-
+//        mp.printText("================================================================\n");
 
         String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
-
         mp.printBitmap(path);
-
-
-        mp.printText("================================================================\n");
+        mp.printText("\n");
         mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
         mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
         mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
@@ -414,6 +413,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
                             mp.printText("  "+codeName,rightText+"\n");
                         }
+
+                        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
+                                rateComponentForExport.add(codeName);
+                                exportRateDueAmount.add(rightText);
+                            }
+                        }
                     }
                 }
             } // end loop
@@ -435,7 +441,29 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("",""+"\n");
         mp.printText("",""+"\n");
         mp.printText("",""+"\n");
-        //Printed
+        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+            mp.printText("EXPORT BILL\n");
+            mp.printText("--------------------------------------------------------------"+"\n");
+            mp.printText("Date              Prev                 Pres              KWH"+"\n");
+            mp.printText(MainActivity.selectedAccount.getDateRead()
+                    + "         " + MainActivity.selectedAccount.getExportPreviousReading()
+                    + "                " + MainActivity.selectedAccount.getExportReading()
+                    + "          " + MainActivity.selectedAccount.getExportConsume()+"\n");
+            mp.printText("--------------------------------------------------------------"+"\n");
+
+            mp.printText("Customer Charge to DU\n");
+            for(int i = 0; i < rateComponentForExport.size();i++) {
+                mp.printText("  "+rateComponentForExport.get(i).toString(),exportRateDueAmount.get(i).toString()+"\n");
+            }
+            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getAmountDueExport()));
+
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
+            mp.printText("\n");
+            mp.printText("\n");
+
+        }
         db.updateAccountToPrinted(db,"Printed");
     }
 }

@@ -119,6 +119,10 @@ public class DBInfo implements BaseColumns {
     public static String UnderOverRecovery = "UnderOverRecovery";
     public static String BillDeposit = "BillDeposit";
     public static String Averaging = "Averaging";
+    public static String IsNetMetering = "IsNetMetering";
+    public static String MotherMeter = "MotherMeter";
+    public static String SubMeter = "SubMeter";
+    public static String Coreloss = "Coreloss";
 
     //public static String Consume = "Consume";
     //public static String NewReading = "NewReading";

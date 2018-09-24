@@ -11,6 +11,7 @@ MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/
 MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:2:1-11:12
 MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/937ad2ad8c8ec3c32ef3c3422a8124ca/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/4ad1102d6313db23bd421512b4e31875/AndroidManifest.xml:17:1-22:12
@@ -253,6 +254,8 @@ MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.g
 MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:7:5-43
 MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/937ad2ad8c8ec3c32ef3c3422a8124ca/AndroidManifest.xml:20:5-44
