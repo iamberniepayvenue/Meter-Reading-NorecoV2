@@ -350,7 +350,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                                  String localtaxrate, String localtaxamount, String totalamount,
                                  String isvat, String isdvat,String isOverUnder,String isfranchisetax, String islocaltax,
                                  String islifeline, String isscdiscount, String ratestatus,
-                                 String dateadded, String extra1) {
+                                 String dateadded, String extra1,String isExport) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         // sql.execSQL("DELETE From "+DBInfo.TBlRateSchedule+"");
@@ -381,6 +381,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.IsSCDiscount, isscdiscount);
         data.put(DBInfo.RateStatus, ratestatus);
         data.put(DBInfo.DateAdded, dateadded);
+        data.put(DBInfo.IsExport,isExport);
         data.put(DBInfo.Extra1, extra1);
         data.put(DBInfo.Extra2, ".");
         data.put(DBInfo.Notes1, ".");
@@ -429,8 +430,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
         cv.put(DBInfo.IsNetMetering,account.getIsNetMetering());
-        cv.put(DBInfo.MotherMeter,account.getMotherMeter());
-        cv.put(DBInfo.SubMeter,account.getSubMeter());
+        cv.put(DBInfo.IsCheckSubMeterType,account.getIsCheckSubMeterType());
+        cv.put(DBInfo.CheckMeterAccountNo,account.getCheckMeterAccountNo());
+        cv.put(DBInfo.CheckMeterName,account.getCheckMeterName());
         cv.put(DBInfo.Coreloss,account.getCoreloss());
         sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
 
@@ -600,7 +602,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ReadingDetailsModel readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(),a.getPrevBilling(),a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
                 a.getPenalty(),a.getRateSched(),a.getMultiplier(),a.getDemandKW(),a.getAdvancePayment(),a.getBillDeposit(),a.getLastReadingDate(),
                 a.getInitialReading(),a.getPrevReading(),a.getPrevFinalReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
-                a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount(),isStopMeter);
+                a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount(),
+                isStopMeter,a.getExportConsume(),a.getExportReading(),a.getExportPreviousReading());
         String readingDetails = gson.toJson(readingDetailsModel);
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.ReadingDetails, readingDetails);
@@ -695,8 +698,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setReadStatus(c.getString(c.getColumnIndex(DBInfo.ReadStatus)));
                 account.setActualConsumption(c.getString(c.getColumnIndex(DBInfo.Extra2)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
-                account.setMotherMeter(c.getString(c.getColumnIndex(DBInfo.MotherMeter)));
-                account.setSubMeter(c.getString(c.getColumnIndex(DBInfo.SubMeter)));
+                account.setIsCheckSubMeterType(c.getString(c.getColumnIndex(DBInfo.IsCheckSubMeterType)));
+                account.setCheckMeterAccountNo(c.getString(c.getColumnIndex(DBInfo.CheckMeterAccountNo)));
+                account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
                 account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
                 account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
 
@@ -771,8 +775,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setSequenceNo(c.getString(c.getColumnIndex(DBInfo.SequenceNo)));
                 account.setRouteNo(c.getString(c.getColumnIndex(DBInfo.RouteNo)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
-                account.setMotherMeter(c.getString(c.getColumnIndex(DBInfo.MotherMeter)));
-                account.setSubMeter(c.getString(c.getColumnIndex(DBInfo.SubMeter)));
+                account.setIsCheckSubMeterType(c.getString(c.getColumnIndex(DBInfo.IsCheckSubMeterType)));
+                account.setCheckMeterAccountNo(c.getString(c.getColumnIndex(DBInfo.CheckMeterAccountNo)));
+                account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
                 account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
                 account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
                 try {

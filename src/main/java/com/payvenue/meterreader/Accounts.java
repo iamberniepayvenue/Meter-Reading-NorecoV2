@@ -150,6 +150,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         if(a_class.contains("Lower") || a_class.contains("lower")) {
             isLowerVoltage = true;
+            Log.e(TAG,"Lower V here");
         }
 
         if(mAccount.getMultiplier().equalsIgnoreCase(".") ||
@@ -308,40 +309,12 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         /**STOP METER*/
         if(isStopCheck) {
-            String strAveraging = mAccount.getAveraging();
-            //Log.e(TAG,"averaging "+ strAveraging);
-            try {
-                float flConsumption = 0;
-                JSONObject json = new JSONObject(strAveraging);
-                JSONArray jsonArrayNew = json.getJSONArray("New");
-                JSONArray jsonArrayOld = json.getJSONArray("Old");
-                JSONArray finalArray;
-                JSONObject finalJson;
-
-                finalArray = jsonArrayNew.length() == 3 ? jsonArrayNew : jsonArrayOld;
-                //Log.e(TAG,"isStopCheck "+ finalArray);
-                for(int i = 0; i < finalArray.length();i++){
-                    finalJson = finalArray.getJSONObject(i);
-                    String consumption = finalJson.getString("Consumption");
-                    flConsumption = flConsumption + Float.valueOf(consumption);
-                }
-
-                if(finalArray.length() == 3) {
-                    flConsumption = flConsumption / 3;
-                }
-
-
-                rateMultiplier = flConsumption;
-
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                //Log.e(TAG,"isStopCheck "+ e.getMessage());
-                Toast.makeText(getApplicationContext(),"No available past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
+            float av = getAveraging();
+            if(av != -2000) {
+                rateMultiplier = av;
+            }else{
                 return;
             }
-
         }
 
 
@@ -379,7 +352,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     cursor.getString(cursor.getColumnIndex("IsSCDiscount")),
                     cursor.getString(cursor.getColumnIndex("IsLifeLine")),
                     Float.valueOf(Amount),//componentRate
-                    cursor.getString(cursor.getColumnIndex("IsOverUnder")));
+                    cursor.getString(cursor.getColumnIndex("IsOverUnder")),
+                    cursor.getString(cursor.getColumnIndex("IsExport")));
 
 
 
@@ -421,7 +395,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
             if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
                 scDiscountedAmount = componentAmount * scPercentage;
-                Log.e(TAG,"senior :" + scDiscountedAmount);
+                //Log.e(TAG,"senior :" + scDiscountedAmount);
                 totalSeniorDiscount = totalSeniorDiscount + scDiscountedAmount;
             }
 
@@ -429,9 +403,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
                 totalLifelineComponentAmount = totalLifelineComponentAmount + componentAmount;
                 totalLifelineDiscount = totalLifelineDiscount + lifelineDiscountAmount;
-                Log.e(TAG,"lifeline :("+componentAmount+" * "+ lifelineDiscountRate +") = " + lifelineDiscountAmount);
-                Log.e(TAG,"total :("+totalLifelineComponentAmount);
-                Log.e(TAG,"totaldiscount :("+totalLifelineDiscount);
+                //Log.e(TAG,"lifeline :("+componentAmount+" * "+ lifelineDiscountRate +") = " + lifelineDiscountAmount);
+                //Log.e(TAG,"total :("+totalLifelineComponentAmount);
+                //Log.e(TAG,"totaldiscount :("+totalLifelineDiscount);
             }
 
             if(mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
@@ -479,29 +453,39 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             totalComponent = totalComponent + componentAmount;
 
             if(isNetMetering.equalsIgnoreCase("1")){
-                if(rateSchedule.getRateComponent().equalsIgnoreCase("Generation System Charges")) {
+                exportMultiplier = Float.valueOf(mAccount.getExportConsume());
+                if(rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
                     String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), exportMultiplier);
-                    amountDueExport = CommonFunc.toDigit(strComponentAmount);
+                    if(rateSchedule.getRateComponent().equalsIgnoreCase("Generation System Charges")){
+                        amountDueExport = CommonFunc.toDigit(strComponentAmount);
+                        Log.e(TAG,"amountDueExport1: " + amountDueExport);
+                        //Log.e(TAG,"ComponentAmount: " + strComponentAmount);
+                        //Log.e(TAG,"ComponentRate: " + rateSchedule.getComponentRate());
+                        //Log.e(TAG,"exportMultiplier: " + exportMultiplier);
+                    }
+
+                    if(rateSchedule.getRateComponent().equalsIgnoreCase("METERING SYSTEM CHARGE") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering System Charge")){
+                        amountDueExport = -CommonFunc.toDigit(strComponentAmount);
+                        Log.e(TAG,"amountDueExport2: " + amountDueExport);
+                    }
+
+                    if(rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                        amountDueExport =  -rateSchedule.getComponentRate();
+                        Log.e(TAG,"amountDueExport3: " + amountDueExport);
+                    }
+
+
+                    //Log.e(TAG,"amountDueExport--" + amountDueExport);
+                    totalAmountDueExport = totalAmountDueExport + amountDueExport;
                 }
 
-                if(rateSchedule.getRateComponent().equalsIgnoreCase("METERING SYSTEM CHARGE") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering System Charge")){
-                    String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), exportMultiplier);
-                    amountDueExport = -CommonFunc.toDigit(strComponentAmount);
-                }
-
-                if(rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
-                    amountDueExport =  -rateSchedule.getComponentRate();
-                }
-
-                totalAmountDueExport = totalAmountDueExport + amountDueExport;
             }
 
 
             myRates.add(new Rates(rateSchedule.getRateSegment(),
                     rateSchedule.getRateCode(),
                     rateSchedule.getRateComponent(),
-                    Amount,rateSchedule.getIsLifeline(),rateSchedule.getIsSCDiscount(), componentAmount, componentvat, componentftax, componentltax,amountDueExport));
-
+                    Amount,rateSchedule.getIsLifeline(),rateSchedule.getIsSCDiscount(),rateSchedule.getIsExport(), componentAmount, componentvat, componentftax, componentltax,amountDueExport));
 
         }/**end of loop*/
 
@@ -519,7 +503,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
              *
             **/
         }
-        Log.e(TAG,"senior: " + totalSeniorDiscount);
+        //Log.e(TAG,"senior: " + totalSeniorDiscount);
         totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
         String penalty = mAccount.getPenalty();
         if(!penalty.equalsIgnoreCase("0")) {
@@ -538,7 +522,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         netBillAmountExport = billedAmount - totalAmountDueExport;
 
-
+        //Log.e(TAG,"totalAmountDueExport" + totalAmountDueExport);
+        //Log.e(TAG,"netBillAmountExport" + netBillAmountExport);
 
         mAccount.setLatitude("" + MainActivity.gps.getLatitude());
         mAccount.setLongitude("" + MainActivity.gps.getLongitude());
@@ -678,6 +663,49 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         /**Check if Change Meter*/
 
         if (mAccount.getIsChangeMeter().equals("1")) {
+            float av = getAveraging();
+            if(av != -2000) {
+                consume = av;
+            }else{
+                return;
+            }
+        }
+
+
+
+        float kwh = consume * multiplier + Float.valueOf(coreLoss);
+        Log.e(TAG,"new Reading : " + strReading);
+        Log.e(TAG,"consumption * multiplier: " + kwh);
+        mAccount.setConsume(String.valueOf(kwh));
+        mAccount.setActualConsumption(String.valueOf(consume));
+
+
+        if(isNetMetering.equalsIgnoreCase("1")) {
+            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+            MyDialogFragment dialogFragment = new MyDialogFragment();
+            dialogFragment.mListener = this;
+            dialogFragment.show(fm,"MyDialogFragment");
+        }else{
+            displayButtons();
+        }
+    }
+
+    @Override
+    public void onMyDialogDismiss(int tag) {
+        if(tag == 0) {
+            float consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
+            float kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
+            mAccount.setExportConsume(String.valueOf(kwhExport));
+            mAccount.setActualExportConsume(String.valueOf(consumeExport));
+            Log.e(TAG,"consumeExport:" + consumeExport);
+            Log.e(TAG,"kwhExport:" + kwhExport);
+            displayButtons();
+        }
+    }
+
+    public float getAveraging() {
+        //if (mAccount.getIsChangeMeter().equals("1")) {
+        float val;
             String strAveraging = mAccount.getAveraging();
             try {
                 float flConsumption = 0;
@@ -695,42 +723,16 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     flConsumption = flConsumption + Float.valueOf(consumption);
                 }
 
-                consume = finalArray.length() == 3 ? flConsumption/3 : flConsumption;
+                val = finalArray.length() == 3 ? flConsumption/3 : flConsumption;
 
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(),"No availbale past 3 consumption(averaging)..",Toast.LENGTH_SHORT).show();
-                return;
+                val = -2000;
             }
-        }
+        //}
 
-
-
-        float kwh = consume * multiplier + Float.valueOf(coreLoss);
-        Log.e(TAG,"new Reading : " + strReading);
-        Log.e(TAG,"consumption * multiplier: " + kwh);
-        mAccount.setConsume(String.valueOf(kwh));
-        mAccount.setActualConsumption(String.valueOf(consume));
-
-
-        if(isNetMetering.equalsIgnoreCase("1")) {
-            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            MyDialogFragment dialogFragment = new MyDialogFragment();
-            dialogFragment.show(fm,"MyDialogFragment");
-        }else{
-            displayButtons();
-        }
-    }
-
-    @Override
-    public void onDismiss(int tag) {
-        if(tag == 0) {
-            float consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
-            float kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
-            mAccount.setExportConsume(String.valueOf(kwhExport));
-            mAccount.setActualExportConsume(String.valueOf(consumeExport));
-            displayButtons();
-        }
+        return val;
     }
 
     public void hideKeyboard() {
@@ -1073,6 +1075,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
         mp.printText("Multiplier:" + mAccount.getMultiplier()+"\n");
         mp.printText("Consumption:" + mAccount.getActualConsumption()+"\n");
+        mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
         if(isNetMetering.equalsIgnoreCase("1")) {
             mp.printText("Net-Metering Customer - IMPORT BILL\n");
         }
@@ -1104,7 +1107,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     if(r.getRateSegment().equals(rateSegmentCode)) {
                         String codeName = r.getCodeName();
                         String rateAmount = String.valueOf(r.getRateAmount());
-                        String amount = String.valueOf(r.getAmount());
+                        String amount;
+                        if(isNetMetering.equalsIgnoreCase("1")){
+                            amount = String.valueOf(r.getAmountDueExport());
+                        }else{
+                            amount = String.valueOf(r.getAmount());
+                        }
+
                         int padding = 20 - rateAmount.length() - amount.length();
                         String paddingChar = " ";
                         for (int p = 0; p < padding; p++) {
@@ -1143,10 +1152,16 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                         }
 
                         if(isNetMetering.equalsIgnoreCase("1")) {
-                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
+
+                            if(r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
                                 rateComponentForExport.add(codeName);
                                 exportRateDueAmount.add(rightText);
                             }
+
+//                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
+//                                rateComponentForExport.add(codeName);
+//                                exportRateDueAmount.add(rightText);
+//                            }
                         }
 
                     }
@@ -1184,11 +1199,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             for(int i = 0; i < rateComponentForExport.size();i++) {
                 mp.printText("  "+rateComponentForExport.get(i).toString(),exportRateDueAmount.get(i).toString()+"\n");
             }
-            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getAmountDueExport()));
+            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
 
             mp.printText("\n");
             mp.printText("\n");
             mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
+            mp.printText("\n");
+            mp.printText("\n");
             mp.printText("\n");
             mp.printText("\n");
 

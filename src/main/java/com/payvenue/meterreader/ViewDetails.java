@@ -377,7 +377,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     if(r.getRateSegment().equals(rateSegmentCode)) {
                         String codeName = r.getCodeName();
                         String rateAmount = String.valueOf(r.getRateAmount());
-                        String amount = String.valueOf(r.getAmount());
+                        String amount;
+                        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")){
+                            amount = String.valueOf(r.getAmountDueExport());
+                        }else{
+                            amount = String.valueOf(r.getAmount());
+                        }
                         int padding = 20 - rateAmount.length() - amount.length();
                         String paddingChar = " ";
                         for (int p = 0; p < padding; p++) {
@@ -415,10 +420,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         }
 
                         if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
+                            if(r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
                                 rateComponentForExport.add(codeName);
                                 exportRateDueAmount.add(rightText);
                             }
+//                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
+//                                rateComponentForExport.add(codeName);
+//                                exportRateDueAmount.add(rightText);
+//                            }
                         }
                     }
                 }
@@ -437,7 +446,6 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
         mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
         mp.printText("",""+"\n");
-        mp.printText("REPRINTED" +"\n");
         mp.printText("",""+"\n");
         mp.printText("",""+"\n");
         mp.printText("",""+"\n");
@@ -455,15 +463,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             for(int i = 0; i < rateComponentForExport.size();i++) {
                 mp.printText("  "+rateComponentForExport.get(i).toString(),exportRateDueAmount.get(i).toString()+"\n");
             }
-            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getAmountDueExport()));
+            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
 
             mp.printText("\n");
             mp.printText("\n");
             mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
             mp.printText("\n");
             mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("\n");
 
         }
+
+        mp.printText("REPRINTED" +"\n");
         db.updateAccountToPrinted(db,"Printed");
+
     }
 }

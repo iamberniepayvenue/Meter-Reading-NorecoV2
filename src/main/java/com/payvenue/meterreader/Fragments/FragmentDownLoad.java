@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     private View rootView;
     SQLiteDatabase database;
     String mac;
+    private Snackbar snackbar;
 
 
     TextView lblMAC, mTvView;
@@ -61,7 +63,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     Context ctx;
     private int numberOfRoutesDownloaded = 0;
     private int numberOfAccountSavingPerRoutes = 0;
-    private int numberOfRoutesPassing = 0;
+    //private int numberOfRoutesPassing = 0;
     private int numberOfTimesDeletingTable = 0;
     private static final String TAG = "FragmentDownLoad";
     private boolean ifRouteExist = false;
@@ -75,7 +77,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         DB = new DataBaseHandler(getActivity());
         ctx = this.getActivity();
         rootView = inflater.inflate(R.layout.fragment_download, container, false);
-
 
         mDialog = new ProgressDialog(this.getActivity());
         mDialog.setCancelable(false);
@@ -118,7 +119,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     }
 
 
-    //region Functions
+    public void setSnackbar(String msg) {
+        snackbar = Snackbar.make(rootView,msg,Snackbar.LENGTH_LONG);
+    }
 
     public void initViews() {
         spinHost = (Spinner) rootView.findViewById(R.id.spinnHost);
@@ -142,7 +145,23 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
         MainActivity.db.errorDownLoad(MainActivity.db);
         numberOfTimesDeletingTable++;
+        setZeroPreference();
 
+        if (mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+    }
+    public void clearData(){
+        numberOfTimesDeletingTable++;
+        MainActivity.db.errorDownLoad(MainActivity.db);
+        setZeroPreference();
+
+        if (mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+    }
+
+    public void setZeroPreference() {
         myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,0);
         myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,0);
         myPreferences.savePrefInt(Constant.COOP_DETAILS_COUNT,0);
@@ -152,10 +171,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,0);
         myPreferences.savePrefInt(Constant.LIFELINE_POLICY_COUNT,0);
         myPreferences.savePrefInt(Constant.RATE_CODE_COUNT,0);
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
     }
 
     //endregion
@@ -271,7 +286,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     + "&mac=" + mac
                                     + "&tagclass=" + tagClass;
                             Log.e(TAG,urlParam);
-                            if(numberOfRoutesPassing == 0) {
+                            if(numberOfTimesDeletingTable == 0) {
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
                         }
@@ -318,7 +333,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
                     String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
                     String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + coopID;
-
+                    Log.e(TAG,"RateSchedule: " + cmdSchedule);
+                    Log.e(TAG,"RateSegment: " + cmdRateSegment);
+                    Log.e(TAG,"BillingPolicy: " + cmdPolicy);
                     if(myPreferences.getPrefInt(Constant.RATE_CODE_COUNT) == 0) {
                         MainActivity.webRequest.sendRequest(cmdRateCode, "Code", "","","", this);
                     }
@@ -566,7 +583,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String isscdiscount = obj.getString("IsSCDiscount");
                             String ratestatus = obj.getString("RateStatus");
                             String dateadded = obj.getString("DateFrom");
-                            String extra1 = obj.getString("Extra1");
+                            String extra1 = obj.getString("RateComponentDetails");
+                            String IsExport = obj.getString("IsExport");
 
 
                             int save = DB.saveRateSchedule(DB, coopid, ratesegment,
@@ -576,9 +594,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     franchisetaxamount, localtaxrate,
                                     localtaxamount, totalamount, isvat, isdvat,isUnderOver,
                                     isfranchisetax, islocaltax, islifeline,
-                                    isscdiscount, ratestatus, dateadded, extra1);
+                                    isscdiscount, ratestatus, dateadded, extra1,IsExport);
 
-                            if(classification.equalsIgnoreCase("Higher Voltage")) {
+                            if(classification.contains("Higher") || classification.contains("HIGHER")) {
                                 myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,save);
                             }else {
                                 myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,save);
@@ -661,7 +679,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     /**
                                      * numberOfRoutesPassing means counter of failing request
                                      * */
-                                    if(numberOfRoutesPassing == 0) {
+                                    if(numberOfTimesDeletingTable == 0) {
                                         MainActivity.webRequest.sendRequest(url, "Accounts", params, dueDate, param3, this);
                                         enableButton();
                                     }
@@ -685,25 +703,34 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 default:
         }
 
+        Log.e(TAG,"deletingtable: " + numberOfTimesDeletingTable);
+
         if(numberOfRoutesDownloaded > 0 ) {
             if(numberOfRoutesDownloaded == numberOfAccountSavingPerRoutes) {
                 if (mDialog.isShowing()) {
                     mDialog.dismiss();
                 }
 
-                Toast.makeText(ctx,"Download Complete",Toast.LENGTH_LONG).show();
-                updateReaderTable();
+                if(numberOfTimesDeletingTable == 0) {
+                    Toast.makeText(ctx,"Download Complete",Toast.LENGTH_LONG).show();
+                    updateReaderTable();
+                }
+
             }else{
                 //mDialog.show();
             }
 
             /**failed download*/
-            if(numberOfRoutesPassing > 0) {
+            if(numberOfTimesDeletingTable > 0) {
                 if (mDialog.isShowing()) {
                     mDialog.dismiss();
                 }
+
                 mTvView.setText("");
-                showToast("Download accounts not completed, please download again.");
+                clearData();
+                setSnackbar("Download accounts not completed, please download again.");
+                snackbar.show();
+                mTvView.setText("");
                 return;
             }
 
@@ -713,6 +740,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 }
             }
         }
+
 
         BtnDownLoad.setEnabled(true);
     }
@@ -732,6 +760,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     cursorRouteID.moveToNext();
                 }
             }
+        }else{
+            clearData();
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            setSnackbar("Please download again...");
+            snackbar.show();
+            mTvView.setText("");
         }
     }
 
@@ -743,19 +780,25 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         }
 
         if(type.equalsIgnoreCase("Accounts")) {
-            numberOfRoutesPassing++;
-            Toast.makeText(getContext(), "Failed to download Accounts, please retry...", Toast.LENGTH_SHORT).show();
-            MainActivity.db.errorDownLoad(MainActivity.db);
+            clearData();
+            setSnackbar("Failed to download Accounts, please retry...");
+            snackbar.show();
+            mTvView.setText("");
         }
 
         if(type.equalsIgnoreCase("dlRoutes")) {
-            Toast.makeText(getContext(), "Failed to download Routes, please retry...", Toast.LENGTH_SHORT).show();
+            clearData();
+            setSnackbar("Failed to download Routes, please retry...");
+            snackbar.show();
+            mTvView.setText("");
         }
 
         if(error.getMessage() == null) {
             Log.e(TAG,"failed download: " + type );
         }else{
-            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            setSnackbar(error.getMessage());
+            snackbar.show();
+            mTvView.setText("");
         }
 
     }

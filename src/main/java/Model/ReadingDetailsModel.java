@@ -30,13 +30,17 @@ public class ReadingDetailsModel {
      String Averaging;
      String OverUnderDiscount;
      String IsStopMeter;
+     String ExportConsume;
+     String ExportReading;
+     String ExportPreviousReading;
 
 
     public ReadingDetailsModel(String billMonth, String prevBilling, String address, String seniorCitizenStatus, String SCExpiryDate,
                                String penalty, String rateSched, String multiplier, String demandKW, String advancePayment, String billDeposit,
                                String lastReadingDate, String initialReading, String prevReading, String prevFinalReading, String isChangeMeter,
                                String meterBrand, String consume, String reading, String remarks, String latitude,
-                               String longitude, String totalLifeLineDiscount, String totalSCDiscount, Bill mBill,String overUnderDiscount,String isStopMeter) { //,String Averaging
+                               String longitude, String totalLifeLineDiscount, String totalSCDiscount, Bill mBill,String overUnderDiscount,String isStopMeter,
+                               String exportConsume,String exportReading,String exportPreviousReading) { //,String Averaging
         BillMonth = billMonth;
         PrevBilling = prevBilling;
         Address = address;
@@ -65,5 +69,8 @@ public class ReadingDetailsModel {
         OverUnderDiscount = overUnderDiscount;
         //this.Averaging = Averaging;
         IsStopMeter = isStopMeter;
+        ExportConsume = exportConsume;
+        ExportReading = exportReading;
+        ExportPreviousReading = exportPreviousReading;
     }
 }

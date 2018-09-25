@@ -17,22 +17,24 @@ public class RateSchedule {
     private String IsLifeline;
     private float componentRate;
     private String IsOverUnder;
+    private String IsExport;
 
     public RateSchedule() {
 
     }
 
-    public RateSchedule(String rateSegment,String isSCDiscount,String isLifeline) {
+    public RateSchedule(String rateSegment,String isSCDiscount,String isLifeline,String isExport) {
         RateSegment = rateSegment;
         IsLifeline = isLifeline;
         IsSCDiscount = isSCDiscount;
+        IsExport = isExport;
     }
 
     public RateSchedule(String rateSegment, String rateCode, String rateComponent, String rateType,
                         String isVatable, String isDVAT, String isFranchiseTaxable,
                         String isLocalTaxable, float componentVatRate,
                         float componentFTaxRate, float componentLTaxRate,
-                        String isSCDiscount, String isLifeline, float componentRate,String isOverUnder) {
+                        String isSCDiscount, String isLifeline, float componentRate,String isOverUnder,String isExport) {
 
         RateSegment = rateSegment;
         RateCode = rateCode;
@@ -49,6 +51,7 @@ public class RateSchedule {
         IsLifeline = isLifeline;
         this.componentRate = componentRate;
         IsOverUnder = isOverUnder;
+        IsExport = isExport;
     }
 
     public String getRateSegment() {
@@ -109,5 +112,9 @@ public class RateSchedule {
 
     public String getIsOverUnder() {
         return IsOverUnder;
+    }
+
+    public String getIsExport() {
+        return IsExport;
     }
 }

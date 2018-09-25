@@ -12,13 +12,14 @@ public class Rates extends RateSchedule {
     private float AmountDueExport;
 
 
+
     public Rates() {
 
     }
 
-    public Rates(String segment, String code, String codeName, String rateAmount,String isLifeLine,String isSCDiscount, float amount, float vatAmount, float franchiseTax, float locatlTax,float amountDueExport) {
+    public Rates(String segment, String code, String codeName, String rateAmount,String isLifeLine,String isSCDiscount,String isExport,float amount, float vatAmount, float franchiseTax, float locatlTax,float amountDueExport) {
 
-        super(segment,isLifeLine,isSCDiscount);
+        super(segment,isLifeLine,isSCDiscount,isExport);
 
         Code = code;
         CodeName = codeName;

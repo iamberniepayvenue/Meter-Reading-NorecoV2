@@ -23,11 +23,14 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 public class MyDialogFragment extends AppCompatDialogFragment {
-    private MyDialogInterface mListener;
+    public static MyDialogInterface mListener;
     private Button btnOK;
     private EditText txtPrevReading;
     private EditText txtPresReading;
     InputMethodManager imm;
+
+
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -43,7 +46,8 @@ public class MyDialogFragment extends AppCompatDialogFragment {
         txtPresReading = v.findViewById(R.id.txtExportPressReading);
 
 
-        //txtPrevReading.setText(MainActivity.selectedAccount.getExportPreviousReading());
+        txtPrevReading.setText(MainActivity.selectedAccount.getExportPreviousReading() + " kWh");
+        txtPresReading.requestFocus();
         txtPresReading.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int i, KeyEvent event) {
@@ -91,9 +95,9 @@ public class MyDialogFragment extends AppCompatDialogFragment {
         }
 
         if(!txtPrevReading.getText().toString().equalsIgnoreCase("") &&
-                txtPresReading.getText().toString().equalsIgnoreCase("")) {
+                !txtPresReading.getText().toString().equalsIgnoreCase("")) {
             MainActivity.selectedAccount.setExportReading(txtPresReading.getText().toString());
-            mListener.onDismiss(0);
+            mListener.onMyDialogDismiss(0);
             dismiss();
         }
     }

@@ -72,6 +72,7 @@ public class DBInfo implements BaseColumns {
     public static String RateStatus = "RateStatus";
     public static String DateAdded = "DateAdded";
     public static String IsOverUnder = "IsOverUnder";
+    public static String IsExport = "IsExport";
 
 
     public static String RateSegmentCode = "RateSegmentCode";
@@ -120,8 +121,9 @@ public class DBInfo implements BaseColumns {
     public static String BillDeposit = "BillDeposit";
     public static String Averaging = "Averaging";
     public static String IsNetMetering = "IsNetMetering";
-    public static String MotherMeter = "MotherMeter";
-    public static String SubMeter = "SubMeter";
+    public static String IsCheckSubMeterType = "IsCheckSubMeterType";
+    public static String CheckMeterAccountNo = "CheckMeterAccountNo";
+    public static String CheckMeterName = "CheckMeterName";
     public static String Coreloss = "Coreloss";
 
     //public static String Consume = "Consume";
@@ -200,6 +202,7 @@ public class DBInfo implements BaseColumns {
             + " STRING, " + IsFranchiseTax + " STRING ," + IsLocalTax
             + " STRING, " + IsLifeLine + " STRING , " + IsSCDiscount
             + " STRING, " + RateStatus + " STRING , " + DateAdded
+            + " STRING, " + IsExport
             + " STRING," + Extra1 + " STRING, " + Extra2
             + " STRING, " + Notes1 + " TEXT, " + Notes2
             + " TEXT)";
@@ -245,14 +248,15 @@ public class DBInfo implements BaseColumns {
             + LastName + " TEXT, " + TownCode + " TEXT,"
             + RouteNo + " TEXT," + AccountID + " TEXT,"
             + AccountType + " TEXT," + AccountClassification + " TEXT,"
-            + SubClassification + " TEXT," + SequenceNo + " TEXT,"
-            + ReadStatus + " TEXT," + EditCount + " TEXT,"
+            + SubClassification + " TEXT," + SequenceNo + " TEXT," + IsNetMetering + " TEXT,"
+            + IsCheckSubMeterType + " TEXT," + CheckMeterAccountNo + " TEXT,"
+            + CheckMeterName + " TEXT," + ReadStatus + " TEXT," + EditCount + " TEXT,"
             + PrintCount + " TEXT," + DueDate + " TEXT,"
             + DisoDate + " TEXT," + AccountStatus + " TEXT,"
             + ReadingDetails + " TEXT," + MeterSerialNo + " TEXT,"
             + UploadStatus + " TEXT," + PoleRental + " TEXT,"
             + SpaceRental + " TEXT," + PilferagePenalty + " TEXT,"
-            + UnderOverRecovery + " TEXT," + Averaging + " TEXT,"
+            + UnderOverRecovery + " TEXT," + Averaging + " TEXT," + Coreloss + " TEXT,"
             + Extra1 + " TEXT," + Extra2 + " TEXT,"
             + Notes1 + " TEXT," + Notes2 + " TEXT)";
 }

@@ -73,8 +73,9 @@ public class Account extends Person {
     private String Coreloss;
     private String ExportConsume;
     private String ExportReading;
-    private String MotherMeter;
-    private String SubMeter;
+    private String IsCheckSubMeterType;
+    private String CheckMeterAccountNo;
+    private String CheckMeterName;
     private String ExportPreviousReading;
     private String ActualExportConsume;
 
@@ -626,23 +627,31 @@ public class Account extends Person {
         ActualExportConsume = actualExportConsume;
     }
 
-    public String getMotherMeter() {
-        return MotherMeter;
-    }
-
-    public String getSubMeter() {
-        return SubMeter;
-    }
-
-    public void setMotherMeter(String motherMeter) {
-        MotherMeter = motherMeter;
-    }
-
-    public void setSubMeter(String subMeter) {
-        SubMeter = subMeter;
-    }
-
     public String getExportPreviousReading() {
         return ExportPreviousReading;
+    }
+
+    public String getIsCheckSubMeterType() {
+        return IsCheckSubMeterType;
+    }
+
+    public String getCheckMeterAccountNo() {
+        return CheckMeterAccountNo;
+    }
+
+    public String getCheckMeterName() {
+        return CheckMeterName;
+    }
+
+    public void setIsCheckSubMeterType(String isCheckSubMeterType) {
+        IsCheckSubMeterType = isCheckSubMeterType;
+    }
+
+    public void setCheckMeterAccountNo(String checkMeterAccountNo) {
+        CheckMeterAccountNo = checkMeterAccountNo;
+    }
+
+    public void setCheckMeterName(String checkMeterName) {
+        CheckMeterName = checkMeterName;
     }
 }

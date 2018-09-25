@@ -9,7 +9,7 @@ public class Bill {
     private float TotalAmount;
     private float TotalBilledAmount;
     private float NetBillAmountExport;
-    private float AmountDueExport;
+    private float TotalAmountDueExport;
 
     public Bill() {
 
@@ -20,7 +20,7 @@ public class Bill {
         TotalAmount = totalAmount;
         TotalBilledAmount = totalBilledAmount;
         NetBillAmountExport = netBillAmountExport;
-                AmountDueExport = totalExportAmountDue;
+        TotalAmountDueExport = totalExportAmountDue;
     }
 
     public ArrayList<Rates> getRates() {
@@ -39,7 +39,7 @@ public class Bill {
         return NetBillAmountExport;
     }
 
-    public float getAmountDueExport() {
-        return AmountDueExport;
+    public float getTotalAmountDueExport() {
+        return TotalAmountDueExport;
     }
 }
