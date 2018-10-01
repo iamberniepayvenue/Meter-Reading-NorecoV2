@@ -1,6 +1,5 @@
 package com.payvenue.meterreader.Fragments;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -11,9 +10,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.payvenue.meterreader.MainActivity;
 import com.payvenue.meterreader.R;
 
+import java.util.ArrayList;
+
 import DataBase.DataBaseHandler;
+import Model.Policies;
 
 public class FragmentPolicy extends Fragment {
 
@@ -49,43 +52,38 @@ public class FragmentPolicy extends Fragment {
 				TableLayout.LayoutParams.WRAP_CONTENT);
 
 		DataBaseHandler db = new DataBaseHandler(getActivity());
-
-		Cursor cursor = db.getBillingPolicy(db);
-
-		if (cursor.getCount() > 0) {
-
-			cursor.moveToFirst();
-			do {
-
+		ArrayList<Policies> policiesArrayList = new ArrayList<>();
+		//Cursor cursor = db.getBillingPolicy(db,MainActivity.selectedAccount.getAccountClassification());
+		policiesArrayList = db.getBillingPolicy(db,MainActivity.selectedAccount.getAccountClassification());
+		if (policiesArrayList.size() > 0) {
+			for(Policies p: policiesArrayList) {
 				TableRow row = new TableRow(getActivity());
 				row.setPadding(10, 10, 10, 10);
 				row.setGravity(Gravity.CENTER_HORIZONTAL);
 
 				TextView txtpolicycode = new TextView(getActivity());
-				txtpolicycode.setText(cursor.getString(3));
+				txtpolicycode.setText(p.getPolicyCode());
 
-				TextView txtpolicyname = new TextView(getActivity());
-				txtpolicyname.setText(cursor.getString(4));
+				//TextView txtpolicyname = new TextView(getActivity());
+				//txtpolicyname.setText(cursor.getString(4));
 
 				TextView txtcustclass = new TextView(getActivity());
-				txtcustclass.setText(cursor.getString(6));
+				txtcustclass.setText(p.getCustomerClass());
 
 				TextView txtminkwh = new TextView(getActivity());
-				txtminkwh.setText(cursor.getString(8));
+				txtminkwh.setText(p.getMinkWh());
 
 				TextView txtmaxkwh = new TextView(getActivity());
-				txtmaxkwh.setText(cursor.getString(9));
+				txtmaxkwh.setText(p.getMaxkWh());
 
 				row.addView(txtpolicycode);
-				row.addView(txtpolicyname);
+				//row.addView(txtpolicyname);
 				row.addView(txtcustclass);
 				row.addView(txtminkwh);
 				row.addView(txtmaxkwh);
 
 				table.addView(row, lastTxtParams);
-
-			} while (cursor.moveToNext());
-
+			}
 		}
 
 	}

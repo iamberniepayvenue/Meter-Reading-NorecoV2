@@ -45,6 +45,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     Button btnViewMap, btnReadAccount, btnNotFound;
     ArrayList<RateSegmentModel> listRateSegment = new ArrayList<>();
     public DataBaseHandler db;
+    private boolean IsMotherMeter = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -65,6 +66,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             myPurpose = b.getInt("purpose");
         }
 
+        if(MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+            IsMotherMeter = true;
+        }
 
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
@@ -332,9 +336,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         if(a_class.equalsIgnoreCase("RESIDENTIAL") || a_class.equalsIgnoreCase("Residential")) {
             a_class = "Res";
         } else if(a_class.equalsIgnoreCase("Lower Voltage")) {
-            a_class = "LowerV";
+            a_class = "LV";
         }else if (a_class.equalsIgnoreCase("Higher Voltage")) {
-            a_class = "HigherV";
+            a_class = "HV";
         }
         //Rates rates;
         mRates = mBill.getRates();
@@ -366,89 +370,95 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("--------------------------------------------------------------"+"\n");
         //Cursor cursorRateSegment = db.getRateSegment(db);
         //ArrayList<Components> componentsList= db.getRateComponent(db);
-        if(listRateSegment.size() > 0) {
-            for (RateSegmentModel s: listRateSegment){
-                String segmentName =  s.getRateSegmentName();
-                String rateSegmentCode = s.getRateSegmentCode();
-                if(!segmentName.equalsIgnoreCase("FIT-ALL")) {
-                    mp.printText(segmentName+"\n");
-                }
-                for(Rates r: mRates) {
-                    if(r.getRateSegment().equals(rateSegmentCode)) {
-                        String codeName = r.getCodeName();
-                        String rateAmount = String.valueOf(r.getRateAmount());
-                        String amount;
-                        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")){
-                            amount = String.valueOf(r.getAmountDueExport());
-                        }else{
+        if(!IsMotherMeter) {
+            if (listRateSegment.size() > 0) {
+                for (RateSegmentModel s : listRateSegment) {
+                    String segmentName = s.getRateSegmentName();
+                    String rateSegmentCode = s.getRateSegmentCode();
+                    if (!segmentName.equalsIgnoreCase("FIT-ALL")) {
+                        mp.printText(segmentName + "\n");
+                    }
+                    for (Rates r : mRates) {
+                        if (r.getRateSegment().equals(rateSegmentCode)) {
+                            String codeName = r.getCodeName();
+                            String rateAmount = String.valueOf(r.getRateAmount());
+                            String amount;
                             amount = String.valueOf(r.getAmount());
-                        }
-                        int padding = 20 - rateAmount.length() - amount.length();
-                        String paddingChar = " ";
-                        for (int p = 0; p < padding; p++) {
-                            paddingChar = paddingChar.concat(" ");
-                        }
-                        String rightText = rateAmount + paddingChar + amount;
 
-                        if(codeName.contains("VAT on")) {
-                            vatListCode.add(codeName);
-                            vatListValue.add(rightText);
-                        }
-
-                        /** print here */
-                        if(codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
-
-                            if(!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
-                                mp.printText("  Lifeline Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount()))+"\n");
-                            }else{
-                                mp.printText("  "+codeName,rightText+"\n");
+                            int padding = 20 - rateAmount.length() - amount.length();
+                            String paddingChar = " ";
+                            for (int p = 0; p < padding; p++) {
+                                paddingChar = paddingChar.concat(" ");
                             }
-                        }
+                            String rightText = rateAmount + paddingChar + amount;
 
-                        if(codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
-
-                            if(!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
-                                mp.printText("  Senior Citizens Discount(R)", "-"+MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount()))+"\n");
-                            }else{
-                                mp.printText("  "+codeName,rightText+"\n");
+                            if (codeName.contains("VAT on")) {
+                                vatListCode.add(codeName);
+                                vatListValue.add(rightText);
                             }
-                        }
 
+                            /** print here */
+                            if (codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
 
-                        if(!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
-                            mp.printText("  "+codeName,rightText+"\n");
-                        }
-
-                        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-                            if(r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
-                                rateComponentForExport.add(codeName);
-                                exportRateDueAmount.add(rightText);
+                                if (!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
+                                    mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount())) + "\n");
+                                } else {
+                                    mp.printText("  " + codeName, rightText + "\n");
+                                }
                             }
-//                            if(codeName.equalsIgnoreCase("Generation System Charges") || codeName.equalsIgnoreCase("METERING SYSTEM CHARGE") || codeName.equalsIgnoreCase("Metering Retail Customer Charge")) {
-//                                rateComponentForExport.add(codeName);
-//                                exportRateDueAmount.add(rightText);
-//                            }
+
+                            if (codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
+
+                                if (!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
+                                    mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount())) + "\n");
+                                } else {
+                                    mp.printText("  " + codeName, rightText + "\n");
+                                }
+                            }
+
+
+                            if (!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
+                                mp.printText("  " + codeName, rightText + "\n");
+                            }
+
+                            /**NET METERING*/
+                            if (MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+                                String amountExport = String.valueOf(r.getAmountDueExport());
+                                if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
+                                    int padding1 = 20 - rateAmount.length() - amountExport.length();
+                                    String paddingChar1 = " ";
+                                    for (int p = 0; p < padding1; p++) {
+                                        paddingChar1 = paddingChar1.concat(" ");
+                                    }
+                                    String rightText1 = rateAmount + paddingChar1 + amountExport;
+                                    rateComponentForExport.add(codeName);
+                                    exportRateDueAmount.add(rightText1);
+                                }
+                            }
                         }
                     }
-                }
-            } // end loop
+                } // end loop
+            }
+
+            mp.printText("VAT Charges" + "\n");
+            for (int i = 0; i < vatListCode.size(); i++) {
+                mp.printText("  " + vatListCode.get(i).toString(), vatListValue.get(i).toString() + "\n");
+            }
+
+            mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
+            mp.printText("", "" + "\n");
+            mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
+            mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling())) + "\n");
+            mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment())) + "\n");
+            mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
+            mp.printText("", "" + "\n");
+            mp.printText("", "" + "\n");
+            mp.printText("", "" + "\n");
+            mp.printText("", "" + "\n");
+
         }
 
-        mp.printText("VAT Charges"+"\n");
-        for(int i = 0; i < vatListCode.size();i++) {
-            mp.printText("  "+vatListCode.get(i).toString(),vatListValue.get(i).toString()+"\n");
-        }
 
-        mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
-        mp.printText("",""+"\n");
-        mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty))+"\n");
-        mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling()))+"\n");
-        mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment()))+"\n");
-        mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
-        mp.printText("",""+"\n");
-        mp.printText("",""+"\n");
-        mp.printText("",""+"\n");
-        mp.printText("",""+"\n");
         if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
             mp.printText("EXPORT BILL\n");
             mp.printText("--------------------------------------------------------------"+"\n");
@@ -459,15 +469,22 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     + "          " + MainActivity.selectedAccount.getExportConsume()+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 
-            mp.printText("Customer Charge to DU\n");
-            for(int i = 0; i < rateComponentForExport.size();i++) {
-                mp.printText("  "+rateComponentForExport.get(i).toString(),exportRateDueAmount.get(i).toString()+"\n");
-            }
-            mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
+            if(!IsMotherMeter) {
+                mp.printText("Customer Charge to DU\n");
+                for (int i = 0; i < rateComponentForExport.size(); i++) {
+                    mp.printText("  " + rateComponentForExport.get(i), exportRateDueAmount.get(i) + "\n");
+                }
+                mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
 
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
+                mp.printText("\n");
+                mp.printText("\n");
+                mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n");
+                if (!MainActivity.selectedAccount.getPrintCount().equalsIgnoreCase("0")) {
+                    mp.printText("REPRINTED" + "\n");
+                }
+            }
+
+
             mp.printText("\n");
             mp.printText("\n");
             mp.printText("\n");
@@ -475,7 +492,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         }
 
-        mp.printText("REPRINTED" +"\n");
+
         db.updateAccountToPrinted(db,"Printed");
 
     }

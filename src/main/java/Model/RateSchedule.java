@@ -6,13 +6,13 @@ public class RateSchedule {
     private String RateCode;
     private String RateComponent;
     private String RateType;
-    private String IsVatable;
-    private String IsDVAT;
-    private String IsFranchiseTaxable;
-    private String IsLocalTaxable;
-    private float ComponentVatRate;
-    private float ComponentFTaxRate;
-    private float ComponentLTaxRate;
+//    private String IsVatable;
+//    private String IsDVAT;
+//    private String IsFranchiseTaxable;
+//    private String IsLocalTaxable;
+//    private float ComponentVatRate;
+//    private float ComponentFTaxRate;
+//    private float ComponentLTaxRate;
     private String IsSCDiscount;
     private String IsLifeline;
     private float componentRate;
@@ -30,23 +30,27 @@ public class RateSchedule {
         IsExport = isExport;
     }
 
+//    public RateSchedule(String rateSegment, String rateCode, String rateComponent, String rateType,
+//                        String isVatable, String isDVAT, String isFranchiseTaxable,
+//                        String isLocalTaxable, float componentVatRate,
+//                        float componentFTaxRate, float componentLTaxRate,
+//                        String isSCDiscount, String isLifeline, float componentRate,String isOverUnder,String isExport)
+
+
     public RateSchedule(String rateSegment, String rateCode, String rateComponent, String rateType,
-                        String isVatable, String isDVAT, String isFranchiseTaxable,
-                        String isLocalTaxable, float componentVatRate,
-                        float componentFTaxRate, float componentLTaxRate,
-                        String isSCDiscount, String isLifeline, float componentRate,String isOverUnder,String isExport) {
+                        String isSCDiscount, String isLifeline, float componentRate,String isOverUnder,String isExport){
 
         RateSegment = rateSegment;
         RateCode = rateCode;
         RateComponent = rateComponent;
         RateType = rateType;
-        IsVatable = isVatable;
-        IsDVAT = isDVAT;
-        IsFranchiseTaxable = isFranchiseTaxable;
-        IsLocalTaxable = isLocalTaxable;
-        ComponentVatRate = componentVatRate;
-        ComponentFTaxRate = componentFTaxRate;
-        ComponentLTaxRate = componentLTaxRate;
+//        IsVatable = isVatable;
+//        IsDVAT = isDVAT;
+//        IsFranchiseTaxable = isFranchiseTaxable;
+//        IsLocalTaxable = isLocalTaxable;
+//        ComponentVatRate = componentVatRate;
+//        ComponentFTaxRate = componentFTaxRate;
+//        ComponentLTaxRate = componentLTaxRate;
         IsSCDiscount = isSCDiscount;
         IsLifeline = isLifeline;
         this.componentRate = componentRate;
@@ -70,33 +74,33 @@ public class RateSchedule {
         return RateType;
     }
 
-    public String getIsVatable() {
-        return IsVatable;
-    }
-
-    public String getIsDVAT() {
-        return IsDVAT;
-    }
-
-    public String getIsFranchiseTaxable() {
-        return IsFranchiseTaxable;
-    }
-
-    public String getIsLocalTaxable() {
-        return IsLocalTaxable;
-    }
-
-    public float getComponentVatRate() {
-        return ComponentVatRate;
-    }
-
-    public float getComponentFTaxRate() {
-        return ComponentFTaxRate;
-    }
-
-    public float getComponentLTaxRate() {
-        return ComponentLTaxRate;
-    }
+//    public String getIsVatable() {
+//        return IsVatable;
+//    }
+//
+//    public String getIsDVAT() {
+//        return IsDVAT;
+//    }
+//
+//    public String getIsFranchiseTaxable() {
+//        return IsFranchiseTaxable;
+//    }
+//
+//    public String getIsLocalTaxable() {
+//        return IsLocalTaxable;
+//    }
+//
+//    public float getComponentVatRate() {
+//        return ComponentVatRate;
+//    }
+//
+//    public float getComponentFTaxRate() {
+//        return ComponentFTaxRate;
+//    }
+//
+//    public float getComponentLTaxRate() {
+//        return ComponentLTaxRate;
+//    }
 
     public String getIsSCDiscount() {
         return IsSCDiscount;

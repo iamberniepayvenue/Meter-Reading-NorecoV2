@@ -78,6 +78,8 @@ public class Account extends Person {
     private String CheckMeterName;
     private String ExportPreviousReading;
     private String ActualExportConsume;
+    private String LifeLineSubsidy;
+    private String SeniorSubsidy;
 
 
     public String getCoreloss() {
@@ -653,5 +655,21 @@ public class Account extends Person {
 
     public void setCheckMeterName(String checkMeterName) {
         CheckMeterName = checkMeterName;
+    }
+
+    public String getLifeLineSubsidy() {
+        return LifeLineSubsidy;
+    }
+
+    public String getSeniorSubsidy() {
+        return SeniorSubsidy;
+    }
+
+    public void setLifeLineSubsidy(String lifeLineSubsidy) {
+        LifeLineSubsidy = lifeLineSubsidy;
+    }
+
+    public void setSeniorSubsidy(String seniorSubsidy) {
+        SeniorSubsidy = seniorSubsidy;
     }
 }

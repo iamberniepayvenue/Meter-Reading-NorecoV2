@@ -39,6 +39,7 @@ import java.nio.channels.FileChannel;
 
 import DataBase.DBInfo;
 import Model.Account;
+import Model.Bill;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.NetworkUtil;
@@ -247,7 +248,18 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("Remarks",account.getRemarks());
                     rowObject.put("DueDate",cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
                     rowObject.put("NewMeterSerial",cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
-
+                    rowObject.put("ExportReading",account.getExportReading());
+                    rowObject.put("IsExport",account.getIsNetMetering());
+                    rowObject.put("PrevExportReading",account.getExportPreviousReading());
+                    rowObject.put("ExportConsumption",account.getExportConsume());
+                    Bill mBill = account.getBill();
+                    rowObject.put("ExportBillAmount",mBill.getTotalAmountDueExport());
+                    rowObject.put("BillAmount",mBill.getTotalBilledAmount());
+                    rowObject.put("LifelineDiscount",account.getTotalLifeLineDiscount());
+                    rowObject.put("LifelineSubsidy",account.getLifeLineSubsidy());
+                    rowObject.put("SCDiscount",mBill.getTotalBilledAmount());
+                    rowObject.put("SCSubsidy",account.getSeniorSubsidy());
+                    rowObject.put("UORDiscount",account.getOverUnderDiscount());
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -267,7 +279,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 String url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
                 Log.e(TAG,"request: "+url);
                 Log.e(TAG,"final data: "+FinalData);
-                MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),"","", this);
+                //MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),"","", this);
             }
         }catch (IllegalArgumentException i) {
             Toast.makeText(getContext(),i.getMessage(),Toast.LENGTH_LONG).show();

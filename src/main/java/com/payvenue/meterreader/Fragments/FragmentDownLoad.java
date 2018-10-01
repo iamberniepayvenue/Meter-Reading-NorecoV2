@@ -184,7 +184,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
             case R.id.btnDownLoad:
 
-
+                numberOfTimesDeletingTable = 0;
+                numberOfAccountSavingPerRoutes = 0;
                 strPort = txtPort.getText().toString();
                 if (strPort.trim().length() == 0) {//|| txtHost.trim().length() == 0
                     Toast.makeText(ctx, "Please provide a Host and Port to download data.", Toast.LENGTH_LONG).show();
@@ -517,22 +518,22 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                             JSONObject obj = array.getJSONObject(i);
 
-                            String CoopID = obj.getString("PowerUtilityID");
-                            String CoopName = obj.getString("PowerUtilityName");
+                            //String CoopID = obj.getString("PowerUtilityID");
+                            //String CoopName = obj.getString("PowerUtilityName");
                             String PolicyCode = obj.getString("PolicyCode");
-                            String PolicyName = obj.getString("PolicyName");
+                            //String PolicyName = obj.getString("PolicyName");
                             String PolicyType = obj.getString("PolicyType");
                             String CustomerClass = obj
                                     .getString("CustomerClass");
-                            String SubClass = obj.getString("SubClass");
+                            //String SubClass = obj.getString("SubClass");
                             String MinkWh = obj.getString("MinkWh");
                             String MaxkWh = obj.getString("MaxkWh");
                             String PercentAmount = obj
                                     .getString("PercentAmount");
 
-                            int save = DB.saveBillingPolicy(DB, CoopID, CoopName,
-                                    PolicyCode, PolicyName, PolicyType,
-                                    CustomerClass, SubClass, MinkWh, MaxkWh,
+                            int save = DB.saveBillingPolicy(DB,
+                                    PolicyCode, PolicyType,
+                                    CustomerClass,MinkWh, MaxkWh,
                                     PercentAmount);
                             if(CustomerClass.equalsIgnoreCase("Higher Voltage")) {
                                 myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,save);
@@ -559,42 +560,38 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
-                            String coopid = obj.getString("PowerUtilityID");
+                            //String coopid = obj.getString("PowerUtilityID");
                             String ratesegment = obj.getString("RateSegment");
                             String ratecomponent = obj.getString("RateComponent");
                             String printorder = obj.getString("PrintOrder");
                             String classification = obj.getString("Classification");
-                            String ratesched = obj.getString("RateSched");
+                            //String ratesched = obj.getString("RateSched");
                             String rateschedtype = obj.getString("RateSchedType");
                             String amount = obj.getString("Amount");
-                            String vatrate = obj.getString("VATRate");
-                            String vatamount = obj.getString("VATAmount");
-                            String franchisetaxrate = obj.getString("FranchiseTaxRate");
-                            String franchisetaxamount = obj.getString("FranchiseTaxAmount");
-                            String localtaxrate = obj.getString("LocalTaxRate");
-                            String localtaxamount = obj.getString("LocalTaxAmount");
-                            String totalamount = obj.getString("TotalAmount");
-                            String isvat = obj.getString("IsVAT");
-                            String isdvat = obj.getString("IsDVAT");
+                            //String vatrate = obj.getString("VATRate");
+                            //String vatamount = obj.getString("VATAmount");
+                            //String franchisetaxrate = obj.getString("FranchiseTaxRate");
+                            //String franchisetaxamount = obj.getString("FranchiseTaxAmount");
+                            //String localtaxrate = obj.getString("LocalTaxRate");
+                            //String localtaxamount = obj.getString("LocalTaxAmount");
+                            //String totalamount = obj.getString("TotalAmount");
+                            //String isvat = obj.getString("IsVAT");
+                            //String isdvat = obj.getString("IsDVAT");
                             String isUnderOver = obj.getString("IsOverUnder");
-                            String isfranchisetax = obj.getString("IsFranchiseTax");
-                            String islocaltax = obj.getString("IsLocalTax");
+                           // String isfranchisetax = obj.getString("IsFranchiseTax");
+                            //String islocaltax = obj.getString("IsLocalTax");
                             String islifeline = obj.getString("IsLifeLine");
                             String isscdiscount = obj.getString("IsSCDiscount");
-                            String ratestatus = obj.getString("RateStatus");
-                            String dateadded = obj.getString("DateFrom");
+                            //String ratestatus = obj.getString("RateStatus");
+                            //String dateadded = obj.getString("DateFrom");
                             String extra1 = obj.getString("RateComponentDetails");
                             String IsExport = obj.getString("IsExport");
 
 
-                            int save = DB.saveRateSchedule(DB, coopid, ratesegment,
-                                    ratecomponent, printorder, classification,
-                                    ratesched, rateschedtype, amount, vatrate,
-                                    vatamount, franchisetaxrate,
-                                    franchisetaxamount, localtaxrate,
-                                    localtaxamount, totalamount, isvat, isdvat,isUnderOver,
-                                    isfranchisetax, islocaltax, islifeline,
-                                    isscdiscount, ratestatus, dateadded, extra1,IsExport);
+                            int save = DB.saveRateSchedule(DB,ratesegment,
+                                    ratecomponent,printorder,classification,
+                                    rateschedtype,amount,isUnderOver,islifeline,
+                                    isscdiscount,extra1,IsExport);
 
                             if(classification.contains("Higher") || classification.contains("HIGHER")) {
                                 myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,save);
@@ -660,8 +657,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 details.put("BillDeposit", obj.getString("BillDeposit"));
                                 details.put("LastReadingDate", obj.getString("LastReadingDate"));
                                 details.put("InitialReading",obj.getString("InitialReading"));
-                                details.put("PrevReading", obj.getString("PrevReading"));
-                                details.put("PrevFinalReading", obj.getString("PrevFinalReading"));
+                                //details.put("PrevReading", obj.getString("PrevReading"));
+                                //details.put("PrevFinalReading", obj.getString("PrevFinalReading"));
                                 details.put("ExportPreviousReading", obj.getString("ExportReading"));
                                 details.put("IsChangeMeter", obj.getString("IsChangeMeter"));
                                 details.put("MeterBrand", obj.getString("MeterBrand"));
@@ -676,6 +673,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 if (DownloadSave == DownloadCount) {
                                     long offset = DB.getAccountSaveCount(DB,params);
                                     String url = param3 + "&offset=" + offset;
+                                    Log.e(TAG,"Accounts: " + url);
                                     /**
                                      * numberOfRoutesPassing means counter of failing request
                                      * */
@@ -800,6 +798,5 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
             snackbar.show();
             mTvView.setText("");
         }
-
     }
 }

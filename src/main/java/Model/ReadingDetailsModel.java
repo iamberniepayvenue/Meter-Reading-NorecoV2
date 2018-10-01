@@ -33,14 +33,17 @@ public class ReadingDetailsModel {
      String ExportConsume;
      String ExportReading;
      String ExportPreviousReading;
+     String SeniorSubsidy;
+     String LifeLineSubsidy;
+     String IsNetMetering;
 
 
     public ReadingDetailsModel(String billMonth, String prevBilling, String address, String seniorCitizenStatus, String SCExpiryDate,
                                String penalty, String rateSched, String multiplier, String demandKW, String advancePayment, String billDeposit,
-                               String lastReadingDate, String initialReading, String prevReading, String prevFinalReading, String isChangeMeter,
+                               String lastReadingDate, String initialReading,String isChangeMeter,
                                String meterBrand, String consume, String reading, String remarks, String latitude,
                                String longitude, String totalLifeLineDiscount, String totalSCDiscount, Bill mBill,String overUnderDiscount,String isStopMeter,
-                               String exportConsume,String exportReading,String exportPreviousReading) { //,String Averaging
+                               String exportConsume,String exportReading,String exportPreviousReading,String seniorSubsidy,String lifeLineSubsidy,String isNetMetering) { //,String Averaging
         BillMonth = billMonth;
         PrevBilling = prevBilling;
         Address = address;
@@ -54,8 +57,6 @@ public class ReadingDetailsModel {
         BillDeposit = billDeposit;
         LastReadingDate = lastReadingDate;
         InitialReading = initialReading;
-        PrevReading = prevReading;
-        PrevFinalReading = prevFinalReading;
         IsChangeMeter = isChangeMeter;
         MeterBrand = meterBrand;
         Consume = consume;
@@ -72,5 +73,8 @@ public class ReadingDetailsModel {
         ExportConsume = exportConsume;
         ExportReading = exportReading;
         ExportPreviousReading = exportPreviousReading;
+        SeniorSubsidy = seniorSubsidy;
+        LifeLineSubsidy = lifeLineSubsidy;
+        IsNetMetering = isNetMetering;
     }
 }

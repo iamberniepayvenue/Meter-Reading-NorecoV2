@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import Model.Account;
 import Model.Components;
 import Model.LifeLineSubsidyModel;
+import Model.Policies;
 import Model.RateSegmentModel;
 import Model.Reader;
 import Model.ReadingDetailsModel;
@@ -315,23 +316,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return (int)save;
     }
 
-    public int saveBillingPolicy(DataBaseHandler db, String coopid,
-                                  String coopname, String policycode, String policyname,
-                                  String policytype, String customerclass, String subclass,
+    public int saveBillingPolicy(DataBaseHandler db,String policycode,String policytype, String customerclass,
                                   String minkwh, String maxkwh, String percentamount) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
-        // sql.execSQL("DELETE From "+DBInfo.TBLPolicy+"");
-
         ContentValues data = new ContentValues();
 
-        data.put(DBInfo.COOPID, coopid);
-        data.put(DBInfo.CoopName, coopname);
+        //data.put(DBInfo.COOPID, coopid);
+        //data.put(DBInfo.CoopName, coopname);
         data.put(DBInfo.PolicyCode, policycode);
-        data.put(DBInfo.PolicyName, policyname);
+        //data.put(DBInfo.PolicyName, policyname);
         data.put(DBInfo.PolicyType, policytype);
         data.put(DBInfo.CustomerClass, customerclass);
-        data.put(DBInfo.SubClass, subclass);
+        //data.put(DBInfo.SubClass, subclass);
         data.put(DBInfo.MinkWh, minkwh);
         data.put(DBInfo.MaxkWh, maxkwh);
         data.put(DBInfo.PercentAmount, percentamount);
@@ -342,45 +339,39 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return (int)save;
     }
 
-    public int saveRateSchedule(DataBaseHandler db, String coopid,
-                                 String ratesegment, String ratecomponent, String printorder,
-                                 String classification, String ratesched, String rateschedtype,
-                                 String amount, String vatrate, String vatamount,
-                                 String franchisetaxrate, String franchisetaxamount,
-                                 String localtaxrate, String localtaxamount, String totalamount,
-                                 String isvat, String isdvat,String isOverUnder,String isfranchisetax, String islocaltax,
-                                 String islifeline, String isscdiscount, String ratestatus,
-                                 String dateadded, String extra1,String isExport) {
+    public int saveRateSchedule(DataBaseHandler db,String ratesegment, String ratecomponent, String printorder,
+                                 String classification,String rateschedtype,
+                                 String amount,String isOverUnder,String islifeline, String isscdiscount,String extra1,String isExport) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         // sql.execSQL("DELETE From "+DBInfo.TBlRateSchedule+"");
 
         ContentValues data = new ContentValues();
 
-        data.put(DBInfo.COOPID, coopid);
+        //data.put(DBInfo.COOPID, coopid);
         data.put(DBInfo.RateSegment, ratesegment);
         data.put(DBInfo.RateComponent, ratecomponent);
         data.put(DBInfo.PrintOrder, printorder);
         data.put(DBInfo.Classification, classification);
-        data.put(DBInfo.RateSched, ratesched);
+        //data.put(DBInfo.RateSched, ratesched);
         data.put(DBInfo.RateSchedType, rateschedtype);
         data.put(DBInfo.Amount, amount);
-        data.put(DBInfo.VATRate, vatrate);
-        data.put(DBInfo.VATAmount, vatamount);
-        data.put(DBInfo.FranchiseTaxRate, franchisetaxrate);
-        data.put(DBInfo.FranchiseTaxAmount, franchisetaxamount);
-        data.put(DBInfo.LocalTaxRate, localtaxrate);
-        data.put(DBInfo.LocalTaxAmount, localtaxamount);
-        data.put(DBInfo.TotalAmount, totalamount);
-        data.put(DBInfo.IsVAT, isvat);
-        data.put(DBInfo.IsDVAT, isdvat);
+        //data.put(DBInfo.VATRate, vatrate);
+        //data.put(DBInfo.VATAmount, vatamount);
+        //data.put(DBInfo.FranchiseTaxRate, franchisetaxrate);
+        //data.put(DBInfo.FranchiseTaxAmount, franchisetaxamount);
+        //data.put(DBInfo.LocalTaxRate, localtaxrate);
+        //data.put(DBInfo.LocalTaxAmount, localtaxamount);
+        //data.put(DBInfo.TotalAmount, totalamount);
+        //data.put(DBInfo.IsVAT, isvat);
+        //data.put(DBInfo.IsDVAT, isdvat);
         data.put(DBInfo.IsOverUnder,isOverUnder);
-        data.put(DBInfo.IsFranchiseTax, isfranchisetax);
-        data.put(DBInfo.IsLocalTax, islocaltax);
+        //data.put(DBInfo.IsFranchiseTax, isfranchisetax);
+        //data.put(DBInfo.IsLocalTax, islocaltax);
         data.put(DBInfo.IsLifeLine, islifeline);
         data.put(DBInfo.IsSCDiscount, isscdiscount);
-        data.put(DBInfo.RateStatus, ratestatus);
-        data.put(DBInfo.DateAdded, dateadded);
+        //data.put(DBInfo.RateStatus, ratestatus);
+        //data.put(DBInfo.DateAdded, dateadded);
         data.put(DBInfo.IsExport,isExport);
         data.put(DBInfo.Extra1, extra1);
         data.put(DBInfo.Extra2, ".");
@@ -423,9 +414,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.ReadingDetails, details);
         cv.put(DBInfo.UploadStatus, account.getUploadStatus());
         cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
-        cv.put(DBInfo.PoleRental,account.getPoleRental());
-        cv.put(DBInfo.SpaceRental,account.getSpaceRental());
-        cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
+        //cv.put(DBInfo.PoleRental,account.getPoleRental());
+        //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
+        //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
         cv.put(DBInfo.UnderOverRecovery,account.getUnderOverRecovery());
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
@@ -478,15 +469,26 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
     // get Billing Policy
-    public Cursor getBillingPolicy(DataBaseHandler db) {
-
+    public ArrayList<Policies> getBillingPolicy(DataBaseHandler db, String classification) {
+        ArrayList<Policies> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
         Cursor c = sql.rawQuery("SELECT * From " + DBInfo.TBLPolicy
-                + " ORDER BY PolicyCode ASC;", null);
+                + " Where CustomerClass = '"+ classification +"' ORDER BY PolicyCode ASC;", null);
 
+        if(c.moveToFirst()) {
+            while(!c.isAfterLast()) {
+                String policyCode = c.getString(c.getColumnIndex(DBInfo.PolicyCode));
+                String policyType = c.getString(c.getColumnIndex(DBInfo.PolicyType));
+                String cusClass = c.getString(c.getColumnIndex(DBInfo.PolicyType));
+                String minKWH = c.getString(c.getColumnIndex(DBInfo.MinkWh));
+                String maxKWH = c.getString(c.getColumnIndex(DBInfo.MaxkWh));
+                String percentAmount = c.getString(c.getColumnIndex(DBInfo.PercentAmount));
+                list.add(new Policies(policyCode,policyType,cusClass,minKWH,maxKWH,percentAmount));
+                c.moveToNext();
+            }
+        }
 
-        return c;
-
+        return list;
     }
 
 
@@ -583,7 +585,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
 
         String myQuery = "SELECT * From " + DBInfo.TBlRateSchedule
-                + " Where " + DBInfo.Classification + "='" + acctclass + "' Order By RateSegment,PrintOrder";
+                + " Where " + DBInfo.Classification + " Like'" + acctclass + "' Order By RateSegment,PrintOrder";
         Cursor c = sql.rawQuery(myQuery, null);
         return c;
     }
@@ -599,11 +601,21 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         Gson gson = new GsonBuilder().create();
         Account a = MainActivity.selectedAccount;
-        ReadingDetailsModel readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(),a.getPrevBilling(),a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
-                a.getPenalty(),a.getRateSched(),a.getMultiplier(),a.getDemandKW(),a.getAdvancePayment(),a.getBillDeposit(),a.getLastReadingDate(),
-                a.getInitialReading(),a.getPrevReading(),a.getPrevFinalReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
-                a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),a.getBill(),a.getOverUnderDiscount(),
-                isStopMeter,a.getExportConsume(),a.getExportReading(),a.getExportPreviousReading());
+        ReadingDetailsModel readingDetailsModel;
+        if(MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+            readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(),a.getPrevBilling(),a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
+                    a.getPenalty(),a.getRateSched(),a.getMultiplier(),a.getDemandKW(),a.getAdvancePayment(),a.getBillDeposit(),a.getLastReadingDate(),
+                    a.getInitialReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
+                    a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),null,a.getOverUnderDiscount(),
+                    isStopMeter,a.getExportConsume(),a.getExportReading(),a.getExportPreviousReading(),a.getSeniorSubsidy(),a.getLifeLineSubsidy(),a.getIsNetMetering());
+        }else {
+            readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(), a.getPrevBilling(), a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
+                    a.getPenalty(), a.getRateSched(), a.getMultiplier(), a.getDemandKW(), a.getAdvancePayment(), a.getBillDeposit(), a.getLastReadingDate(),
+                    a.getInitialReading(), a.getIsChangeMeter(), a.getMeterBrand(), a.getConsume(), a.getReading(),
+                    a.getRemarks(), a.getLatitude(), a.getLongitude(), a.getTotalLifeLineDiscount(), a.getTotalSCDiscount(), a.getBill(), a.getOverUnderDiscount(),
+                    isStopMeter, a.getExportConsume(), a.getExportReading(), a.getExportPreviousReading(), a.getSeniorSubsidy(), a.getLifeLineSubsidy(), a.getIsNetMetering());
+        }
+
         String readingDetails = gson.toJson(readingDetailsModel);
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.ReadingDetails, readingDetails);
@@ -703,6 +715,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
                 account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
                 account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
+                account.setPrintCount(c.getString(c.getColumnIndex(DBInfo.PrintCount)));
 
                 try {
                     JSONObject object = new JSONObject(ave);

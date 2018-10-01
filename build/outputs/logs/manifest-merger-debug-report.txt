@@ -4,27 +4,27 @@ ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
-MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/aed1bd9e05315fcd3ea960e22037951f/AndroidManifest.xml:17:1-22:12
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-13:12
-MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/67fd0e61bc48a136dd2807f871995c5e/AndroidManifest.xml:2:1-11:12
-MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/e2265b0bbdca2843647eb11cbe6c83d8/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:2:1-11:12
-MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/937ad2ad8c8ec3c32ef3c3422a8124ca/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/4ad1102d6313db23bd421512b4e31875/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c89f879f50c827bded10b17e3a8e4d9f/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/3a0db28a6f2ee169a4daedb4a6ad408d/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/a591495c4b4a75b1255a36276ba76a08/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/8480001309fbd0e1987c51ff89ff95f0/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7d624cdcff8d02d6f57544dbbd27a40d/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/6c3ab9a5c5b2e76fa9f11d12a685e3e1/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/934c8c53cd1965a23f3091a35940878a/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/64b0d775ef3ab2a99b67b0e634b3d847/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/069e7e6792e7a986cdc92a90488db3e0/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/bb63b261e2f84433db7126276814d48d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/2b85be995ac0db0c9d8bd8bba4793af1/AndroidManifest.xml:17:1-22:12
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:2:1-13:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/dbfdd194ab8bc7b86d44492ca968df9b/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/4c3f78418c960fcfc6877f9e2761a763/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/4675da66c6fc1fa418349d8b30f539cd/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/341cda0133df49d4a36cb82f070723ff/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3a79a545af2d9f49a1be65573559535e/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/ce0ed1847760ec5e3857a40c51331dea/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/35c6d90afcb5697bb4f3a2c014b89e93/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/dc6ad81c1cbf384700a88093d15ae20e/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/5e53facfdbee5c347638fe1567dce1d7/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/39e556fe800aca96beb45ffc07ff00be/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/5c58aaa64a0e98de2ac8b9b7fa0520c5/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/691f281ab08a1caf32750cc05a20fbfc/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/c08059f18c920ed7d357f249664d69cb/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/53a69a981d43bcfaa9b0d92f20892fe7/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/c4d411a81f4d9c2fd35d189cd7369c46/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/fb145bac699a5f7786bc506820af3ae3/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/e9602909915b79854d0c34c2f9328546/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/903d553d795d6aa02f9d60b803748354/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/191d2ab7123a02450524a60224f557b0/AndroidManifest.xml:17:1-22:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-127:12
@@ -116,12 +116,12 @@ ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-
 		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:38:22-72
 application
 ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:44:5-125:19
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-20
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-20
-MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/67fd0e61bc48a136dd2807f871995c5e/AndroidManifest.xml:9:5-20
-MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/67fd0e61bc48a136dd2807f871995c5e/AndroidManifest.xml:9:5-20
-MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:9:5-20
-MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:9:5-20
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:11:5-20
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:11:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/dbfdd194ab8bc7b86d44492ca968df9b/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/dbfdd194ab8bc7b86d44492ca968df9b/AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/341cda0133df49d4a36cb82f070723ff/AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/341cda0133df49d4a36cb82f070723ff/AndroidManifest.xml:9:5-20
 	android:label
 		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:47:9-41
 	android:icon
@@ -240,48 +240,48 @@ uses-sdk
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
-MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/aed1bd9e05315fcd3ea960e22037951f/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/aed1bd9e05315fcd3ea960e22037951f/AndroidManifest.xml:20:5-43
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/67fd0e61bc48a136dd2807f871995c5e/AndroidManifest.xml:5:5-7:41
-MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/67fd0e61bc48a136dd2807f871995c5e/AndroidManifest.xml:5:5-7:41
-MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/e2265b0bbdca2843647eb11cbe6c83d8/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/e2265b0bbdca2843647eb11cbe6c83d8/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/16f98e1269737b12b0ca3474722e29cc/AndroidManifest.xml:20:5-44
-MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:7:5-43
-MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/c0af6cb7f398f24a935bcd3578c1115e/AndroidManifest.xml:7:5-43
-MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3b9a6d7da1485bd5ecef37836bf215df/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/1a645ac76746815265e4ae21b4a3621e/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/e64b989dec391577239decba7507df3d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/937ad2ad8c8ec3c32ef3c3422a8124ca/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/937ad2ad8c8ec3c32ef3c3422a8124ca/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/4ad1102d6313db23bd421512b4e31875/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/4ad1102d6313db23bd421512b4e31875/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c89f879f50c827bded10b17e3a8e4d9f/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/c89f879f50c827bded10b17e3a8e4d9f/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/3a0db28a6f2ee169a4daedb4a6ad408d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/3a0db28a6f2ee169a4daedb4a6ad408d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/a591495c4b4a75b1255a36276ba76a08/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/a591495c4b4a75b1255a36276ba76a08/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/8480001309fbd0e1987c51ff89ff95f0/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/8480001309fbd0e1987c51ff89ff95f0/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7d624cdcff8d02d6f57544dbbd27a40d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7d624cdcff8d02d6f57544dbbd27a40d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/6c3ab9a5c5b2e76fa9f11d12a685e3e1/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/6c3ab9a5c5b2e76fa9f11d12a685e3e1/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/934c8c53cd1965a23f3091a35940878a/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/934c8c53cd1965a23f3091a35940878a/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/64b0d775ef3ab2a99b67b0e634b3d847/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/64b0d775ef3ab2a99b67b0e634b3d847/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/069e7e6792e7a986cdc92a90488db3e0/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/069e7e6792e7a986cdc92a90488db3e0/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/bb63b261e2f84433db7126276814d48d/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/bb63b261e2f84433db7126276814d48d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/2b85be995ac0db0c9d8bd8bba4793af1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/2b85be995ac0db0c9d8bd8bba4793af1/AndroidManifest.xml:20:5-43
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:7:5-9:41
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/dbfdd194ab8bc7b86d44492ca968df9b/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/dbfdd194ab8bc7b86d44492ca968df9b/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/4c3f78418c960fcfc6877f9e2761a763/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/4c3f78418c960fcfc6877f9e2761a763/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/4675da66c6fc1fa418349d8b30f539cd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/4675da66c6fc1fa418349d8b30f539cd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/341cda0133df49d4a36cb82f070723ff/AndroidManifest.xml:7:5-43
+MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/341cda0133df49d4a36cb82f070723ff/AndroidManifest.xml:7:5-43
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3a79a545af2d9f49a1be65573559535e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/3a79a545af2d9f49a1be65573559535e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/ce0ed1847760ec5e3857a40c51331dea/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/ce0ed1847760ec5e3857a40c51331dea/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/35c6d90afcb5697bb4f3a2c014b89e93/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/35c6d90afcb5697bb4f3a2c014b89e93/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/dc6ad81c1cbf384700a88093d15ae20e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/dc6ad81c1cbf384700a88093d15ae20e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/5e53facfdbee5c347638fe1567dce1d7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/5e53facfdbee5c347638fe1567dce1d7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/39e556fe800aca96beb45ffc07ff00be/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/39e556fe800aca96beb45ffc07ff00be/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/5c58aaa64a0e98de2ac8b9b7fa0520c5/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/5c58aaa64a0e98de2ac8b9b7fa0520c5/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/691f281ab08a1caf32750cc05a20fbfc/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/691f281ab08a1caf32750cc05a20fbfc/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/c08059f18c920ed7d357f249664d69cb/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/c08059f18c920ed7d357f249664d69cb/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/53a69a981d43bcfaa9b0d92f20892fe7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/53a69a981d43bcfaa9b0d92f20892fe7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/c4d411a81f4d9c2fd35d189cd7369c46/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/c4d411a81f4d9c2fd35d189cd7369c46/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/fb145bac699a5f7786bc506820af3ae3/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/fb145bac699a5f7786bc506820af3ae3/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/e9602909915b79854d0c34c2f9328546/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/e9602909915b79854d0c34c2f9328546/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/903d553d795d6aa02f9d60b803748354/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/903d553d795d6aa02f9d60b803748354/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/191d2ab7123a02450524a60224f557b0/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/191d2ab7123a02450524a60224f557b0/AndroidManifest.xml:20:5-44
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
 	android:targetSdkVersion

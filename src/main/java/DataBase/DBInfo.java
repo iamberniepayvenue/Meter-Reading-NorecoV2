@@ -216,14 +216,11 @@ public class DBInfo implements BaseColumns {
             + " TEXT ," + Notes2 + " TEXT)";
 
     public static final String CREATE_POLICY = "CREATE TABLE " + DBInfo.TBLPolicy
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COOPID
-            + " STRING, " + CoopName + " STRING, " + PolicyCode
-            + " STRING ," + PolicyName + " STRING ," + PolicyType
-            + " STRING ," + CustomerClass + "," + SubClass
-            + " STRING, " + MinkWh + " STRING, " + MaxkWh
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + PolicyCode
+            + " STRING ," + PolicyType + " STRING," + CustomerClass
+            + " STRING," + MinkWh + " STRING, " + MaxkWh
             + " STRING, " + PercentAmount + " STRING, " + Extra1
-            + " STRING, " + Extra2 + " STRING ," + Notes1
-            + " TEXT , " + Notes2 + " TEXT)";
+            + " STRING, " + Extra2 + " STRING)";
 
     public static final String CREATE_UTILITY = "CREATE TABLE " + DBInfo.TBLUtility + "("
             + COOPID + " STRING , " + CoopName + " STRING, "

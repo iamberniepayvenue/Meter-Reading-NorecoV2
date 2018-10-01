@@ -3,3 +3,21 @@
 ActualConsumption(Extra2) = Pres. RDG - Prev. RDG see actual process in Accounts class in checkReading()
 strDemands = for higher voltage class see actual process in Accounts class in checkReading()
 senior citizen discount = if 1 - 20 kwh(consumption) for senior seniordiscount = (totallifeline - (totalLifeLine * lifelinerate)) * .05
+
+
+Extra1 used for New Meter Serial Number
+Extra2 used for Actual Consumption Regular Bill
+
+During Upload :
+ update ExportReading from connection_profile by new ExportReading...
+
+
+Higher Voltage:
+  Demand KW (reading demand kw) <= demandKWMinimum,demandKWMinimum will be the reference(Demand KW (reading) * RateSchedType contains 'PERKW,PERMO')
+  if Demand KW (reading demand kw) > demandKWMinimum,demandKW(reading), Demand KW (reading) will be the reference (Demand KW (reading) * RateSchedType contains 'PERKW,PERMO')
+
+
+Check Meter Type:
+    M = Mother Meter
+    R = Regular Meter
+    S = Sub meter
