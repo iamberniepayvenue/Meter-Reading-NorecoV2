@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 
@@ -253,13 +254,21 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("PrevExportReading",account.getExportPreviousReading());
                     rowObject.put("ExportConsumption",account.getExportConsume());
                     Bill mBill = account.getBill();
-                    rowObject.put("ExportBillAmount",mBill.getTotalAmountDueExport());
-                    rowObject.put("BillAmount",mBill.getTotalBilledAmount());
+                    float exportBillAmount = 0;
+                    float billAmount = 0;
+                    if(!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
+                        exportBillAmount = mBill.getTotalAmountDueExport();
+                        billAmount = mBill.getTotalBilledAmount();
+                    }
+
+                    rowObject.put("ExportBillAmount",exportBillAmount);
+                    rowObject.put("BillAmount",billAmount);
                     rowObject.put("LifelineDiscount",account.getTotalLifeLineDiscount());
                     rowObject.put("LifelineSubsidy",account.getLifeLineSubsidy());
-                    rowObject.put("SCDiscount",mBill.getTotalBilledAmount());
+                    rowObject.put("SCDiscount",account.getTotalSCDiscount());
                     rowObject.put("SCSubsidy",account.getSeniorSubsidy());
                     rowObject.put("UORDiscount",account.getOverUnderDiscount());
+                    rowObject.put("MeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -276,10 +285,16 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     e.printStackTrace();
                 }
 
-                String url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
-                Log.e(TAG,"request: "+url);
-                Log.e(TAG,"final data: "+FinalData);
-                //MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),"","", this);
+                String url = null;
+                try {
+                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
+                    //Log.e(TAG,"request: "+url);
+                    //Log.e(TAG,"final data: "+FinalData);
+                    MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),"","", this);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    Log.e(TAG,"UnsupportedEncodingException: " + e.getMessage());
+                }
             }
         }catch (IllegalArgumentException i) {
             Toast.makeText(getContext(),i.getMessage(),Toast.LENGTH_LONG).show();
