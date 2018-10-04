@@ -84,8 +84,8 @@ public class CommonFunc {
                 if (res1.length() > 0) {
                     res1.deleteCharAt(res1.length() - 1);
                 }
-                return res1.toString().toLowerCase();
-                //return "0:fd:20:44:bb:55";
+                //return res1.toString().toLowerCase();
+                return "00:FD:20:44:BB:55";
             }
         } catch (Exception ex) {
         }
@@ -171,8 +171,9 @@ public class CommonFunc {
 
 
     public static String calcComponentAmount(float rate, float consumption) {
-        DecimalFormat df = new DecimalFormat(".####");
+        DecimalFormat df = new DecimalFormat("##.####");
         float res = rate * consumption;
+        Log.e("CommonFunc","calcComponentAmount: "+ df.format(res));
         return df.format(res);
     }
 

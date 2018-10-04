@@ -25,7 +25,7 @@ public class WebRequest {
 
     Context c;
     private static final String TAG = "WebRequest";
-    private IVolleyListener listener;
+
 
     public WebRequest(Context c) {
         this.c = c;

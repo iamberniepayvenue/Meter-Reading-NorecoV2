@@ -268,7 +268,8 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("SCDiscount",account.getTotalSCDiscount());
                     rowObject.put("SCSubsidy",account.getSeniorSubsidy());
                     rowObject.put("UORDiscount",account.getOverUnderDiscount());
-                    rowObject.put("MeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
+                    rowObject.put("IsCheckSubMeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
+                    rowObject.put("DemandKWReading",account.getDemandKW());
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();

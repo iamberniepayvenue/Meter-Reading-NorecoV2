@@ -28,6 +28,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -644,23 +645,25 @@ public class MainActivity extends AppCompatActivity {
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        try{
+            Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
-        // If there are paired devices, add each one to the ArrayAdapter
-        if (pairedDevices.size() > 0) {
+            // If there are paired devices, add each one to the ArrayAdapter
+            if (pairedDevices.size() > 0) {
 
-            dialog.findViewById(R.id.title_paired_devices).setVisibility(
-                    View.VISIBLE);
-            for (BluetoothDevice device : pairedDevices) {
-                mPairedDevicesArrayAdapter.add(device.getName() + "\n"
-                        + device.getAddress());
+                dialog.findViewById(R.id.title_paired_devices).setVisibility(
+                        View.VISIBLE);
+                for (BluetoothDevice device : pairedDevices) {
+                    mPairedDevicesArrayAdapter.add(device.getName() + "\n"
+                            + device.getAddress());
+                }
+            } else {
+                String noDevices = "No devices have been paired";
+                mPairedDevicesArrayAdapter.add(noDevices);
             }
-        } else {
-            String noDevices = "No devices have been paired";
-            mPairedDevicesArrayAdapter.add(noDevices);
+        }catch (NullPointerException e) {
+            Log.e(TAG,""+e.getMessage());
         }
-
-
     }
 
 

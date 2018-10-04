@@ -38,7 +38,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+    import java.text.DecimalFormat;
+    import java.util.ArrayList;
 import java.util.List;
 
 import DataBase.DataBaseHandler;
@@ -358,6 +359,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             if(!isMotherMeter) {
 
                 while (cursor.moveToNext()) {
+                    String strComponentAmount = "0";
                     String Amount = cursor.getString(cursor.getColumnIndex("Amount"));
                     rateSchedule = new RateSchedule(
                             cursor.getString(cursor.getColumnIndex("RateSegment")),
@@ -389,19 +391,22 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     if (isLowerVoltage || isHigherVoltage) {
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                             componentAmount = rateSchedule.getComponentRate();
+                            strComponentAmount = String.valueOf(componentAmount);
                             fixed = 1;
                         }
                     } else {
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                             componentAmount = rateSchedule.getComponentRate();
+                            strComponentAmount = String.valueOf(componentAmount);
                             fixed = 1;
                         }
                     }
 
                     Log.e(TAG, "fixed : " + fixed);
                     if (fixed == 0) {
-                        String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
-                        componentAmount = CommonFunc.toDigit(strComponentAmount);
+                        String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
+                        componentAmount = CommonFunc.toDigit(_strComponentAmount);
+                        strComponentAmount = _strComponentAmount;
                     }
 
                     //Log.e(TAG,"component amount : " + componentAmount);
@@ -411,8 +416,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         if (rateSchedule.getRateType().equalsIgnoreCase("PERKW") || rateSchedule.getRateType().equalsIgnoreCase("PKW") || rateSchedule.getRateType().equalsIgnoreCase("P/kW")) {
                             if (fixed == 0) {
                                 Log.e(TAG, "here : here" + demandKWMininum);
-                                String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), demandKWMininum);
-                                componentAmount = CommonFunc.toDigit(strComponentAmount);
+                                String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), demandKWMininum);
+                                componentAmount = CommonFunc.toDigit(_strComponentAmount);
+                                strComponentAmount = _strComponentAmount;
                                 Log.e(TAG, "demand : " + rateSchedule.getRateComponent() + " ----- " + componentAmount);
                             }
                         }
@@ -437,6 +443,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
                         overUnder = overUnder + componentAmount;
                         componentAmount = 0;
+                        strComponentAmount = String.valueOf(componentAmount);
                         componentvat = 0;
                         componentftax = 0;
                         componentltax = 0;
@@ -444,6 +451,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                     if (canAvailLifelineDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
                         componentAmount = 0;
+                        strComponentAmount = String.valueOf(componentAmount);
                         componentvat = 0;
                         componentftax = 0;
                         componentltax = 0;
@@ -453,11 +461,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             || rateSchedule.getRateCode().equalsIgnoreCase("OLRA")
                             || rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
                         componentAmount = 0;
+                        strComponentAmount = String.valueOf(componentAmount);
                     }
 
                     if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
                         //rateSchedule.getRateCode().equalsIgnoreCase("SOL"))
                         componentAmount = 0;
+                        strComponentAmount = String.valueOf(componentAmount);
                         componentvat = 0;
                         componentftax = 0;
                         componentltax = 0;
@@ -465,6 +475,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                     if (canAvailSCDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
                         componentAmount = 0;
+                        strComponentAmount = String.valueOf(componentAmount);
                         componentvat = 0;
                         componentftax = 0;
                         componentltax = 0;
@@ -474,6 +485,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     /**record senior subsidy*/
                     if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
                         scSubsidy = componentAmount;
+                        DecimalFormat df = new DecimalFormat("##.####");
+                        df.format(scSubsidy);
                     }
 
                     /**record lifeline subsidy*/
@@ -487,13 +500,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     if (isNetMetering.equalsIgnoreCase("1")) {
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
-                            String strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), exportMultiplier);
+                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), exportMultiplier);
                             if (rateSchedule.getRateComponent().equalsIgnoreCase("Generation System Charges")) {
-                                amountDueExport = CommonFunc.toDigit(strComponentAmount);
+                                amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().equalsIgnoreCase("METERING SYSTEM CHARGE") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering System Charge")) {
-                                amountDueExport = -CommonFunc.toDigit(strComponentAmount);
+                                amountDueExport = -CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
@@ -507,10 +520,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     }
 
                     Log.e(TAG, "component amount --- : " + componentAmount);
+                    Log.e(TAG, "component amount1 --- : " + strComponentAmount);
                     myRates.add(new Rates(rateSchedule.getRateSegment(),
                             rateSchedule.getRateCode(),
                             rateSchedule.getRateComponent(),
-                            Amount, rateSchedule.getIsLifeline(), rateSchedule.getIsSCDiscount(), rateSchedule.getIsExport(), componentAmount, amountDueExport)); //componentvat, componentftax, componentltax,
+                            Amount, rateSchedule.getIsLifeline(), rateSchedule.getIsSCDiscount(), rateSchedule.getIsExport(), strComponentAmount, amountDueExport)); //componentvat, componentftax, componentltax,
 
                 }/**end of loop*/
 
@@ -545,11 +559,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             + CommonFunc.toDigit(mAccount.getPilferagePenalty())
                     */
 
-                netBillAmountExport = billedAmount - totalAmountDueExport;
-
                 billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
+                netBillAmountExport = billedAmount - totalAmountDueExport;
                 mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount,netBillAmountExport,totalAmountDueExport);
                 mAccount.setBill(mBill);
+
             }
 
             mAccount.setLatitude("" + MainActivity.gps.getLatitude());
@@ -1190,8 +1204,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
                                 String rateAmount = String.valueOf(r.getRateAmount());
-                                String amount;
-                                amount = String.valueOf(r.getAmount());
+                                String amount = r.getAmount();
 
                                 int padding = 20 - rateAmount.length() - amount.length();
                                 String paddingChar = " ";
