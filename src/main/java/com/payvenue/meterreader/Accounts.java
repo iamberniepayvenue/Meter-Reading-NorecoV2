@@ -140,22 +140,16 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             mAccount =  MainActivity.selectedAccount;
             a_class = mAccount.getAccountClassification();
+
             if(mAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || mAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
                 isMotherMeter = true;
             }
-    //        if(a_class.contains("Voltage") || a_class.contains("voltage")) {
-    //            a_class = a_class.replace(" "," ");
-    //        }
-    //
-    //        if(a_class.equalsIgnoreCase(a_class.toUpperCase())) {
-    //            a_class = a_class.substring(0,1).toUpperCase() + a_class.substring(1).toLowerCase();
-    //        }
 
-            if(a_class.contains("Higher") || a_class.contains("higher") || a_class.contains("HIGHER")) {
+            if(a_class.toLowerCase().contains("higher")) {
                 isHigherVoltage = true;
             }
 
-            if(a_class.contains("Lower") || a_class.contains("lower")) {
+            if(a_class.toLowerCase().contains("lower")) {
                 isLowerVoltage = true;
                 Log.e(TAG,"Lower V here");
             }
@@ -356,6 +350,10 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
             Log.e(TAG,"Is Mother Meter: " + isMotherMeter);
+            /**
+             *  Check Mother meter
+             *
+             * */
             if(!isMotherMeter) {
 
                 while (cursor.moveToNext()) {
@@ -1143,14 +1141,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             try{
                 List<Rates> mRates;
                 Bill mBill = mAccount.getBill();
-                mRates = mBill.getRates();
                 MobilePrinter mp = MobilePrinter.getInstance(this);
                 String a_class = mAccount.getAccountClassification();
-                if(a_class.equalsIgnoreCase("RESIDENTIAL") || a_class.equalsIgnoreCase("Residential")) {
+                if(a_class.toLowerCase().contains("residential")) {
                     a_class = "Res";
-                } else if(a_class.equalsIgnoreCase("Lower Voltage")) {
+                } else if(a_class.toLowerCase().contains("lower")) {
                     a_class = "LV";
-                }else if (a_class.equalsIgnoreCase("Higher Voltage")) {
+                } else if (a_class.toLowerCase().contains("higher")) {
                     a_class = "HV";
                 }
 
@@ -1189,6 +1186,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
              cursorRateSegment is defined in MainActivity, and was assign in ViewDetails class
              * */
             if(!isMotherMeter) {
+                mRates = mBill.getRates();
                 if (listRateSegment.size() > 0) {
                     for (RateSegmentModel seg : listRateSegment) {
                         String segmentName = seg.getRateSegmentName();

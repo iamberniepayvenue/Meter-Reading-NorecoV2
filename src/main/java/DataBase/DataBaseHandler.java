@@ -835,7 +835,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ArrayList<RateSegmentModel> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
         String query = "SELECT r.RateSegmentCode,r.RateSegmentName,r.Details From " + DBInfo.TBLRateSegment
-                + " r Left Join " +DBInfo.TBlRateSchedule +" rs On r.RateSegmentCode = rs.RateSegment Where rs.Classification Like " + MainActivity.selectedAccount.getAccountClassification() + " Order By RateSegmentCode";
+                + " r Left Join " +DBInfo.TBlRateSchedule +" rs On r.RateSegmentCode = rs.RateSegment Where rs.Classification Like '" + MainActivity.selectedAccount.getAccountClassification() + "' Group By r.RateSegmentCode Order By r.RateSegmentCode";
         Cursor c = sql.rawQuery(query, null);
 
         if(c.moveToFirst()) {

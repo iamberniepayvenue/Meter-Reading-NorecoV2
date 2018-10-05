@@ -217,17 +217,18 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             } else {
 
-                if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
-                    Toast.makeText(this, "Can't Generate Billing for Higher Voltage Classification.", Toast.LENGTH_SHORT).show();
+                if (MainActivity.mIsConnected) {
+                    preparePrint();
                 } else {
-                    //Intent intent = new Intent(this, BillPreview.class);
-                    //startActivityForResult(intent, 5);
-                    if (MainActivity.mIsConnected) {
-                        preparePrint();
-                    } else {
-                        Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
                 }
+//                if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
+//                    Toast.makeText(this, "Can't Generate Billing for Higher Voltage Classification.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    //Intent intent = new Intent(this, BillPreview.class);
+//                    //startActivityForResult(intent, 5);
+//
+//                }
             }
         }
 
@@ -252,9 +253,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         }
 
-        return super.
-
-                onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -333,15 +332,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         List<Rates> mRates;
         mBill = MainActivity.selectedAccount.getBill();
         String a_class = MainActivity.selectedAccount.getAccountClassification();
-        if(a_class.equalsIgnoreCase("RESIDENTIAL") || a_class.equalsIgnoreCase("Residential")) {
+        if(a_class.toLowerCase().contains("residential")) {
             a_class = "Res";
-        } else if(a_class.equalsIgnoreCase("Lower Voltage")) {
+        } else if(a_class.toLowerCase().contains("lower")) {
             a_class = "LV";
-        }else if (a_class.equalsIgnoreCase("Higher Voltage")) {
+        } else if (a_class.toLowerCase().contains("higher")) {
             a_class = "HV";
         }
-        //Rates rates;
-        mRates = mBill.getRates();
+
 //        mp.printText("           Negros Oriental II Electric Cooperative\n");
 //        mp.printText("                  Real St., Dumaguete City\n");
 //        mp.printText("                         (NORECO2)\n");
@@ -371,6 +369,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         //Cursor cursorRateSegment = db.getRateSegment(db);
         //ArrayList<Components> componentsList= db.getRateComponent(db);
         if(!IsMotherMeter) {
+            mRates = mBill.getRates();
             if (listRateSegment.size() > 0) {
                 for (RateSegmentModel s : listRateSegment) {
                     String segmentName = s.getRateSegmentName();
