@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.payvenue.meterreader.MainActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -341,7 +342,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public int saveRateSchedule(DataBaseHandler db,String ratesegment, String ratecomponent, String printorder,
                                  String classification,String rateschedtype,
-                                 String amount,String isOverUnder,String islifeline, String isscdiscount,String extra1,String isExport) {
+                                 String amount,String isOverUnder,String islifeline, String isscdiscount,String dateFrom,String extra1,String isExport) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         // sql.execSQL("DELETE From "+DBInfo.TBlRateSchedule+"");
@@ -371,7 +372,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.IsLifeLine, islifeline);
         data.put(DBInfo.IsSCDiscount, isscdiscount);
         //data.put(DBInfo.RateStatus, ratestatus);
-        //data.put(DBInfo.DateAdded, dateadded);
+        data.put(DBInfo.DateAdded, dateFrom);
         data.put(DBInfo.IsExport,isExport);
         data.put(DBInfo.Extra1, extra1);
         data.put(DBInfo.Extra2, ".");
@@ -384,6 +385,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return (int)save;
     }
 
+    public String getBillMonth(DataBaseHandler db,String classification) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        Cursor cursor;
+        String query = "Select "+DBInfo.DateAdded+" From " + DBInfo.TBlRateSchedule + " Where " + DBInfo.Classification + " Like '" + classification + "' Group By " + DBInfo.DateAdded;
+        cursor = sql.rawQuery(query,null,null);
+
+        while (cursor.moveToNext()) {
+            return cursor.getString(cursor.getColumnIndex("DateAdded"));
+        }
+
+
+        return "";
+    }
 
     public int saveAccount(DataBaseHandler db, Account account, String details,String routeID) {
         int count = 0;
@@ -420,6 +434,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.UnderOverRecovery,account.getUnderOverRecovery());
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
+        cv.put(DBInfo.Arrears,account.getArrears());
         cv.put(DBInfo.IsNetMetering,account.getIsNetMetering());
         cv.put(DBInfo.IsCheckSubMeterType,account.getIsCheckSubMeterType());
         cv.put(DBInfo.CheckMeterAccountNo,account.getCheckMeterAccountNo());
@@ -710,6 +725,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setReadStatus(c.getString(c.getColumnIndex(DBInfo.ReadStatus)));
                 account.setActualConsumption(c.getString(c.getColumnIndex(DBInfo.Extra2)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
+                String arr = c.getString(c.getColumnIndex(DBInfo.Arrears));
                 account.setIsCheckSubMeterType(c.getString(c.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                 account.setCheckMeterAccountNo(c.getString(c.getColumnIndex(DBInfo.CheckMeterAccountNo)));
                 account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
@@ -719,11 +735,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
                 try {
                     JSONObject object = new JSONObject(ave);
+                    JSONArray arrObject = new JSONArray(arr);
                     account.setAveraging(object);
+                    account.setArrears(arrObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e(TAG,"ave : " + e.getMessage());
                 }
+
                 MainActivity.selectedAccount = account;
             }
         }
@@ -788,6 +807,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setSequenceNo(c.getString(c.getColumnIndex(DBInfo.SequenceNo)));
                 account.setRouteNo(c.getString(c.getColumnIndex(DBInfo.RouteNo)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
+                String arr = c.getString(c.getColumnIndex(DBInfo.Arrears));
                 account.setIsCheckSubMeterType(c.getString(c.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                 account.setCheckMeterAccountNo(c.getString(c.getColumnIndex(DBInfo.CheckMeterAccountNo)));
                 account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
@@ -795,7 +815,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
                 try {
                     JSONObject object = new JSONObject(ave);
+                    JSONArray arrObject = new JSONArray(arr);
                     account.setAveraging(object);
+                    account.setArrears(arrObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e(TAG,"ave : " + e.getMessage());

@@ -583,7 +583,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             String islifeline = obj.getString("IsLifeLine");
                             String isscdiscount = obj.getString("IsSCDiscount");
                             //String ratestatus = obj.getString("RateStatus");
-                            //String dateadded = obj.getString("DateFrom");
+                            String dateFrom = obj.getString("DateFrom");
                             String extra1 = obj.getString("RateComponentDetails");
                             String IsExport = obj.getString("IsExport");
 
@@ -591,7 +591,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             int save = DB.saveRateSchedule(DB,ratesegment,
                                     ratecomponent,printorder,classification,
                                     rateschedtype,amount,isUnderOver,islifeline,
-                                    isscdiscount,extra1,IsExport);
+                                    isscdiscount,dateFrom,extra1,IsExport);
 
                             if(classification.contains("Higher") || classification.contains("HIGHER")) {
                                 myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT,save);

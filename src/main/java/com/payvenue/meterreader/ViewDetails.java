@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.mapswithme.maps.api.MapsWithMeApi;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -311,6 +312,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void preparePrint() {
+        DecimalFormat df = new DecimalFormat("#.####");
         ArrayList<String> vatListCode = new ArrayList<>();
         ArrayList<String> vatListValue = new ArrayList<>();
         ArrayList<String> rateComponentForExport = new ArrayList<>();
@@ -351,7 +353,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("\n");
         mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
         mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
-        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(MainActivity.selectedAccount.getBillMonth())+"\n");
+        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + MainActivity.selectedAccount.getBillMonth()+"\n");
         mp.printTextBoldRight("Account Name:",name+"\n");
         mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
         mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
@@ -359,6 +361,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
         mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
         mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
+        if(a_class.equalsIgnoreCase("HV")) {
+            mp.printText("Coreloss:" + MainActivity.selectedAccount.getCoreloss(),"DemandKW:"+MainActivity.selectedAccount.getDemandKW()+"\n");
+        }else{
+            mp.printText("Coreloss:" + MainActivity.selectedAccount.getCoreloss()+"\n");
+        }
+
+        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+            mp.printText("Net-Metering Customer - IMPORT BILL\n");
+        }
+
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date              Prev                 Pres              KWH"+"\n");
         mp.printText(MainActivity.selectedAccount.getDateRead()
@@ -382,7 +394,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                             String codeName = r.getCodeName();
                             String rateAmount = String.valueOf(r.getRateAmount());
                             String amount;
-                            amount = String.valueOf(r.getAmount());
+                            amount = df.format(Double.parseDouble(r.getAmount()));
 
                             int padding = 20 - rateAmount.length() - amount.length();
                             String paddingChar = " ";
@@ -422,7 +434,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
                             /**NET METERING*/
                             if (MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-                                String amountExport = String.valueOf(r.getAmountDueExport());
+                                String amountExport = df.format(r.getAmountDueExport());
                                 if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
                                     int padding1 = 20 - rateAmount.length() - amountExport.length();
                                     String paddingChar1 = " ";
@@ -459,7 +471,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
         if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-            mp.printText("EXPORT BILL\n");
+            mp.printTextBoldRight("","EXPORT BILL"+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
             mp.printText("Date              Prev                 Pres              KWH"+"\n");
             mp.printText(MainActivity.selectedAccount.getDateRead()
@@ -471,7 +483,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             if(!IsMotherMeter) {
                 mp.printText("Customer Charge to DU\n");
                 for (int i = 0; i < rateComponentForExport.size(); i++) {
-                    mp.printText("  " + rateComponentForExport.get(i), exportRateDueAmount.get(i) + "\n");
+                    mp.printText("  " + rateComponentForExport.get(i),  exportRateDueAmount.get(i) + "\n");
                 }
                 mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
 

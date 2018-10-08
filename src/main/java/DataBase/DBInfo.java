@@ -120,6 +120,7 @@ public class DBInfo implements BaseColumns {
     public static String UnderOverRecovery = "UnderOverRecovery";
     public static String BillDeposit = "BillDeposit";
     public static String Averaging = "Averaging";
+    public static String Arrears = "Arrears";
     public static String IsNetMetering = "IsNetMetering";
     public static String IsCheckSubMeterType = "IsCheckSubMeterType";
     public static String CheckMeterAccountNo = "CheckMeterAccountNo";
@@ -253,7 +254,7 @@ public class DBInfo implements BaseColumns {
             + ReadingDetails + " TEXT," + MeterSerialNo + " TEXT,"
             + UploadStatus + " TEXT," + PoleRental + " TEXT,"
             + SpaceRental + " TEXT," + PilferagePenalty + " TEXT,"
-            + UnderOverRecovery + " TEXT," + Averaging + " TEXT," + Coreloss + " TEXT,"
+            + UnderOverRecovery + " TEXT," + Averaging + " TEXT," + Coreloss + " TEXT," +  Arrears + " TEXT,"
             + Extra1 + " TEXT," + Extra2 + " TEXT,"
             + Notes1 + " TEXT," + Notes2 + " TEXT)";
 }

@@ -6,16 +6,16 @@ public class Bill {
 
 
     private ArrayList<Rates> mRates;
-    private float TotalAmount;
-    private float TotalBilledAmount;
-    private float NetBillAmountExport;
-    private float TotalAmountDueExport;
+    private double TotalAmount;
+    private double TotalBilledAmount;
+    private double NetBillAmountExport;
+    private double TotalAmountDueExport;
 
     public Bill() {
 
     }
 
-    public Bill(ArrayList<Rates> rates, float totalAmount, float totalBilledAmount,float netBillAmountExport,float totalExportAmountDue) {
+    public Bill(ArrayList<Rates> rates, double totalAmount, double totalBilledAmount,double netBillAmountExport,double totalExportAmountDue) {
         this.mRates = rates;
         TotalAmount = totalAmount;
         TotalBilledAmount = totalBilledAmount;
@@ -27,19 +27,19 @@ public class Bill {
         return mRates;
     }
 
-    public float getTotalAmount() {
+    public double getTotalAmount() {
         return TotalAmount;
     }
 
-    public float getTotalBilledAmount() {
+    public double getTotalBilledAmount() {
         return TotalBilledAmount;
     }
 
-    public float getNetBillAmountExport() {
+    public double getNetBillAmountExport() {
         return NetBillAmountExport;
     }
 
-    public float getTotalAmountDueExport() {
+    public double getTotalAmountDueExport() {
         return TotalAmountDueExport;
     }
 }

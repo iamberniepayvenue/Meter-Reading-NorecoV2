@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.GsonBuilder;
 import com.payvenue.meterreader.Camera.ZBarScannerActivity;
 import com.payvenue.meterreader.Fragments.MyDialogFragment;
 import com.payvenue.meterreader.Interface.MyDialogInterface;
@@ -74,22 +73,26 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         boolean isOvalCheck = false, isRecycleCheck = false, isStopCheck = false, isChangeCheck = false;
         double maxreadingvalue = 0;
         String strReading = "", strRemarks = "", strDemands = "";
-        float rateMultiplier,exportMultiplier;
-        float multiplier,totalAmountDueExport = 0,netBillAmountExport = 0;
-        float scPercentage;// = (float) 0.05;
-        float componentAmount, componentvat, componentltax, componentftax,lifelineDiscountRate,scDiscountedAmount,
+        double rateMultiplier,exportMultiplier;
+        double multiplier,totalAmountDueExport = 0,netBillAmountExport = 0;
+        double scPercentage;// = (float) 0.05;
+        double componentAmount, componentvat, componentltax, componentftax,lifelineDiscountRate,scDiscountedAmount,
                 lifelineDiscountAmount,totalLifelineDiscount,totalComponent, billedAmount;
-        float scSubsidy = 0;
-        float sol = 0;
-        float overUnder = 0;
-        float totalSeniorDiscount;
-        float demandKWMininum;
+        double scSubsidy = 0;
+        double sol = 0;
+        double overUnder = 0;
+        double totalSeniorDiscount;
+        double demandKWMininum;
+        double totalArrears = 0,arrearsPenalty = 0;
         boolean canAvailLifelineDiscount = false, canAvailSCDiscount = false;
         boolean scInvalidDate = false;
         boolean isSCOverPolicy = false;
         ArrayList<Rates> myRates = new ArrayList<>();
         ArrayList<RateSegmentModel> listRateSegment = new ArrayList<>();
         ArrayList<Policies> policiesArrayList = new ArrayList<>();
+        ArrayList<String> arrearsAmountList = new ArrayList<>();
+        ArrayList<String> arrearsBillMonthList = new ArrayList<>();
+        ArrayList<String> arrearsPenaltyList = new ArrayList<>();
         //public  ArrayList<Components> componentsList = new ArrayList<>();
         Bill mBill;
         String billMonth;
@@ -151,8 +154,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             if(a_class.toLowerCase().contains("lower")) {
                 isLowerVoltage = true;
-                Log.e(TAG,"Lower V here");
             }
+
+            simplifyArrears();
 
             if(mAccount.getMultiplier().equalsIgnoreCase(".") ||
                     mAccount.getMultiplier().equalsIgnoreCase("")) {
@@ -162,6 +166,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
             Log.e(TAG,"Classification: " + a_class);
+            Log.e(TAG,"isHigherVoltage: " + isHigherVoltage);
+
             isNetMetering = mAccount.getIsNetMetering();
 
             policiesArrayList = db.getBillingPolicy(db,a_class);
@@ -249,7 +255,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
         public void calculateBill() {
 
-            float totalLifelineComponentAmount = 0;
+            double totalLifelineComponentAmount = 0;
 
             mAccount.setRemarks(strRemarks);
 
@@ -318,8 +324,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             RateSchedule rateSchedule = null;
 
-            billMonth = CommonFunc.getBillMonth(); //+ "-" + mAccount.getRouteNo() + "-" + mAccount.getAccountID();
-            mAccount.setBillMonth(billMonth);
+            billMonth =  db.getBillMonth(db,a_class);
+            String []strArray = billMonth.split("/");
+            mAccount.setBillMonth(CommonFunc.monthAbrev(strArray[0]));
             mAccount.setDateRead(CommonFunc.getDateOnly());
 
             String strConsume = mAccount.getConsume();
@@ -385,120 +392,149 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                      *  Supply System Charge
                      *  Metering Retail Customer Charge
                      * */
-                    int fixed = 0;
-                    if (isLowerVoltage || isHigherVoltage) {
+
+                    if(isHigherVoltage) {
+                        int fixed = 0;
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                             componentAmount = rateSchedule.getComponentRate();
                             strComponentAmount = String.valueOf(componentAmount);
                             fixed = 1;
                         }
-                    } else {
-                        if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
-                            componentAmount = rateSchedule.getComponentRate();
-                            strComponentAmount = String.valueOf(componentAmount);
-                            fixed = 1;
+
+                        Log.e(TAG, "fixed : " + fixed);
+                        if (fixed == 0) {
+                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)rateMultiplier);
+                            componentAmount = CommonFunc.toDigit(_strComponentAmount);
+                            strComponentAmount = _strComponentAmount;
                         }
-                    }
 
-                    Log.e(TAG, "fixed : " + fixed);
-                    if (fixed == 0) {
-                        String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), rateMultiplier);
-                        componentAmount = CommonFunc.toDigit(_strComponentAmount);
-                        strComponentAmount = _strComponentAmount;
-                    }
-
-                    //Log.e(TAG,"component amount : " + componentAmount);
-                    if (isHigherVoltage) {
-                        demandKWMininum = Float.valueOf(mAccount.getDemandKW());
-                        Log.e(TAG, "reg: " + rateSchedule.getRateComponent() + " ----- " + componentAmount);
-                        if (rateSchedule.getRateType().equalsIgnoreCase("PERKW") || rateSchedule.getRateType().equalsIgnoreCase("PKW") || rateSchedule.getRateType().equalsIgnoreCase("P/kW")) {
-                            if (fixed == 0) {
-                                Log.e(TAG, "here : here" + demandKWMininum);
-                                String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), demandKWMininum);
-                                componentAmount = CommonFunc.toDigit(_strComponentAmount);
-                                strComponentAmount = _strComponentAmount;
-                                Log.e(TAG, "demand : " + rateSchedule.getRateComponent() + " ----- " + componentAmount);
+                        //Log.e(TAG,"component amount : " + componentAmount);
+                        if (isHigherVoltage) {
+                            demandKWMininum = Double.valueOf(mAccount.getDemandKW());
+                            //Log.e(TAG, "reg: " + rateSchedule.getRateComponent() + " ----- " + componentAmount);
+                            String _rateType = rateSchedule.getRateType().toUpperCase();
+                            if (_rateType.equalsIgnoreCase("PERKW") || _rateType.equalsIgnoreCase("PKW") || _rateType.equalsIgnoreCase("P/KW")) {
+                                if (fixed == 0) {
+                                    //Log.e(TAG, "here : here" + demandKWMininum);
+                                    String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)demandKWMininum);
+                                    componentAmount = CommonFunc.toDigit(_strComponentAmount);
+                                    strComponentAmount = _strComponentAmount;
+                                    //Log.e(TAG, "demand : " + rateSchedule.getRateComponent() + " ----- " + componentAmount);
+                                }
                             }
                         }
-                    }
+
+                        if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
+                                rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
+
+                        if (mAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
+                                rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            overUnder = overUnder + componentAmount;
+                        }
+
+                        /**record senior subsidy*/
+                        if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                            scSubsidy = componentAmount;
+                        }
+
+                        /**record lifeline subsidy*/
+                        if (rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                            sol = componentAmount;
+                        }
+
+                    }else{
+                        int fixed = 0;
+                        if (isLowerVoltage) {
+                            if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                                componentAmount = rateSchedule.getComponentRate();
+                                strComponentAmount = String.valueOf(componentAmount);
+                                fixed = 1;
+                            }
+                        } else {
+                            if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                                componentAmount = rateSchedule.getComponentRate();
+                                strComponentAmount = String.valueOf(componentAmount);
+                                fixed = 1;
+                            }
+                        }
+
+                        Log.e(TAG, "fixed : " + fixed);
+                        if (fixed == 0) {
+                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)rateMultiplier);
+                            Log.e(TAG,"Multuply :" + rateSchedule.getComponentRate() * rateMultiplier);
+                            componentAmount = CommonFunc.toDigit(_strComponentAmount);
+                            strComponentAmount = _strComponentAmount;
+                        }
+
+                        if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
+                            scDiscountedAmount = componentAmount * scPercentage;
+                            totalSeniorDiscount = totalSeniorDiscount + scDiscountedAmount;
+                        }
+
+                        if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().equalsIgnoreCase("Yes")) {
+                            lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
+                            totalLifelineComponentAmount = totalLifelineComponentAmount + componentAmount;
+                            totalLifelineDiscount = totalLifelineDiscount + lifelineDiscountAmount;
+                        }
+
+                        if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
+                                rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
+
+                        /**Compute Over Under Discount*/
+                        if (mAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
+                                rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            overUnder = overUnder + componentAmount;
+                        }
+
+                        if (canAvailLifelineDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
+
+                        if (canAvailLifelineDiscount && (rateSchedule.getRateCode().equalsIgnoreCase("ICCS")
+                                || rateSchedule.getRateCode().equalsIgnoreCase("OLRA")
+                                || rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
+
+                        if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                            //rateSchedule.getRateCode().equalsIgnoreCase("SOL"))
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
+
+                        if (canAvailSCDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                            componentAmount = 0;
+                            strComponentAmount = String.valueOf(componentAmount);
+                        }
 
 
-                    if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
-                        scDiscountedAmount = componentAmount * scPercentage;
-                        totalSeniorDiscount = totalSeniorDiscount + scDiscountedAmount;
-                    }
+                        /**record senior subsidy*/
+                        if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                            scSubsidy = componentAmount;
+                        }
 
-                    if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().equalsIgnoreCase("Yes")) {
-                        lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
-                        totalLifelineComponentAmount = totalLifelineComponentAmount + componentAmount;
-                        totalLifelineDiscount = totalLifelineDiscount + lifelineDiscountAmount;
-                        //Log.e(TAG,"lifeline :("+componentAmount+" * "+ lifelineDiscountRate +") = " + lifelineDiscountAmount);
-                        //Log.e(TAG,"total :("+totalLifelineComponentAmount);
-                        //Log.e(TAG,"totaldiscount :("+totalLifelineDiscount);
-                    }
-
-                    if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
-                            rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
-                        overUnder = overUnder + componentAmount;
-                        componentAmount = 0;
-                        strComponentAmount = String.valueOf(componentAmount);
-                        componentvat = 0;
-                        componentftax = 0;
-                        componentltax = 0;
-                    }
-
-                    if (canAvailLifelineDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
-                        componentAmount = 0;
-                        strComponentAmount = String.valueOf(componentAmount);
-                        componentvat = 0;
-                        componentftax = 0;
-                        componentltax = 0;
-                    }
-
-                    if (canAvailLifelineDiscount && (rateSchedule.getRateCode().equalsIgnoreCase("ICCS")
-                            || rateSchedule.getRateCode().equalsIgnoreCase("OLRA")
-                            || rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
-                        componentAmount = 0;
-                        strComponentAmount = String.valueOf(componentAmount);
-                    }
-
-                    if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
-                        //rateSchedule.getRateCode().equalsIgnoreCase("SOL"))
-                        componentAmount = 0;
-                        strComponentAmount = String.valueOf(componentAmount);
-                        componentvat = 0;
-                        componentftax = 0;
-                        componentltax = 0;
-                    }
-
-                    if (canAvailSCDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
-                        componentAmount = 0;
-                        strComponentAmount = String.valueOf(componentAmount);
-                        componentvat = 0;
-                        componentftax = 0;
-                        componentltax = 0;
-                    }
+                        /**record lifeline subsidy*/
+                        if (rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                            sol = componentAmount;
+                        }
+                    } /**End If*/
 
 
-                    /**record senior subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
-                        scSubsidy = componentAmount;
-                        DecimalFormat df = new DecimalFormat("##.####");
-                        df.format(scSubsidy);
-                    }
-
-                    /**record lifeline subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
-                        sol = componentAmount;
-                    }
-
-
+                    Log.e(TAG,"componentAmount: " + componentAmount);
                     totalComponent = totalComponent + componentAmount;
-                    float amountDueExport = 0;
+                    double amountDueExport = 0;
                     if (isNetMetering.equalsIgnoreCase("1")) {
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
-                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), exportMultiplier);
+                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)exportMultiplier);
                             if (rateSchedule.getRateComponent().equalsIgnoreCase("Generation System Charges")) {
                                 amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
@@ -517,8 +553,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                     }
 
-                    Log.e(TAG, "component amount --- : " + componentAmount);
-                    Log.e(TAG, "component amount1 --- : " + strComponentAmount);
+                    //Log.e(TAG, "component amount --- : " + componentAmount);
+                    Log.e(TAG, "component amount1 --- : " + rateSchedule.getRateComponent() +":"+ strComponentAmount);
                     myRates.add(new Rates(rateSchedule.getRateSegment(),
                             rateSchedule.getRateCode(),
                             rateSchedule.getRateComponent(),
@@ -542,13 +578,10 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
                 //Log.e(TAG,"senior: " + totalSeniorDiscount);
                 totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
-                String penalty = mAccount.getPenalty();
-                if (!penalty.equalsIgnoreCase("0")) {
-                    penalty = "0";
-                }
 
-                billedAmount = totalComponent + CommonFunc.toDigit(penalty)
-                        + CommonFunc.toDigit(mAccount.getPrevBilling());
+
+                billedAmount = totalComponent + arrearsPenalty
+                        + totalArrears;
 
                 /** Not included */
             /*
@@ -572,12 +605,35 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mAccount.setLifeLineSubsidy(String.valueOf(sol));
             mAccount.setSeniorSubsidy(String.valueOf(scSubsidy));
 
-            Log.e(TAG, "SeniorSubsidy: " + scSubsidy);
-            Log.e(TAG, "LifeLineSubsidy: " + sol);
-            Log.e(TAG, "scSubsidy: " + totalSeniorDiscount);
-            Log.e(TAG, "scSubsidy: " + totalLifelineDiscount);
-            Log.e(TAG, "mBill: " + new GsonBuilder().create().toJson(mAccount.getBill()));
+//            Log.e(TAG, "SeniorSubsidy: " + scSubsidy);
+//            Log.e(TAG, "LifeLineSubsidy: " + sol);
+//            Log.e(TAG, "scSubsidy: " + totalSeniorDiscount);
+//            Log.e(TAG, "scSubsidy: " + totalLifelineDiscount);
+//            Log.e(TAG, "mBill: " + new GsonBuilder().create().toJson(mAccount.getBill()));
             MainActivity.db.updateReadAccount(MainActivity.db, "Read",isStopCheck);
+        }
+
+        private void simplifyArrears(){
+
+            try {
+                JSONArray jsonArray = new JSONArray(mAccount.getArrears());
+                for(int i = 0; i < jsonArray.length();i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    arrearsPenalty = + Double.valueOf(jsonObject.getString("Penalty"));
+                    totalArrears = + Double.valueOf(jsonObject.getString("Amount"));
+
+                    arrearsAmountList.add(jsonObject.getString("Amount"));
+                    arrearsBillMonthList.add(jsonObject.getString("BillingDate"));
+                    arrearsPenaltyList.add(jsonObject.getString("Penalty"));
+                }
+
+                mAccount.setPenalty(String.valueOf(arrearsPenalty));
+                mAccount.setPrevBilling(String.valueOf(totalArrears));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(TAG,"simplifyArrears:" + e.getMessage());
+            }
         }
 
         private float getSCDiscount() {
@@ -630,7 +686,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             return -1;
         }
-        private float getLifeLinerPercentage(float consume) {
+        private float getLifeLinerPercentage(double consume) {
             float value = 0f;
             int kwh = (int)Math.ceil(consume);
 
@@ -734,7 +790,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
 
-            float consume = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getReading())) - Double.parseDouble(initialRead), 2);
+            double consume = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getReading())) - Double.parseDouble(initialRead), 2);
 
             if (isHigherVoltage) {
                 if (strDemands.isEmpty()) {
@@ -742,14 +798,19 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     return;
                 }
 
-                demandKWMininum = Float.valueOf(mAccount.getDemandKW());
-                if(demandKWMininum < Float.valueOf(strDemands)){
-                    demandKWMininum = Float.valueOf(strDemands);
-                }
+                demandKWMininum = Double.valueOf(strDemands);
 
                 /**Update demandKWMininum*/
                 mAccount.setDemandKW(String.valueOf(demandKWMininum));
             }
+
+            if(a_class.equalsIgnoreCase("Contestable Class")){
+                demandKWMininum = Double.valueOf(mAccount.getDemandKW());
+                if(demandKWMininum < Double.valueOf(strDemands)){
+                    demandKWMininum = Double.valueOf(strDemands);
+                }
+            }
+
 
             if (consume < 0) {
                 showToast("Invalid Reading. Current reading is less than the Previous Reading");
@@ -769,11 +830,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
 
-            float kwh = consume * multiplier + Float.valueOf(coreLoss);
+            double kwh = consume * multiplier + Float.valueOf(coreLoss);
             Log.e(TAG,"new Reading : " + strReading);
             Log.e(TAG,"consumption * multiplier: " + kwh);
-            mAccount.setConsume(String.valueOf(kwh));
-            mAccount.setActualConsumption(String.valueOf(consume));
+            mAccount.setConsume(String.valueOf((float) kwh));
+            mAccount.setActualConsumption(String.valueOf((float) consume));
 
 
             if(isNetMetering.equalsIgnoreCase("1")) {
@@ -789,8 +850,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         @Override
         public void onMyDialogDismiss(int tag) {
             if(tag == 0) {
-                float consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
-                float kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
+                double consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
+                double kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
                 mAccount.setExportConsume(String.valueOf(kwhExport));
                 mAccount.setActualExportConsume(String.valueOf(consumeExport));
                 Log.e(TAG,"consumeExport:" + consumeExport);
@@ -1121,7 +1182,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
         public void preparePrint() {
-
+            DecimalFormat df = new DecimalFormat("#.####");
             ArrayList<String> vatListCode = new ArrayList<>();
             ArrayList<String> vatListValue = new ArrayList<>();
             ArrayList<String> rateComponentForExport = new ArrayList<>();
@@ -1161,7 +1222,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("\n");
                 mp.printText("Meter No:" + mAccount.getMeterSerialNo(), "Type:" + a_class +"\n");
                 mp.printTextBoldRight("Account No:", mAccount.getAccountID());
-                mp.printTextExceptLeft("Account No:"+ mAccount.getAccountID(),"BillMonth:" + CommonFunc.monthAbrev(mAccount.getBillMonth())+"\n");
+                mp.printTextExceptLeft("Account No:"+ mAccount.getAccountID(),"BillMonth:" + mAccount.getBillMonth()+"\n");
                 mp.printTextBoldRight("Account Name:",name+"\n");
             mp.printText("Address:"+ mAccount.getAddress()+"\n");
             mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(mAccount.getDateRead()) +"\n");
@@ -1169,7 +1230,14 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
             mp.printText("Multiplier:" + mAccount.getMultiplier()+"\n");
             mp.printText("Consumption:" + mAccount.getActualConsumption()+"\n");
-            mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
+
+
+            if(isHigherVoltage) {
+                mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
+            }else{
+                mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
+            }
+
             if(isNetMetering.equalsIgnoreCase("1")) {
                 mp.printText("Net-Metering Customer - IMPORT BILL\n");
             }
@@ -1202,7 +1270,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
                                 String rateAmount = String.valueOf(r.getRateAmount());
-                                String amount = r.getAmount();
+                                String amount = df.format(Double.parseDouble(r.getAmount()));
 
                                 int padding = 20 - rateAmount.length() - amount.length();
                                 String paddingChar = " ";
@@ -1243,7 +1311,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                                 if (isNetMetering.equalsIgnoreCase("1")) {
 
-                                    String amountExport = String.valueOf(r.getAmountDueExport());
+                                    String amountExport = df.format((r.getAmountDueExport()));
                                     if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
                                         int padding1 = 20 - rateAmount.length() - amountExport.length();
                                         String paddingChar1 = " ";
@@ -1279,7 +1347,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
             if(isNetMetering.equalsIgnoreCase("1")) {
-                mp.printText("EXPORT BILL\n");
+                mp.printTextBoldRight("","EXPORT BILL"+"\n");
                 mp.printText("--------------------------------------------------------------"+"\n");
                 mp.printText("Date              Prev                 Pres              KWH"+"\n");
                 mp.printText(mAccount.getDateRead()

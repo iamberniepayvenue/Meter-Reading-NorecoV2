@@ -40,7 +40,7 @@ public class CommonFunc {
     }
 
 
-    public static Float toDigit(String todigit) {
+    public static double toDigit(String todigit) {
         return Float.parseFloat(todigit);
     }
 
@@ -170,10 +170,10 @@ public class CommonFunc {
     }
 
 
-    public static String calcComponentAmount(float rate, float consumption) {
-        DecimalFormat df = new DecimalFormat("##.####");
-        float res = rate * consumption;
-        Log.e("CommonFunc","calcComponentAmount: "+ df.format(res));
+    public static String calcComponentAmount(double rate, double consumption) {
+        DecimalFormat df = new DecimalFormat("#.####");
+        double res = rate * consumption ;
+        Log.e("CommonFunc",""+rate+" * "+ consumption + " = " + df.format(res) + " and "+((float)res));
         return df.format(res);
     }
 
@@ -186,7 +186,6 @@ public class CommonFunc {
             return Math.round(result);
         }
         return result;
-
     }
 
     public static boolean isValidDate(String date) {
@@ -219,34 +218,43 @@ public class CommonFunc {
     }
 
     public static String monthAbrev(String billMonth) {
-        String sub = billMonth.substring(0,2);
+        String sub = billMonth;//billMonth.substring(0,2);
         String val = "";
         switch (sub) {
             case "01":
+            case "1":
                 val = "JAN";
                 break;
             case "02":
+            case "2":
                 val = "FEB";
                 break;
             case "03":
+            case "3":
                 val = "MAR";
                 break;
             case "04":
+            case "4":
                 val = "APR";
                 break;
             case "05":
+            case "5":
                 val = "MAY";
                 break;
             case "06":
+            case "6":
                 val = "JUN";
                 break;
             case "07":
+            case "7":
                 val = "JUL";
                 break;
             case "08":
+            case "8":
                 val = "AUG";
                 break;
             case "09":
+            case "9":
                 val = "SEPT";
                 break;
             case "10":

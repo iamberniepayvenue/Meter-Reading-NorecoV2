@@ -68,6 +68,7 @@ public class Account extends Person {
     private String TotalSCDiscount;
     private String TotalLifeLineDiscount;
     private Object Averaging;
+    private Object Arrears;
     private String OverUnderDiscount;
     private String ActualConsumption;
     private String Coreloss;
@@ -595,6 +596,14 @@ public class Account extends Person {
 
     public void setAveraging(Object averaging) {
         Averaging = averaging;
+    }
+
+    public String getArrears() {
+        return Arrears.toString();
+    }
+
+    public void setArrears(Object arrears) {
+        Arrears = arrears;
     }
 
     public String getOverUnderDiscount() {

@@ -254,16 +254,17 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("PrevExportReading",account.getExportPreviousReading());
                     rowObject.put("ExportConsumption",account.getExportConsume());
                     Bill mBill = account.getBill();
-                    float exportBillAmount = 0;
-                    float billAmount = 0;
+                    double exportBillAmount = 0;
+                    double billAmount = 0;
                     if(!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
                         exportBillAmount = mBill.getTotalAmountDueExport();
-                        billAmount = mBill.getTotalBilledAmount();
+                        billAmount = mBill.getTotalAmount();
                     }
 
                     rowObject.put("ExportBillAmount",exportBillAmount);
                     rowObject.put("BillAmount",billAmount);
-                    rowObject.put("LifelineDiscount",account.getTotalLifeLineDiscount());
+                    float lifelineDiscount = Float.valueOf(account.getTotalLifeLineDiscount());
+                    rowObject.put("LifelineDiscount",String.valueOf(-lifelineDiscount));
                     rowObject.put("LifelineSubsidy",account.getLifeLineSubsidy());
                     rowObject.put("SCDiscount",account.getTotalSCDiscount());
                     rowObject.put("SCSubsidy",account.getSeniorSubsidy());
