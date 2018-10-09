@@ -120,9 +120,28 @@ public class MobilePrinter {
         woosim.saveSpool(EUC_KR, text , 0, false);
         woosim.printSpool(true);
     }
+
     public void printTextBoldRight(String leftText, String rightText) {
         woosim.saveSpool(EUC_KR, leftText, 0, false);
         woosim.saveSpool(EUC_KR, rightText, 0, true);
+        woosim.printSpool(true);
+    }
+
+    public void printText(String one,String two,String three,String four,int tag) {
+
+        int padding;
+        if(tag == 0) {
+            padding = 37 - (one.length() + two.length() + three.length() + four.length());
+        }else{
+            //62
+            padding = (30 - (one.length() + two.length() + three.length() + four.length()));
+        }
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
+        }
+        String text = one + paddingChar + two + paddingChar + three + paddingChar + four;
+        woosim.saveSpool(EUC_KR, text, 0, false);
         woosim.printSpool(true);
     }
 

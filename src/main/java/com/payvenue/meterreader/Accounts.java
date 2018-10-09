@@ -93,6 +93,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         ArrayList<String> arrearsAmountList = new ArrayList<>();
         ArrayList<String> arrearsBillMonthList = new ArrayList<>();
         ArrayList<String> arrearsPenaltyList = new ArrayList<>();
+        ArrayList<String> arrearsBillNumberList = new ArrayList<>();
         //public  ArrayList<Components> componentsList = new ArrayList<>();
         Bill mBill;
         String billMonth;
@@ -619,12 +620,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 JSONArray jsonArray = new JSONArray(mAccount.getArrears());
                 for(int i = 0; i < jsonArray.length();i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    arrearsPenalty = + Double.valueOf(jsonObject.getString("Penalty"));
-                    totalArrears = + Double.valueOf(jsonObject.getString("Amount"));
+                    arrearsPenalty = arrearsPenalty + Double.valueOf(jsonObject.getString("Penalty"));
+                    totalArrears = totalArrears + Double.valueOf(jsonObject.getString("Amount"));
 
                     arrearsAmountList.add(jsonObject.getString("Amount"));
                     arrearsBillMonthList.add(jsonObject.getString("BillingDate"));
                     arrearsPenaltyList.add(jsonObject.getString("Penalty"));
+                    arrearsBillNumberList.add(jsonObject.getString("BillNumber"));
                 }
 
                 mAccount.setPenalty(String.valueOf(arrearsPenalty));
@@ -1243,10 +1245,23 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
             mp.printText("--------------------------------------------------------------"+"\n");
             mp.printText("Date              Prev                 Pres              KWH"+"\n");
-            mp.printText(mAccount.getDateRead()
-                    + "         " + initialRead
-                    + "                " + mAccount.getReading()
-                    + "          " + mAccount.getConsume()+"\n");
+//            mp.printText(mAccount.getDateRead()
+//                    + "         " + initialRead
+//                    + "                " + mAccount.getReading()
+//                    + "          " + mAccount.getConsume()+"\n");
+                int padding = 20 - mAccount.getReading().length() - mAccount.getConsume().length();
+                String paddingChar = " ";
+                for (int p = 0; p < padding; p++) {
+                    paddingChar = paddingChar.concat(" ");
+                }
+                String strRight = mAccount.getReading() + paddingChar + mAccount.getConsume();
+                int paddingLeft = 20 - mAccount.getDateRead().length() - mAccount.getInitialReading().length();
+                String _paddingLeft = " ";
+                for (int p = 0; p < paddingLeft; p++) {
+                    _paddingLeft = paddingChar.concat(" ");
+                }
+                String strLeft = mAccount.getDateRead() + _paddingLeft +mAccount.getInitialReading();
+                mp.printText(strLeft,strRight+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 
             /**
@@ -1272,12 +1287,12 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                 String rateAmount = String.valueOf(r.getRateAmount());
                                 String amount = df.format(Double.parseDouble(r.getAmount()));
 
-                                int padding = 20 - rateAmount.length() - amount.length();
-                                String paddingChar = " ";
-                                for (int p = 0; p < padding; p++) {
-                                    paddingChar = paddingChar.concat(" ");
+                                int padding2 = 20 - rateAmount.length() - amount.length();
+                                String paddingChar2 = " ";
+                                for (int p = 0; p < padding2; p++) {
+                                    paddingChar2 = paddingChar2.concat(" ");
                                 }
-                                String rightText = rateAmount + paddingChar + amount;
+                                String rightText = rateAmount + paddingChar2 + amount;
 
                                 if (codeName.contains("VAT on")) {
                                     vatListCode.add(codeName);
@@ -1335,6 +1350,22 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                 mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
                 mp.printText("", "" + "\n");
+
+                if(arrearsBillMonthList.size() > 0) {
+                    mp.printText("BillingDate        BillNumber          Amount          Penalty" + "\n");
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                    for (int i = 0; i < arrearsBillMonthList.size(); i++) {
+                        String billdate = arrearsBillMonthList.get(i);
+                        String billnumber = arrearsBillNumberList.get(i);
+                        String amount = arrearsAmountList.get(i);
+                        String _penalty = arrearsPenaltyList.get(i);
+                        String[] str = billdate.split(" ");
+                        mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
+                    }
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                }
+
+
                 mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
                 mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
                 mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
@@ -1350,10 +1381,25 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printTextBoldRight("","EXPORT BILL"+"\n");
                 mp.printText("--------------------------------------------------------------"+"\n");
                 mp.printText("Date              Prev                 Pres              KWH"+"\n");
-                mp.printText(mAccount.getDateRead()
-                        + "         " + mAccount.getExportPreviousReading()
-                        + "                " + mAccount.getExportReading()
-                        + "          " + mAccount.getExportConsume()+"\n");
+//                mp.printText(mAccount.getDateRead()
+//                        + "         " + mAccount.getExportPreviousReading()
+//                        + "                " + mAccount.getExportReading()
+//                        + "          " + mAccount.getExportConsume()+"\n");
+
+                int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
+                String paddingChar1 = " ";
+                for (int p = 0; p < padding1; p++) {
+                    paddingChar1 = paddingChar1.concat(" ");
+                }
+                String strRight1 = mAccount.getDateRead() + paddingChar1 + mAccount.getExportPreviousReading();
+
+                int paddingLeft1 = 20 - mAccount.getExportReading().length() - mAccount.getExportConsume().length();
+                String _paddingLeft1 = " ";
+                for (int p = 0; p < paddingLeft1; p++) {
+                    _paddingLeft1 = paddingChar1.concat(" ");
+                }
+                String strLeft1 = mAccount.getExportReading() + _paddingLeft1 +mAccount.getExportConsume();
+                mp.printText(strRight1,strLeft1+"\n");
                 mp.printText("--------------------------------------------------------------"+"\n");
 
                 if(!isMotherMeter) {

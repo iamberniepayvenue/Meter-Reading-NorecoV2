@@ -81,6 +81,9 @@ public class Account extends Person {
     private String ActualExportConsume;
     private String LifeLineSubsidy;
     private String SeniorSubsidy;
+    private String BillingDate;
+    private String BillNumber;
+
 
 
     public String getCoreloss() {

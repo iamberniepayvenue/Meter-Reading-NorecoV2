@@ -17,11 +17,16 @@ import android.widget.Toast;
 
 import com.mapswithme.maps.api.MapsWithMeApi;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import DataBase.DataBaseHandler;
+import Model.Account;
 import Model.Bill;
 import Model.RateSegmentModel;
 import Model.Rates;
@@ -47,6 +52,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     ArrayList<RateSegmentModel> listRateSegment = new ArrayList<>();
     public DataBaseHandler db;
     private boolean IsMotherMeter = false;
+    private Account mAccount;
+    ArrayList<String> arrearsAmountList = new ArrayList<>();
+    ArrayList<String> arrearsBillMonthList = new ArrayList<>();
+    ArrayList<String> arrearsPenaltyList = new ArrayList<>();
+    ArrayList<String> arrearsBillNumberList = new ArrayList<>();
 
     @SuppressLint("NewApi")
     @Override
@@ -67,12 +77,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             myPurpose = b.getInt("purpose");
         }
 
-        if(MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+        mAccount =  MainActivity.selectedAccount;
+        if(mAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || mAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
             IsMotherMeter = true;
         }
 
+
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
+        simplifyArrears();
+
         initViews();
         setValues();
         displayButton();
@@ -106,17 +120,17 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void setValues() {
-        viewacctid.setText(MainActivity.selectedAccount.getAccountID());
-        viewacctserial.setText(MainActivity.selectedAccount.getMeterSerialNo());
-        //MainActivity.selectedAccount.getFirstName() + " " + MainActivity.selectedAccount.getMiddleName() + " " + MainActivity.selectedAccount.getLastName()
-        viewacctname.setText(MainActivity.selectedAccount.getLastName());
-        viewacctadd.setText(MainActivity.selectedAccount.getAddress());
-        txtclass.setText(MainActivity.selectedAccount.getAccountClassification());
-        txtmeterbrand.setText(MainActivity.selectedAccount.getMeterBrand());
-        mReading.setText(MainActivity.selectedAccount.getReading());
-        mPrevReading.setText(MainActivity.selectedAccount.getInitialReading());
-        mConsume.setText(MainActivity.selectedAccount.getConsume());
-        mLocation.setText(MainActivity.selectedAccount.getLatitude() +","+MainActivity.selectedAccount.getLongitude());
+        viewacctid.setText(mAccount.getAccountID());
+        viewacctserial.setText(mAccount.getMeterSerialNo());
+        //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
+        viewacctname.setText(mAccount.getLastName());
+        viewacctadd.setText(mAccount.getAddress());
+        txtclass.setText(mAccount.getAccountClassification());
+        txtmeterbrand.setText(mAccount.getMeterBrand());
+        mReading.setText(mAccount.getReading());
+        mPrevReading.setText(mAccount.getInitialReading());
+        mConsume.setText(mAccount.getConsume());
+        mLocation.setText(mAccount.getLatitude() +","+mAccount.getLongitude());
     }
 
     public void displayButton() {
@@ -180,7 +194,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 break;
             case MainActivity.Modes.MODE_2://3333
             case MainActivity.Modes.MODE_3:
-                if (MainActivity.selectedAccount.getUploadStatus().equals("1")) {
+                if (mAccount.getUploadStatus().equals("1")) {
                     menu.findItem(R.id.btnEdit).setVisible(false);
                 } else {
                     menu.findItem(R.id.btnEdit).setVisible(true);
@@ -212,7 +226,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         if (id == R.id.btnGen) {
 
-            if (CommonFunc.toDigit(MainActivity.selectedAccount.getConsume()) < 0) {
+            if (CommonFunc.toDigit(mAccount.getConsume()) < 0) {
                 Toast.makeText(this,
                         "Can't Generate Billing for erroneous reading.",
                         Toast.LENGTH_SHORT).show();
@@ -223,7 +237,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 } else {
                     Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
                 }
-//                if (MainActivity.selectedAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
+//                if (mAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
 //                    Toast.makeText(this, "Can't Generate Billing for Higher Voltage Classification.", Toast.LENGTH_SHORT).show();
 //                } else {
 //                    //Intent intent = new Intent(this, BillPreview.class);
@@ -234,7 +248,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         if (id == R.id.btnEdit) {
-            int editCount = db.getEditAttemp(db,MainActivity.selectedAccount.getAccountID());
+            int editCount = db.getEditAttemp(db,mAccount.getAccountID());
 
 //            if(editCount == 3) {
 //                Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
@@ -267,9 +281,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             case R.id.btnNotFound:
 
 
-                MainActivity.selectedAccount.setReadStatus(MainActivity.Modes.MODE_4);
-                MainActivity.selectedAccount.setLatitude(String.valueOf(curlat));
-                MainActivity.selectedAccount.setLongitude(String.valueOf(curlong));
+                mAccount.setReadStatus(MainActivity.Modes.MODE_4);
+                mAccount.setLatitude(String.valueOf(curlat));
+                mAccount.setLongitude(String.valueOf(curlong));
 
                 db.updateReadAccount(db, MainActivity.Modes.MODE_4,false);
 
@@ -311,20 +325,36 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
     }
 
+    private void simplifyArrears(){
+        try {
+            JSONArray jsonArray = new JSONArray(mAccount.getArrears());
+            for(int i = 0; i < jsonArray.length();i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                arrearsAmountList.add(jsonObject.getString("Amount"));
+                arrearsBillMonthList.add(jsonObject.getString("BillingDate"));
+                arrearsPenaltyList.add(jsonObject.getString("Penalty"));
+                arrearsBillNumberList.add(jsonObject.getString("BillNumber"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG,"simplifyArrears:" + e.getMessage());
+        }
+    }
+
     public void preparePrint() {
         DecimalFormat df = new DecimalFormat("#.####");
         ArrayList<String> vatListCode = new ArrayList<>();
         ArrayList<String> vatListValue = new ArrayList<>();
         ArrayList<String> rateComponentForExport = new ArrayList<>();
         ArrayList<String> exportRateDueAmount = new ArrayList<>();
-        String name = MainActivity.selectedAccount.getLastName();
-        if(MainActivity.selectedAccount.getFirstName().equalsIgnoreCase(".")
-                || MainActivity.selectedAccount.getMiddleName().equalsIgnoreCase(".")){
-            name = MainActivity.selectedAccount.getLastName() + ", " + MainActivity.selectedAccount.getFirstName()
-                    + MainActivity.selectedAccount.getMiddleName();
+        String name = mAccount.getLastName();
+        if(mAccount.getFirstName().equalsIgnoreCase(".")
+                || mAccount.getMiddleName().equalsIgnoreCase(".")){
+            name = mAccount.getLastName() + ", " + mAccount.getFirstName()
+                    + mAccount.getMiddleName();
         }
 
-        String penalty = MainActivity.selectedAccount.getPenalty();
+        String penalty = mAccount.getPenalty();
         if(penalty.equalsIgnoreCase("-") || penalty.equalsIgnoreCase(".")) {
             penalty = "0";
         }
@@ -332,8 +362,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         MobilePrinter mp = MobilePrinter.getInstance(this);
         Bill mBill;
         List<Rates> mRates;
-        mBill = MainActivity.selectedAccount.getBill();
-        String a_class = MainActivity.selectedAccount.getAccountClassification();
+        mBill = mAccount.getBill();
+        String a_class = mAccount.getAccountClassification();
         if(a_class.toLowerCase().contains("residential")) {
             a_class = "Res";
         } else if(a_class.toLowerCase().contains("lower")) {
@@ -342,41 +372,57 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             a_class = "HV";
         }
 
-//        mp.printText("           Negros Oriental II Electric Cooperative\n");
-//        mp.printText("                  Real St., Dumaguete City\n");
-//        mp.printText("                         (NORECO2)\n");
-//        mp.printText("                   STATEMENT OF ACCOUNT\n");
-//        mp.printText("================================================================\n");
-
+////        mp.printText("           Negros Oriental II Electric Cooperative\n");
+////        mp.printText("                  Real St., Dumaguete City\n");
+////        mp.printText("                         (NORECO2)\n");
+////        mp.printText("                   STATEMENT OF ACCOUNT\n");
+////        mp.printText("================================================================\n");
+//
         String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
         mp.printBitmap(path);
         mp.printText("\n");
-        mp.printText("Meter No:" + MainActivity.selectedAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
-        mp.printTextBoldRight("Account No:", MainActivity.selectedAccount.getAccountID());
-        mp.printTextExceptLeft("Account No:"+ MainActivity.selectedAccount.getAccountID(),"BillMonth:" + MainActivity.selectedAccount.getBillMonth()+"\n");
+        mp.printText("Meter No:" + mAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
+        mp.printTextBoldRight("Account No:", mAccount.getAccountID());
+        mp.printTextExceptLeft("Account No:"+ mAccount.getAccountID(),"BillMonth:" + mAccount.getBillMonth()+"\n");
         mp.printTextBoldRight("Account Name:",name+"\n");
-        mp.printText("Address:"+ MainActivity.selectedAccount.getAddress()+"\n");
-        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(MainActivity.selectedAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(MainActivity.selectedAccount.getDateRead()) +"\n");
-        mp.printText("Due Date: "+MainActivity.selectedAccount.getDueDate()+"\n");//
+        mp.printText("Address:"+ mAccount.getAddress()+"\n");
+        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(mAccount.getDateRead()) +"\n");
+        mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-        mp.printText("Multiplier:" + MainActivity.selectedAccount.getMultiplier()+"\n");
-        mp.printText("Consumption:" + MainActivity.selectedAccount.getActualConsumption()+"\n");
+        mp.printText("Multiplier:" + mAccount.getMultiplier()+"\n");
+        mp.printText("Consumption:" + mAccount.getActualConsumption()+"\n");
         if(a_class.equalsIgnoreCase("HV")) {
-            mp.printText("Coreloss:" + MainActivity.selectedAccount.getCoreloss(),"DemandKW:"+MainActivity.selectedAccount.getDemandKW()+"\n");
+            mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
         }else{
-            mp.printText("Coreloss:" + MainActivity.selectedAccount.getCoreloss()+"\n");
+            mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
         }
 
-        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+        if(mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
             mp.printText("Net-Metering Customer - IMPORT BILL\n");
         }
 
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date              Prev                 Pres              KWH"+"\n");
-        mp.printText(MainActivity.selectedAccount.getDateRead()
-                + "         " + MainActivity.selectedAccount.getInitialReading()
-                + "                " + MainActivity.selectedAccount.getReading()
-                + "          " + MainActivity.selectedAccount.getConsume()+"\n");
+//        mp.printText(mAccount.getDateRead()
+//                + "         " + mAccount.getInitialReading()
+//                + "                " + mAccount.getReading()
+//                + "          " + mAccount.getConsume()+"\n");
+
+        int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getInitialReading().length();
+        String paddingChar1 = " ";
+         for (int p = 0; p < padding1; p++) {
+           paddingChar1 = paddingChar1.concat(" ");
+         }
+        String strRight = mAccount.getDateRead() + paddingChar1 + mAccount.getInitialReading();
+
+        int paddingLeft = 20 - mAccount.getReading().length() - mAccount.getConsume().length();
+        String _paddingLeft = " ";
+        for (int p = 0; p < paddingLeft; p++) {
+            _paddingLeft = _paddingLeft.concat(" ");
+        }
+        String strLeft = mAccount.getReading() + _paddingLeft + mAccount.getConsume();
+
+        mp.printText(strRight,strLeft+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
         //Cursor cursorRateSegment = db.getRateSegment(db);
         //ArrayList<Components> componentsList= db.getRateComponent(db);
@@ -411,8 +457,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                             /** print here */
                             if (codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
 
-                                if (!MainActivity.selectedAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
-                                    mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalLifeLineDiscount())) + "\n");
+                                if (!mAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
+                                    mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalLifeLineDiscount())) + "\n");
                                 } else {
                                     mp.printText("  " + codeName, rightText + "\n");
                                 }
@@ -420,8 +466,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
                             if (codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
 
-                                if (!MainActivity.selectedAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
-                                    mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getTotalSCDiscount())) + "\n");
+                                if (!mAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
+                                    mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
                                 } else {
                                     mp.printText("  " + codeName, rightText + "\n");
                                 }
@@ -433,15 +479,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                             }
 
                             /**NET METERING*/
-                            if (MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+                            if (mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
                                 String amountExport = df.format(r.getAmountDueExport());
                                 if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
-                                    int padding1 = 20 - rateAmount.length() - amountExport.length();
-                                    String paddingChar1 = " ";
-                                    for (int p = 0; p < padding1; p++) {
-                                        paddingChar1 = paddingChar1.concat(" ");
+                                    int padding2 = 20 - rateAmount.length() - amountExport.length();
+                                    String paddingChar2 = " ";
+                                    for (int p = 0; p < padding2; p++) {
+                                        paddingChar2 = paddingChar2.concat(" ");
                                     }
-                                    String rightText1 = rateAmount + paddingChar1 + amountExport;
+                                    String rightText1 = rateAmount + paddingChar2 + amountExport;
                                     rateComponentForExport.add(codeName);
                                     exportRateDueAmount.add(rightText1);
                                 }
@@ -458,9 +504,23 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
             mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
             mp.printText("", "" + "\n");
+
+            if(arrearsBillMonthList.size() > 0) {
+                mp.printText("BillingDate        BillNumber          Amount          Penalty" + "\n");
+                mp.printText("--------------------------------------------------------------" + "\n");
+                for (int i = 0; i < arrearsBillMonthList.size(); i++) {
+                    String billdate = arrearsBillMonthList.get(i);
+                    String billnumber = arrearsBillNumberList.get(i);
+                    String amount = arrearsAmountList.get(i);
+                    String _penalty = arrearsPenaltyList.get(i);
+                    String[] str = billdate.split(" ");
+                    mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
+                }
+                mp.printText("--------------------------------------------------------------" + "\n");
+            }
             mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
-            mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getPrevBilling())) + "\n");
-            mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(MainActivity.selectedAccount.getAdvancePayment())) + "\n");
+            mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
+            mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
             mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
             mp.printText("", "" + "\n");
             mp.printText("", "" + "\n");
@@ -470,14 +530,29 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
 
-        if(MainActivity.selectedAccount.getIsNetMetering().equalsIgnoreCase("1")) {
+        if(mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
             mp.printTextBoldRight("","EXPORT BILL"+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
             mp.printText("Date              Prev                 Pres              KWH"+"\n");
-            mp.printText(MainActivity.selectedAccount.getDateRead()
-                    + "         " + MainActivity.selectedAccount.getExportPreviousReading()
-                    + "                " + MainActivity.selectedAccount.getExportReading()
-                    + "          " + MainActivity.selectedAccount.getExportConsume()+"\n");
+//            mp.printText(mAccount.getDateRead()
+//                    + "         " + mAccount.getExportPreviousReading()
+//                    + "                " + mAccount.getExportReading()
+//                    + "          " + mAccount.getExportConsume()+"\n");
+
+            int padding3 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
+            String paddingChar3 = " ";
+            for (int p = 0; p < padding3; p++) {
+                paddingChar3 = paddingChar3.concat(" ");
+            }
+            String strRight1 = mAccount.getDateRead() + paddingChar3 + mAccount.getExportPreviousReading();
+
+            int paddingLeft1 = 20 - mAccount.getExportReading().length() - mAccount.getExportConsume().length();
+            String _paddingLeft1 = " ";
+            for (int p = 0; p < paddingLeft1; p++) {
+                _paddingLeft1 = paddingChar1.concat(" ");
+            }
+            String strLeft1 = mAccount.getExportReading() + _paddingLeft1 +mAccount.getExportConsume();
+            mp.printText(strRight1,strLeft1+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 
             if(!IsMotherMeter) {
@@ -490,7 +565,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("\n");
                 mp.printText("\n");
                 mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n");
-                if (!MainActivity.selectedAccount.getPrintCount().equalsIgnoreCase("0")) {
+                if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {
                     mp.printText("REPRINTED" + "\n");
                 }
             }

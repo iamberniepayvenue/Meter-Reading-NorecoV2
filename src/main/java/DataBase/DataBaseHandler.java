@@ -399,7 +399,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return "";
     }
 
-    public int saveAccount(DataBaseHandler db, Account account, String details,String routeID) {
+    public int saveAccount(DataBaseHandler db, Account account, String details,String routeID,String arrears) {
         int count = 0;
 
         SQLiteDatabase sql = db.getWritableDatabase();
@@ -434,7 +434,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.UnderOverRecovery,account.getUnderOverRecovery());
         cv.put(DBInfo.LastReadingDate,account.getLastReadingDate());
         cv.put(DBInfo.Averaging,account.getAveraging());
-        cv.put(DBInfo.Arrears,account.getArrears());
+        cv.put(DBInfo.Arrears,arrears);
         cv.put(DBInfo.IsNetMetering,account.getIsNetMetering());
         cv.put(DBInfo.IsCheckSubMeterType,account.getIsCheckSubMeterType());
         cv.put(DBInfo.CheckMeterAccountNo,account.getCheckMeterAccountNo());
@@ -726,6 +726,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setActualConsumption(c.getString(c.getColumnIndex(DBInfo.Extra2)));
                 String ave = c.getString(c.getColumnIndex(DBInfo.Averaging));
                 String arr = c.getString(c.getColumnIndex(DBInfo.Arrears));
+                account.setArrears(arr);
                 account.setIsCheckSubMeterType(c.getString(c.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                 account.setCheckMeterAccountNo(c.getString(c.getColumnIndex(DBInfo.CheckMeterAccountNo)));
                 account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
@@ -735,12 +736,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
                 try {
                     JSONObject object = new JSONObject(ave);
-                    JSONArray arrObject = new JSONArray(arr);
+                    //JSONArray arrObject = new JSONArray(arr);
                     account.setAveraging(object);
-                    account.setArrears(arrObject);
+                    //account.setArrears(String.valueOf(arrObject));
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e(TAG,"ave : " + e.getMessage());
+                    Log.e(TAG,"getAccountDetails - ave : " + e.getMessage());
                 }
 
                 MainActivity.selectedAccount = account;

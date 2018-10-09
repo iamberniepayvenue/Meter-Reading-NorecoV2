@@ -68,6 +68,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     private static final String TAG = "FragmentDownLoad";
     private boolean ifRouteExist = false;
     private MyPreferences myPreferences;
+    private int totalAccountSave = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -184,6 +185,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
             case R.id.btnDownLoad:
 
+                totalAccountSave = 0;
                 numberOfTimesDeletingTable = 0;
                 numberOfAccountSavingPerRoutes = 0;
                 strPort = txtPort.getText().toString();
@@ -286,7 +288,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     + "&idTo=" + accountIDTo
                                     + "&mac=" + mac
                                     + "&tagclass=" + tagClass;
-                            Log.e(TAG,urlParam);
+                            Log.e(TAG,cmdAccounts);
                             if(numberOfTimesDeletingTable == 0) {
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
@@ -645,11 +647,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             if(!acc.equalsIgnoreCase("0")) {
                                 details = new JSONObject();
                                 details.put("BillMonth","");
-                                details.put("PrevBilling", obj.getString("PrevBilling"));
+                                details.put("PrevBilling", "0");
                                 details.put("Address", obj.getString("Address"));
                                 details.put("SeniorCitizenStatus", obj.getString("SeniorCitizenStatus"));
                                 details.put("SCExpiryDate", obj.getString("SCExpiryDate"));
-                                details.put("Penalty", obj.getString("Penalty"));
+                                details.put("Penalty", "0");
                                 details.put("RateSched", obj.getString("RateSched"));
                                 details.put("Multiplier", obj.getString("Multiplier"));
                                 details.put("DemandKW", obj.getString("DemandKW"));
@@ -667,18 +669,22 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 details.put("Reading", "0");
                                 details.put("ExportReading","0");
                                 details.put("Remarks", "");
+                                String arrears = obj.getString("Arrears").toString();
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 account.setDueDate(param2);
-                                DownloadSave = DownloadSave + DB.saveAccount(DB, account, details.toString(),params);
+                                DownloadSave = DownloadSave + DB.saveAccount(DB, account, details.toString(),params,arrears);
                                 if (DownloadSave == DownloadCount) {
-                                    long offset = DB.getAccountSaveCount(DB,params);
-                                    String url = param3 + "&offset=" + offset;
-                                    Log.e(TAG,"Accounts: " + url);
+                                    //long offset = DB.getAccountSaveCount(DB,params);
+                                    totalAccountSave = totalAccountSave + DownloadSave;
+                                    String url = param3 + "&offset=" + totalAccountSave;
                                     /**
                                      * numberOfRoutesPassing means counter of failing request
                                      * */
                                     if(numberOfTimesDeletingTable == 0) {
+                                        mDialog.setMessage(""+totalAccountSave+" Accounts saved/DownLoading Data.Please wait.");
                                         MainActivity.webRequest.sendRequest(url, "Accounts", params, dueDate, param3, this);
+                                        Log.e(TAG,"totalAccountSave: " + totalAccountSave);
+                                        Log.e(TAG,"accounts: " + url);
                                         enableButton();
                                     }
                                 }
@@ -703,7 +709,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
         Log.e(TAG,"deletingtable: " + numberOfTimesDeletingTable);
 
-        if(numberOfRoutesDownloaded > 0 ) {
+            if(numberOfRoutesDownloaded > 0 ) {
             if(numberOfRoutesDownloaded == numberOfAccountSavingPerRoutes) {
                 if (mDialog.isShowing()) {
                     mDialog.dismiss();
@@ -712,6 +718,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 if(numberOfTimesDeletingTable == 0) {
                     Toast.makeText(ctx,"Download Complete",Toast.LENGTH_LONG).show();
                     updateReaderTable();
+
                 }
 
             }else{
