@@ -1498,6 +1498,8 @@ string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
 string scanning
+string search_hint
+string search_label
 string search_menu_title
 string select_device
 string status_bar_notification_info_overflow
@@ -1989,3 +1991,4 @@ styleable View android_theme android_focusable paddingEnd paddingStart theme
 styleable ViewBackgroundHelper android_background backgroundTint backgroundTintMode
 styleable ViewStubCompat android_id android_layout android_inflatedId
 xml file_paths
+xml searchable

@@ -101,18 +101,18 @@ public class MobilePrinter {
             paddingChar = paddingChar.concat(" ");
         }
 
-        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, false);
         woosim.printSpool(true);
     }
 
     public void printTextEmphasized1(String leftText, String rightText) {
-        int padding = 31 - leftText.length() - rightText.length() ;
+        int padding = 31 - leftText.length() - rightText.length();
         String paddingChar = " ";
         for (int i = 0; i < padding; i++) {
             paddingChar = paddingChar.concat(" ");
         }
 
-        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, false);
         woosim.printSpool(true);
     }
 
@@ -145,29 +145,31 @@ public class MobilePrinter {
         woosim.printSpool(true);
     }
 
+    public void printextEmphasized(String text) {
+        woosim.saveSpool(EUC_KR, text , 2, false);
+        woosim.printSpool(true);
+    }
+
+    public void printextEmphasizedNormalFont(String text) {
+        woosim.saveSpool(EUC_KR, text , 1, false);
+        woosim.printSpool(true);
+    }
+
+
     public void printBitmap(String path) {
         try {
             int r = woosim.printBitmap(path);
-            //byte[] lf = {0x0a};
             byte[] ff ={0x0c};
-            //woosim.controlCommand(lf, lf.length);
             woosim.controlCommand(ff, 1);
             woosim.printSpool(true);
-            Log.e(TAG,"printBitmap : " + r);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG,"printBitmap : " + e.getMessage());
         }
     }
 
-    public void printBitmap(byte[] bmpBuff, int bmpLength) {
-        int r = woosim.printBitmap(bmpBuff,bmpLength);
-        byte[] lf = {0x0a};
-        byte[] ff ={0x0c};
-        woosim.controlCommand(lf, lf.length);
-        woosim.controlCommand(ff, bmpLength);
-        woosim.printSpool(true);
-        Log.e(TAG,"printBitmap : " + r);
+    public void barcode(String AccountID) {
+        //byte[] bardode = WoosimBarcode.createBarcode(WoosimBarcode.CODEBAR,60,2,);
     }
 
     public int setConnection(String address) {
@@ -213,8 +215,6 @@ public class MobilePrinter {
                     track3Data[j++] = extractdata[i];
                 }
             }
-
-
         }
         //2,3track
         else if (dataLength == 141) {
@@ -225,7 +225,6 @@ public class MobilePrinter {
                     track3Data[j++] = extractdata[i];
                 }
             }
-
         }
         //1,2,3track
         else if (dataLength == 217) {
@@ -244,6 +243,5 @@ public class MobilePrinter {
             String str3 = new String(track3Data);
 
         }
-
     }
 }

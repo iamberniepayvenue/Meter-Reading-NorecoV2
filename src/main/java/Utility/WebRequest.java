@@ -39,8 +39,19 @@ public class WebRequest {
                 if (myType.equalsIgnoreCase("NotFound") || myType.equalsIgnoreCase("uploadData")) {
                     try {
                         JSONObject array = new JSONObject(params);
-                        String columnID = array.getString("columnid").toString();
+                        String columnID = array.getString("columnid");
                         MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e(TAG,"JSONException: " + e.getMessage());
+                    }
+                }
+
+                if(myType.equalsIgnoreCase("FM")) {
+                    try {
+                        JSONObject array = new JSONObject(params);
+                        String columnID = array.getString("columnid");
+                        MainActivity.db.updateUploadStatusFoundMeter(MainActivity.db, columnID);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.e(TAG,"JSONException: " + e.getMessage());
@@ -60,16 +71,19 @@ public class WebRequest {
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 
-    public void sendRequest(String url) {
+    public void sendRequest(String url, final String tag) {
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e(TAG,"response : " + response);
+                //Log.e(TAG,"response : " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"response : " + error.getMessage());
+                Log.e(TAG,"error : " + error.getMessage());
+                if(tag.equalsIgnoreCase("saveAccount")) {
+                    MyPreferences.getInstance(c).savePrefInt("update_error", 1);
+                }
             }
         });
 

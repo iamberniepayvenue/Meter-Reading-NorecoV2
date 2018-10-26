@@ -1,9 +1,9 @@
 package com.payvenue.meterreader.Fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -20,20 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.payvenue.meterreader.Interface.IVolleyListener;
 import com.payvenue.meterreader.MainActivity;
 import com.payvenue.meterreader.R;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +35,7 @@ import DataBase.DataBaseHandler;
 import Utility.GPSTracker;
 import Utility.NetworkUtil;
 
-public class FragmentFound extends Fragment {
+public class FragmentFound extends Fragment implements IVolleyListener {
 
     View rootView;
     ListView listview;
@@ -52,7 +43,7 @@ public class FragmentFound extends Fragment {
 
     Context mcontext;
     DataBaseHandler db;
-
+    ProgressDialog mDialog;
     Dialog addDialog;
     GPSTracker gps;
     double longitude;
@@ -78,7 +69,9 @@ public class FragmentFound extends Fragment {
         tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         listview = (ListView) rootView.findViewById(R.id.listview);
-
+        mDialog = new ProgressDialog(this.getActivity());
+        mDialog.setCancelable(false);
+        mDialog.setMessage("Compressing Data. Please wait...");
 
         return rootView;
 
@@ -247,148 +240,71 @@ public class FragmentFound extends Fragment {
         }
 
 
-
+        mDialog.setMessage("Uploading data.Please wait.");
+        mDialog.show();
         while (c.moveToNext()) {
             JSONArray myArray = new JSONArray();
             JSONObject myobj = new JSONObject();
-
-            try {
-                myobj.put("MeterSerialNo", c.getString(c.getColumnIndex("MeterSerialNo")));
-                myobj.put("NewReading", c.getString(c.getColumnIndex("Reading")));
-                myobj.put("DateRead", c.getString(c.getColumnIndex("DateRead")));
-                myobj.put("Remarks", c.getString(c.getColumnIndex("Remarks")));
-                myobj.put("Latitude", c.getString(c.getColumnIndex("Latitude")));
-                myobj.put("Longitude", c.getString(c.getColumnIndex("Longitude")));
-                myobj.put("ReaderID", MainActivity.reader.getReaderID());
-                myobj.put("ReadStatus","Found");
-                myArray.put(myobj);
-
-                columnid = c.getString(0);
-
-                JSONObject FinalData = new JSONObject();
+            String status = c.getString(c.getColumnIndex("Extra1"));
+            //if(!status.equalsIgnoreCase("1")) {
                 try {
-                    FinalData.put("readAccounts", myArray);
-                    FinalData.put("columnid", columnid);
+                    myobj.put("AccountID", "FM"); // Found Meter
+                    myobj.put("CoopID", MainActivity.connSettings.getCoopID());
+                    myobj.put("MeterSerialNo", c.getString(c.getColumnIndex("MeterSerialNo")));
+                    myobj.put("NewReading", c.getString(c.getColumnIndex("Reading")));
+                    myobj.put("DateRead", c.getString(c.getColumnIndex("DateRead")));
+                    myobj.put("Remarks", c.getString(c.getColumnIndex("Remarks")));
+                    myobj.put("Latitude", c.getString(c.getColumnIndex("Latitude")));
+                    myobj.put("Longitude", c.getString(c.getColumnIndex("Longitude")));
+                    myobj.put("ReaderID", MainActivity.reader.getReaderID());
+                    myobj.put("ReadStatus", "Found");
+                    myArray.put(myobj);
 
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
+                    columnid = c.getString(0);
+
+                    JSONObject FinalData = new JSONObject();
+                    try {
+                        FinalData.put("readAccounts", myArray);
+                        FinalData.put("columnid", columnid);
+
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    String url = "http://" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8");
+                    Log.e(TAG, "FM :" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + FinalData.toString());
+                    MainActivity.webRequest.sendRequest(url, "FM", FinalData.toString(), "", "", this);
+
+                } catch (Exception e) {
                     e.printStackTrace();
+
                 }
-
-
-                new uploadFoundMeters().execute(FinalData);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
+            //}
         }
     }
 
-
-    //endregion
-
-    //region Threads
-
-    public class uploadFoundMeters extends AsyncTask<JSONObject, Void, String> {
-
-
-        String columnID;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    @Override
+    public void onSuccess(String type, String response, String params, String param2, String param3) {
+        Log.e(TAG,"onSuccess: "+ response);
+        if (mDialog.isShowing()) {
+            mDialog.dismiss();
         }
 
+        Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
 
-        @Override
-        protected String doInBackground(JSONObject... params) {
-
-            Log.d("Data", "" + params[0] + "");
-
-            final JSONObject myData = params[0];
-
-            try {
-                columnID = myData.getString("columnid").toString();
-                Log.d("ColumnID", "" + columnID);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            HttpParams myParams = new BasicHttpParams();
-
-            HttpConnectionParams.setConnectionTimeout(myParams, 20000);
-            HttpConnectionParams.setSoTimeout(myParams, 20000);
-            HttpClient httpclient = new DefaultHttpClient(myParams);
-            String json = myData.toString();
-
-
-            final StringBuilder request = new StringBuilder(MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData");
-            request.append("&data=").append(URLEncoder.encode(json));
-            request.append("&coopid=").append(MainActivity.connSettings.getCoopID());
-            request.append("&mac=").append(MainActivity.macAddress);
-
-            Log.e(TAG,"Upload Found meters : " + request.toString());
-
-            String uploadResult;
-
-            try {
-
-                HttpPost httppost = new HttpPost(request.toString());
-                httppost.setHeader("Content-type", "application/json");
-
-                StringEntity se = new StringEntity(json.toString());
-                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,
-                        "application/json"));
-                httppost.setEntity(se);
-
-                HttpResponse response = httpclient.execute(httppost);
-                uploadResult = EntityUtils.toString(response.getEntity());
-                Log.i("tag", uploadResult);
-
-            } catch (Exception e) {
-                return "Failed";
-
-            }
-
-            return uploadResult;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (s.equalsIgnoreCase("Failed")) {
-                Toast.makeText(getActivity(), "Uploading of data failed.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (s.matches("[0-9]+")) {
-
-                int myresult = Integer.parseInt(s);
-                if (myresult == 01) {
-                    Toast.makeText(getActivity(),
-                            "Data successfully uploaded.", Toast.LENGTH_SHORT).show();
-
-                    db.updateFoundMeters(db, columnID, "1"); //1 is uploaded
-
-                    getFoundMeters();
-
-                } else {
-                    Toast.makeText(getActivity(), "Uploading of data failed.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-
-                Toast.makeText(getActivity(), "Uploading of data failed.", Toast.LENGTH_SHORT).show();
-
-
-            }
-
-        }
     }
 
+    @Override
+    public void onFailed(VolleyError error, String type) {
+        Log.e(TAG,"onFailed: "+ error.getMessage());
+        if (mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
 
-    //endregion
+        Toast.makeText(mcontext,"Failed to upload",Toast.LENGTH_SHORT).show();
+
+    }
 
 }
 

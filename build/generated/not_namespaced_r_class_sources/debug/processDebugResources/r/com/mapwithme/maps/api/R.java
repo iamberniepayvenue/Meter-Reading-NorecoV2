@@ -40,7 +40,7 @@ public final class R {
 
         public static final int down_pro = 0x7f0d0026;
         public static final int mwm_should_be_installed = 0x7f0d002b;
-        public static final int url_pro = 0x7f0d0059;
+        public static final int url_pro = 0x7f0d005b;
     }
     public static final class style {
         private style() {}

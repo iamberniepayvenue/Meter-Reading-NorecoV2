@@ -195,11 +195,11 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             }
 
 
-            Log.e(TAG, "Upload Not Found " + FinalData.toString());
+            Log.e(TAG, "Upload Not Found: " + strRequest + "&data="+ FinalData.toString());
 
             String url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
 
-            MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
+            //MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
 
         }
 

@@ -319,49 +319,6 @@ public class MainActivity extends AppCompatActivity {
         if(!CommonFunc.hasExternalStoragePrivateFile(this,"noreco_logo.bmp")) {
             CommonFunc.createExternalStoragePrivateFile(this);
         }
-
-
-//        File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"Documents");
-//        if(!f.exists()) {
-//            f.mkdirs();
-//        }
-//
-//        Bitmap bm = BitmapFactory.decodeResource( getResources(), R.drawable.woosim);
-//        String extStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Documents";
-//        FileOutputStream outStream;
-//        File file = new File(extStorageDirectory, "woosim.bmp");
-//        try {
-//            outStream = new FileOutputStream(file);
-//            bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-//            outStream.flush();
-//            outStream.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            Log.e(TAG,"exportLogo: " + e.getMessage());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.e(TAG,"exportLogo: " + e.getMessage());
-//        }
-
-
-//        File sd = Environment.getExternalStorageDirectory();
-//        File data = Environment.getDataDirectory();
-//        FileChannel source = null;
-//        FileChannel destination = null;
-//        String currentDBPath = "android.resource://"+ BuildConfig.APPLICATION_ID+ R.drawable.woosim;
-//        String backupDBPath = "Documents/noreco2_logo";
-//        File currentDB = new File(data, currentDBPath);
-//        File backupDB = new File(sd, backupDBPath);
-//        try {
-//            source = new FileInputStream(currentDB).getChannel();
-//            destination = new FileOutputStream(backupDB).getChannel();
-//            destination.transferFrom(source, 0, source.size());
-//            source.close();
-//            destination.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.e(TAG,"exportLogo: " + e.getMessage());
-//        }
     }
 
     public static void setConnSettings() {

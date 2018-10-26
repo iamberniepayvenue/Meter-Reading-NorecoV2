@@ -14,11 +14,11 @@ public class Constant {
 
 
     /**Production*/
-    //public static String PORT = "8080/noreco_api/billing_api.asp";
+    public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
 
     /**Development
      * 8080
      * */
-    public static String PORT = "8080/noreco_api/billing_api.asp"; // /teslaclient
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 }

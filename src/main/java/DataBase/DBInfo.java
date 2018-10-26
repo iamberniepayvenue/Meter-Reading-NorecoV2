@@ -126,6 +126,8 @@ public class DBInfo implements BaseColumns {
     public static String CheckMeterAccountNo = "CheckMeterAccountNo";
     public static String CheckMeterName = "CheckMeterName";
     public static String Coreloss = "Coreloss";
+    public static String ExportDateCounter = "ExportDateCounter";
+    public static String ExportBill = "ExportBill";
 
     //public static String Consume = "Consume";
     //public static String NewReading = "NewReading";
@@ -255,6 +257,7 @@ public class DBInfo implements BaseColumns {
             + UploadStatus + " TEXT," + PoleRental + " TEXT,"
             + SpaceRental + " TEXT," + PilferagePenalty + " TEXT,"
             + UnderOverRecovery + " TEXT," + Averaging + " TEXT," + Coreloss + " TEXT," +  Arrears + " TEXT,"
+            + ExportBill + " TEXT," + ExportDateCounter + " TEXT,"
             + Extra1 + " TEXT," + Extra2 + " TEXT,"
             + Notes1 + " TEXT," + Notes2 + " TEXT)";
 }

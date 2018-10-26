@@ -14,4 +14,16 @@
         android:title="Filter by Name"
         app:showAsAction="never" />
 
+
+    <item
+        android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <!--<item-->
+        <!--android:id="@+id/clear_search"-->
+        <!--android:title="clear search history"-->
+        <!--app:showAsAction="never" />-->
 </menu>

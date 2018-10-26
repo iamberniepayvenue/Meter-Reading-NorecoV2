@@ -30,13 +30,13 @@ import java.util.Locale;
 
 public class CommonFunc {
 
-    public static float round(float value, int places) {
+    public static double roundOff(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         long factor = (long) Math.pow(10, places);
         value = value * factor;
         long tmp = Math.round(value);
-        return (float) tmp / factor;
+        return (double) tmp / factor;
     }
 
 
@@ -84,8 +84,8 @@ public class CommonFunc {
                 if (res1.length() > 0) {
                     res1.deleteCharAt(res1.length() - 1);
                 }
-                //return res1.toString().toLowerCase();
-                return "00:FD:20:44:BB:55";
+                return res1.toString().toLowerCase();
+                //return "00:FD:20:44:BB:55";
             }
         } catch (Exception ex) {
         }
@@ -173,7 +173,6 @@ public class CommonFunc {
     public static String calcComponentAmount(double rate, double consumption) {
         DecimalFormat df = new DecimalFormat("#.####");
         double res = rate * consumption ;
-        Log.e("CommonFunc",""+rate+" * "+ consumption + " = " + df.format(res) + " and "+((float)res));
         return df.format(res);
     }
 
@@ -215,6 +214,21 @@ public class CommonFunc {
 
         SimpleDateFormat targetFormat = new SimpleDateFormat("MM/dd/yyyy");
         return targetFormat.format(sourceDate);
+    }
+
+
+
+    public static String disconnectionNotice() {
+        return "Note: Pls pay in the office 2 days after receipt of this Statement af Account or within 7 days from Due Date" +
+                "to avoid Penalty.";
+    }
+
+    public static String officialReceipt(){
+        return "This is not an Official Receipt. Payment of this bill does not mean payment of previous delinquencies if any.";
+    }
+
+    public static String warning(){
+        return "WARNING!SUBJECT TO DISCONNECTION";
     }
 
     public static String monthAbrev(String billMonth) {

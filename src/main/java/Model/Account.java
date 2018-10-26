@@ -83,6 +83,8 @@ public class Account extends Person {
     private String SeniorSubsidy;
     private String BillingDate;
     private String BillNumber;
+    private String ExportBill;
+    private String ExportDateCounter;
 
 
 
@@ -683,5 +685,21 @@ public class Account extends Person {
 
     public void setSeniorSubsidy(String seniorSubsidy) {
         SeniorSubsidy = seniorSubsidy;
+    }
+
+    public String getExportBill() {
+        return ExportBill;
+    }
+
+    public String getExportDateCounter() {
+        return ExportDateCounter;
+    }
+
+    public void setExportBill(String exportBill) {
+        ExportBill = exportBill;
+    }
+
+    public void setExportDateCounter(String exportDateCounter) {
+        ExportDateCounter = exportDateCounter;
     }
 }

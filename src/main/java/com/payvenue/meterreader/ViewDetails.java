@@ -341,12 +341,26 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
     }
 
+    public String segmentName(ArrayList<String> duplicateSegmentName,String segmentName){
+        String name = "";
+        if(duplicateSegmentName.size() > 0) {
+            for(String segName: duplicateSegmentName) {
+                if(segmentName.equalsIgnoreCase(segName)){
+                    return segmentName;
+                }
+            }
+        }
+
+        return name;
+    }
+
     public void preparePrint() {
         DecimalFormat df = new DecimalFormat("#.####");
         ArrayList<String> vatListCode = new ArrayList<>();
         ArrayList<String> vatListValue = new ArrayList<>();
         ArrayList<String> rateComponentForExport = new ArrayList<>();
         ArrayList<String> exportRateDueAmount = new ArrayList<>();
+        ArrayList<String> duplicateSegmentName = new ArrayList<>();
         String name = mAccount.getLastName();
         if(mAccount.getFirstName().equalsIgnoreCase(".")
                 || mAccount.getMiddleName().equalsIgnoreCase(".")){
@@ -363,6 +377,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         Bill mBill;
         List<Rates> mRates;
         mBill = mAccount.getBill();
+        mRates = mBill.getRates();
+        /**Check duplicate name*/
+        if (listRateSegment.size() > 0) {
+            for (RateSegmentModel seg : listRateSegment) {
+                for(Rates r : mRates){
+                    String segmentName = seg.getRateSegmentName();
+                    String codeName = r.getCodeName();
+                    if(segmentName.equalsIgnoreCase(codeName)){
+                        duplicateSegmentName.add(segmentName);
+                    }
+                }
+            }
+        }
+
         String a_class = mAccount.getAccountClassification();
         if(a_class.toLowerCase().contains("residential")) {
             a_class = "Res";
@@ -377,20 +405,19 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 ////        mp.printText("                         (NORECO2)\n");
 ////        mp.printText("                   STATEMENT OF ACCOUNT\n");
 ////        mp.printText("================================================================\n");
-//
+
         String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
         mp.printBitmap(path);
         mp.printText("\n");
-        mp.printText("Meter No:" + mAccount.getMeterSerialNo(), "Type:" + a_class+"\n");
-        mp.printTextBoldRight("Account No:", mAccount.getAccountID());
-        mp.printTextExceptLeft("Account No:"+ mAccount.getAccountID(),"BillMonth:" + mAccount.getBillMonth()+"\n");
-        mp.printTextBoldRight("Account Name:",name+"\n");
-        mp.printText("Address:"+ mAccount.getAddress()+"\n");
+        mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
+        mp.printextEmphasized(name+"\n");
+        mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
+        mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
         mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(mAccount.getDateRead()) +"\n");
         mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-        mp.printText("Multiplier:" + mAccount.getMultiplier()+"\n");
-        mp.printText("Consumption:" + mAccount.getActualConsumption()+"\n");
+        mp.printText("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n");
+        mp.printText("Consumption:" + mAccount.getActualConsumption(),"BillMonth:" + mAccount.getBillMonth()+"\n");
         if(a_class.equalsIgnoreCase("HV")) {
             mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
         }else{
@@ -402,39 +429,45 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         mp.printText("--------------------------------------------------------------"+"\n");
-        mp.printText("Date              Prev                 Pres              KWH"+"\n");
-//        mp.printText(mAccount.getDateRead()
-//                + "         " + mAccount.getInitialReading()
-//                + "                " + mAccount.getReading()
-//                + "          " + mAccount.getConsume()+"\n");
+        mp.printText("Date                Prev                 Pres              KWH"+"\n");
 
         int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getInitialReading().length();
-        String paddingChar1 = " ";
+        String spacing = " ";
          for (int p = 0; p < padding1; p++) {
-           paddingChar1 = paddingChar1.concat(" ");
+             spacing = spacing.concat(" ");
          }
-        String strRight = mAccount.getDateRead() + paddingChar1 + mAccount.getInitialReading();
+        String strRight = mAccount.getDateRead() + spacing + mAccount.getInitialReading();
 
         int paddingLeft = 20 - mAccount.getReading().length() - mAccount.getConsume().length();
-        String _paddingLeft = " ";
+        String _spacing = " ";
         for (int p = 0; p < paddingLeft; p++) {
-            _paddingLeft = _paddingLeft.concat(" ");
+            _spacing = _spacing.concat(" ");
         }
-        String strLeft = mAccount.getReading() + _paddingLeft + mAccount.getConsume();
+        String strLeft = mAccount.getReading() + _spacing + mAccount.getConsume();
 
         mp.printText(strRight,strLeft+"\n");
         mp.printText("--------------------------------------------------------------"+"\n");
-        //Cursor cursorRateSegment = db.getRateSegment(db);
-        //ArrayList<Components> componentsList= db.getRateComponent(db);
         if(!IsMotherMeter) {
-            mRates = mBill.getRates();
             if (listRateSegment.size() > 0) {
                 for (RateSegmentModel s : listRateSegment) {
                     String segmentName = s.getRateSegmentName();
                     String rateSegmentCode = s.getRateSegmentCode();
-                    if (!segmentName.equalsIgnoreCase("FIT-ALL")) {
+
+                    /** Avoid printing same segment name*/
+                    if(duplicateSegmentName.size() > 0) {
+                        for(String segName: duplicateSegmentName) {
+                            if (!segmentName.equalsIgnoreCase(segName)) {
+                                mp.printText(segmentName + "\n");
+                            }
+                        }
+                    }else {
                         mp.printText(segmentName + "\n");
                     }
+
+//                    if (!segmentName.equalsIgnoreCase("FIT-ALL")) {
+//                        mp.printText(segmentName + "\n");
+//                    }
+
                     for (Rates r : mRates) {
                         if (r.getRateSegment().equals(rateSegmentCode)) {
                             String codeName = r.getCodeName();
@@ -475,7 +508,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
                             if (!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
-                                mp.printText("  " + codeName, rightText + "\n");
+                                String sn = segmentName(duplicateSegmentName,codeName);
+                                if(!sn.equalsIgnoreCase("")){
+                                    mp.printText(codeName, rightText + "\n");
+                                }else{
+                                    mp.printText("  " + codeName, rightText + "\n");
+                                }
                             }
 
                             /**NET METERING*/
@@ -499,7 +537,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
             mp.printText("VAT Charges" + "\n");
             for (int i = 0; i < vatListCode.size(); i++) {
-                mp.printText("  " + vatListCode.get(i).toString(), vatListValue.get(i).toString() + "\n");
+                mp.printText("  " + vatListCode.get(i), vatListValue.get(i) + "\n");
             }
 
             mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
@@ -533,25 +571,21 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         if(mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
             mp.printTextBoldRight("","EXPORT BILL"+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
-            mp.printText("Date              Prev                 Pres              KWH"+"\n");
-//            mp.printText(mAccount.getDateRead()
-//                    + "         " + mAccount.getExportPreviousReading()
-//                    + "                " + mAccount.getExportReading()
-//                    + "          " + mAccount.getExportConsume()+"\n");
+            mp.printText("Date                Prev                 Pres              KWH"+"\n");
 
             int padding3 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
-            String paddingChar3 = " ";
+            String spacing3 = " ";
             for (int p = 0; p < padding3; p++) {
-                paddingChar3 = paddingChar3.concat(" ");
+                spacing3 = spacing3.concat(" ");
             }
-            String strRight1 = mAccount.getDateRead() + paddingChar3 + mAccount.getExportPreviousReading();
+            String strRight1 = mAccount.getDateRead() + spacing3 + mAccount.getExportPreviousReading();
 
             int paddingLeft1 = 20 - mAccount.getExportReading().length() - mAccount.getExportConsume().length();
-            String _paddingLeft1 = " ";
+            String _spacing2 = " ";
             for (int p = 0; p < paddingLeft1; p++) {
-                _paddingLeft1 = paddingChar1.concat(" ");
+                _spacing2 = _spacing2.concat(" ");
             }
-            String strLeft1 = mAccount.getExportReading() + _paddingLeft1 +mAccount.getExportConsume();
+            String strLeft1 = mAccount.getExportReading() + _spacing2 + mAccount.getExportConsume();
             mp.printText(strRight1,strLeft1+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 
@@ -565,20 +599,27 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("\n");
                 mp.printText("\n");
                 mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n");
-                if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {
-                    mp.printText("REPRINTED" + "\n");
-                }
+
             }
-
-
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("\n");
-
         }
 
+        mp.printText("\n");
+        mp.printText("\n");
 
+        if(arrearsBillMonthList.size() > 0) {
+            mp.printText(CommonFunc.disconnectionNotice()+"\n");
+            mp.printText("\n");
+            mp.printText(CommonFunc.officialReceipt()+"\n");
+            mp.printText("\n");
+            mp.printText(CommonFunc.warning()+"\n");
+        }
+        if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {
+            mp.printText("REPRINTED" + "\n");
+        }
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("\n");
         db.updateAccountToPrinted(db,"Printed");
 
     }

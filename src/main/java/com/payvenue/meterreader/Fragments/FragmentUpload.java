@@ -57,7 +57,8 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     String CoopID;
     View rootView;
     Spinner spinHost;
-
+    int lengthOfData = 0;
+    int countToUpload = 0;
 
     Button btnExtract;
     Button btnRestUpload;
@@ -140,6 +141,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         btnExtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 exportDB();
             }
         });
@@ -202,6 +204,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 return;
             }
 
+            lengthOfData = cursor.getCount();
             mDialog.setMessage("Uploading data.Please wait.");
             mDialog.show();
             JSONArray resultSet;
@@ -215,12 +218,12 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
             while (cursor.moveToNext()) {
 
-
+                countToUpload = countToUpload + 1;
                 resultSet = new JSONArray();
                 rowObject = new JSONObject();
                 FinalData = new JSONObject();
 
-
+                String accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
                 details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                 String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
                 int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -253,11 +256,12 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("IsExport",account.getIsNetMetering());
                     rowObject.put("PrevExportReading",account.getExportPreviousReading());
                     rowObject.put("ExportConsumption",account.getExportConsume());
+                    //add billmonth from rate schedule date_from
                     Bill mBill = account.getBill();
                     double exportBillAmount = 0;
                     double billAmount = 0;
                     if(!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
-                        exportBillAmount = mBill.getTotalAmountDueExport();
+                        exportBillAmount = mBill.getNetBillAmountExport();
                         billAmount = mBill.getTotalAmount();
                     }
 
@@ -271,6 +275,14 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("UORDiscount",account.getOverUnderDiscount());
                     rowObject.put("IsCheckSubMeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                     rowObject.put("DemandKWReading",account.getDemandKW());
+                    rowObject.put("ExportBill",account.getExportBill());
+                    rowObject.put("ExportDateCounter",account.getExportDateCounter());
+                    String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
+                    String []strArray = billMonth.split("/");
+                    String yr = strArray[2].substring(2);
+                    String month = strArray[0];
+                    billMonth = month+yr;
+                    rowObject.put("billmonth",billMonth);
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -289,10 +301,10 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 String url = null;
                 try {
+
                     url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
-                    //Log.e(TAG,"request: "+url);
-                    //Log.e(TAG,"final data: "+FinalData);
-                    MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),"","", this);
+                    MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
+                    Log.e(TAG,"upload:"+url);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     Log.e(TAG,"UnsupportedEncodingException: " + e.getMessage());
@@ -307,31 +319,20 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
     @Override
     public void onSuccess(String type, String response,String params,String param2,String param3) {
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
+
+        if(Integer.valueOf(param2) == lengthOfData) {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+            lengthOfData = 0;
+            countToUpload = 0;
+            Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
+
+
         getDataCount();
         setValues();
 
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-            if (jsonArray.length() > 0) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-                    String result = obj.getString("result");
-                    if(result.equalsIgnoreCase("01")) {
-                        Log.e(TAG,"response after upload: " + result);
-                    }
-
-                    if(result.equalsIgnoreCase("02")) {
-                        Log.e(TAG,"response after upload: " + result);
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -351,12 +352,9 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     }
 
     public void getDataCount() {
-
-
         uploadCount = MainActivity.db.getDataCount(MainActivity.db, "uploaded");
         readCount = MainActivity.db.getDataCount(MainActivity.db, "read");
         unreadCount = MainActivity.db.getDataCount(MainActivity.db, "unread");
-
     }
 
 
@@ -396,6 +394,8 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             Toast.makeText(mcontext, "DB Exported!", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(mcontext, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }
+
