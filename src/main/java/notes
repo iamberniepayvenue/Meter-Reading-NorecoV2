@@ -21,3 +21,7 @@ Check Meter Type:
     M = Mother Meter
     R = Regular Meter
     S = Sub meter
+
+
+    ExportBill = negative value of net metering amount, this will be downloaded
+                    from billing profile and deduct to net metering payable if positive value.

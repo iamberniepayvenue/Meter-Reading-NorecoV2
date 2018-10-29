@@ -569,8 +569,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
                 //Log.e(TAG,"senior: " + totalSeniorDiscount);
                 totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
-
-
                 billedAmount = totalComponent + arrearsPenalty + totalArrears;
 
                 /** Not included */
