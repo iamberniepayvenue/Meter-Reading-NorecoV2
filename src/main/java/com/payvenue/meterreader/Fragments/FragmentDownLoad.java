@@ -136,6 +136,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         BtnDownLoad = (Button) rootView.findViewById(R.id.btnDownLoad);
         BtnDelete = (Button) rootView.findViewById(R.id.button1);
         txtPort = ((EditText) rootView.findViewById(R.id.txtport));
+        spinHost.setEnabled(false);
     }
 
     public void enableButton() {

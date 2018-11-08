@@ -202,7 +202,8 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                 } else {
 
                     listview.setAdapter(null);
-                    db.saveFoundMeter(db, ".", meterserial, reading, remarks, latitude, longitude);
+
+                    db.saveFoundMeter(db, ".", meterserial, reading, remarks, latitude, longitude,CommonFunc.getTimeNow());
                     getFoundMeters();
                     addDialog.dismiss();
                 }

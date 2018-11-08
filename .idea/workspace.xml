@@ -25,175 +25,38 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/compat/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/compat/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/constraint/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/constraint/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/coreui/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/coreui/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/coreutils/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/coreutils/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/design/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/design/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/fragment/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/fragment/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/graphics/drawable/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/graphics/drawable/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/graphics/drawable/animated/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/graphics/drawable/animated/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/mediacompat/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/mediacompat/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/transition/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/transition/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v4/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v4/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v7/appcompat/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v7/appcompat/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v7/recyclerview/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/android/support/v7/recyclerview/R.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/com/payvenue/meterreader/R.java" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/com/payvenue/meterreader/R.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/debug.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/values.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/values.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/single/debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/single/debug.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/merger.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/merger.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/uqMD9JW_WcFHc6vgvncnc42I_ck=" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/uqMD9JW_WcFHc6vgvncnc42I_ck=" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/DataBase/DBInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/DataBase/DBInfo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/DataBase/DataBaseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/DataBase/DataBaseHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/Account.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/ReadingDetailsModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/ReadingDetailsModel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/Route.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Model/Route.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/CommonFunc.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/CommonFunc.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/Constant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/Utility/WebRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/compat/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/compat/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/constraint/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/constraint/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/coreui/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/coreui/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/coreutils/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/coreutils/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/design/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/design/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/fragment/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/fragment/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/graphics/drawable/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/graphics/drawable/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/graphics/drawable/animated/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/graphics/drawable/animated/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/mediacompat/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/mediacompat/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/transition/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/transition/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v4/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v4/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v7/appcompat/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v7/appcompat/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v7/recyclerview/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/android/support/v7/recyclerview/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/AccountListActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/AccountListActivity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts$ActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts$ActionListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts$TextChangeListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts$TextChangeListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Adapter/AccountAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Adapter/AccountAdapter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/BillPayment.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/BillPayment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/BillPreview.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/BillPreview.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentFound.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentPolicy.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentPolicy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentReading.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentReading.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentRoute$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentRoute$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentRoute.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentRoute.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/MyDialogFragment$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/MyDialogFragment$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/MyDialogFragment.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/MyDialogFragment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/RateSchedule.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/RateSchedule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/MainActivity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$id.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$id.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$integer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$integer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$layout.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$layout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$menu.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$menu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$string.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$string.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$style.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$style.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$styleable.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$styleable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$xml.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/R$xml.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/info/androidhive/slidingmenu/adapter/NavDrawerListAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/info/androidhive/slidingmenu/adapter/NavDrawerListAdapter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/processed_res/debug/processDebugResources/out/resources-debug.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/processed_res/debug/processDebugResources/out/resources-debug.ap_" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/res/merged/debug/layout_pop_found_meter.xml.flat" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/merged/debug/layout_pop_found_meter.xml.flat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/res/merged/debug/menu_menu_navigation.xml.flat" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/merged/debug/menu_menu_navigation.xml.flat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/res/symbol-table-with-package/debug/package-aware-r.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/symbol-table-with-package/debug/package-aware-r.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/symbols/debug/R.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/symbols/debug/R.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/DataBase/DBInfo.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/DataBase/DBInfo.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/res/merged/debug/values_values.arsc.flat" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/merged/debug/values_values.arsc.flat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/DataBase/DataBaseHandler.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/DataBase/DataBaseHandler.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/Account.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/Account.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/ReadingDetailsModel.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/ReadingDetailsModel.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/Route.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Model/Route.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/CommonFunc.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/CommonFunc.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/Constant.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/Constant.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$3.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$3.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$4.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest$4.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/Utility/WebRequest.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/compat/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/compat/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/constraint/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/constraint/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/coreui/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/coreui/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/coreutils/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/coreutils/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/design/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/design/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/fragment/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/fragment/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/graphics/drawable/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/graphics/drawable/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/graphics/drawable/animated/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/graphics/drawable/animated/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/mediacompat/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/mediacompat/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/transition/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/transition/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v4/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v4/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v7/appcompat/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v7/appcompat/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v7/recyclerview/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/android/support/v7/recyclerview/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/AccountListActivity.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/AccountListActivity.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts$ActionListener.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts$ActionListener.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts$TextChangeListener.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts$TextChangeListener.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Adapter/AccountAdapter.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Adapter/AccountAdapter.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/BillPayment.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/BillPayment.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/BillPreview.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/BillPreview.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound$1.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound$2.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentFound.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentNotFound$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentNotFound$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentNotFound.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentNotFound.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentPolicy.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentPolicy.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentReading.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentReading.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentRoute$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentRoute$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentRoute.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentRoute.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/MyDialogFragment$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/MyDialogFragment$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/MyDialogFragment.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/MyDialogFragment.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/RateSchedule.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/RateSchedule.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$3.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$3.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$4.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$4.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$5.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity$5.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/MainActivity.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$id.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$id.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$integer.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$integer.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$layout.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$layout.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$menu.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$menu.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$string.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$string.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$style.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$style.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$styleable.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$styleable.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$xml.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/R$xml.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/ViewDetails.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/ViewDetails.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/info/androidhive/slidingmenu/adapter/NavDrawerListAdapter.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/info/androidhive/slidingmenu/adapter/NavDrawerListAdapter.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DataBase/DBInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataBase/DBInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/ReadingDetailsModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/ReadingDetailsModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Route.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Route.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utility/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utility/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utility/WebRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utility/WebRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/pop_found_meter.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/pop_found_meter.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu_navigation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/menu_navigation.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -229,75 +92,20 @@
       <file leaf-file-name="Accounts.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22470">
-              <caret line="1559" column="99" selection-start-line="1559" selection-start-column="20" selection-end-line="1559" selection-end-column="99" />
+            <state relative-caret-position="183">
+              <caret line="334" selection-start-line="334" selection-end-line="334" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Rates.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Model/Rates.java">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="53" column="18" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
+            <state relative-caret-position="266">
+              <caret line="747" lean-forward="true" selection-start-line="747" selection-end-line="747" />
               <folding>
-                <element signature="e#1492#1493#0" expanded="true" />
-                <element signature="e#1525#1526#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ViewDetails.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8985">
-              <caret line="630" column="5" selection-start-line="630" selection-start-column="5" selection-end-line="630" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FragmentUpload.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="269" column="95" selection-start-line="269" selection-start-column="95" selection-end-line="269" selection-end-column="95" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DataBaseHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7635">
-              <caret line="538" column="9" selection-start-line="538" selection-start-column="9" selection-end-line="538" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommonFunc.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3195">
-              <caret line="237" column="5" selection-start-line="237" selection-start-column="5" selection-end-line="237" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FragmentDownLoad.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11175">
-              <caret line="792" selection-start-line="792" selection-end-line="792" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WebRequest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Utility/WebRequest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="34" column="10" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -314,12 +122,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>kWhReadi</find>
-      <find>preparePrint</find>
-      <find>isMotherMeter</find>
-      <find>mBill</find>
-      <find>TotalBilledAmount</find>
-      <find>AlertDialog</find>
       <find>dialog</find>
       <find>Consume</find>
       <find>totalAmount</find>
@@ -344,6 +146,12 @@
       <find>DownloadCount</find>
       <find>0101110108</find>
       <find>getRateSched</find>
+      <find>accountID</find>
+      <find>status</find>
+      <find>printAccountSummary</find>
+      <find>time</find>
+      <find>spinnHost</find>
+      <find>setTimeRead</find>
     </findStrings>
     <replaceStrings>
       <replace>mAccount</replace>
@@ -2672,7 +2480,6 @@
         <option value="$PROJECT_DIR$/src/main/java/Model/Bill.java" />
         <option value="$PROJECT_DIR$/src/main/java/Model/Rates.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/provider/SearchProvider.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/provider/SearchSuggestionProvider.java" />
         <option value="$PROJECT_DIR$/src/main/res/xml/searchable.xml" />
@@ -2688,17 +2495,18 @@
         <option value="$PROJECT_DIR$/src/main/java/Model/Account.java" />
         <option value="$PROJECT_DIR$/src/main/java/Model/ReadingDetailsModel.java" />
         <option value="$PROJECT_DIR$/src/main/res/menu/menu_navigation.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" />
         <option value="$PROJECT_DIR$/src/main/java/Model/Route.java" />
         <option value="$PROJECT_DIR$/src/main/java/Utility/WebRequest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" />
-        <option value="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java" />
+        <option value="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" />
+        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -2713,7 +2521,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2768,19 +2576,23 @@
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
               <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
+            <path>
+              <item name="Meter-Reading-Noreco" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="device.picker.selection" value="G4AZCY04P426" />
+    <property name="device.picker.selection" value="DMSSTSFMYLCUROOB" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/res/drawable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
@@ -2976,6 +2788,7 @@
       <window_info id="Build Variants" order="2" sideWeight="0.51111114" side_tool="true" weight="0.26348227" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5148515" side_tool="true" weight="0.5591216" />
+      <window_info anchor="right" id="Preview" order="4" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3288364" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49528643" weight="0.5912162" />
@@ -2983,7 +2796,7 @@
       <window_info id="Captures" order="2" weight="0.23805855" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4888889" weight="0.21617162" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4888889" visible="true" weight="0.21617162" />
       <window_info anchor="bottom" id="Build" order="7" sideWeight="0.48844886" weight="0.32263514" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.32920793" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -2992,15 +2805,37 @@
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Preview" order="4" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Designer" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5148515" side_tool="true" weight="0.5591216" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4888889" weight="0.21617162" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Build Variants" order="2" sideWeight="0.51111114" side_tool="true" weight="0.26348227" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Logcat" order="7" sideWeight="0.48514852" weight="0.5591216" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" weight="0.570132" />
+      <window_info anchor="bottom" id="Mirror" order="7" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="bottom" id="Android Profiler" order="7" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3288364" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32900432" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="right" id="Assistant" order="4" weight="0.38613862" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.48844886" weight="0.32263514" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49528643" weight="0.5912162" />
+      <window_info id="Captures" order="2" weight="0.23805855" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.32920793" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Assistant" order="4" weight="0.38613862" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -3011,23 +2846,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="new commit" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/MyPreferences.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/account_details.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="195" column="41" selection-start-line="195" selection-start-column="41" selection-end-line="195" selection-end-column="41" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Model/RateSchedule.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
@@ -3153,20 +2971,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="52" selection-start-line="52" selection-end-line="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentRoute.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-775">
@@ -3274,13 +3078,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Bill.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/notes">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -3288,35 +3085,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Account.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="62" column="31" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9572">
-          <caret line="749" column="74" selection-start-line="749" selection-start-column="74" selection-end-line="749" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="259">
           <caret line="62" column="68" selection-start-line="62" selection-start-column="68" selection-end-line="62" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="71" column="60" selection-start-line="71" selection-start-column="60" selection-end-line="71" selection-end-column="60" />
-          <folding>
-            <element signature="e#1878#2551#0" expanded="true" />
-            <element signature="e#2550#2551#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3341,13 +3113,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="257" selection-start-line="257" selection-end-line="257" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Model/Rates.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="735">
@@ -3359,41 +3124,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/WebRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="34" column="10" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11175">
-          <caret line="792" selection-start-line="792" selection-end-line="792" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7635">
-          <caret line="538" column="9" selection-start-line="538" selection-start-column="9" selection-end-line="538" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22470">
-          <caret line="1559" column="99" selection-start-line="1559" selection-start-column="20" selection-end-line="1559" selection-end-column="99" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8985">
@@ -3401,17 +3131,128 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="200" column="13" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3195">
-          <caret line="237" column="5" selection-start-line="237" selection-start-column="5" selection-end-line="237" selection-end-column="5" />
+        <state relative-caret-position="390">
+          <caret line="108" column="25" selection-start-line="108" selection-start-column="25" selection-end-line="108" selection-end-column="25" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentFound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-689">
+          <caret line="205" column="113" selection-start-line="205" selection-start-column="113" selection-end-line="205" selection-end-column="113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/WebRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="53" column="55" selection-start-line="53" selection-start-column="55" selection-end-line="53" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Bill.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
+          <folding>
+            <element signature="e#833#834#0" expanded="true" />
+            <element signature="e#873#874#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Account.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="162" column="17" selection-start-line="162" selection-start-column="8" selection-end-line="162" selection-end-column="17" />
+          <folding>
+            <element signature="e#4087#4088#0" expanded="true" />
+            <element signature="e#4124#4125#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-276">
+          <caret line="1149" column="44" selection-start-line="1149" selection-start-column="33" selection-end-line="1149" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_download.xml">
+      <provider editor-type-id="text-editor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="131" column="16" selection-start-line="131" selection-start-column="8" selection-end-line="131" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_upload.xml">
+      <provider editor-type-id="text-editor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="269" column="95" selection-start-line="269" selection-start-column="95" selection-end-line="269" selection-end-column="95" />
+        <state relative-caret-position="303">
+          <caret line="119" selection-start-line="119" selection-end-line="119" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="334" selection-start-line="334" selection-end-line="334" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="747" lean-forward="true" selection-start-line="747" selection-end-line="747" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

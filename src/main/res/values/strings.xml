@@ -26,8 +26,8 @@
     <string-array name="array_hosts">
         <item>192.168.20.254</item>
         <!--192.168.5.240-->
-        <item>103.105.212.68</item>
-        <item>"dev.teslasuite.com"</item>
+        <!--<item>103.105.212.68</item>-->
+        <!--<item>"dev.teslasuite.com"</item>-->
     </string-array>
 
     <!--

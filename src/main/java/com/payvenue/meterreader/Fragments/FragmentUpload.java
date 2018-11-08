@@ -114,7 +114,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         btnExtract = (Button) rootView.findViewById(R.id.btnExtract);
         BtnUpload = (Button) rootView.findViewById(R.id.btnUpload);
         txtuploadCount = rootView.findViewById(R.id.valuploaded);
-
+        spinHost.setEnabled(false);
     }
 
 

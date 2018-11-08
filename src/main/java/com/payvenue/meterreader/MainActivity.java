@@ -692,9 +692,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void printAccountSummary() {
+
         if(mIsConnected) {
-            ArrayList<Account> list = new ArrayList<>();
-            list =  db.summaryDetails(db);
+            //ArrayList<Account> list = new ArrayList<>();
+            ArrayList<Account> list =  db.summaryDetails(db);
             MobilePrinter mp = MobilePrinter.getInstance(this);
             String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
             mp.printBitmap(path);
@@ -705,7 +706,7 @@ public class MainActivity extends AppCompatActivity {
             mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records       :   "+ db.getActiveRecords(db) + "\n");
             mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
             mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
-            mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   0" + "\n");
+            mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
             mp.printText("Zero Consumption  :   "+db.getZeroConsumption(db));
             mp.printText("\n");
             mp.printText("\n");
@@ -728,10 +729,22 @@ public class MainActivity extends AppCompatActivity {
                         String reading = a.getReading();
                         String kwh = a.getConsume();
                         String remarks = a.getRemarks();
+                        String status = a.getReadStatus();
                         Bill bill = a.getBill();
+                        String time = a.getTimeRead();
+
+                        double _amount = 0;
+                        String amount;
                         if (bill != null) {
-                            String amount = MainActivity.dec2.format(bill.getTotalBilledAmount());
-                            String time = a.getTimeRead();
+                            amount = MainActivity.dec2.format(bill.getTotalBilledAmount());
+                        }else{
+                            amount = MainActivity.dec2.format(_amount);
+                        }
+
+                        if(time == null) {
+                            time = "";
+                        }
+
 
                             int padding = 16 - accountID.length() - reading.length();
                             String spacing = " ";
@@ -765,7 +778,7 @@ public class MainActivity extends AppCompatActivity {
                             String finalString = firstString + finalSpacing + secondString;
 
                             mp.printText(finalString, thirdString + "\n");
-                        }
+                        //}
 
                     }
 

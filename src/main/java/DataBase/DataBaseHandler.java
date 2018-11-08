@@ -1056,7 +1056,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void saveFoundMeter(DataBaseHandler db, String accountnumber, String meterserial, String reading, String remarks, Double latitude, Double longitude) {
+    public void saveFoundMeter(DataBaseHandler db, String accountnumber, String meterserial, String reading, String remarks, Double latitude, Double longitude,String timeRead) {
 
         SQLiteDatabase sql = db.getWritableDatabase();
 
@@ -1070,17 +1070,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Latitude, latitude);
         data.put(DBInfo.Longitude,longitude);
         data.put(DBInfo.Extra1, 0);
+        data.put(DBInfo.Extra2,timeRead);
+        /**Extra1 Upload Status*/
+        /**Extra2 time read*/
         sql.insert(DBInfo.TBlFound_Meters, null, data);
-    }
-
-
-    public void updateFoundMeters(DataBaseHandler db, String columnid, String flag) {
-        SQLiteDatabase sql = db.getReadableDatabase();
-        ContentValues data = new ContentValues();
-        data.put(DBInfo.Extra1, flag);// 1 is uploaded : 0 is not
-        sql.update(DBInfo.TBlFound_Meters, data, "_id=" + columnid, null);
-        sql.close();
-        db.close();
     }
 
     public int getDataCountThisRoute(DataBaseHandler db,String routeID) {
@@ -1129,7 +1122,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Account account;
         Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select AccountID,ReadingDetails From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed'";
+        String statement = "Select AccountID,ReadingDetails,ReadStatus From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed' Or ReadStatus = 'NotFound'";
         Cursor cursor = sql.rawQuery(statement,null);
         if(cursor.moveToFirst()) {
             while(!cursor.isAfterLast()) {
@@ -1137,6 +1130,48 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account = gson.fromJson(details, Account.class);
                 String accountID = cursor.getString(cursor.getColumnIndex("AccountID"));
                 account.setAccountID(accountID);
+                account.setReadStatus(cursor.getString(cursor.getColumnIndex("ReadStatus")));
+                list.add(account);
+                cursor.moveToNext();
+            }
+        }
+        sql.close();
+        db.close();
+
+        ArrayList<Account> _list;
+        _list = summaryDetailsOfFound(db);
+
+        Account _a = new Account();
+        if(_list.size() > 0) {
+            for (Account a : _list) {
+                _a.setAccountID(a.getAccountID());
+                _a.setReading(a.getReading());
+                _a.setRemarks(a.getRemarks());
+                _a.setTimeRead(a.getTimeRead());
+                _a.setConsume(a.getConsume());
+                _a.setReadStatus(a.getReadStatus());
+                list.add(_a);
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<Account> summaryDetailsOfFound(DataBaseHandler db) {
+        ArrayList<Account> list = new ArrayList<>();
+        Account account = new Account();
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String statement = "Select MeterSerialNo,Reading,Remarks,Extra2 From found_meters";
+        Cursor cursor = sql.rawQuery(statement,null);
+        if(cursor.moveToFirst()) {
+            while(!cursor.isAfterLast()) {
+                Log.e(TAG,"here");
+                account.setAccountID(".");
+                account.setReading(cursor.getString(cursor.getColumnIndex("Reading")));
+                account.setRemarks(cursor.getString(cursor.getColumnIndex("Remarks")));
+                account.setTimeRead(cursor.getString(cursor.getColumnIndex("Extra2")));
+                account.setConsume("0");
+                account.setReadStatus("Found");
                 list.add(account);
                 cursor.moveToNext();
             }
@@ -1338,7 +1373,24 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public String MissedAccount(DataBaseHandler db) {
         SQLiteDatabase sql = db.getReadableDatabase();
 
-        String statement = "Select Count(_id) as count From accounts Where ReadStatus = 'NotFound' OR ReadStatus = 'Found'";
+        String statement = "Select Count(_id) as count From accounts Where ReadStatus = 'NotFound'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        String count = "0";
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                count = cursor.getString(cursor.getColumnIndex("count"));
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
+    }
+
+    public String newConnectionCount(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        String statement = "Select Count(_id) as count From found_meters";
         Cursor cursor = sql.rawQuery(statement,null);
         String count = "0";
         if(cursor.getCount() > 0) {
