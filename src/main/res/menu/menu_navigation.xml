@@ -94,6 +94,19 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/drawer_summary"
+        android:title="Print Summary">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/summary"
+                    android:icon="@drawable/ic_onaccounts"
+                    android:title="Print" />
+            </group>
+        </menu>
+    </item>
+
 
     <item
         android:id="@+id/drawer_settings"

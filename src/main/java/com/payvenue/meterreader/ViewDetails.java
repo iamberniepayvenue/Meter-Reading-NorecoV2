@@ -78,7 +78,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         mAccount =  MainActivity.selectedAccount;
-        if(mAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || mAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+        if(mAccount.getIsCheckSubMeterType().toLowerCase().equalsIgnoreCase("m")) {
             IsMotherMeter = true;
         }
 
@@ -231,7 +231,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         "Can't Generate Billing for erroneous reading.",
                         Toast.LENGTH_SHORT).show();
             } else {
-
+                //preparePrint();
                 if (MainActivity.mIsConnected) {
                     preparePrint();
                 } else {
@@ -374,22 +374,27 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         MobilePrinter mp = MobilePrinter.getInstance(this);
-        Bill mBill;
-        List<Rates> mRates;
-        mBill = mAccount.getBill();
-        mRates = mBill.getRates();
-        /**Check duplicate name*/
-        if (listRateSegment.size() > 0) {
-            for (RateSegmentModel seg : listRateSegment) {
-                for(Rates r : mRates){
-                    String segmentName = seg.getRateSegmentName();
-                    String codeName = r.getCodeName();
-                    if(segmentName.equalsIgnoreCase(codeName)){
-                        duplicateSegmentName.add(segmentName);
+
+        Bill mBill = null;
+        List<Rates> mRates = null;
+        if(!IsMotherMeter) {
+            mBill = mAccount.getBill();
+            mRates = mBill.getRates();
+            /**Check duplicate name*/
+            if (listRateSegment.size() > 0) {
+                for (RateSegmentModel seg : listRateSegment) {
+                    for(Rates r : mRates){
+                        String segmentName = seg.getRateSegmentName();
+                        String codeName = r.getCodeName();
+                        String sCode = seg.getRateSegmentCode();
+                        if(segmentName.equalsIgnoreCase(codeName)){
+                            duplicateSegmentName.add(segmentName);
+                        }
                     }
                 }
             }
         }
+
 
         String a_class = mAccount.getAccountClassification();
         if(a_class.toLowerCase().contains("residential")) {
@@ -455,23 +460,22 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
                     /** Avoid printing same segment name*/
                     if(duplicateSegmentName.size() > 0) {
-                        for(String segName: duplicateSegmentName) {
-                            if (!segmentName.equalsIgnoreCase(segName)) {
+                        for(String seg : duplicateSegmentName) {
+                            if (!seg.equalsIgnoreCase(segmentName)) {
                                 mp.printText(segmentName + "\n");
                             }
                         }
-                    }else {
+                    }else{
                         mp.printText(segmentName + "\n");
                     }
 
-//                    if (!segmentName.equalsIgnoreCase("FIT-ALL")) {
-//                        mp.printText(segmentName + "\n");
-//                    }
 
                     for (Rates r : mRates) {
                         if (r.getRateSegment().equals(rateSegmentCode)) {
                             String codeName = r.getCodeName();
-                            String rateAmount = String.valueOf(r.getRateAmount());
+                            @SuppressLint("DefaultLocale")
+                            String rateAmount = String.format("%.4f",Float.valueOf(r.getRateAmount()));
+                            //String rateAmount = String.valueOf(r.getRateAmount());
                             String amount;
                             amount = df.format(Double.parseDouble(r.getAmount()));
 
@@ -603,16 +607,18 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             }
         }
 
-        mp.printText("\n");
-        mp.printText("\n");
+
 
         if(arrearsBillMonthList.size() > 0) {
+            mp.printText("\n");
+            mp.printText("\n");
             mp.printText(CommonFunc.disconnectionNotice()+"\n");
             mp.printText("\n");
             mp.printText(CommonFunc.officialReceipt()+"\n");
             mp.printText("\n");
-            mp.printText(CommonFunc.warning()+"\n");
+            mp.printText("                "+CommonFunc.warning()+"                 "+"\n");
         }
+
         if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {
             mp.printText("REPRINTED" + "\n");
         }

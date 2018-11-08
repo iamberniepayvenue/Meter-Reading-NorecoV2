@@ -14,7 +14,9 @@ public class Route extends Reader {
     private String TagClass;
 
 
-    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass) {
+
+    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName) {
+        super(coopID,readerID,readerName);
         DistrictID = districtID;
         RouteID = routeID;
         AccountIDTo = accountIDTo;
@@ -47,4 +49,6 @@ public class Route extends Reader {
     public String getTagClass() {
         return TagClass;
     }
+
+
 }

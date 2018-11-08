@@ -11,6 +11,7 @@ public class Constant {
     public static String BILLING_POLICY_HIGHVOLT_COUNT = "billing_policy_highvolt_count";
     public static String LIFELINE_POLICY_COUNT = "lifeline_policy_count";
     public static String RATE_CODE_COUNT = "rate_code";
+    public static String THRESHOLD_COUNT = "threshold";
 
 
     /**Production*/

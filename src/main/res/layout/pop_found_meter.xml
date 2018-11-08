@@ -15,7 +15,8 @@
         android:ems="10"
         android:hint="Account Number"
         android:inputType="textPersonName"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:visibility="gone"/>
 
 
     <EditText

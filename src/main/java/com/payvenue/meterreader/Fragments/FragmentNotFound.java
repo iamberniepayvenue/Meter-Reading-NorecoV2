@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import DataBase.DBInfo;
@@ -131,7 +132,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         String strRequest = "http://" + MainActivity.connSettings.getHost() + ":"
                 + MainActivity.connSettings.getPort()
                 + "?cmd=uploadData"
-                + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
+                + "&coopid=" + MainActivity.connSettings.getCoopID() + "&Mac=" + CommonFunc.getMacAddress();
 
         if (cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No Data to upload.", Toast.LENGTH_SHORT).show();
@@ -150,7 +151,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
 
             resultSet = new JSONArray();
             rowObject = new JSONObject();
-
+            String accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
             details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
             account = gson.fromJson(details, Account.class);
             String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
@@ -178,7 +179,12 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
                 rowObject.put("ReadStatus",cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus)));
                 rowObject.put("Remarks",account.getRemarks());
                 rowObject.put("DueDate",cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
-
+                String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
+                String []strArray = billMonth.split("/");
+                String yr = strArray[2];
+                String month = strArray[0];
+                billMonth = yr+month;
+                rowObject.put("billmonth",billMonth);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
                 e.printStackTrace();
@@ -197,10 +203,13 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
 
             Log.e(TAG, "Upload Not Found: " + strRequest + "&data="+ FinalData.toString());
 
-            String url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString());
-
-            //MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
-
+            String url;
+            try {
+                url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
+                MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
     }

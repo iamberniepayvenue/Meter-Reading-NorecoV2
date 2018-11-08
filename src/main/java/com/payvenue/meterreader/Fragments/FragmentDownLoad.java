@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import DataBase.DBInfo;
 import DataBase.DataBaseHandler;
@@ -69,6 +70,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
     private boolean ifRouteExist = false;
     private MyPreferences myPreferences;
     private int totalAccountSave = 0;
+    private int routeLength = 0;
+    private int rdsuccess = 0;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -266,7 +270,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             dueDate = obj.getString("DueDate");
                             tagClass = obj.getString("TagClass");
                             route = gson.fromJson(obj.toString(), Route.class);
-
+                            myPreferences.savePrefString("TAGCLASS",tagClass);
                             /**check to avoid duplication of routes and accounts*/
                             ifRouteExist = DB.checkRouteIsExist(DB,routeID,districtID);
                             if(!ifRouteExist) {
@@ -279,21 +283,23 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     + "&idFrom=" + accountIDFrom
                                     + "&idTo=" + accountIDTo
                                     + "&mac=" + mac
-                                    + "&tagclass=" + tagClass; // + "&offset=0" set to zero
+                                    + "&tagclass=" + tagClass
+                                    + "&rd=0";  // + "&offset=0" set to zero
                             urlParam = baseurl + "?cmd=getaccounts&coopid=" + coopID
                                     + "&districtid=" + URLEncoder.encode(districtID)
                                     + "&routeid=" + URLEncoder.encode(routeID)
                                     + "&idFrom=" + accountIDFrom
                                     + "&idTo=" + accountIDTo
                                     + "&mac=" + mac
-                                    + "&tagclass=" + tagClass;
-
-                                int offset = DB.getAccountSaveCount(DB, routeID);
-                                if(offset > 0) {
-                                    cmdAccounts = cmdAccounts + "&offset=" + offset;
-                                }else{
+                                    + "&tagclass=" + tagClass
+                                    + "&rd=0";
+                                /**rd means download all thus not downloaded accounts*/
+//                                int offset = DB.getAccountSaveCount(DB, routeID);
+//                                if(offset > 0) {
+//                                    cmdAccounts = cmdAccounts + "&offset=" + offset;
+//                                }else{
                                     cmdAccounts = cmdAccounts + "&offset=0";
-                                }
+                                //}
 
                             if(numberOfTimesDeletingTable == 0) {
                                 int update_error = MyPreferences.getInstance(ctx).getPrefInt("update_error");
@@ -301,6 +307,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     MyPreferences.getInstance(ctx).savePrefInt("update_error",0);
                                 }
 
+                                myPreferences.savePrefInt("rd",0);
+                                Log.e(TAG,"fetchAccount: "+ cmdAccounts);
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
                         }
@@ -315,13 +323,39 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                         MainActivity.setReader();
                     } else {
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
+
 
                         if(!params.equalsIgnoreCase("1")){
-                            Toast.makeText(ctx,"No Routes Downloaded",Toast.LENGTH_SHORT).show();
-                            return;
+
+                            String tagC = myPreferences.getPrefString("TAGCLASS");
+                            int rd = myPreferences.getPrefInt("rd");
+                            Log.e(TAG,"rd: "+ rd);
+                            if(rd == 0)  {
+                                ArrayList<Route> _list = DB.getRoute(DB);
+
+                                routeLength = _list.size();
+
+                                for(int i = 0; i < _list.size(); i++) {
+                                    cmdAccounts = baseurl + "?cmd=getaccounts&coopid=" + _list.get(i).getCoopID()
+                                            + "&districtid=" + _list.get(i).getDistrictID()
+                                            + "&routeid=" + _list.get(i).getRouteID()
+                                            + "&idFrom=" + _list.get(i).getAccountIDFrom()
+                                            + "&idTo=" + _list.get(i).getAccountIDTo()
+                                            + "&mac=" + mac
+                                            + "&tagclass=" + tagC
+                                            + "&rd=1";
+                                    Log.e(TAG,"1: "+ cmdAccounts);
+                                    String ddate = DB.getDueDate(DB,_list.get(i).getRouteID());
+                                    MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",_list.get(i).getRouteID(),ddate,"rd", this);
+                                }
+                            }else{
+                                if (mDialog.isShowing()) {
+                                    mDialog.dismiss();
+                                }
+                                Toast.makeText(ctx,"No Routes Downloaded",Toast.LENGTH_SHORT).show();
+                                return;
+                           }
+
                             /** stop the process, waiting for the assign routes*/
                         }else{
                             Toast.makeText(ctx,"No New Assign Routes",Toast.LENGTH_SHORT).show();
@@ -346,11 +380,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=" + coopID + "&mac=" + mac;
                     String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
                     String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + tagClass;
-                    String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + coopID;
-//                    Log.e(TAG,"RateSchedule: " + cmdSchedule);
-//                    Log.e(TAG,"RateSegment: " + cmdRateSegment);
-//                    Log.e(TAG,"BillingPolicy: " + cmdPolicy);
-//                    Log.e(TAG,"cmdRateComponent: " + cmdRateComponent);
+                    String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + coopID+"&mac=" + mac;
+                    String cmdThreshold = baseurl + "?cmd=threshold&mac=" + mac;
+                    //Log.e(TAG)
                     if(myPreferences.getPrefInt(Constant.RATE_CODE_COUNT) == 0) {
                         MainActivity.webRequest.sendRequest(cmdRateCode, "Code", "","","", this);
                     }
@@ -388,6 +420,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                     if(myPreferences.getPrefInt(Constant.LIFELINE_POLICY_COUNT) == 0) {
                         MainActivity.webRequest.sendRequest(cmdLifeLineDiscount, "LifeLineDiscount", "","","", this);
+                    }
+
+                    if(myPreferences.getPrefInt(Constant.THRESHOLD_COUNT) == 0){
+                        Log.e(TAG,"cmdThreshold: "+ cmdThreshold);
+                        MainActivity.webRequest.sendRequest(cmdThreshold, "threshold", "","","", this);
                     }
 
                 break;
@@ -695,6 +732,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             JSONObject obj = array.getJSONObject(i);
                             String acc = obj.getString("AccountID");
                             if(!acc.equalsIgnoreCase("0")) {
+                                Log.e(TAG,"AccountID: " + acc);
                                 details = new JSONObject();
                                 details.put("BillMonth","");
                                 details.put("PrevBilling", "0");
@@ -752,30 +790,58 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 account.setDueDate(param2);
+
+                                /** update_error means something wrong when updating reader table IsDownload*/
                                 int update_error = MyPreferences.getInstance(ctx).getPrefInt("update_error");
                                 if(update_error == 0) {
-                                    DownloadSave = DownloadSave + DB.saveAccount(DB, account, details.toString(), params, strArr);
+                                    DownloadSave = DownloadSave + DB.saveAccount(DB, account, details.toString(), params, strArr,param3);
+
+                                    //Log.e(TAG,"DownloadSave" + DownloadSave);
+                                    //Log.e(TAG,"DownloadCount" + DownloadCount);
                                     if (DownloadSave == DownloadCount) {
-                                        int offset = DB.getAccountSaveCount(DB, params);
-                                        //Log.e(TAG,"offset: " + params +" : " + offset );
+                                        //int offset = DB.getAccountSaveCount(DB, params);
                                         totalAccountSave = totalAccountSave + DownloadSave;
-                                        String url = param3 + "&offset=" + offset;
-                                        /**
-                                         * numberOfRoutesPassing means counter of failing request
-                                         * */
-                                        if (numberOfTimesDeletingTable == 0) {
-                                            mDialog.setMessage("" + totalAccountSave + " Accounts saved/DownLoading Data.Please wait.");
-                                            MainActivity.webRequest.sendRequest(url, "Accounts", params, dueDate, param3, this);
-                                            enableButton();
+
+                                        if(!param3.equalsIgnoreCase("rd")){
+                                            String url = param3 + "&offset=0"; //+ offset;
+                                            /**
+                                             * numberOfRoutesPassing means counter of failing request
+                                             * */
+                                            if (numberOfTimesDeletingTable == 0) {
+                                                mDialog.setMessage("" + totalAccountSave + " Accounts saved/DownLoading Data.Please wait.");
+                                                MainActivity.webRequest.sendRequest(url, "Accounts", params, dueDate, param3, this);
+                                                enableButton();
+                                            }
+                                        }
+
+                                        if(param3.equalsIgnoreCase("rd")) {
+                                            rdsuccess = rdsuccess + 1;
+                                            if (mDialog.isShowing()) {
+                                                mDialog.dismiss();
+                                            }
                                         }
                                     }
                                 }else{
                                     clearData();
                                 }
                             }else{
+
+                                Log.e(TAG,"here");
                                 int accountCount = DB.getDataCountThisRoute(DB,params);
                                 if(accountCount > 0) {
                                     numberOfAccountSavingPerRoutes++;
+                                }
+
+                                if(param3.equalsIgnoreCase("rd")) {
+                                    //Log.e(TAG,"routeLength: " + routeLength + ", rdsuccess: "+ rdsuccess);
+
+                                    if(routeLength == rdsuccess) {
+                                        myPreferences.savePrefInt("rd",1);
+                                    }
+
+                                    if (mDialog.isShowing()) {
+                                        mDialog.dismiss();
+                                    }
                                 }
                             }
                         }
@@ -788,11 +854,36 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 }
 
                 break;
+
+            case "threshold":
+                try {
+                    int save = 0;
+                    JSONArray array = new JSONArray(response);
+                    int arraycount = array.length();
+                    if(array.length() > 0) {
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
+                            String settingcode = object.getString(DBInfo.SettingsCode);
+                            String percent = object.getString("Details");
+
+                            save = save + DB.saveThreshold(DB,settingcode,percent);
+                            if(save == arraycount){
+                                myPreferences.savePrefInt(Constant.THRESHOLD_COUNT,save);
+                            }else{
+                                myPreferences.savePrefInt(Constant.THRESHOLD_COUNT,0);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(TAG,"threshold(err)" + e.getMessage());
+                }
+                break;
                 default:
         }
 
         //Log.e(TAG,"deletingtable: " + numberOfTimesDeletingTable);
-
+        //Log.e(TAG,"numberOfRoutesDownloaded: "+ numberOfRoutesDownloaded + "numberOfAccountSavingPerRoutes : "+ numberOfAccountSavingPerRoutes);
             if(numberOfRoutesDownloaded > 0 ) {
             if(numberOfRoutesDownloaded == numberOfAccountSavingPerRoutes) {
                 if (mDialog.isShowing()) {
@@ -868,6 +959,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
             mDialog.dismiss();
         }
 
+
         if(type.equalsIgnoreCase("Accounts")) {
             clearData();
             setSnackbar("Failed to download Accounts, please retry...");
@@ -882,12 +974,20 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
             mTvView.setText("");
         }
 
+        if(type.equalsIgnoreCase("threshold")) {
+            clearData();
+            setSnackbar("Failed to download threshold, please retry...");
+            snackbar.show();
+            mTvView.setText("");
+        }
+
         if(error.getMessage() == null) {
             Log.e(TAG,"failed download: " + type );
         }else{
             setSnackbar(error.getMessage());
             snackbar.show();
             mTvView.setText("");
+            Log.e(TAG,"failed download: " + error.getMessage() );
         }
     }
 }

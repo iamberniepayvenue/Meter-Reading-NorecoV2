@@ -177,16 +177,15 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
         //PortNumber = ((EditText) rootView.findViewById(R.id.txtupPort)).getText().toString();
         PortNumber = txtPort.getText().toString();
-        String strRequest = "http://" + HostName + ":"
-                + PortNumber
-                + "?cmd=uploadData"
-                + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
+        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
 
 
         if (PortNumber.trim().length() == 0) {
             Toast.makeText(mcontext, "Please provide a host and port to sync data.", Toast.LENGTH_LONG).show();
             return;
         }
+
+
         int status = NetworkUtil.getConnectivityStatusString(mcontext);
         if (status == 0) {
             Toast.makeText(mcontext, "Please check your internet connection.", Toast.LENGTH_LONG).show();
@@ -256,6 +255,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("IsExport",account.getIsNetMetering());
                     rowObject.put("PrevExportReading",account.getExportPreviousReading());
                     rowObject.put("ExportConsumption",account.getExportConsume());
+                    rowObject.put("ActualConsumption",cursor.getString(cursor.getColumnIndex("Extra2")));
                     //add billmonth from rate schedule date_from
                     Bill mBill = account.getBill();
                     double exportBillAmount = 0;
@@ -276,12 +276,18 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("IsCheckSubMeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                     rowObject.put("DemandKWReading",account.getDemandKW());
                     rowObject.put("ExportBill",account.getExportBill());
-                    rowObject.put("ExportDateCounter",account.getExportDateCounter());
+                    rowObject.put("Mac",CommonFunc.getMacAddress());
+                    String exportDateCounter = "0";
+                    if(account.getExportDateCounter() != null) {
+                        exportDateCounter = account.getExportDateCounter();
+                    }
+
+                    rowObject.put("ExportDateCounter",exportDateCounter);
                     String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
                     String []strArray = billMonth.split("/");
-                    String yr = strArray[2].substring(2);
+                    String yr = strArray[2]; //.substring(0,4);
                     String month = strArray[0];
-                    billMonth = month+yr;
+                    billMonth = yr+month;
                     rowObject.put("billmonth",billMonth);
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
@@ -352,9 +358,9 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     }
 
     public void getDataCount() {
-        uploadCount = MainActivity.db.getDataCount(MainActivity.db, "uploaded");
-        readCount = MainActivity.db.getDataCount(MainActivity.db, "read");
-        unreadCount = MainActivity.db.getDataCount(MainActivity.db, "unread");
+        uploadCount = MainActivity.db.getDataCount(MainActivity.db, "uploaded","upload");
+        readCount = MainActivity.db.getDataCount(MainActivity.db, "read","upload");
+        unreadCount = MainActivity.db.getDataCount(MainActivity.db, "unread","upload");
     }
 
 

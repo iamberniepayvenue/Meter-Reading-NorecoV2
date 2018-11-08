@@ -1,59 +1,63 @@
     package com.payvenue.meterreader;
 
+    import android.annotation.SuppressLint;
     import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+    import android.content.DialogInterface;
+    import android.content.Intent;
+    import android.content.pm.PackageManager;
+    import android.database.Cursor;
+    import android.media.AudioManager;
+    import android.media.ToneGenerator;
+    import android.os.Build;
+    import android.os.Bundle;
+    import android.support.annotation.Nullable;
+    import android.support.constraint.ConstraintLayout;
+    import android.support.design.widget.Snackbar;
+    import android.support.v4.content.ContextCompat;
+    import android.support.v7.app.AlertDialog;
+    import android.support.v7.app.AppCompatActivity;
+    import android.text.Editable;
+    import android.text.TextWatcher;
+    import android.util.Log;
+    import android.view.KeyEvent;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.view.WindowManager;
+    import android.view.inputmethod.EditorInfo;
+    import android.view.inputmethod.InputMethodManager;
+    import android.widget.Button;
+    import android.widget.CheckBox;
+    import android.widget.EditText;
+    import android.widget.TextView;
+    import android.widget.Toast;
 
-import com.payvenue.meterreader.Camera.ZBarScannerActivity;
-import com.payvenue.meterreader.Fragments.MyDialogFragment;
-import com.payvenue.meterreader.Interface.MyDialogInterface;
+    import com.payvenue.meterreader.Camera.ZBarScannerActivity;
+    import com.payvenue.meterreader.Fragments.MyDialogFragment;
+    import com.payvenue.meterreader.Interface.MyDialogInterface;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    import org.json.JSONArray;
+    import org.json.JSONException;
+    import org.json.JSONObject;
 
     import java.text.DecimalFormat;
     import java.util.ArrayList;
-import java.util.List;
+    import java.util.List;
 
-import DataBase.DataBaseHandler;
-import Model.Account;
-import Model.Bill;
-import Model.LifeLineSubsidyModel;
-import Model.Policies;
-import Model.RateSchedule;
-import Model.RateSegmentModel;
-import Model.Rates;
-import Utility.CommonFunc;
-import Utility.MobilePrinter;
-import ZBar.ZBarConstants;
+    import DataBase.DataBaseHandler;
+    import Model.Account;
+    import Model.Bill;
+    import Model.LifeLineSubsidyModel;
+    import Model.Policies;
+    import Model.RateSchedule;
+    import Model.RateSegmentModel;
+    import Model.Rates;
+    import Model.Thresholds;
+    import Utility.CommonFunc;
+    import Utility.MobilePrinter;
+    import ZBar.ZBarConstants;
 
-import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
+    import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
 
 
     /**
@@ -146,7 +150,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mAccount =  MainActivity.selectedAccount;
             a_class = mAccount.getAccountClassification();
 
-            if(mAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || mAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+            if(mAccount.getIsCheckSubMeterType().toLowerCase().equalsIgnoreCase("m")) {
                 isMotherMeter = true;
             }
 
@@ -237,8 +241,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }else{
                 mPrevReading.setText(" Previous Reading: "+prevReading+" kwh");
             }
-
-
         }
 
         public void displayButtons() {
@@ -316,9 +318,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             Cursor cursor = MainActivity.db.getRateSched(MainActivity.db,
                     mAccount.getRateSched(),
                     a_class);
-            Log.e(TAG,"cursor: "+ cursor.getCount());
+            //Log.e(TAG,"cursor: "+ cursor.getCount());
             if (cursor.getCount() <= 0) {
-                showToast("No Rateschedule Created for this Classification");
+                showToast("No rate schedule created for this classification");
                 return;
             }
 
@@ -329,6 +331,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             String []strArray = billMonth.split("/");
             mAccount.setBillMonth(CommonFunc.monthAbrev(strArray[0]));
             mAccount.setDateRead(CommonFunc.getDateOnly());
+            mAccount.setTimeRead(CommonFunc.getTimeNow());
 
             String strConsume = mAccount.getConsume();
             float flConsume = Float.parseFloat(strConsume);
@@ -392,6 +395,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                      *  Metering Retail Customer Charge
                      * */
 
+                    //Log.e(TAG,"Amount: "+ String.format("%.4f",Float.valueOf(Amount)));
+                    //Log.e(TAG,"Amount1: "+ Amount);
                     if(isHigherVoltage) {
                         int fixed = 0;
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
@@ -545,7 +550,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         }
                     }
 
-                    Log.e(TAG,"calculation: "+ rateSchedule.getRateComponent() + " - " + Amount + " - "+strComponentAmount);
+                    //Log.e(TAG,"calculation: "+ rateSchedule.getRateComponent() + " - " + Amount + " - "+strComponentAmount);
                     myRates.add(new Rates(rateSchedule.getRateSegment(),
                             rateSchedule.getRateCode(),
                             rateSchedule.getRateComponent(),
@@ -583,22 +588,32 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                  * */
 
                 billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
-                netBillAmountExport = totalComponent - totalAmountDueExport;
-                double exportbill = Double.parseDouble(mAccount.getExportBill());
+                if (isNetMetering.equalsIgnoreCase("1")) {
+                    netBillAmountExport = totalComponent - totalAmountDueExport;
+                    //Log.e(TAG,"netBillAmountExport: " + netBillAmountExport);
+                }
+
+
+                double exportbill = 0;
+                if(mAccount.getExportBill() != null) {
+                    if(mAccount.getExportBill().equalsIgnoreCase("")){
+                        exportbill = 0;
+                    }else{
+                        exportbill = Double.parseDouble(mAccount.getExportBill());
+                    }
+                }
 
                 if(netBillAmountExport < 0) {
                     netBillAmountExport = netBillAmountExport + exportbill;
-                    netBillAmountExport = -netBillAmountExport;
+                    //netBillAmountExport = -netBillAmountExport;
+                    //Log.e(TAG,"here: "+ netBillAmountExport);
                 }else{
                     netBillAmountExport = netBillAmountExport + exportbill;
                 }
 
 
                 mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount,netBillAmountExport,totalAmountDueExport);
-                Log.e(TAG,"ExportAmount: "+ netBillAmountExport);
-
-
-
+                //Log.e(TAG,"ExportAmount: "+ netBillAmountExport);
                 mAccount.setBill(mBill);
             }
 
@@ -621,7 +636,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 for(int i = 0; i < jsonArray.length();i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     arrearsPenalty = arrearsPenalty + Double.valueOf(jsonObject.getString("Penalty"));
-                    totalArrears = totalArrears + Double.valueOf(jsonObject.getString("Amount"));
+                    totalArrears = totalArrears + Double.valueOf(jsonObject.getString("TotalAmount"));
                     arrearsAmountList.add(jsonObject.getString("TotalAmount"));
                     arrearsBillMonthList.add(jsonObject.getString("BillMonth"));
                     arrearsPenaltyList.add(jsonObject.getString("Penalty"));
@@ -789,7 +804,39 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
             double presReading = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
-            double consume = CommonFunc.round((maxreadingvalue + presReading - Double.parseDouble(initialRead)), 1);
+            final double[] consume = {CommonFunc.round((maxreadingvalue + presReading - Double.parseDouble(initialRead)), 1)};
+
+            if(initialRead.equalsIgnoreCase(mAccount.getReading())) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(false);
+                builder.setTitle("Stop Meter");
+                builder.setMessage("This is stop meter or not?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        float av = getAveraging();
+                        if(av != -2000) {
+                            builder.setCancelable(false);
+                            consume[0] = av;
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        builder.setCancelable(false);
+                        consume[0] = 0;
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+
 
 
             if (isHigherVoltage) {
@@ -814,7 +861,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
             if(!mAccount.getReading().equalsIgnoreCase("0")){
-                if (consume < 0) {
+                if (consume[0] < 0) {
                     showToast("Invalid Reading. Current reading is less than the Previous Reading");
                     return;
                 }
@@ -826,29 +873,82 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             if (mAccount.getIsChangeMeter().equals("1")) {
                 float av = getAveraging();
                 if(av != -2000) {
-                    consume = av;
+                    consume[0] = av;
                 }else{
                     return;
                 }
             }
 
+            double kwh = consume[0] * multiplier + Float.valueOf(coreLoss);
+
+            boolean showAlert = false;
+            float kWhRead = Float.valueOf(mAccount.getkWhReading());
+            if(kWhRead != 0) {
+                ArrayList<Thresholds> thresholds =  db.getThreshold(db);
+                float lowerThreshold = 0;
+                float upperThreshold = 0;
+                if(thresholds.size() > 0) {
+                    for(Thresholds t: thresholds){
+                        if(t.getSettingsCode().toLowerCase().contains("low")) {
+                            lowerThreshold = Float.valueOf(t.getThresholdPercentage());
+                        }
+
+                        if(t.getSettingsCode().toLowerCase().contains("up")){
+                            upperThreshold = Float.valueOf(t.getThresholdPercentage());
+                        }
+                    }
+                }
 
 
-            double kwh = consume * multiplier + Float.valueOf(coreLoss);
-            Log.e(TAG,"new Reading : " + strReading);
-            Log.e(TAG,"consumption * multiplier: " + CommonFunc.roundOff(kwh,1));
+                float _lowerThreshold = (lowerThreshold/100) * kWhRead;
+                float _upperThreshold = (upperThreshold/100) * kWhRead;
+
+
+                if(kwh < _lowerThreshold) {
+                    showAlert((float) consume[0],kWhRead,"lower");
+                    showAlert = true;
+                }
+
+                if(kwh > _upperThreshold) {
+                    showAlert((float) consume[0],kWhRead,"higher");
+                    showAlert = true;
+                }
+            }
+
+
+
             mAccount.setConsume(String.valueOf(CommonFunc.roundOff(kwh,1)));
-            mAccount.setActualConsumption(String.valueOf(consume));
+            mAccount.setActualConsumption(String.valueOf(consume[0]));
 
+            if(!showAlert) {
+                forNetMetering();
+            }
+        }
 
-            if(isNetMetering.equalsIgnoreCase("1")) {
+        public void forNetMetering(){
+            if (isNetMetering.equalsIgnoreCase("1")) {
                 android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
                 MyDialogFragment dialogFragment = new MyDialogFragment();
                 dialogFragment.mListener = this;
-                dialogFragment.show(fm,"MyDialogFragment");
-            }else{
+                dialogFragment.show(fm, "MyDialogFragment");
+            } else {
                 displayButtons();
             }
+        }
+
+        public void showAlert(float consumption,float kWhRead,String tag) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+            alertDialog.setMessage("Consumption("+consumption+" kwh) seems to be " + tag + " than previous consumption "+kWhRead + "kwh");
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    forNetMetering();
+                }
+            });
+
+            AlertDialog dialog = alertDialog.create();
+            dialog.show();
         }
 
         @Override
@@ -858,8 +958,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 double kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
                 mAccount.setExportConsume(String.valueOf(kwhExport));
                 mAccount.setActualExportConsume(String.valueOf(consumeExport));
-                Log.e(TAG,"consumeExport:" + consumeExport);
-                Log.e(TAG,"kwhExport:" + kwhExport);
                 displayButtons();
             }
         }
@@ -976,7 +1074,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                         mAccount.setRemarks(strRemarks);
                     }
-
 
                     calculateBill();
                     /**PRINTING SOA*/
@@ -1215,25 +1312,24 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
             try{
-                List<Rates> mRates;
-                Bill mBill = mAccount.getBill();
-                mRates = mBill.getRates();
+                List<Rates> mRates = null;
+                if(!isMotherMeter) {
+                    Bill mBill = mAccount.getBill();
+                    mRates = mBill.getRates();
 
-                /**Check duplicate name*/
-                if (listRateSegment.size() > 0) {
-                    for (RateSegmentModel seg : listRateSegment) {
-                        for(Rates r : mRates){
-                            String segmentName = seg.getRateSegmentName();
-                            String codeName = r.getCodeName();
-                            if(segmentName.equalsIgnoreCase(codeName)){
-                                duplicateSegmentName.add(segmentName);
+                    /**Check duplicate name*/
+                    if (listRateSegment.size() > 0) {
+                        for (RateSegmentModel seg : listRateSegment) {
+                            for(Rates r : mRates){
+                                String segmentName = seg.getRateSegmentName();
+                                String codeName = r.getCodeName();
+                                if(segmentName.equalsIgnoreCase(codeName)){
+                                    duplicateSegmentName.add(segmentName);
+                                }
                             }
                         }
                     }
                 }
-
-
-
 
                 MobilePrinter mp = MobilePrinter.getInstance(this);
                 String a_class = mAccount.getAccountClassification();
@@ -1301,25 +1397,25 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         String segmentName = seg.getRateSegmentName();
                         String rateSegmentCode = seg.getRateSegmentCode();
 
+
                         /** Avoid printing same segment name*/
+
                         if(duplicateSegmentName.size() > 0) {
-                            for(String segName: duplicateSegmentName) {
-                                if (!segmentName.equalsIgnoreCase(segName)) {
+                            for(String s : duplicateSegmentName) {
+                                if (!s.equalsIgnoreCase(segmentName)) {
                                     mp.printText(segmentName + "\n");
                                 }
                             }
-                        }else {
+                        }else{
                             mp.printText(segmentName + "\n");
                         }
 
-//                        if (!segmentName.equalsIgnoreCase("FIT-ALL")) {
-//                            mp.printText(segmentName + "\n");
-//                        }
 
                         for (Rates r : mRates) {
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
-                                String rateAmount = String.valueOf(r.getRateAmount());
+                                @SuppressLint("DefaultLocale")
+                                String rateAmount = String.format("%.4f",Float.valueOf(r.getRateAmount()));
                                 String amount = df.format(Double.parseDouble(r.getAmount()));
 
                                 int padding2 = 20 - rateAmount.length() - amount.length();
@@ -1327,6 +1423,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                 for (int p = 0; p < padding2; p++) {
                                     paddingChar2 = paddingChar2.concat(" ");
                                 }
+
                                 String rightText = rateAmount + paddingChar2 + amount;
 
                                 if (codeName.contains("VAT on")) {
@@ -1393,7 +1490,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("", "" + "\n");
 
                 if(arrearsBillMonthList.size() > 0) {
-                    mp.printText("BillingDate        BillNumber          Amount          Penalty" + "\n");
+                    mp.printText("BillingMonth        BillNumber          Amount          Penalty" + "\n");
                     mp.printText("--------------------------------------------------------------" + "\n");
                     for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                         String billdate = arrearsBillMonthList.get(i);
@@ -1451,15 +1548,16 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
                 }
             }
-                mp.printText("\n");
-                mp.printText("\n");
+
 
                 if(arrearsBillMonthList.size() > 0) {
+                    mp.printText("\n");
+                    mp.printText("\n");
                     mp.printText(CommonFunc.disconnectionNotice()+"\n");
                     mp.printText("\n");
                     mp.printText(CommonFunc.officialReceipt()+"\n");
                     mp.printText("\n");
-                    mp.printText(CommonFunc.warning()+"\n");
+                    mp.printText("                "+CommonFunc.warning()+"                 "+"\n");
                 }
                 mp.printText("\n");
                 mp.printText("\n");

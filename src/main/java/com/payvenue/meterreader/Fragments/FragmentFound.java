@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 
 import DataBase.DataBaseHandler;
+import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.NetworkUtil;
 
@@ -164,7 +165,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
         addDialog.setCancelable(false);
 
 
-        etaccountnumber = (EditText) addDialog.findViewById(R.id.etaccountnumber);
+        //etaccountnumber = (EditText) addDialog.findViewById(R.id.etaccountnumber);
         etmeterserial = (EditText) addDialog.findViewById(R.id.etmeterserial);
         etmeterreading = (EditText) addDialog.findViewById(R.id.etmeterreading);
         etremarks = (EditText) addDialog.findViewById(R.id.etremarks);
@@ -194,18 +195,16 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                 String meterserial = etmeterserial.getText().toString();
                 String reading = etmeterreading.getText().toString();
                 String remarks = etremarks.getText().toString();
-                String acctnumber = etaccountnumber.getText().toString();
+                //String acctnumber = etaccountnumber.getText().toString();
 
                 if (meterserial.isEmpty() || reading.isEmpty() || remarks.isEmpty()) {
                     Toast.makeText(mcontext, "Please provide sufficient data,", Toast.LENGTH_SHORT).show();
                 } else {
 
                     listview.setAdapter(null);
-                    db.saveFoundMeter(db, acctnumber, meterserial, reading, remarks, latitude, longitude);
+                    db.saveFoundMeter(db, ".", meterserial, reading, remarks, latitude, longitude);
                     getFoundMeters();
                     addDialog.dismiss();
-
-
                 }
                 v.setEnabled(true);
             }
@@ -230,9 +229,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
     public void prepareData() {
 
         Cursor c = db.getFoundMeters(db);
-
-        String columnid = "";
-
+        String columnid;
 
         if (c.getCount() == 0) {
             Toast.makeText(mcontext, "No data to upload.", Toast.LENGTH_SHORT).show();
@@ -245,8 +242,6 @@ public class FragmentFound extends Fragment implements IVolleyListener {
         while (c.moveToNext()) {
             JSONArray myArray = new JSONArray();
             JSONObject myobj = new JSONObject();
-            String status = c.getString(c.getColumnIndex("Extra1"));
-            //if(!status.equalsIgnoreCase("1")) {
                 try {
                     myobj.put("AccountID", "FM"); // Found Meter
                     myobj.put("CoopID", MainActivity.connSettings.getCoopID());
@@ -258,6 +253,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                     myobj.put("Longitude", c.getString(c.getColumnIndex("Longitude")));
                     myobj.put("ReaderID", MainActivity.reader.getReaderID());
                     myobj.put("ReadStatus", "Found");
+                    myobj.put("Mac",CommonFunc.getMacAddress());
                     myArray.put(myobj);
 
                     columnid = c.getString(0);
@@ -266,7 +262,6 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                     try {
                         FinalData.put("readAccounts", myArray);
                         FinalData.put("columnid", columnid);
-
                     } catch (JSONException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -280,7 +275,6 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                     e.printStackTrace();
 
                 }
-            //}
         }
     }
 

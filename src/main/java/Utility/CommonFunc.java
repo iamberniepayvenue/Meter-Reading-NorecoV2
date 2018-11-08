@@ -85,7 +85,7 @@ public class CommonFunc {
                     res1.deleteCharAt(res1.length() - 1);
                 }
                 return res1.toString().toLowerCase();
-                //return "00:FD:20:44:BB:55";
+                //return "00:54:06:b7:28:2c";
             }
         } catch (Exception ex) {
         }
@@ -95,6 +95,20 @@ public class CommonFunc {
     public static String getDateOnly() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public static String getDateComplete() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "EEE d MMM yyyy HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public static String getTimeNow(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
@@ -219,12 +233,12 @@ public class CommonFunc {
 
 
     public static String disconnectionNotice() {
-        return "Note: Pls pay in the office 2 days after receipt of this Statement af Account or within 7 days from Due Date" +
-                "to avoid Penalty.";
+        return "Note: Pls pay in the office 2 days after receipt of this \n Statement of Account or within 7 days from Due Date" +
+                " to avoid \n Penalty.";
     }
 
     public static String officialReceipt(){
-        return "This is not an Official Receipt. Payment of this bill does not mean payment of previous delinquencies if any.";
+        return "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
     }
 
     public static String warning(){

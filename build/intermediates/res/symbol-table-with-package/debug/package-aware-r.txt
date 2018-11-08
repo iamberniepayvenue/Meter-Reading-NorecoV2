@@ -979,6 +979,7 @@ id drawer_rate
 id drawer_read
 id drawer_settings
 id drawer_submenu
+id drawer_summary
 id drawer_sync
 id editPayment
 id editSearch
@@ -1151,6 +1152,7 @@ id start
 id status_bar_latest_event_content
 id submenuarrow
 id submit_area
+id summary
 id syncRates
 id tabMode
 id tableLayout1

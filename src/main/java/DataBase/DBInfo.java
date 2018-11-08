@@ -14,6 +14,7 @@ public class DBInfo implements BaseColumns {
     public static final String TBLConn_settings = "connection_settings";
     public static final String TBLAccount_Billing = "account_billing";
     public static final String TBlFound_Meters = "found_meters";
+    public static final String TBLThreshold = "threshold";
 
     // Table For on-site printing
     public static final String TBLRateCode = "rate_code";
@@ -128,6 +129,7 @@ public class DBInfo implements BaseColumns {
     public static String Coreloss = "Coreloss";
     public static String ExportDateCounter = "ExportDateCounter";
     public static String ExportBill = "ExportBill";
+    public static String kWhReading = "kWhReading";
 
     //public static String Consume = "Consume";
     //public static String NewReading = "NewReading";
@@ -142,6 +144,9 @@ public class DBInfo implements BaseColumns {
     public static String Longitude = "Longitude";
     public static String Remarks = "Remarks";
 
+    /**threshold table*/
+    public static String SettingsCode = "SettingsCode";
+    public static String ThresholdPercentage = "ThresholdPercentage";
 
     public static String Extra1 = "Extra1";
     public static String Extra2 = "Extra2";
@@ -174,71 +179,71 @@ public class DBInfo implements BaseColumns {
 
     public static final String CREATE_RATECODE = "CREATE TABLE " + DBInfo.TBLRateCode
             + "(_id INTEGER PRIMARY KEY AUTOINCREMENT , " + COOPID
-            + " STRING ," + CoopName + " STRING, " + RateCode
-            + " STRING , " + Details + " STRING ," + IsActive
-            + " STRING , " + Extra1 + " STRING ," + Extra2
-            + " STRING, " + Notes1 + " TEXT, " + Notes2
+            + " TEXT ," + CoopName + " TEXT, " + RateCode
+            + " TEXT , " + Details + " TEXT ," + IsActive
+            + " TEXT , " + Extra1 + " TEXT ," + Extra2
+            + " TEXT, " + Notes1 + " TEXT, " + Notes2
             + " TEXT)";
 
 
     public static final String CREATE_COMPONENT = "CREATE TABLE "
             + DBInfo.TBlRateComponent
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT ," + COOPID + " STRING , "
-            + CoopName + " STRING, "
-            + RateComponent + " STRING, " + Details + " STRING, "
-            + IsActive + " STRING, " + Extra1 + " STRING, "
-            + Extra2 + " STRING, " + Notes1 + " TEXT, "
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT ," + COOPID + " TEXT , "
+            + CoopName + " TEXT, "
+            + RateComponent + " TEXT, " + Details + " TEXT, "
+            + IsActive + " TEXT, " + Extra1 + " TEXT, "
+            + Extra2 + " TEXT, " + Notes1 + " TEXT, "
             + Notes2 + " TEXT )";
 
 
     public static final String CREATE_SCHEDULE = "CREATE TABLE "
             + DBInfo.TBlRateSchedule
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COOPID + " STRING, " + RateSegment
-            + " STRING , " + RateComponent + " STRING , " + PrintOrder
-            + " STRING , " + Classification + " STRING ," + RateSched
-            + " STRING , " + RateSchedType + " STRING, " + Amount
-            + " STRING," + VATRate + " STRING, " + VATAmount
-            + " STRING, " + FranchiseTaxRate + " STRING, " + FranchiseTaxAmount
-            + " STRING, " + LocalTaxRate + " STRING , " + LocalTaxAmount
-            + " STRING, " + TotalAmount + " STRING, " + IsVAT
-            + " STRING, " + IsDVAT + " STRING, " + IsOverUnder
-            + " STRING, " + IsFranchiseTax + " STRING ," + IsLocalTax
-            + " STRING, " + IsLifeLine + " STRING , " + IsSCDiscount
-            + " STRING, " + RateStatus + " STRING , " + DateAdded
-            + " STRING, " + IsExport
-            + " STRING," + Extra1 + " STRING, " + Extra2
-            + " STRING, " + Notes1 + " TEXT, " + Notes2
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COOPID + " TEXT, " + RateSegment
+            + " TEXT , " + RateComponent + " TEXT , " + PrintOrder
+            + " TEXT , " + Classification + " TEXT ," + RateSched
+            + " TEXT , " + RateSchedType + " TEXT, " + Amount
+            + " TEXT," + VATRate + " TEXT, " + VATAmount
+            + " TEXT, " + FranchiseTaxRate + " TEXT, " + FranchiseTaxAmount
+            + " TEXT, " + LocalTaxRate + " TEXT , " + LocalTaxAmount
+            + " TEXT, " + TotalAmount + " TEXT, " + IsVAT
+            + " TEXT, " + IsDVAT + " TEXT, " + IsOverUnder
+            + " TEXT, " + IsFranchiseTax + " TEXT ," + IsLocalTax
+            + " TEXT, " + IsLifeLine + " TEXT , " + IsSCDiscount
+            + " TEXT, " + RateStatus + " TEXT , " + DateAdded
+            + " TEXT, " + IsExport
+            + " TEXT," + Extra1 + " TEXT, " + Extra2
+            + " TEXT, " + Notes1 + " TEXT, " + Notes2
             + " TEXT)";
 
     public static final String CREATE_SEGMENT = "CREATE TABLE "
             + DBInfo.TBLRateSegment
-            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COOPID + " STRING, " + RateSegmentCode
-            + " STRING , " + RateSegmentName + " STRING, " + Details
-            + " STRING, " + IsActive + " STRING, " + Extra1
-            + " STRING, " + Extra2 + " STRING , " + Notes1
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + COOPID + " TEXT, " + RateSegmentCode
+            + " TEXT , " + RateSegmentName + " TEXT, " + Details
+            + " TEXT, " + IsActive + " TEXT, " + Extra1
+            + " TEXT, " + Extra2 + " TEXT , " + Notes1
             + " TEXT ," + Notes2 + " TEXT)";
 
     public static final String CREATE_POLICY = "CREATE TABLE " + DBInfo.TBLPolicy
             + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + PolicyCode
-            + " STRING ," + PolicyType + " STRING," + CustomerClass
-            + " STRING," + MinkWh + " STRING, " + MaxkWh
-            + " STRING, " + PercentAmount + " STRING, " + Extra1
-            + " STRING, " + Extra2 + " STRING)";
+            + " TEXT ," + PolicyType + " TEXT," + CustomerClass
+            + " TEXT," + MinkWh + " TEXT, " + MaxkWh
+            + " TEXT, " + PercentAmount + " TEXT, " + Extra1
+            + " TEXT, " + Extra2 + " TEXT)";
 
     public static final String CREATE_UTILITY = "CREATE TABLE " + DBInfo.TBLUtility + "("
-            + COOPID + " STRING , " + CoopName + " STRING, "
-            + CoopType + " STRING," + Classification + " STRING, "
-            + ReadingToDueDate + " STRING,"
-            + Acronym + " STRING, " + BillingCode + " STRING, "
-            + BusinessAddress + " STRING," + TelNo + " TEXT,"
-            + TinNo + " TEXT, " + Extra1 + " STRING, "
-            + Extra2 + " STRING)";
+            + COOPID + " TEXT , " + CoopName + " TEXT, "
+            + CoopType + " TEXT," + Classification + " TEXT, "
+            + ReadingToDueDate + " TEXT,"
+            + Acronym + " TEXT, " + BillingCode + " TEXT, "
+            + BusinessAddress + " TEXT," + TelNo + " TEXT,"
+            + TinNo + " TEXT, " + Extra1 + " TEXT, "
+            + Extra2 + " TEXT)";
 
     public static final String CREATE_FOUNDMETERS = "CREATE TABLE " + TBlFound_Meters + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + AccountID + " STRING, "
-            + MeterSerialNo + " STRING, " + Reading + " STRING," + DateRead + " STRING, "
-            + Latitude + " STRING, "+ Longitude + " STRING," + Remarks + " STRING, "
-            + Extra1 + " STRING, " + Extra2 + " STRING)";
+            + AccountID + " TEXT, "
+            + MeterSerialNo + " TEXT, " + Reading + " TEXT," + DateRead + " TEXT, "
+            + Latitude + " TEXT, "+ Longitude + " TEXT," + Remarks + " TEXT, "
+            + Extra1 + " TEXT, " + Extra2 + " TEXT)";
 
 
     public static final String CREATE_ACCOUNTS = "CREATE TABLE " + TBLACCOUNTINFO + "(_id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -257,8 +262,12 @@ public class DBInfo implements BaseColumns {
             + UploadStatus + " TEXT," + PoleRental + " TEXT,"
             + SpaceRental + " TEXT," + PilferagePenalty + " TEXT,"
             + UnderOverRecovery + " TEXT," + Averaging + " TEXT," + Coreloss + " TEXT," +  Arrears + " TEXT,"
-            + ExportBill + " TEXT," + ExportDateCounter + " TEXT,"
+            + ExportBill + " TEXT," + ExportDateCounter + " TEXT," + kWhReading + " TEXT,"
             + Extra1 + " TEXT," + Extra2 + " TEXT,"
             + Notes1 + " TEXT," + Notes2 + " TEXT)";
+
+    public static final String CREATE_THRESHOLD = " CREATE TABLE " + TBLThreshold
+            + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + SettingsCode + " TEXT,"
+            + ThresholdPercentage + " TEXT)";
 }
 

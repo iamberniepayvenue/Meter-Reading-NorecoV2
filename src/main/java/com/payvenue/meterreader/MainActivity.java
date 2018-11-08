@@ -52,10 +52,12 @@ import com.payvenue.meterreader.Fragments.RatesFragment;
 import com.woosim.bt.WoosimPrinter;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Set;
 
 import DataBase.DataBaseHandler;
 import Model.Account;
+import Model.Bill;
 import Model.ConnSettings;
 import Model.Reader;
 import Utility.CommonFunc;
@@ -280,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.logout:
                         // EXIT
                         finish();
+                        break;
+                    case R.id.summary:
+                        printAccountSummary();
                         break;
                     default:
                         break;
@@ -684,5 +689,105 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+
+    public void printAccountSummary() {
+        if(mIsConnected) {
+            ArrayList<Account> list = new ArrayList<>();
+            list =  db.summaryDetails(db);
+            MobilePrinter mp = MobilePrinter.getInstance(this);
+            String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
+            mp.printBitmap(path);
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("                      READING STATISTICS                      "+ "\n");
+            mp.printText("\n");
+            mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records       :   "+ db.getActiveRecords(db) + "\n");
+            mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
+            mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
+            mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   0" + "\n");
+            mp.printText("Zero Consumption  :   "+db.getZeroConsumption(db));
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("\n");
+            db.getReader(db);
+            mp.printText("Reader : "+reader.getReaderName(),""+CommonFunc.getDateComplete() + "\n");
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText("                       READING SUMMARY                        "+ "\n");
+            mp.printText("=============================================================="+ "\n");
+            mp.printText("  Account    Reading    KWH Used    Amount    Time   Remarks"  + "\n");
+            mp.printText("=============================================================="+ "\n");
+            if(list.size() > 0) {
+                try{
+
+                    for(Account a: list) {
+                        String accountID = a.getAccountID();
+                        String reading = a.getReading();
+                        String kwh = a.getConsume();
+                        String remarks = a.getRemarks();
+                        Bill bill = a.getBill();
+                        if (bill != null) {
+                            String amount = MainActivity.dec2.format(bill.getTotalBilledAmount());
+                            String time = a.getTimeRead();
+
+                            int padding = 16 - accountID.length() - reading.length();
+                            String spacing = " ";
+                            for (int p = 0; p < padding; p++) {
+                                spacing = spacing.concat(" ");
+                            }
+
+                            String firstString = accountID + spacing + reading;
+
+                            int padding2 = 15 - kwh.length() - amount.length();
+                            String spacing2 = " ";
+                            for (int p = 0; p < padding2; p++) {
+                                spacing2 = spacing2.concat(" ");
+                            }
+
+                            String secondString = kwh + spacing2 + amount;
+
+                            int padding3 = 15 - time.length() - remarks.length();
+                            String spacing3 = " ";
+                            for (int p = 0; p < padding3; p++) {
+                                spacing3 = spacing3.concat(" ");
+                            }
+                            String thirdString = time + spacing3 + remarks;
+
+                            int finalPadding = 40 - firstString.length() - secondString.length();
+                            String finalSpacing = " ";
+                            for (int p = 0; p < finalPadding; p++) {
+                                finalSpacing = finalSpacing.concat(" ");
+                            }
+
+                            String finalString = firstString + finalSpacing + secondString;
+
+                            mp.printText(finalString, thirdString + "\n");
+                        }
+
+                    }
+
+                    mp.printText("\n");
+                    DecimalFormat df = new DecimalFormat("#,###.00");
+                    String total = db.getSumConsumption(db);
+                    String [] arrString = total.split(":");
+
+                    mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                }catch (NullPointerException e) {
+                    Log.e(TAG,"printAccountSummary:"+e.getMessage());
+                }
+                mp.printText("\n");
+                mp.printText("\n");
+                mp.printText("\n");
+                mp.printText("\n");
+                mp.printText("\n");
+            }
+
+        }else{
+            Toast.makeText(this,"Printer is not connected.",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

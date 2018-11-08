@@ -19,12 +19,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Model.Account;
+import Model.Bill;
 import Model.LifeLineSubsidyModel;
 import Model.Policies;
 import Model.RateSegmentModel;
 import Model.Reader;
 import Model.ReadingDetailsModel;
 import Model.Route;
+import Model.Thresholds;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.MyPreferences;
@@ -60,6 +62,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.execSQL(DBInfo.CREATE_UTILITY);
         sql.execSQL(DBInfo.CREATE_FOUNDMETERS);
         sql.execSQL(DBInfo.CREATE_LIFELINEDISCOUNT);
+        sql.execSQL(DBInfo.CREATE_THRESHOLD);
     }
 
     @Override
@@ -69,14 +72,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public void errorDownLoad(DataBaseHandler db,Context context) {
         SQLiteDatabase sql = db.getReadableDatabase();
-        //sql.execSQL("Delete from " + DBInfo.TBLACCOUNTINFO + "");
-
-
-
-
-
-        //myPreferences.savePrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT,0);
-        //myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,0);
 
         if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT) == 0) {
             sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
@@ -103,6 +98,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             sql.execSQL("Delete from " + DBInfo.TBLLifeLineDiscount + "");
         }
 
+        if(MyPreferences.getInstance(context).getPrefInt(Constant.THRESHOLD_COUNT) == 0) {
+            sql.execSQL("Delete from " + DBInfo.TBLThreshold + "");
+        }
+
 
         sql.execSQL("Delete from " + DBInfo.TBLRoutes + "");
         sql.execSQL("Delete from " + DBInfo.TBLConn_settings + "");
@@ -115,7 +114,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public void saveRoute(DataBaseHandler db, Route route) {
 
-        SQLiteDatabase sql = db.getReadableDatabase();
+        SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(DBInfo.COOPID, route.getCoopID());
@@ -129,6 +128,42 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.close();
         db.close();
 
+    }
+
+    public ArrayList<Route> getRoute(DataBaseHandler db) {
+        ArrayList<Route> list = new ArrayList<>();
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        String statement = "SELECT * FROM routes";
+        Cursor c = sql.rawQuery(statement,null);
+
+        if(c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                String coopid = c.getString(c.getColumnIndex(DBInfo.COOPID));
+                String readerid = c.getString(c.getColumnIndex(DBInfo.ReaderID));
+                String districtid = c.getString(c.getColumnIndex(DBInfo.DistrictID));
+                String routeid = c.getString(c.getColumnIndex(DBInfo.RouteID));
+                String idfrom = c.getString(c.getColumnIndex(DBInfo.AccountIDFrom));
+                String idTo = c.getString(c.getColumnIndex(DBInfo.AccountIDTo));
+                list.add(new Route(districtid,routeid,idTo,idfrom,"","",coopid,readerid,""));
+                c.moveToNext();
+            }
+        }
+
+        sql.close();
+        db.close();
+        return list;
+    }
+
+    public String getDueDate(DataBaseHandler db,String routeID) {
+        SQLiteDatabase sq = db.getReadableDatabase();
+        String statement = "SELECT DueDate FROM accounts WHERE " + DBInfo.RouteNo + " = '"+routeID+"' LIMIT 1";
+        Cursor c = sq.rawQuery(statement,null);
+        while (c.moveToNext()) {
+            return c.getString(c.getColumnIndex("DueDate"));
+        }
+
+        return "";
     }
 
     public String getDistrictID(DataBaseHandler db,String routeID) {
@@ -381,73 +416,129 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return "";
     }
 
-    public int saveAccount(DataBaseHandler db, Account account, String details,String routeID,String arrears) {
+    public int saveAccount(DataBaseHandler db, Account account, String details,String routeID,String arrears,String rd) {
         int count = 0;
 
         SQLiteDatabase sql = db.getWritableDatabase();
-        //if(!accountIsExist(db,account.getAccountID())) {
-            ContentValues cv = new ContentValues();
-            cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
-            cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
-            cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
-            cv.put(DBInfo.COOPID, account.getCoopID());
-            cv.put(DBInfo.FirstName, account.getFirstName());
-            cv.put(DBInfo.MiddleName, account.getMiddleName());
-            cv.put(DBInfo.LastName, account.getLastName());
-            cv.put(DBInfo.TownCode, account.getTownCode());
-            cv.put(DBInfo.RouteNo, routeID);
-            cv.put(DBInfo.AccountID, account.getAccountID());
-            cv.put(DBInfo.AccountType, account.getAccountType());
-            cv.put(DBInfo.AccountClassification, account.getAccountClassification());
-            cv.put(DBInfo.SubClassification, account.getSubClassification());
-            cv.put(DBInfo.SequenceNo, account.getSequenceNo());
-            cv.put(DBInfo.ReadStatus, "Unread");
-            cv.put(DBInfo.EditCount, 0);
-            cv.put(DBInfo.PrintCount, 0);
-            cv.put(DBInfo.DueDate, account.getDueDate());
-            cv.put(DBInfo.DisoDate, account.getDisoDate());
-            cv.put(DBInfo.AccountStatus, account.getAccountStatus());
-            cv.put(DBInfo.ReadingDetails, details);
-            cv.put(DBInfo.UploadStatus, account.getUploadStatus());
-            cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
-            //cv.put(DBInfo.PoleRental,account.getPoleRental());
-            //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
-            //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
-            cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
-            cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
-            cv.put(DBInfo.Averaging, account.getAveraging());
-            cv.put(DBInfo.Arrears, arrears);
-            cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
-            cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
-            cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
-            cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
-            cv.put(DBInfo.Coreloss, account.getCoreloss());
-            cv.put(DBInfo.ExportBill,account.getExportBill());
-            cv.put(DBInfo.ExportDateCounter,account.getExportDateCounter());
-            long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
+        ContentValues cv = new ContentValues();
+        int val = accountIsExist(db,account.getAccountID());
+        if(rd.equalsIgnoreCase("rd")){
+            Log.e(TAG,account.getAccountID());
 
-            if (save != 0) {
-                String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
-                MainActivity.webRequest.sendRequest(url,"saveAccount");
+            if(val == 0) {
+                cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
+                cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
+                cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
+                cv.put(DBInfo.COOPID, account.getCoopID());
+                cv.put(DBInfo.FirstName, account.getFirstName());
+                cv.put(DBInfo.MiddleName, account.getMiddleName());
+                cv.put(DBInfo.LastName, account.getLastName());
+                cv.put(DBInfo.TownCode, account.getTownCode());
+                cv.put(DBInfo.RouteNo, routeID);
+                cv.put(DBInfo.AccountID, account.getAccountID());
+                cv.put(DBInfo.AccountType, account.getAccountType());
+                cv.put(DBInfo.AccountClassification, account.getAccountClassification());
+                cv.put(DBInfo.SubClassification, account.getSubClassification());
+                cv.put(DBInfo.SequenceNo, account.getSequenceNo());
+                cv.put(DBInfo.ReadStatus, "Unread");
+                cv.put(DBInfo.EditCount, 0);
+                cv.put(DBInfo.PrintCount, 0);
+                cv.put(DBInfo.DueDate, account.getDueDate());
+                cv.put(DBInfo.DisoDate, account.getDisoDate());
+                cv.put(DBInfo.AccountStatus, account.getAccountStatus());
+                cv.put(DBInfo.ReadingDetails, details);
+                cv.put(DBInfo.UploadStatus, account.getUploadStatus());
+                cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
+                //cv.put(DBInfo.PoleRental,account.getPoleRental());
+                //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
+                //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
+                cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
+                cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
+                cv.put(DBInfo.Averaging, account.getAveraging());
+                cv.put(DBInfo.Arrears, arrears);
+                cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
+                cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
+                cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
+                cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
+                cv.put(DBInfo.Coreloss, account.getCoreloss());
+                cv.put(DBInfo.ExportBill,account.getExportBill());
+                cv.put(DBInfo.ExportDateCounter,account.getExportDateCounter());
+                cv.put(DBInfo.kWhReading,account.getkWhReading());
+                long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
+
+                if (save != 0) {
+                    String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
+                    MainActivity.webRequest.sendRequest(url,"saveAccount");
+                }
             }
-//        }else{
-//            String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
-//            MainActivity.webRequest.sendRequest(url,"saveAccount");
-//        }
-        sql.close();
-        db.close();
-        return  1;
-    }
+        }else{
+            if(val == 0) {
+                //Log.e(TAG,"account-here" + account.getAccountID());
+                cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
+                cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
+                cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
+                cv.put(DBInfo.COOPID, account.getCoopID());
+                cv.put(DBInfo.FirstName, account.getFirstName());
+                cv.put(DBInfo.MiddleName, account.getMiddleName());
+                cv.put(DBInfo.LastName, account.getLastName());
+                cv.put(DBInfo.TownCode, account.getTownCode());
+                cv.put(DBInfo.RouteNo, routeID);
+                cv.put(DBInfo.AccountID, account.getAccountID());
+                cv.put(DBInfo.AccountType, account.getAccountType());
+                cv.put(DBInfo.AccountClassification, account.getAccountClassification());
+                cv.put(DBInfo.SubClassification, account.getSubClassification());
+                cv.put(DBInfo.SequenceNo, account.getSequenceNo());
+                cv.put(DBInfo.ReadStatus, "Unread");
+                cv.put(DBInfo.EditCount, 0);
+                cv.put(DBInfo.PrintCount, 0);
+                cv.put(DBInfo.DueDate, account.getDueDate());
+                cv.put(DBInfo.DisoDate, account.getDisoDate());
+                cv.put(DBInfo.AccountStatus, account.getAccountStatus());
+                cv.put(DBInfo.ReadingDetails, details);
+                cv.put(DBInfo.UploadStatus, account.getUploadStatus());
+                cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
+                //cv.put(DBInfo.PoleRental,account.getPoleRental());
+                //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
+                //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
+                cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
+                cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
+                cv.put(DBInfo.Averaging, account.getAveraging());
+                cv.put(DBInfo.Arrears, arrears);
+                cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
+                cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
+                cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
+                cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
+                cv.put(DBInfo.Coreloss, account.getCoreloss());
+                cv.put(DBInfo.ExportBill, account.getExportBill());
+                cv.put(DBInfo.ExportDateCounter, account.getExportDateCounter());
+                cv.put(DBInfo.kWhReading, account.getkWhReading());
 
-    public boolean accountIsExist(DataBaseHandler db,String accountid) {
-        SQLiteDatabase sql = db.getReadableDatabase();
-        String stmt = "select count(AccountID) from accounts where AccountID = '"+accountid+"'";
-        Cursor cursor = sql.rawQuery(stmt,null,null);
-        if(cursor.getCount() > 0) {
-           return true;
+                long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
+
+                if (save != 0) {
+                    String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
+                    MainActivity.webRequest.sendRequest(url, "saveAccount");
+                    //Log.e(TAG, "update is read: " + url);
+                }
+            }
         }
 
-        return false;
+        sql.close();
+        db.close();
+
+        return 1;
+    }
+
+    public int accountIsExist(DataBaseHandler db,String accountid) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String stmt = "select count(AccountID) as count from accounts where AccountID = '"+accountid+"'";
+        int val = 0;
+        Cursor cursor = sql.rawQuery(stmt,null,null);
+        while(cursor.moveToNext()) {
+            val = cursor.getInt(cursor.getColumnIndex("count"));
+        }
+
+        return val;
     }
 
     public int getAccountSaveCount(DataBaseHandler db,String route) {
@@ -606,7 +697,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String myQuery = "SELECT * From " + DBInfo.TBlRateSchedule
                 + " Where " + DBInfo.Classification + " Like'" + acctclass + "' Order By RateSegment,PrintOrder";
 
-        Log.e(TAG,"getRateSched: "+ myQuery);
+        //Log.e(TAG,"getRateSched: "+ myQuery);
         Cursor c = sql.rawQuery(myQuery, null);
         return c;
     }
@@ -623,25 +714,27 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Gson gson = new GsonBuilder().create();
         Account a = MainActivity.selectedAccount;
         ReadingDetailsModel readingDetailsModel;
-        if(MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("M") || MainActivity.selectedAccount.getIsCheckSubMeterType().equalsIgnoreCase("m")) {
+        if(MainActivity.selectedAccount.getIsCheckSubMeterType().toLowerCase().equalsIgnoreCase("m")) {
             readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(),a.getPrevBilling(),a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
                     a.getPenalty(),a.getRateSched(),a.getMultiplier(),a.getDemandKW(),a.getAdvancePayment(),a.getBillDeposit(),a.getLastReadingDate(),
                     a.getInitialReading(),a.getIsChangeMeter(),a.getMeterBrand(),a.getConsume(),a.getReading(),
                     a.getRemarks(),a.getLatitude(),a.getLongitude(),a.getTotalLifeLineDiscount(),a.getTotalSCDiscount(),null,a.getOverUnderDiscount(),
-                    isStopMeter,a.getExportConsume(),a.getExportReading(),a.getExportPreviousReading(),a.getSeniorSubsidy(),a.getLifeLineSubsidy(),a.getIsNetMetering());
+                    isStopMeter,a.getExportConsume(),a.getExportReading(),a.getExportPreviousReading(),a.getSeniorSubsidy(),a.getLifeLineSubsidy(),a.getIsNetMetering(),a.getTimeRead());
         }else {
             readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(), a.getPrevBilling(), a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
                     a.getPenalty(), a.getRateSched(), a.getMultiplier(), a.getDemandKW(), a.getAdvancePayment(), a.getBillDeposit(), a.getLastReadingDate(),
                     a.getInitialReading(), a.getIsChangeMeter(), a.getMeterBrand(), a.getConsume(), a.getReading(),
                     a.getRemarks(), a.getLatitude(), a.getLongitude(), a.getTotalLifeLineDiscount(), a.getTotalSCDiscount(), a.getBill(), a.getOverUnderDiscount(),
-                    isStopMeter, a.getExportConsume(), a.getExportReading(), a.getExportPreviousReading(), a.getSeniorSubsidy(), a.getLifeLineSubsidy(), a.getIsNetMetering());
+                    isStopMeter, a.getExportConsume(), a.getExportReading(), a.getExportPreviousReading(), a.getSeniorSubsidy(), a.getLifeLineSubsidy(), a.getIsNetMetering(),a.getTimeRead());
         }
 
         String readingDetails = gson.toJson(readingDetailsModel);
         cv.put(DBInfo.ReadStatus, status);
+        cv.put(DBInfo.DateRead,a.getDateRead());
         cv.put(DBInfo.ReadingDetails, readingDetails);
         cv.put(DBInfo.EditCount, CommonFunc.toDigit(MainActivity.selectedAccount.getEditCount()) + 1);
         cv.put(DBInfo.Extra2,MainActivity.selectedAccount.getActualConsumption());
+        cv.put(DBInfo.UploadStatus,"0");
         sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + MainActivity.selectedAccount.getAccountID() + "'", null);
         sql.close();
         db.close();
@@ -741,6 +834,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setPrintCount(c.getString(c.getColumnIndex(DBInfo.PrintCount)));
                 account.setExportBill(c.getString(c.getColumnIndex(DBInfo.ExportBill)));
                 account.setExportDateCounter(c.getString(c.getColumnIndex(DBInfo.ExportDateCounter)));
+                account.setkWhReading(c.getString(c.getColumnIndex(DBInfo.kWhReading)));
 
                 try {
                     JSONObject object = new JSONObject(ave);
@@ -856,6 +950,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setCheckMeterName(c.getString(c.getColumnIndex(DBInfo.CheckMeterName)));
                 account.setCoreloss(c.getString(c.getColumnIndex(DBInfo.Coreloss)));
                 account.setIsNetMetering(c.getString(c.getColumnIndex(DBInfo.IsNetMetering)));
+                account.setPrintCount(c.getString(c.getColumnIndex(DBInfo.PrintCount)));
+                account.setExportBill(c.getString(c.getColumnIndex(DBInfo.ExportBill)));
+                account.setExportDateCounter(c.getString(c.getColumnIndex(DBInfo.ExportDateCounter)));
+                account.setkWhReading(c.getString(c.getColumnIndex(DBInfo.kWhReading)));
                 try {
                     JSONObject object = new JSONObject(ave);
                     account.setAveraging(object);
@@ -897,14 +995,16 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public ArrayList<RateSegmentModel> getRateSegment(DataBaseHandler db) {
         ArrayList<RateSegmentModel> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
-        String query = "SELECT r.RateSegmentCode,r.RateSegmentName,r.Details From " + DBInfo.TBLRateSegment
-                + " r Left Join " +DBInfo.TBlRateSchedule +" rs On r.RateSegmentCode = rs.RateSegment Where rs.Classification Like '" + MainActivity.selectedAccount.getAccountClassification() + "' Group By r.RateSegmentCode Order By r.RateSegmentCode";
+        String query = "SELECT CAST(r.RateSegmentCode AS int) AS ratesegmentcode,r.RateSegmentName,r.Details From " + DBInfo.TBLRateSegment
+                + " r Left Join " +DBInfo.TBlRateSchedule +" rs On r.RateSegmentCode = rs.RateSegment Where rs.Classification Like '" + MainActivity.selectedAccount.getAccountClassification() + "' Group By r.RateSegmentCode Order By ratesegmentcode";
+
+        //Log.e(TAG,"getRateSegment :" + query);
         Cursor c = sql.rawQuery(query, null);
 
         if(c.moveToFirst()) {
             while (!c.isAfterLast()) {
 
-                String rateSegmentCode = c.getString(c.getColumnIndex("RateSegmentCode"));
+                String rateSegmentCode = c.getString(c.getColumnIndex("ratesegmentcode"));
                 String rateSegmentName = c.getString(c.getColumnIndex("RateSegmentName"));
                 String rateDetails = c.getString(c.getColumnIndex("Details"));
                 list.add(new RateSegmentModel(rateSegmentCode,rateSegmentName,rateDetails));
@@ -990,7 +1090,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return c.getCount();
     }
 
-    public int getDataCount(DataBaseHandler db, String status) {
+    public int getDataCount(DataBaseHandler db, String status, String tag) {
 
 
         SQLiteDatabase sql = db.getReadableDatabase();
@@ -998,10 +1098,22 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String strQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + "";
 
         if (status.equalsIgnoreCase("read")) {
-            strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed'";
+            if(tag.equalsIgnoreCase("summ")){
+                strQuery += " Where ReadStatus='Read'";
+            }else{
+                strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed'";
+            }
+
         } else if (status.equalsIgnoreCase("unread")) {
             strQuery += " Where ReadStatus='Unread'";
+        } else if(status.equalsIgnoreCase("printed")) {
+            if(tag.equalsIgnoreCase("summ")){
+                strQuery += " Where ReadStatus='Printed'";
+            }
+        } else if(status.equalsIgnoreCase("readprinted")) {
+            strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed'";
         } else {
+            if(tag.equalsIgnoreCase("upload"))
             strQuery += " Where UploadStatus='1'";
         }
 
@@ -1010,6 +1122,28 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         return c.getCount();
 
+    }
+
+    public ArrayList<Account> summaryDetails(DataBaseHandler db) {
+        ArrayList<Account> list = new ArrayList<>();
+        Account account;
+        Gson gson = new GsonBuilder().create();
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String statement = "Select AccountID,ReadingDetails From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        if(cursor.moveToFirst()) {
+            while(!cursor.isAfterLast()) {
+                String details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
+                account = gson.fromJson(details, Account.class);
+                String accountID = cursor.getString(cursor.getColumnIndex("AccountID"));
+                account.setAccountID(accountID);
+                list.add(account);
+                cursor.moveToNext();
+            }
+        }
+        sql.close();
+        db.close();
+        return list;
     }
 
     public void resetAllAccounts(DataBaseHandler db) {
@@ -1066,5 +1200,155 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.close();
         db.close();
         return list;
+    }
+
+    public int saveThreshold(DataBaseHandler db,String scode,String percent){
+        SQLiteDatabase sql = db.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBInfo.SettingsCode,scode);
+        cv.put(DBInfo.ThresholdPercentage,percent);
+        sql.insert(DBInfo.TBLThreshold,null,cv);
+        sql.close();
+        db.close();
+        return 1;
+    }
+
+    public ArrayList<Thresholds> getThreshold(DataBaseHandler db) {
+        ArrayList<Thresholds> list = new ArrayList<>();
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        Cursor c = sql.query(DBInfo.TBLThreshold,null,null,null,null,null,null);
+        if(c.moveToFirst()) {
+            while(!c.isAfterLast()) {
+                String scode = c.getString(c.getColumnIndex(DBInfo.SettingsCode));
+                String percentage = c.getString(c.getColumnIndex(DBInfo.ThresholdPercentage));
+
+                list.add(new Thresholds(scode,percentage));
+                c.moveToNext();
+            }
+        }
+        sql.close();
+        db.close();
+        return list;
+    }
+
+    public String getTotalRecords(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String count = "0";
+        String statement = "Select Count(_id) as count From accounts";
+        Cursor cursor = sql.rawQuery(statement,null);
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                count = cursor.getString(cursor.getColumnIndex("count"));
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
+    }
+
+    public String getActiveRecords(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String count = "0";
+        String statement = "Select Count(_id) as count From accounts Where AccountStatus = 'AC'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                count = cursor.getString(cursor.getColumnIndex("count"));
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
+    }
+
+    public String getInActiveRecords(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String statement = "Select Count(_id) as count From accounts Where AccountStatus = 'DC'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        String count = "0";
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                count = cursor.getString(cursor.getColumnIndex("count"));
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
+    }
+
+    public int getZeroConsumption(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        Account account;
+        Gson gson = new GsonBuilder().create();
+        String statement = "Select ReadingDetails From accounts Where ReadStatus = 'Read' OR ReadStatus = 'Printed'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        int count = 0;
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                String details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
+                account = gson.fromJson(details, Account.class);
+
+                String consumption = account.getConsume();
+                if(Float.valueOf(consumption) == 0) {
+                    count++;
+                }
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
+    }
+
+    public String getSumConsumption(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        Account account;
+        Gson gson = new GsonBuilder().create();
+        String statement = "Select ReadingDetails From accounts Where ReadStatus = 'Read' OR ReadStatus = 'Printed'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        float consumption = 0;
+        double amount = 0;
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                String details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
+                account = gson.fromJson(details, Account.class);
+                Bill bill = account.getBill();
+                if(bill != null){
+                    amount = amount + bill.getTotalBilledAmount();
+                }
+
+                consumption = consumption + Float.valueOf(account.getConsume());
+                Log.e(TAG,"consumption:"+consumption);
+                Log.e(TAG,"amount:"+amount);
+            }
+        }
+
+        String val = String.valueOf(consumption)+":"+String.valueOf(amount);
+        Log.e(TAG,"total: "+ val);
+        sql.close();
+        db.close();
+        return val;
+
+    }
+
+    public String MissedAccount(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        String statement = "Select Count(_id) as count From accounts Where ReadStatus = 'NotFound' OR ReadStatus = 'Found'";
+        Cursor cursor = sql.rawQuery(statement,null);
+        String count = "0";
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                count = cursor.getString(cursor.getColumnIndex("count"));
+            }
+        }
+
+        sql.close();
+        db.close();
+        return count;
     }
 }

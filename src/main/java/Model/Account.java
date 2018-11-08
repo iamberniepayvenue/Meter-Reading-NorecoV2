@@ -85,6 +85,8 @@ public class Account extends Person {
     private String BillNumber;
     private String ExportBill;
     private String ExportDateCounter;
+    private String kWhReading;
+    private String TimeRead;
 
 
 
@@ -701,5 +703,21 @@ public class Account extends Person {
 
     public void setExportDateCounter(String exportDateCounter) {
         ExportDateCounter = exportDateCounter;
+    }
+
+    public String getkWhReading() {
+        return kWhReading;
+    }
+
+    public void setkWhReading(String kWhReading) {
+        this.kWhReading = kWhReading;
+    }
+
+    public void setTimeRead(String timeRead) {
+        TimeRead = timeRead;
+    }
+
+    public String getTimeRead() {
+        return TimeRead;
     }
 }

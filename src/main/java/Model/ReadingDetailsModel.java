@@ -36,6 +36,7 @@ public class ReadingDetailsModel {
      String SeniorSubsidy;
      String LifeLineSubsidy;
      String IsNetMetering;
+     String TimeRead;
 
 
     public ReadingDetailsModel(String billMonth, String prevBilling, String address, String seniorCitizenStatus, String SCExpiryDate,
@@ -43,7 +44,7 @@ public class ReadingDetailsModel {
                                String lastReadingDate, String initialReading,String isChangeMeter,
                                String meterBrand, String consume, String reading, String remarks, String latitude,
                                String longitude, String totalLifeLineDiscount, String totalSCDiscount, Bill mBill,String overUnderDiscount,String isStopMeter,
-                               String exportConsume,String exportReading,String exportPreviousReading,String seniorSubsidy,String lifeLineSubsidy,String isNetMetering) { //,String Averaging
+                               String exportConsume,String exportReading,String exportPreviousReading,String seniorSubsidy,String lifeLineSubsidy,String isNetMetering,String timeRead) { //,String Averaging
         BillMonth = billMonth;
         PrevBilling = prevBilling;
         Address = address;
@@ -76,5 +77,6 @@ public class ReadingDetailsModel {
         SeniorSubsidy = seniorSubsidy;
         LifeLineSubsidy = lifeLineSubsidy;
         IsNetMetering = isNetMetering;
+        TimeRead = timeRead;
     }
 }

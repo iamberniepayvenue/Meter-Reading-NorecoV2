@@ -58,11 +58,16 @@ public class WebRequest {
                     }
                 }
 
+                if(myType.equalsIgnoreCase("Accounts")) {
+                    //Log.e(TAG,response.toString());
+                }
+
                 listener.onSuccess(myType,response.toString(),params,param2,param3);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,"error:"+ error.getMessage());
                 listener.onFailed(error,myType);
             }
         });
