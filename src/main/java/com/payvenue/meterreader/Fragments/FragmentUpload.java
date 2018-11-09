@@ -49,7 +49,7 @@ import static com.payvenue.meterreader.R.id.btnResetUpload;
 
 public class FragmentUpload extends Fragment implements IVolleyListener {
 
-    TextView cuurmac, txtreadcount, txtunreadcount, txtupport, txtuploadCount;
+    TextView cuurmac, txtreadcount, txtunreadcount, txtuploadCount;
     Button BtnUpload;
     int uploadCount, returnCount, readCount, unreadCount;
     String HostName;
@@ -81,8 +81,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         rootView = inflater.inflate(R.layout.fragment_upload, container, false);
 
         mcontext = getActivity();
-        txtPort = rootView.findViewById(R.id.txtupPort);
-        txtPort.setText(Constant.PORT);
         mDialog = new ProgressDialog(this.getActivity());
         mDialog.setCancelable(false);
         mDialog.setMessage("Compressing Data. Please wait...");
@@ -103,10 +101,9 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     }
 
     public void initView() {
-
+        txtPort = rootView.findViewById(R.id.txtupPort);
         txtreadcount = (TextView) rootView.findViewById(R.id.txtreadcount);
         txtunreadcount = (TextView) rootView.findViewById(R.id.txtunreadcount);
-        txtupport = (TextView) rootView.findViewById(R.id.txtupPort);
         cuurmac = (TextView) rootView.findViewById(R.id.txtmac);
         spinHost = (Spinner) rootView.findViewById(R.id.spinnHost);
         HostName = spinHost.getSelectedItem().toString();
@@ -115,10 +112,12 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         BtnUpload = (Button) rootView.findViewById(R.id.btnUpload);
         txtuploadCount = rootView.findViewById(R.id.valuploaded);
         spinHost.setEnabled(false);
+        txtPort.setEnabled(false);
     }
 
 
     public void setValues() {
+        txtPort.setText(Constant.PORT);
         cuurmac.setText(CommonFunc.getMacAddress());
         txtreadcount.setText("" + readCount);
         txtunreadcount.setText("" + unreadCount);
@@ -174,8 +173,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
     public void prepareData() {
 
-
-        //PortNumber = ((EditText) rootView.findViewById(R.id.txtupPort)).getText().toString();
         PortNumber = txtPort.getText().toString();
         String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
 
@@ -307,7 +304,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 String url = null;
                 try {
-
                     url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
                     MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
                     Log.e(TAG,"upload:"+url);

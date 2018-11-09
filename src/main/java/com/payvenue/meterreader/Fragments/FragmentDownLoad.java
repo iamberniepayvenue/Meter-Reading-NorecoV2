@@ -105,6 +105,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
         lblMAC.setText(mac);
         txtPort.setText(Constant.PORT);
+
         BtnDownLoad.setOnClickListener(this);
         BtnDelete.setOnClickListener(this);
 
@@ -137,6 +138,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
         BtnDelete = (Button) rootView.findViewById(R.id.button1);
         txtPort = ((EditText) rootView.findViewById(R.id.txtport));
         spinHost.setEnabled(false);
+        txtPort.setEnabled(false);
     }
 
     public void enableButton() {

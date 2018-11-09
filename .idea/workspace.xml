@@ -7,7 +7,7 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
   </component>
   <component name="CMakeSettings">
@@ -26,19 +26,35 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/debug.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/values.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/multi-v2/values.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/debug/single/debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/debug/single/debug.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/uqMD9JW_WcFHc6vgvncnc42I_ck=" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageDebug/tmp/debug/zip-cache/uqMD9JW_WcFHc6vgvncnc42I_ck=" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/AccountListActivity.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/AccountListActivity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/processed_res/debug/processDebugResources/out/resources-debug.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/processed_res/debug/processDebugResources/out/resources-debug.ap_" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/res/merged/debug/layout_fragment_route.xml.flat" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/merged/debug/layout_fragment_route.xml.flat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/AccountListActivity.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/AccountListActivity.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentDownLoad.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Accounts.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad$1.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentDownLoad.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$1.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$2.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$3.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$3.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$4.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload$4.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/Fragments/FragmentUpload.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/ViewDetails.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/debug/64/com/payvenue/meterreader/ViewDetails.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/debug/0/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/outputs/apk/debug/Meter-Reading-Noreco-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_route.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_route.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -71,35 +87,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="FragmentNotFound.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java">
+      <file leaf-file-name="Accounts.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6">
-              <caret line="218" selection-start-line="218" selection-end-line="218" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fragment_no_found.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_no_found.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FragmentRoute.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentRoute.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="74" column="69" selection-start-line="74" selection-start-column="69" selection-end-line="74" selection-end-column="69" />
+            <state relative-caret-position="931">
+              <caret line="841" column="34" lean-forward="true" selection-start-line="841" selection-start-column="34" selection-end-line="841" selection-end-column="34" />
               <folding>
-                <element signature="e#1753#2309#0" expanded="true" />
-                <element signature="e#2308#2309#0" expanded="true" />
+                <element signature="e#34674#35128#0" expanded="true" />
+                <element signature="e#35127#35128#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MyDialogFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/MyDialogFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-244">
+              <caret line="57" column="21" lean-forward="true" selection-start-line="57" selection-start-column="21" selection-end-line="57" selection-end-column="21" />
+              <folding>
+                <element signature="e#1631#2122#0" expanded="true" />
+                <element signature="e#2121#2122#0" expanded="true" />
+                <element signature="e#2203#2347#0" expanded="true" />
+                <element signature="e#2346#2347#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -108,57 +118,26 @@
       <file leaf-file-name="AccountListActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="44" column="23" selection-start-line="44" selection-start-column="23" selection-end-line="44" selection-end-column="23" />
+            <state relative-caret-position="346">
+              <caret line="62" column="43" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_accounts.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="DataBaseHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="43" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+            <state relative-caret-position="412">
+              <caret line="826" column="75" selection-start-line="826" selection-start-column="75" selection-end-line="826" selection-end-column="75" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fragment_route.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_route.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="ViewDetails.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AccountAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Adapter/AccountAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="49" column="92" selection-start-line="49" selection-start-column="92" selection-end-line="49" selection-end-column="92" />
-              <folding>
-                <element signature="e#552#553#0" expanded="true" />
-                <element signature="e#585#586#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list_accounts.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/list_accounts.xml">
-          <provider selected="true" editor-type-id="android-designer2">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
+            <state relative-caret-position="336">
+              <caret line="591" column="13" selection-start-line="591" selection-start-column="13" selection-end-line="591" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -175,8 +154,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dialog</find>
-      <find>Consume</find>
       <find>totalAmount</find>
       <find>Amount</find>
       <find>df</find>
@@ -205,6 +182,8 @@
       <find>time</find>
       <find>spinnHost</find>
       <find>setTimeRead</find>
+      <find>txtupport</find>
+      <find>txtPort</find>
     </findStrings>
     <replaceStrings>
       <replace>mAccount</replace>
@@ -2516,7 +2495,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/Utility/MyPreferences.java" />
         <option value="$PROJECT_DIR$/src/main/res/menu/account_details.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/RateSchedule.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_rate_schedule.xml" />
@@ -2549,12 +2527,7 @@
         <option value="$PROJECT_DIR$/src/main/res/menu/menu_navigation.xml" />
         <option value="$PROJECT_DIR$/src/main/java/Model/Route.java" />
         <option value="$PROJECT_DIR$/src/main/java/Utility/WebRequest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" />
-        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/list_accounts.xml" />
@@ -2567,6 +2540,12 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_route.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Adapter/AccountAdapter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" />
+        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
       </list>
     </option>
   </component>
@@ -2625,6 +2604,17 @@
               <item name="Meter-Reading-Noreco" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="Utility" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Meter-Reading-Noreco" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Meter-Reading-Noreco" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="Meter-Reading-Noreco" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Meter-Reading-Noreco" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
             <path>
               <item name="Meter-Reading-Noreco" type="1abcf292:AndroidViewProjectNode" />
@@ -2873,13 +2863,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="new commit" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build/generated/not_namespaced_r_class_sources/debug/processDebugResources/r/com/payvenue/meterreader/R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="3932" column="28" selection-start-line="3932" selection-start-column="28" selection-end-line="3932" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/menu/pending__accounts.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3021,13 +3004,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/Constant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="18" lean-forward="true" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu_navigation.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3077,13 +3053,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8985">
-          <caret line="630" column="5" selection-start-line="630" selection-start-column="5" selection-end-line="630" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -3123,54 +3092,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Account.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="162" column="17" selection-start-line="162" selection-start-column="8" selection-end-line="162" selection-end-column="17" />
-          <folding>
-            <element signature="e#4087#4088#0" expanded="true" />
-            <element signature="e#4124#4125#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_download.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="131" column="16" selection-start-line="131" selection-start-column="8" selection-end-line="131" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_upload.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="119" selection-start-line="119" selection-end-line="119" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9480">
@@ -3196,20 +3117,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="334" selection-start-line="334" selection-end-line="334" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="621" column="30" selection-start-line="621" selection-start-column="30" selection-end-line="621" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_found__meters.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3224,13 +3131,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
           <caret line="160" column="48" selection-start-line="160" selection-start-column="48" selection-end-line="160" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6">
-          <caret line="218" selection-start-line="218" selection-end-line="218" />
         </state>
       </provider>
     </entry>
@@ -3254,17 +3154,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Adapter/AccountAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="49" column="92" selection-start-line="49" selection-start-column="92" selection-end-line="49" selection-end-column="92" />
-          <folding>
-            <element signature="e#552#553#0" expanded="true" />
-            <element signature="e#585#586#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentRoute.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
@@ -3272,6 +3161,39 @@
           <folding>
             <element signature="e#1753#2309#0" expanded="true" />
             <element signature="e#2308#2309#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6">
+          <caret line="218" selection-start-line="218" selection-end-line="218" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_download.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Adapter/AccountAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+          <folding>
+            <element signature="e#552#553#0" expanded="true" />
+            <element signature="e#585#586#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -3286,20 +3208,104 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="44" column="23" selection-start-line="44" selection-start-column="23" selection-end-line="44" selection-end-column="23" />
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="106" column="35" lean-forward="true" selection-start-line="106" selection-start-column="35" selection-end-line="106" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/Constant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_upload.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="43" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+        <state relative-caret-position="172">
+          <caret line="140" column="28" selection-start-line="140" selection-start-column="28" selection-end-line="140" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="319" lean-forward="true" selection-start-line="319" selection-end-line="319" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="591" column="13" selection-start-line="591" selection-start-column="13" selection-end-line="591" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Model/Account.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="473">
+          <caret line="703" column="27" selection-start-line="703" selection-start-column="27" selection-end-line="703" selection-end-column="27" />
+          <folding>
+            <element signature="e#4087#4088#0" expanded="true" />
+            <element signature="e#4124#4125#0" expanded="true" />
+            <element signature="e#13877#13878#0" expanded="true" />
+            <element signature="e#13913#13914#0" expanded="true" />
+            <element signature="e#15601#15602#0" expanded="true" />
+            <element signature="e#15641#15642#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="62" column="43" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="826" column="75" selection-start-line="826" selection-start-column="75" selection-end-line="826" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/MyDialogFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-244">
+          <caret line="57" column="21" lean-forward="true" selection-start-line="57" selection-start-column="21" selection-end-line="57" selection-end-column="21" />
+          <folding>
+            <element signature="e#1631#2122#0" expanded="true" />
+            <element signature="e#2121#2122#0" expanded="true" />
+            <element signature="e#2203#2347#0" expanded="true" />
+            <element signature="e#2346#2347#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="931">
+          <caret line="841" column="34" lean-forward="true" selection-start-line="841" selection-start-column="34" selection-end-line="841" selection-end-column="34" />
+          <folding>
+            <element signature="e#34674#35128#0" expanded="true" />
+            <element signature="e#35127#35128#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

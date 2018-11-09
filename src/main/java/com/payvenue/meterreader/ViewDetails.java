@@ -576,6 +576,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printTextBoldRight("","EXPORT BILL"+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
             mp.printText("Date                Prev                 Pres              KWH"+"\n");
+            String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
             int padding3 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
             String spacing3 = " ";
@@ -584,12 +585,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             }
             String strRight1 = mAccount.getDateRead() + spacing3 + mAccount.getExportPreviousReading();
 
-            int paddingLeft1 = 20 - mAccount.getExportReading().length() - mAccount.getExportConsume().length();
+            int paddingLeft1 = 20 - mAccount.getExportReading().length() - exportConsume.length();
             String _spacing2 = " ";
             for (int p = 0; p < paddingLeft1; p++) {
                 _spacing2 = _spacing2.concat(" ");
             }
-            String strLeft1 = mAccount.getExportReading() + _spacing2 + mAccount.getExportConsume();
+            String strLeft1 = mAccount.getExportReading() + _spacing2 + exportConsume;
             mp.printText(strRight1,strLeft1+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 

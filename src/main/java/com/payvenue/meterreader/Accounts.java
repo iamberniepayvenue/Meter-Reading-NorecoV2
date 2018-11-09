@@ -595,22 +595,22 @@
 
 
                 double exportbill = 0;
-                if(mAccount.getExportBill() != null) {
-                    if(mAccount.getExportBill().equalsIgnoreCase("")){
-                        exportbill = 0;
-                    }else{
-                        exportbill = Double.parseDouble(mAccount.getExportBill());
+                int exportCounter = Integer.valueOf(mAccount.getExportDateCounter());
+                if(exportCounter < 12) {
+                    if (mAccount.getExportBill() != null) {
+                        if (mAccount.getExportBill().equalsIgnoreCase("")) {
+                            exportbill = 0;
+                        } else {
+                            exportbill = Double.parseDouble(mAccount.getExportBill());
+                        }
+                    }
+
+                    if (netBillAmountExport < 0) {
+                        netBillAmountExport = netBillAmountExport + exportbill;
+                    } else {
+                        netBillAmountExport = netBillAmountExport + exportbill;
                     }
                 }
-
-                if(netBillAmountExport < 0) {
-                    netBillAmountExport = netBillAmountExport + exportbill;
-                    //netBillAmountExport = -netBillAmountExport;
-                    //Log.e(TAG,"here: "+ netBillAmountExport);
-                }else{
-                    netBillAmountExport = netBillAmountExport + exportbill;
-                }
-
 
                 mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount,netBillAmountExport,totalAmountDueExport);
                 //Log.e(TAG,"ExportAmount: "+ netBillAmountExport);
@@ -1519,6 +1519,7 @@
                 mp.printTextBoldRight("","EXPORT BILL"+"\n");
                 mp.printText("--------------------------------------------------------------"+"\n");
                 mp.printText("Date                Prev                 Pres              KWH"+"\n");
+                String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
                 int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
                 String paddingChar1 = " ";
@@ -1527,12 +1528,12 @@
                 }
                 String strRight1 = mAccount.getDateRead() + paddingChar1 + mAccount.getExportPreviousReading();
 
-                int paddingLeft1 = 20 - mAccount.getExportReading().length() - mAccount.getExportConsume().length();
+                int paddingLeft1 = 20 - mAccount.getExportReading().length() - exportConsume.length();
                 String _paddingLeft1 = " ";
                 for (int p = 0; p < paddingLeft1; p++) {
                     _paddingLeft1 = paddingChar1.concat(" ");
                 }
-                String strLeft1 = mAccount.getExportReading() + _paddingLeft1 +mAccount.getExportConsume();
+                String strLeft1 = mAccount.getExportReading() + _paddingLeft1 + exportConsume;
                 mp.printText(strRight1,strLeft1+"\n");
                 mp.printText("--------------------------------------------------------------"+"\n");
 
@@ -1541,8 +1542,8 @@
                     for (int i = 0; i < rateComponentForExport.size(); i++) {
                         mp.printText("  " + rateComponentForExport.get(i), exportRateDueAmount.get(i) + "\n");
                     }
-                    mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
 
+                    mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
                     mp.printText("\n");
                     mp.printText("\n");
                     mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()));
