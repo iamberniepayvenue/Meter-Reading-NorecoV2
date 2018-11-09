@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -56,6 +57,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
     EditText etmeterreading;
     EditText etremarks;
     EditText etaccountnumber;
+    ImageView ivNoAccounts;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -70,6 +72,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
         tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         listview = (ListView) rootView.findViewById(R.id.listview);
+        ivNoAccounts = rootView.findViewById(R.id.iv_no_accounts);
         mDialog = new ProgressDialog(this.getActivity());
         mDialog.setCancelable(false);
         mDialog.setMessage("Compressing Data. Please wait...");
@@ -138,21 +141,26 @@ public class FragmentFound extends Fragment implements IVolleyListener {
 
         if (!cursor.isClosed()) {
             // Setup mapping from cursor to view fields;
-            String[] FromFieldNames = new String[]{"AccountID", "MeterSerialNo", "Reading", "Remarks"};
+            if(cursor.getCount() > 0) {
+                String[] FromFieldNames = new String[]{"AccountID", "MeterSerialNo", "Reading", "Remarks"};
 
-            int[] toViewIDs = new int[]{R.id.txtAccountId, R.id.txtmeterserial, R.id.txtreading, R.id.txtremarks};
+                int[] toViewIDs = new int[]{R.id.txtAccountId, R.id.txtmeterserial, R.id.txtreading, R.id.txtremarks};
 
-            // create adapter to map coloums of the database to the elements of
-            // the UI
-            SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
-                    mcontext, // context
-                    R.layout.list_found, // row_layout
-                    cursor, // Cursor
-                    FromFieldNames, // FromFields DataBaseColumns
-                    toViewIDs // ToFields View IDs
-            );
+                // create adapter to map coloums of the database to the elements of
+                // the UI
+                SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+                        mcontext, // context
+                        R.layout.list_found, // row_layout
+                        cursor, // Cursor
+                        FromFieldNames, // FromFields DataBaseColumns
+                        toViewIDs // ToFields View IDs
+                );
 
-            listview.setAdapter(myCursorAdapter);
+                listview.setAdapter(myCursorAdapter);
+            } else {
+                listview.setVisibility(View.GONE);
+                ivNoAccounts.setVisibility(View.VISIBLE);
+            }
         }
 
 

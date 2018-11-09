@@ -1,16 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context="com.payvenue.meterreader.PendingAccounts" >
+    android:gravity="center">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:listSelector="#fff"
-        android:padding="10dp" >
-    </ListView>
+        android:padding="10dp" />
+
+    <ImageView
+        android:id="@+id/iv_no_accounts"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/no_accounts"
+        android:visibility="gone"/>
 
 </RelativeLayout>

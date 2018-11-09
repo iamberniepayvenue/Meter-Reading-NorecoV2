@@ -35,6 +35,7 @@ public class AccountListActivity extends AppCompatActivity {
 
     ArrayList<Account> myAccounts = new ArrayList<>();
     ArrayList<Account> searchAccount = new ArrayList<>();
+    ImageView ivNoAccounts;
 
     @SuppressLint("NewApi")
     @Override
@@ -50,7 +51,7 @@ public class AccountListActivity extends AppCompatActivity {
         // Grab the data to display on this activity
         Bundle b = getIntent().getExtras();
         routecode = b.getString("RouteCode");
-
+        ivNoAccounts = findViewById(R.id.iv_no_accounts);
         listvew = (ListView) findViewById(R.id.list);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,8 +78,14 @@ public class AccountListActivity extends AppCompatActivity {
         try{
             myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter);
 
-            AccountAdapter adapter = new AccountAdapter(myAccounts);
-            listvew.setAdapter(adapter);
+            if(myAccounts.size() > 0) {
+                AccountAdapter adapter = new AccountAdapter(myAccounts);
+                listvew.setAdapter(adapter);
+            }else{
+                ivNoAccounts.setVisibility(View.VISIBLE);
+                listvew.setVisibility(View.GONE);
+            }
+
         }catch (NullPointerException e) {
             Log.e(TAG,e.getMessage());
         }

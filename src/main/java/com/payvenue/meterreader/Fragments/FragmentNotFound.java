@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
     private final String TAG = "FragmentNotFound";
     Context mcontxt;
     ProgressDialog mDialog;
+    ImageView ivNoAccounts;
 
 
     @Override
@@ -58,6 +60,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         rootView = inflater.inflate(R.layout.fragment_no_found, container, false);
         mcontxt = getActivity();
         listvew = (ListView) rootView.findViewById(R.id.list);
+        ivNoAccounts = rootView.findViewById(R.id.iv_no_accounts);
         listvew.setClickable(true);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -218,18 +221,24 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
 
         Cursor cursor = MainActivity.db.getRoutes(MainActivity.db);
         if (!cursor.isClosed()) {
-            String[] FromFieldNames = new String[]{"RouteCode",};
 
-            int[] toViewIDs = new int[]{R.id.txRouteCode};
-            SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
-                    getActivity(), // context
-                    R.layout.route_list, // row_layout
-                    cursor, // Cursor
-                    FromFieldNames, // FromFields DataBaseColumns
-                    toViewIDs // ToFields View IDs
-            );
+            if(cursor.getCount() > 0) {
+                String[] FromFieldNames = new String[]{"RouteCode",};
 
-            listvew.setAdapter(myCursorAdapter);
+                int[] toViewIDs = new int[]{R.id.txRouteCode};
+                SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+                        getActivity(), // context
+                        R.layout.route_list, // row_layout
+                        cursor, // Cursor
+                        FromFieldNames, // FromFields DataBaseColumns
+                        toViewIDs // ToFields View IDs
+                );
+
+                listvew.setAdapter(myCursorAdapter);
+            }else {
+                listvew.setVisibility(View.GONE);
+                ivNoAccounts.setVisibility(View.VISIBLE);
+            }
         }
 
 

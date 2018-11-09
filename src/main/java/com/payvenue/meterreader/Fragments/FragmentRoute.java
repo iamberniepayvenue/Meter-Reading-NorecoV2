@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class FragmentRoute extends Fragment {
     View view;
     String mode;
     ListView listview;
+    ImageView ivNoAccounts;
     private static final String TAG = "FragmentRoute";
 
     public FragmentRoute() {
@@ -60,7 +62,7 @@ public class FragmentRoute extends Fragment {
 
 
         listview = view.findViewById(R.id.listView);
-
+        ivNoAccounts = view.findViewById(R.id.iv_no_accounts);
         getRoute();
 
 
@@ -86,21 +88,26 @@ public class FragmentRoute extends Fragment {
 
 
         if (!cursor.isClosed()) {
-            String[] FromFieldNames = new String[]{"RouteCode",};
+            if(cursor.getCount() > 0) {
+                String[] FromFieldNames = new String[]{"RouteCode",};
 
-            int[] toViewIDs = new int[]{R.id.txRouteCode};
+                int[] toViewIDs = new int[]{R.id.txRouteCode};
 
-            // create adapter to map coloums of the database to the elements of
-            // the UI
-            SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
-                    getActivity(), // context
-                    R.layout.route_list, // row_layout
-                    cursor, // Cursor
-                    FromFieldNames, // FromFields DataBaseColumns
-                    toViewIDs // ToFields View IDs
-            );
+                // create adapter to map coloums of the database to the elements of
+                // the UI
+                SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+                        getActivity(), // context
+                        R.layout.route_list, // row_layout
+                        cursor, // Cursor
+                        FromFieldNames, // FromFields DataBaseColumns
+                        toViewIDs // ToFields View IDs
+                );
 
-            listview.setAdapter(myCursorAdapter);
+                listview.setAdapter(myCursorAdapter);
+            }else{
+                listview.setVisibility(View.GONE);
+                ivNoAccounts.setVisibility(View.VISIBLE);
+            }
         }
 
 

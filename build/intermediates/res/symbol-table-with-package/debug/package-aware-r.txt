@@ -842,6 +842,7 @@ drawable list_selector
 drawable location
 drawable my_border
 drawable navigation_empty_icon
+drawable no_accounts
 drawable noreco
 drawable notification_action_background
 drawable notification_bg
@@ -1027,6 +1028,7 @@ id item2
 id item3
 id item4
 id item_touch_helper_previous_elevation
+id iv_no_accounts
 id largeLabel
 id lblDemand
 id lblDemandVal
