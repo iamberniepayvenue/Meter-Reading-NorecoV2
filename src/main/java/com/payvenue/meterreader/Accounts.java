@@ -282,16 +282,10 @@
                 return;
             }
 
-    //        if (mAccount.getAccountClassification().equalsIgnoreCase("Higher Voltage")) {
-    //            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate",isStopCheck);
-    //            showToast("Cant generate billing for a Higher Voltage classification.");
-    //            return;
-    //        }
 
             /**Check Senior Status Discount*/
             if (mAccount.getSeniorCitizenStatus().equals("1") && a_class.toLowerCase().equalsIgnoreCase("residential") ) {
                     if(CommonFunc.isValidDate(mAccount.getSCExpiryDate())) {
-                        Log.e(TAG,"SC DATE is Valid");
                         String consumption = mAccount.getConsume();
                         int scPolicyMax = getSCDMaxPolicy();
                         int scPolicyMin = getSCDMinPolicy();
@@ -301,7 +295,7 @@
                             return;
                         }
 
-                        //Float.valueOf(consumption) <= 100
+
                         if(Float.valueOf(consumption) >= Float.valueOf(scPolicyMin) && Float.valueOf(consumption) <= Float.valueOf(scPolicyMax)) {
                             canAvailSCDiscount = true;
                         }else{
@@ -318,7 +312,7 @@
             Cursor cursor = MainActivity.db.getRateSched(MainActivity.db,
                     mAccount.getRateSched(),
                     a_class);
-            //Log.e(TAG,"cursor: "+ cursor.getCount());
+
             if (cursor.getCount() <= 0) {
                 showToast("No rate schedule created for this classification");
                 return;
@@ -395,8 +389,7 @@
                      *  Metering Retail Customer Charge
                      * */
 
-                    //Log.e(TAG,"Amount: "+ String.format("%.4f",Float.valueOf(Amount)));
-                    //Log.e(TAG,"Amount1: "+ Amount);
+
                     if(isHigherVoltage) {
                         int fixed = 0;
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
@@ -503,7 +496,6 @@
                         }
 
                         if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
-                            //rateSchedule.getRateCode().equalsIgnoreCase("SOL"))
                             componentAmount = 0;
                             strComponentAmount = String.valueOf(componentAmount);
                         }
@@ -533,15 +525,15 @@
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
                             String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)exportMultiplier);
-                            if (rateSchedule.getRateComponent().equalsIgnoreCase("Generation System Charges")) {
+                            if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("generation system charges")) {
                                 amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
 
-                            if (rateSchedule.getRateComponent().equalsIgnoreCase("METERING SYSTEM CHARGE") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering System Charge")) {
+                            if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering system charge")) {
                                 amountDueExport = -CommonFunc.toDigit(_strComponentAmount);
                             }
 
-                            if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                            if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering retail customer charge")) {
                                 amountDueExport = -rateSchedule.getComponentRate();
                             }
 
@@ -550,11 +542,11 @@
                         }
                     }
 
-                    //Log.e(TAG,"calculation: "+ rateSchedule.getRateComponent() + " - " + Amount + " - "+strComponentAmount);
+
                     myRates.add(new Rates(rateSchedule.getRateSegment(),
                             rateSchedule.getRateCode(),
                             rateSchedule.getRateComponent(),
-                            Amount, rateSchedule.getIsLifeline(), rateSchedule.getIsSCDiscount(), rateSchedule.getIsExport(), strComponentAmount, amountDueExport)); //componentvat, componentftax, componentltax,
+                            Amount,rateSchedule.getIsLifeline(),rateSchedule.getIsSCDiscount(),rateSchedule.getIsExport(),strComponentAmount,amountDueExport)); //componentvat, componentftax, componentltax,
 
                 }/**end of loop*/
 
@@ -572,7 +564,7 @@
                      *
                      **/
                 }
-                //Log.e(TAG,"senior: " + totalSeniorDiscount);
+
                 totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
                 billedAmount = totalComponent + arrearsPenalty + totalArrears;
 
@@ -590,7 +582,6 @@
                 billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
                 if (isNetMetering.equalsIgnoreCase("1")) {
                     netBillAmountExport = totalComponent - totalAmountDueExport;
-                    //Log.e(TAG,"netBillAmountExport: " + netBillAmountExport);
                 }
 
 
@@ -613,7 +604,6 @@
                 }
 
                 mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount,netBillAmountExport,totalAmountDueExport);
-                //Log.e(TAG,"ExportAmount: "+ netBillAmountExport);
                 mAccount.setBill(mBill);
             }
 
@@ -632,7 +622,6 @@
 
             try {
                 JSONArray jsonArray = new JSONArray(mAccount.getArrears());
-                //JSONObject jsonObject1 = new JSONObject(mAccount.getArrears());
                 for(int i = 0; i < jsonArray.length();i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     arrearsPenalty = arrearsPenalty + Double.valueOf(jsonObject.getString("Penalty"));
@@ -847,9 +836,9 @@
 
                 demandKWMininum = Double.valueOf(strDemands);
                 //DecimalFormat df = new DecimalFormat("#.####");
-                double dm = CommonFunc.roundOff(demandKWMininum * multiplier,1);
+                double dm = CommonFunc.roundOff(demandKWMininum * multiplier,2);
                 /**Update demandKWMininum*/
-                Log.e(TAG,"demandKWMininum: " + dm);
+                //Log.e(TAG,"demandKWMininum: " + dm);
                 mAccount.setDemandKW(String.valueOf(dm));
             }
 
@@ -955,7 +944,7 @@
         public void onMyDialogDismiss(int tag) {
             if(tag == 0) {
                 double consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
-                double kwhExport = consumeExport * multiplier + Float.valueOf(coreLoss);
+                double kwhExport = consumeExport * multiplier; //+ Float.valueOf(coreLoss);
                 mAccount.setExportConsume(String.valueOf(kwhExport));
                 mAccount.setActualExportConsume(String.valueOf(consumeExport));
                 displayButtons();
