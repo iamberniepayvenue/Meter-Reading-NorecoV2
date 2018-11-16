@@ -776,21 +776,30 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 }
                 ctr++;
             }
-            getAccountDetails(db,accountID);
+            //getAccountDetails(db,accountID);
         }
         return  cursor.getCount();
     }
 
 
-
-    public void getAccountDetails(DataBaseHandler db, String accountid) {
+    /**
+     *  tag = 0 comes from AccountListActivity
+     *  tag = 1 comes from Accounts after reading
+     *
+     * */
+    public void getAccountDetails(DataBaseHandler db, String accountid,int tag) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
 
-        String myQuery;
+        String myQuery = null;
         Gson gson = new GsonBuilder().create();
+        if(tag == 0) {
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
+        } else if(tag == 1) {
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = 'Unread' Limit 1";
+        }
 
-        myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
+
         Cursor c = sql.rawQuery(myQuery, null);
 
         String details;

@@ -405,7 +405,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     if(tagClass == "1"){
                         if (myPreferences.getPrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT) == 0) {
                             MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "", "", "", this);
-
                         }
 
                         if(myPreferences.getPrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT) == 0) {

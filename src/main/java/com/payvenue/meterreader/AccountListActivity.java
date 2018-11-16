@@ -60,7 +60,7 @@ public class AccountListActivity extends AppCompatActivity {
                 String accountid = ((TextView) view.findViewById(R.id.accountid)).getText().toString();
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,0);
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);

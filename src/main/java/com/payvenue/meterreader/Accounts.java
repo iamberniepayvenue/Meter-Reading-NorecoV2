@@ -337,7 +337,7 @@
                 Log.e(TAG,"isStopCheck");
                 float av = getAveraging();
                 if(av != -2000) {
-                    rateMultiplier = av;
+                    rateMultiplier = av * multiplier + Float.valueOf(coreLoss);
                 }else{
                     return;
                 }
@@ -521,10 +521,17 @@
 
                     totalComponent = totalComponent + componentAmount;
                     double amountDueExport = 0;
+
+                    /**FOR NET METERING*/
                     if (isNetMetering.equalsIgnoreCase("1")) {
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
                             String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)exportMultiplier);
+
+                            amountDueExport = CommonFunc.toDigit(_strComponentAmount);
+
+
+
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("generation system charges")) {
                                 amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
@@ -537,6 +544,9 @@
                                 amountDueExport = -rateSchedule.getComponentRate();
                             }
 
+                            if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("supply retail customer charge")) {
+                                amountDueExport = -rateSchedule.getComponentRate();
+                            }
 
                             totalAmountDueExport = totalAmountDueExport + amountDueExport;
                         }
@@ -793,37 +803,7 @@
 
 
             double presReading = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
-            final double[] consume = {CommonFunc.round((maxreadingvalue + presReading - Double.parseDouble(initialRead)), 1)};
-
-            if(initialRead.equalsIgnoreCase(mAccount.getReading())) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setCancelable(false);
-                builder.setTitle("Stop Meter");
-                builder.setMessage("This is stop meter or not?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        float av = getAveraging();
-                        if(av != -2000) {
-                            builder.setCancelable(false);
-                            consume[0] = av;
-                            dialog.dismiss();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        builder.setCancelable(false);
-                        consume[0] = 0;
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            double consume = CommonFunc.round((maxreadingvalue + presReading - Double.parseDouble(initialRead)), 1);
 
 
 
@@ -850,7 +830,7 @@
             }
 
             if(!mAccount.getReading().equalsIgnoreCase("0")){
-                if (consume[0] < 0) {
+                if (consume < 0) {
                     showToast("Invalid Reading. Current reading is less than the Previous Reading");
                     return;
                 }
@@ -860,15 +840,47 @@
             /**Check if Change Meter*/
 
             if (mAccount.getIsChangeMeter().equals("1")) {
-                float av = getAveraging();
+                double av = getAveraging();
                 if(av != -2000) {
-                    consume[0] = av;
+                    consume = av;
                 }else{
                     return;
                 }
             }
 
-            double kwh = consume[0] * multiplier + Float.valueOf(coreLoss);
+
+            if(initialRead.equalsIgnoreCase(mAccount.getReading())) {
+                final double av = getAveraging();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Stop Meter");
+                builder.setMessage("This is stop meter or not?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(av != -2000) {
+                            setKwh(av);
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setKwh(0);
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }else{
+                setKwh(consume);
+            }
+        }
+
+        public void setKwh(double consume) {
+            Log.e(TAG,"consume: " + consume);
+            double kwh = consume * multiplier + Float.valueOf(coreLoss);
 
             boolean showAlert = false;
             float kWhRead = Float.valueOf(mAccount.getkWhReading());
@@ -894,12 +906,12 @@
 
 
                 if(kwh < _lowerThreshold) {
-                    showAlert((float) consume[0],kWhRead,"lower");
+                    showAlert((float) consume,kWhRead,"lower");
                     showAlert = true;
                 }
 
                 if(kwh > _upperThreshold) {
-                    showAlert((float) consume[0],kWhRead,"higher");
+                    showAlert((float) consume,kWhRead,"higher");
                     showAlert = true;
                 }
             }
@@ -907,7 +919,7 @@
 
 
             mAccount.setConsume(String.valueOf(CommonFunc.roundOff(kwh,1)));
-            mAccount.setActualConsumption(String.valueOf(consume[0]));
+            mAccount.setActualConsumption(String.valueOf(consume));
 
             if(!showAlert) {
                 forNetMetering();
@@ -1072,23 +1084,25 @@
                         showToast("Printer is not connected.");
                     }
 
-                    String route = mAccount.getRouteNo();
-                    String sequenceNumber = mAccount.getSequenceNo();
-                    try{
-                        if(sequenceNumber.equalsIgnoreCase(".") || sequenceNumber == null){
-                            showToast("Sequence number is not a number, please check");
-                            return;
-                        }
-                    } catch (NullPointerException e) {
-                        showToast("Sequence number is not a number, please check");
-                        return;
-                    }
-
-                    int count = db.searchNextAccountToRead(db,route,sequenceNumber,mAccount.getAccountID());
-                    if (count == 0) {
-                            this.finish();
-                    }
+                    /** This part is for sequencing account*/
+//                    String route = mAccount.getRouteNo();
+//                    String sequenceNumber = mAccount.getSequenceNo();
+//                    try{
+//                        if(sequenceNumber.equalsIgnoreCase(".") || sequenceNumber == null){
+//                            showToast("Sequence number is not a number, please check");
+//                            return;
+//                        }
+//                    } catch (NullPointerException e) {
+//                        showToast("Sequence number is not a number, please check");
+//                        return;
+//                    }
+//
+//                    int count = db.searchNextAccountToRead(db,route,sequenceNumber,mAccount.getAccountID());
+//                    if (count == 0) {
+//                            this.finish();
+//                    }
                     //Intent intent = new Intent(this, BillPreview.class);
+                    db.getAccountDetails(MainActivity.db, "",1);
                     Intent intent = new Intent(this, Accounts.class);
                     startActivity(intent);
                     this.finish();
@@ -1454,7 +1468,7 @@
                                 if (isNetMetering.equalsIgnoreCase("1")) {
 
                                     String amountExport = df.format((r.getAmountDueExport()));
-                                    if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().equalsIgnoreCase("Yes")) {
+                                    if (r.getIsExport().equalsIgnoreCase("1") || r.getIsExport().toLowerCase().equalsIgnoreCase("yes")) {
                                         int padding1 = 20 - rateAmount.length() - amountExport.length();
                                         String paddingChar1 = " ";
                                         for (int p = 0; p < padding1; p++) {
