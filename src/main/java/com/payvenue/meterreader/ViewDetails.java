@@ -31,6 +31,7 @@ import Model.Bill;
 import Model.RateSegmentModel;
 import Model.Rates;
 import Utility.CommonFunc;
+import Utility.Constant;
 import Utility.MobilePrinter;
 
 public class ViewDetails extends AppCompatActivity implements OnClickListener {
@@ -613,11 +614,17 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         if(arrearsBillMonthList.size() > 0) {
             mp.printText("\n");
             mp.printText("\n");
-            mp.printText(CommonFunc.disconnectionNotice()+"\n");
+            mp.printText(Constant.DISCONNECTIONNOTICE+"\n");
             mp.printText("\n");
-            mp.printText(CommonFunc.officialReceipt()+"\n");
+            mp.printText(Constant.OFFICIALRECIEPT+"\n");
             mp.printText("\n");
-            mp.printText("                "+CommonFunc.warning()+"                 "+"\n");
+            mp.printText("                "+Constant.WARNING+"                 "+"\n");
+        }else{
+            mp.printText("\n");
+            mp.printText("\n");
+            mp.printText(Constant.FOOTERMESSAGE+"\n");
+            mp.printText("\n");
+            mp.printText(Constant.OFFICIALRECIEPT+"\n");
         }
 
         if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {

@@ -1,63 +1,64 @@
     package com.payvenue.meterreader;
 
     import android.annotation.SuppressLint;
-    import android.content.Context;
-    import android.content.DialogInterface;
-    import android.content.Intent;
-    import android.content.pm.PackageManager;
-    import android.database.Cursor;
-    import android.media.AudioManager;
-    import android.media.ToneGenerator;
-    import android.os.Build;
-    import android.os.Bundle;
-    import android.support.annotation.Nullable;
-    import android.support.constraint.ConstraintLayout;
-    import android.support.design.widget.Snackbar;
-    import android.support.v4.content.ContextCompat;
-    import android.support.v7.app.AlertDialog;
-    import android.support.v7.app.AppCompatActivity;
-    import android.text.Editable;
-    import android.text.TextWatcher;
-    import android.util.Log;
-    import android.view.KeyEvent;
-    import android.view.Menu;
-    import android.view.MenuItem;
-    import android.view.View;
-    import android.view.WindowManager;
-    import android.view.inputmethod.EditorInfo;
-    import android.view.inputmethod.InputMethodManager;
-    import android.widget.Button;
-    import android.widget.CheckBox;
-    import android.widget.EditText;
-    import android.widget.TextView;
-    import android.widget.Toast;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-    import com.payvenue.meterreader.Camera.ZBarScannerActivity;
-    import com.payvenue.meterreader.Fragments.MyDialogFragment;
-    import com.payvenue.meterreader.Interface.MyDialogInterface;
+import com.payvenue.meterreader.Camera.ZBarScannerActivity;
+import com.payvenue.meterreader.Fragments.MyDialogFragment;
+import com.payvenue.meterreader.Interface.MyDialogInterface;
 
-    import org.json.JSONArray;
-    import org.json.JSONException;
-    import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    import java.text.DecimalFormat;
-    import java.util.ArrayList;
-    import java.util.List;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
-    import DataBase.DataBaseHandler;
-    import Model.Account;
-    import Model.Bill;
-    import Model.LifeLineSubsidyModel;
-    import Model.Policies;
-    import Model.RateSchedule;
-    import Model.RateSegmentModel;
-    import Model.Rates;
-    import Model.Thresholds;
-    import Utility.CommonFunc;
-    import Utility.MobilePrinter;
-    import ZBar.ZBarConstants;
+import DataBase.DataBaseHandler;
+import Model.Account;
+import Model.Bill;
+import Model.LifeLineSubsidyModel;
+import Model.Policies;
+import Model.RateSchedule;
+import Model.RateSegmentModel;
+import Model.Rates;
+import Model.Thresholds;
+import Utility.CommonFunc;
+import Utility.Constant;
+import Utility.MobilePrinter;
+import ZBar.ZBarConstants;
 
-    import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
+import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
 
 
     /**
@@ -334,12 +335,10 @@
 
             /**STOP METER*/
             if(isStopCheck) {
-                Log.e(TAG,"isStopCheck");
                 float av = getAveraging();
                 if(av != -2000) {
-                    rateMultiplier = av * multiplier + Float.valueOf(coreLoss);
-                }else{
-                    return;
+                    double presentRead = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
+                    rateMultiplier = (av + presentRead) * multiplier + Float.valueOf(coreLoss);
                 }
             }
 
@@ -802,7 +801,7 @@
             }
 
 
-            double presReading = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
+            final double presReading = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
             double consume = CommonFunc.round((maxreadingvalue + presReading - Double.parseDouble(initialRead)), 1);
 
 
@@ -859,7 +858,7 @@
                     public void onClick(DialogInterface dialog, int which) {
 
                         if(av != -2000) {
-                            setKwh(av);
+                            setKwh(av + presReading);
                         }
                     }
                 });
@@ -1102,7 +1101,7 @@
 //                            this.finish();
 //                    }
                     //Intent intent = new Intent(this, BillPreview.class);
-                    db.getAccountDetails(MainActivity.db, "",1);
+                    db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),1);
                     Intent intent = new Intent(this, Accounts.class);
                     startActivity(intent);
                     this.finish();
@@ -1557,17 +1556,24 @@
                 if(arrearsBillMonthList.size() > 0) {
                     mp.printText("\n");
                     mp.printText("\n");
-                    mp.printText(CommonFunc.disconnectionNotice()+"\n");
+                    mp.printText(Constant.DISCONNECTIONNOTICE+"\n");
                     mp.printText("\n");
-                    mp.printText(CommonFunc.officialReceipt()+"\n");
+                    mp.printText(Constant.OFFICIALRECIEPT+"\n");
                     mp.printText("\n");
-                    mp.printText("                "+CommonFunc.warning()+"                 "+"\n");
+                    mp.printText("                "+Constant.WARNING+"                 "+"\n");
+                }else{
+                    mp.printText("\n");
+                    mp.printText("\n");
+                    mp.printText(Constant.FOOTERMESSAGE+"\n");
+                    mp.printText("\n");
+                    mp.printText(Constant.OFFICIALRECIEPT+"\n");
                 }
+
                 mp.printText("\n");
                 mp.printText("\n");
                 mp.printText("\n");
                 mp.printText("\n");
-            db.updateAccountToPrinted(db,"Printed");
+                db.updateAccountToPrinted(db,"Printed");
 
             }catch (NullPointerException e) {
                 Log.e(TAG,"preparePrint : "+ e.getMessage());

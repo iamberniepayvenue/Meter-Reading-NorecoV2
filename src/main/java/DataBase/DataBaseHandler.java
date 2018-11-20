@@ -796,11 +796,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         if(tag == 0) {
             myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
         } else if(tag == 1) {
-            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = 'Unread' Limit 1";
+            myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > "+Integer.valueOf(accountid)+" Limit 1";
         }
 
 
+
         Cursor c = sql.rawQuery(myQuery, null);
+
+        if(c.getCount() == 0 && tag == 1) {
+            myQuery = "Select * From accounts Where RouteNo = '"+ MainActivity.selectedAccount.getRouteNo()+"' AND ReadStatus = 'Unread' Limit 1";
+            c = sql.rawQuery(myQuery, null);
+        }
+
+        //Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 

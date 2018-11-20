@@ -230,21 +230,6 @@ public class CommonFunc {
         return targetFormat.format(sourceDate);
     }
 
-
-
-    public static String disconnectionNotice() {
-        return "Note: Pls pay in the office 2 days after receipt of this \n Statement of Account or within 7 days from Due Date" +
-                " to avoid \n Penalty.";
-    }
-
-    public static String officialReceipt(){
-        return "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
-    }
-
-    public static String warning(){
-        return "WARNING!SUBJECT TO DISCONNECTION";
-    }
-
     public static String monthAbrev(String billMonth) {
         String sub = billMonth;//billMonth.substring(0,2);
         String val = "";
