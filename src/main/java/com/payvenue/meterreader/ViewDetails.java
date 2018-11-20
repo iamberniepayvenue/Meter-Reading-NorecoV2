@@ -1,6 +1,8 @@
 package com.payvenue.meterreader;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,10 +59,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     public DataBaseHandler db;
     private boolean IsMotherMeter = false;
     private Account mAccount;
+    private Account searchAccount;
     ArrayList<String> arrearsAmountList = new ArrayList<>();
     ArrayList<String> arrearsBillMonthList = new ArrayList<>();
     ArrayList<String> arrearsPenaltyList = new ArrayList<>();
     ArrayList<String> arrearsBillNumberList = new ArrayList<>();
+    private boolean isSearch = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -121,17 +128,32 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void setValues() {
-        viewacctid.setText(mAccount.getAccountID());
-        viewacctserial.setText(mAccount.getMeterSerialNo());
-        //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
-        viewacctname.setText(mAccount.getLastName());
-        viewacctadd.setText(mAccount.getAddress());
-        txtclass.setText(mAccount.getAccountClassification());
-        txtmeterbrand.setText(mAccount.getMeterBrand());
-        mReading.setText(mAccount.getReading());
-        mPrevReading.setText(mAccount.getInitialReading());
-        mConsume.setText(mAccount.getConsume());
-        mLocation.setText(mAccount.getLatitude() +","+mAccount.getLongitude());
+        if(!isSearch) {
+            viewacctid.setText(mAccount.getAccountID());
+            viewacctserial.setText(mAccount.getMeterSerialNo());
+            //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
+            viewacctname.setText(mAccount.getLastName());
+            viewacctadd.setText(mAccount.getAddress());
+            txtclass.setText(mAccount.getAccountClassification());
+            txtmeterbrand.setText(mAccount.getMeterBrand());
+            mReading.setText(mAccount.getReading());
+            mPrevReading.setText(mAccount.getInitialReading());
+            mConsume.setText(mAccount.getConsume());
+            mLocation.setText(mAccount.getLatitude() + "," + mAccount.getLongitude());
+        }else{
+            searchAccount = MainActivity.selectedAccount;
+            viewacctid.setText(searchAccount.getAccountID());
+            viewacctserial.setText(searchAccount.getMeterSerialNo());
+            //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
+            viewacctname.setText(searchAccount.getLastName());
+            viewacctadd.setText(searchAccount.getAddress());
+            txtclass.setText(searchAccount.getAccountClassification());
+            txtmeterbrand.setText(searchAccount.getMeterBrand());
+            mReading.setText(searchAccount.getReading());
+            mPrevReading.setText(searchAccount.getInitialReading());
+            mConsume.setText(searchAccount.getConsume());
+            mLocation.setText(searchAccount.getLatitude() + "," + searchAccount.getLongitude());
+        }
     }
 
     public void displayButton() {
@@ -177,7 +199,63 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.view_details, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        if(searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    return false;
+                }
+            });
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false; //do the default
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.length() > 1) {
+                        MainActivity.db.getAccountDetails(MainActivity.db, s,2);
+                        isSearch = true;
+                        setValues();
+                    } else if (s.length() == 0) {
+                        //TODO: reset the displayed data
+                    }
+                    return false;
+                }
+            });
+
+            int searchCloseButtonId = searchView.getContext().getResources()
+                    .getIdentifier("android:id/search_close_btn", null, null);
+            ImageView closeButton = (ImageView) searchView.findViewById(searchCloseButtonId);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG,"close");
+                    isSearch = false;
+                    setValues();
+
+                    int searchCloseButtonId = searchView.getContext().getResources()
+                            .getIdentifier("android:id/search_src_text", null, null);
+                    EditText et = (EditText) findViewById(searchCloseButtonId);
+                    et.setText("");
+
+                    //Clear query
+                    searchView.setQuery("", false);
+                }
+            });
+        }
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
     }
 
     @Override
@@ -195,6 +273,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 break;
             case MainActivity.Modes.MODE_2://3333
             case MainActivity.Modes.MODE_3:
+                menu.findItem(R.id.search).setVisible(false);
                 if (mAccount.getUploadStatus().equals("1")) {
                     menu.findItem(R.id.btnEdit).setVisible(false);
                 } else {
@@ -204,6 +283,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 menu.findItem(R.id.btnRead).setVisible(false);
                 break;
             case MainActivity.Modes.MODE_4://4444
+                menu.findItem(R.id.search).setVisible(false);
                 menu.findItem(R.id.btnGen).setVisible(false);
                 menu.findItem(R.id.btnEdit).setVisible(false);
                 menu.findItem(R.id.btnRead).setVisible(true);
@@ -549,7 +629,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printText("", "" + "\n");
 
             if(arrearsBillMonthList.size() > 0) {
-                mp.printText("BillingDate        BillNumber          Amount          Penalty" + "\n");
+                mp.printText("BillingDate        BillNumber          Amount          Surcharge" + "\n");
                 mp.printText("--------------------------------------------------------------" + "\n");
                 for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                     String billdate = arrearsBillMonthList.get(i);
@@ -561,7 +641,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 }
                 mp.printText("--------------------------------------------------------------" + "\n");
             }
-            mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
+            mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
             mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
             mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
             mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));

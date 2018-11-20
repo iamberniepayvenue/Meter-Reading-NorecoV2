@@ -785,7 +785,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     /**
      *  tag = 0 comes from AccountListActivity
      *  tag = 1 comes from Accounts after reading
-     *
+     *  tag = 2 comes from ViewDetails
      * */
     public void getAccountDetails(DataBaseHandler db, String accountid,int tag) {
 
@@ -797,6 +797,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
         } else if(tag == 1) {
             myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > "+Integer.valueOf(accountid)+" Limit 1";
+        }else if (tag == 2) {
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%' AND ReadStatus = 'Unread' Limit 1";
         }
 
 
@@ -808,7 +810,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             c = sql.rawQuery(myQuery, null);
         }
 
-        //Log.e(TAG,"getAccountDetails :" + myQuery);
+        Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 

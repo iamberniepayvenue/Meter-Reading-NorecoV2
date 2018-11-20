@@ -1492,7 +1492,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("", "" + "\n");
 
                 if(arrearsBillMonthList.size() > 0) {
-                    mp.printText("BillingMonth        BillNumber          Amount          Penalty" + "\n");
+                    mp.printText("BillingMonth        BillNumber          Amount          Surcharge" + "\n");
                     mp.printText("--------------------------------------------------------------" + "\n");
                     for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                         String billdate = arrearsBillMonthList.get(i);
@@ -1506,7 +1506,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
 
 
-                mp.printText("Add:Penalty:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
+                mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
                 mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
                 mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
                 mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));

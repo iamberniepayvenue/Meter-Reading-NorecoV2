@@ -133,8 +133,6 @@ public class AccountListActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-
-                        Log.e(TAG,"here: "+ s);
                         searchAccount = MainActivity.db.searchItem(MainActivity.db,s);
                         AccountAdapter adapter = new AccountAdapter(searchAccount);
                         listvew.setAdapter(adapter);
@@ -144,7 +142,6 @@ public class AccountListActivity extends AppCompatActivity {
                     }
                     return false;
                 }
-
             });
 
             int searchCloseButtonId = searchView.getContext().getResources()
