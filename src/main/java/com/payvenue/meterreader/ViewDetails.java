@@ -449,6 +449,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     + mAccount.getMiddleName();
         }
 
+        String []date = mAccount.getDateRead().split(" ");
+        String dateRead = date[0];
+
         String penalty = mAccount.getPenalty();
         if(penalty.equalsIgnoreCase("-") || penalty.equalsIgnoreCase(".")) {
             penalty = "0";
@@ -499,7 +502,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printextEmphasized(name+"\n");
         mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
         mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
-        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(mAccount.getDateRead()) +"\n");
+        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");
         mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
         mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
         mp.printText("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n");
@@ -517,12 +520,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         mp.printText("--------------------------------------------------------------"+"\n");
         mp.printText("Date                Prev                 Pres              KWH"+"\n");
 
-        int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getInitialReading().length();
+
+
+        int padding1 = 20 - dateRead.length() - mAccount.getInitialReading().length();
         String spacing = " ";
          for (int p = 0; p < padding1; p++) {
              spacing = spacing.concat(" ");
          }
-        String strRight = mAccount.getDateRead() + spacing + mAccount.getInitialReading();
+        String strRight = dateRead + spacing + mAccount.getInitialReading();
 
         int paddingLeft = 20 - mAccount.getReading().length() - mAccount.getConsume().length();
         String _spacing = " ";
@@ -659,12 +664,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printText("Date                Prev                 Pres              KWH"+"\n");
             String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
-            int padding3 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
+            int padding3 = 20 - dateRead.length() - mAccount.getExportPreviousReading().length();
             String spacing3 = " ";
             for (int p = 0; p < padding3; p++) {
                 spacing3 = spacing3.concat(" ");
             }
-            String strRight1 = mAccount.getDateRead() + spacing3 + mAccount.getExportPreviousReading();
+            String strRight1 = dateRead + spacing3 + mAccount.getExportPreviousReading();
 
             int paddingLeft1 = 20 - mAccount.getExportReading().length() - exportConsume.length();
             String _spacing2 = " ";

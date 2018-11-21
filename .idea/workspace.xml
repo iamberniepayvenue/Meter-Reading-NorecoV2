@@ -21,44 +21,36 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/release/multi-v2/release.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/release/multi-v2/release.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/blame/res/release/multi-v2/values.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/blame/res/release/multi-v2/values.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/mergeReleaseResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/mergeReleaseResources/compile-file-map.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageRelease/tmp/release/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageRelease/tmp/release/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/incremental/packageRelease/tmp/release/file-input-save-data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/incremental/packageRelease/tmp/release/file-input-save-data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/DataBase/DataBaseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/DataBase/DataBaseHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/Utility/CommonFunc.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/Utility/CommonFunc.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$ActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$ActionListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$TextChangeListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts$TextChangeListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Accounts.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentNotFound.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/Fragments/FragmentUpload.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/DataBase/DataBaseHandler.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/DataBase/DataBaseHandler.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/Utility/CommonFunc.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/Utility/CommonFunc.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/javac/release/compileReleaseJavaWithJavac/classes/com/payvenue/meterreader/ViewDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/res/merged/release/values_values.arsc.flat" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/res/merged/release/values_values.arsc.flat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$1.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$2.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$3.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$3.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$ActionListener.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$ActionListener.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$TextChangeListener.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts$TextChangeListener.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Accounts.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Fragments/FragmentNotFound.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Fragments/FragmentNotFound.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Fragments/FragmentUpload.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/Fragments/FragmentUpload.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/ViewDetails.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexBuilder/release/39/com/payvenue/meterreader/ViewDetails.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/release/0/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/release/0/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/release/__content__.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/transforms/dexMerger/release/__content__.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/outputs/apk/release/Meter-Reading-Noreco-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/outputs/apk/release/Meter-Reading-Noreco-release.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/lint-results-release-fatal.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/lint-results-release-fatal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataBase/DataBaseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Utility/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utility/Constant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/notes" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/notes" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -91,20 +83,76 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Accounts.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Accounts.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="1498" column="87" selection-start-line="1498" selection-start-column="87" selection-end-line="1498" selection-end-column="87" />
+            <state relative-caret-position="-41">
+              <caret line="968" column="48" lean-forward="true" selection-start-line="968" selection-start-column="48" selection-end-line="968" selection-end-column="48" />
+              <folding>
+                <element signature="e#35399#35865#0" expanded="true" />
+                <element signature="e#35864#35865#0" expanded="true" />
+                <element signature="e#35917#36138#0" expanded="true" />
+                <element signature="e#36137#36138#0" expanded="true" />
+                <element signature="e#38871#39079#0" expanded="true" />
+                <element signature="e#39078#39079#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ViewDetails.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CommonFunc.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="245">
+              <caret line="219" column="25" selection-start-line="219" selection-start-column="25" selection-end-line="219" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-511">
+              <caret line="107" column="32" selection-start-line="107" selection-start-column="32" selection-end-line="107" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constant.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Utility/Constant.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="260">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FragmentDownLoad.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4976">
+              <caret line="418" column="105" selection-start-line="418" selection-start-column="105" selection-end-line="418" selection-end-column="105" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ViewDetails.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="65">
-              <caret line="631" column="83" selection-start-line="631" selection-start-column="83" selection-end-line="631" selection-end-column="83" />
+            <state relative-caret-position="410">
+              <caret line="538" column="37" selection-start-line="538" selection-start-column="30" selection-end-line="538" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -121,13 +169,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>routeLength</find>
-      <find>rdsuccess</find>
-      <find>numberOfRoutesDownloaded</find>
-      <find>0101110020</find>
-      <find>DownloadCount</find>
-      <find>0101110108</find>
-      <find>getRateSched</find>
       <find>accountID</find>
       <find>status</find>
       <find>printAccountSummary</find>
@@ -149,8 +190,15 @@
       <find>imm</find>
       <find>handleSearch</find>
       <find>mode</find>
-      <find>isStopCheck</find>
       <find>reading</find>
+      <find>setConsume</find>
+      <find>Pres:</find>
+      <find>consume:</find>
+      <find>setReading</find>
+      <find>mAccount.getDateRead()</find>
+      <find>getDateRead</find>
+      <find>strReading</find>
+      <find>isStopCheck</find>
     </findStrings>
     <replaceStrings>
       <replace>mAccount</replace>
@@ -2501,9 +2549,7 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_route.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_accounts.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Adapter/AccountAdapter.java" />
-        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Utility/Constant.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java" />
         <option value="$PROJECT_DIR$/src/main/res/menu/view_details.xml" />
         <option value="$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java" />
@@ -2511,8 +2557,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentUpload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentNotFound.java" />
         <option value="$PROJECT_DIR$/src/main/java/notes" />
-        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
+        <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/Utility/Constant.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java" />
       </list>
     </option>
   </component>
@@ -2769,9 +2817,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="23" width="1254" height="712" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="Android Profiler" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Android Profiler" order="7" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32900432" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
@@ -2781,7 +2828,7 @@
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3288364" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.48927394" weight="0.5912162" />
-      <window_info anchor="bottom" id="Logcat" order="7" sideWeight="0.48514852" weight="0.5591216" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="7" sideWeight="0.48514852" visible="true" weight="0.5591216" />
       <window_info id="Captures" order="2" weight="0.23805855" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
@@ -3127,27 +3174,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5565">
-          <caret line="418" column="105" selection-start-line="418" selection-start-column="105" selection-end-line="418" selection-end-column="105" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/Constant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="3" column="49" selection-start-line="3" selection-start-column="49" selection-end-line="3" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-27/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -3179,13 +3205,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1155">
-          <caret line="101" column="34" selection-start-line="101" selection-start-column="34" selection-end-line="101" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/AccountListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="705">
@@ -3197,16 +3216,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="9225">
           <caret line="644" selection-start-line="644" selection-end-line="644" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="129" column="32" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3231,17 +3240,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Fragments/FragmentDownLoad.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="1498" column="87" selection-start-line="1498" selection-start-column="87" selection-end-line="1498" selection-end-column="87" />
+        <state relative-caret-position="-4976">
+          <caret line="418" column="105" selection-start-line="418" selection-start-column="105" selection-end-line="418" selection-end-column="105" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-511">
+          <caret line="107" column="32" selection-start-line="107" selection-start-column="32" selection-end-line="107" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/Constant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Utility/CommonFunc.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="219" column="25" selection-start-line="219" selection-start-column="25" selection-end-line="219" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/ViewDetails.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="631" column="83" selection-start-line="631" selection-start-column="83" selection-end-line="631" selection-end-column="83" />
+        <state relative-caret-position="410">
+          <caret line="538" column="37" selection-start-line="538" selection-start-column="30" selection-end-line="538" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/payvenue/meterreader/Accounts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-41">
+          <caret line="968" column="48" lean-forward="true" selection-start-line="968" selection-start-column="48" selection-end-line="968" selection-end-column="48" />
+          <folding>
+            <element signature="e#35399#35865#0" expanded="true" />
+            <element signature="e#35864#35865#0" expanded="true" />
+            <element signature="e#35917#36138#0" expanded="true" />
+            <element signature="e#36137#36138#0" expanded="true" />
+            <element signature="e#38871#39079#0" expanded="true" />
+            <element signature="e#39078#39079#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

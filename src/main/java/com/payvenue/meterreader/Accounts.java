@@ -76,6 +76,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         Button btnGenerate, btnTakePic;
         Context mcontext;
         boolean isOvalCheck = false, isRecycleCheck = false, isStopCheck = false, isChangeCheck = false;
+        boolean isStopMeter = false;
         double maxreadingvalue = 0;
         String strReading = "", strRemarks = "", strDemands = "";
         double rateMultiplier,exportMultiplier;
@@ -334,15 +335,27 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
             /**STOP METER*/
-            if(isStopCheck) {
-                float av = getAveraging();
-                if(av != -2000) {
-                    double presentRead = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
-                    double reading = CommonFunc.round(av + presentRead,1);
-                    mAccount.setReading(String.valueOf(reading));
-                    rateMultiplier = (av + presentRead) * multiplier + Float.valueOf(coreLoss);
+            if(!isStopMeter) {
+                if (isStopCheck) {
+                    float av = getAveraging();
+                    if (av != -2000) {
+                        double presentRead = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()), 1);
+                        double average = (av + presentRead) - Double.parseDouble(initialRead);
+                        double presreading = av + presentRead;
+                        rateMultiplier = (average) * multiplier + Float.valueOf(coreLoss);
+                        mAccount.setReading(String.valueOf(CommonFunc.round(presreading, 1)));
+                        mAccount.setConsume(String.valueOf(CommonFunc.roundOff(rateMultiplier, 1)));
+                        mAccount.setActualConsumption(String.valueOf(CommonFunc.round(average, 1)));
+                        //Log.e(TAG,"here here");
+                    }
                 }
             }
+
+
+//            Log.e(TAG,"Prev: "+ mAccount.getInitialReading());
+//            Log.e(TAG,"Pres: "+ mAccount.getReading());
+//            Log.e(TAG,"consumption: " + mAccount.getActualConsumption());
+//            Log.e(TAG,"kwh:"+ mAccount.getConsume());
 
 
             /**Check Lifeliner*/
@@ -858,11 +871,12 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isStopMeter = true;
 
                         if(av != -2000) {
-                            setKwh(av + presReading);
-                            double reading = CommonFunc.round(av + presReading,1);
-                            mAccount.setReading(String.valueOf(reading));
+                            double _av = av + presReading;
+                            mAccount.setReading(String.valueOf(CommonFunc.round(_av,1)));
+                            setKwh(_av,0);
                         }
                     }
                 });
@@ -870,20 +884,28 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        setKwh(0);
+                        setKwh(0,1);
                     }
                 });
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }else{
-                setKwh(consume);
+                setKwh(consume,1);
             }
         }
 
-        public void setKwh(double consume) {
-            Log.e(TAG,"consume: " + consume);
-            double kwh = consume * multiplier + Float.valueOf(coreLoss);
+        public void setKwh(double consume,int tag) {
+            double consumption;
+            double kwh;
+
+            if(tag == 1) {
+                consumption = consume;
+            }else{
+                consumption = consume - Double.parseDouble(initialRead);
+            }
+
+            kwh = consumption * multiplier + Float.valueOf(coreLoss);
 
             boolean showAlert = false;
             float kWhRead = Float.valueOf(mAccount.getkWhReading());
@@ -922,7 +944,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
             mAccount.setConsume(String.valueOf(CommonFunc.roundOff(kwh,1)));
-            mAccount.setActualConsumption(String.valueOf(consume));
+            mAccount.setActualConsumption(String.valueOf(CommonFunc.roundOff(consumption,1)));
 
             if(!showAlert) {
                 forNetMetering();
@@ -1317,6 +1339,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 penalty = "0";
             }
 
+            String []date = mAccount.getDateRead().split(" ");
+            String dateRead = date[0];
+
             try{
                 List<Rates> mRates = null;
                 if(!isMotherMeter) {
@@ -1359,7 +1384,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mp.printextEmphasized(name+"\n");
             mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
             mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
-            mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(mAccount.getDateRead()) +"\n");
+            mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");
             mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
             mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
             mp.printText("Multiplier:" + mAccount.getMultiplier(), "Consumer Type:" + a_class +"\n");
@@ -1378,18 +1403,18 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mp.printText("--------------------------------------------------------------"+"\n");
             mp.printText("Date                Prev                 Pres              KWH"+"\n");
 
-                int padding = 20 - mAccount.getReading().length() - mAccount.getConsume().length();
+                int padding = 20 - dateRead.length() - mAccount.getConsume().length();
                 String spacing = " ";
                 for (int p = 0; p < padding; p++) {
                     spacing = spacing.concat(" ");
                 }
                 String strRight = mAccount.getReading() + spacing + mAccount.getConsume();
-                int paddingLeft = 20 - mAccount.getDateRead().length() - mAccount.getInitialReading().length();
+                int paddingLeft = 20 - dateRead.length() - mAccount.getInitialReading().length();
                 String _spacing = " ";
                 for (int p = 0; p < paddingLeft; p++) {
                     _spacing = _spacing.concat(" ");
                 }
-                String strLeft = mAccount.getDateRead() + _spacing +mAccount.getInitialReading();
+                String strLeft = dateRead + _spacing +mAccount.getInitialReading();
                 mp.printText(strLeft,strRight+"\n");
             mp.printText("--------------------------------------------------------------"+"\n");
 
@@ -1527,12 +1552,12 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("Date                Prev                 Pres              KWH"+"\n");
                 String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
-                int padding1 = 20 - mAccount.getDateRead().length() - mAccount.getExportPreviousReading().length();
+                int padding1 = 20 - dateRead.length() - mAccount.getExportPreviousReading().length();
                 String paddingChar1 = " ";
                 for (int p = 0; p < padding1; p++) {
                     paddingChar1 = paddingChar1.concat(" ");
                 }
-                String strRight1 = mAccount.getDateRead() + paddingChar1 + mAccount.getExportPreviousReading();
+                String strRight1 = dateRead + paddingChar1 + mAccount.getExportPreviousReading();
 
                 int paddingLeft1 = 20 - mAccount.getExportReading().length() - exportConsume.length();
                 String _paddingLeft1 = " ";

@@ -20,7 +20,7 @@ public class Constant {
     /**Development
      * 8080
      * */
-//    public static String PORT = "8080/noreco_api/billing_api.asp";
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
 
