@@ -156,6 +156,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             rowObject = new JSONObject();
             String accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
             details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
+            String []arrDateRead = cursor.getString(cursor.getColumnIndex(DBInfo.DateRead)).split(" ");
             account = gson.fromJson(details, Account.class);
             String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
             int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -163,7 +164,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             reader = MainActivity.db.getReaderID(MainActivity.db);
             try {
                 rowObject.put(DBInfo.DateSync,cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
-                rowObject.put(DBInfo.DateRead,cursor.getString(cursor.getColumnIndex(DBInfo.DateRead)));
+                rowObject.put(DBInfo.DateRead,arrDateRead[0]);
                 rowObject.put(DBInfo.COOPID,cursor.getString(cursor.getColumnIndex(DBInfo.COOPID)));
                 rowObject.put("DistrictID",districtID);
                 rowObject.put("RouteNo",routeID);

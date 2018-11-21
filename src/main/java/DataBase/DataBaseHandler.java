@@ -631,14 +631,18 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String routeID = RouteCode.replace(sub,"");
 
         myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where " +
-                " ReadStatus = '" + mode + "' AND  RouteNo = '" + routeID + "' "; //
-        //(TownCode||'-'||RouteNo)
+                " ReadStatus = '" + mode + "' AND  RouteNo = '" + routeID + "' ";
 
-        if (filter.equalsIgnoreCase("LastName")) {
-            myQuery = myQuery + " Order By AccountID ASC,LastName ASC";
-        } else {
-            myQuery = myQuery + " Order BY AccountID, cast(IFNULL(SequenceNo, 99999) as REAL) ASC ";
+        if(mode.equalsIgnoreCase("Printed")) {
+            myQuery = myQuery + " Order By DateRead ASC";
+        }else{
+            if (filter.equalsIgnoreCase("LastName")) {
+                myQuery = myQuery + " Order By AccountID ASC,LastName ASC";
+            } else {
+                myQuery = myQuery + " Order BY AccountID, cast(IFNULL(SequenceNo, 99999) as REAL) ASC ";
+            }
         }
+
 
         Cursor c = sql.rawQuery(myQuery, null);
 

@@ -629,7 +629,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printText("", "" + "\n");
 
             if(arrearsBillMonthList.size() > 0) {
-                mp.printText("BillingDate        BillNumber          Amount          Surcharge" + "\n");
+                mp.printText("BillingDate        BillNumber         Amount         Surcharge" + "\n");
                 mp.printText("--------------------------------------------------------------" + "\n");
                 for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                     String billdate = arrearsBillMonthList.get(i);

@@ -25,3 +25,5 @@ Check Meter Type:
 
     ExportBill = negative value of net metering amount, this will be downloaded
                     from billing profile and deduct to net metering payable if positive value.
+
+kWhreading = threshold from billing_profile to determine the consumption wither very low or very high.

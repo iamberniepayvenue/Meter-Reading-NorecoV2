@@ -338,6 +338,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 float av = getAveraging();
                 if(av != -2000) {
                     double presentRead = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()),1);
+                    double reading = CommonFunc.round(av + presentRead,1);
+                    mAccount.setReading(String.valueOf(reading));
                     rateMultiplier = (av + presentRead) * multiplier + Float.valueOf(coreLoss);
                 }
             }
@@ -859,6 +861,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                         if(av != -2000) {
                             setKwh(av + presReading);
+                            double reading = CommonFunc.round(av + presReading,1);
+                            mAccount.setReading(String.valueOf(reading));
                         }
                     }
                 });
@@ -1492,7 +1496,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("", "" + "\n");
 
                 if(arrearsBillMonthList.size() > 0) {
-                    mp.printText("BillingMonth        BillNumber          Amount          Surcharge" + "\n");
+                    mp.printText("BillingMonth        BillNumber         Amount        Surcharge" + "\n");
                     mp.printText("--------------------------------------------------------------" + "\n");
                     for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                         String billdate = arrearsBillMonthList.get(i);

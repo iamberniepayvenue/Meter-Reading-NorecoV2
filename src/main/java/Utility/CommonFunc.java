@@ -94,7 +94,7 @@ public class CommonFunc {
 
     public static String getDateOnly() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd", Locale.getDefault());
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }

@@ -223,12 +223,13 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                 String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
                 int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
+                String []arrDateRead = cursor.getString(cursor.getColumnIndex(DBInfo.DateRead)).split(" ");
                 districtID = MainActivity.db.getDistrictID(MainActivity.db,routeID);
                 reader = MainActivity.db.getReaderID(MainActivity.db);
                 account = gson.fromJson(details, Account.class);
                 try {
                     rowObject.put(DBInfo.DateSync,cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
-                    rowObject.put(DBInfo.DateRead,cursor.getString(cursor.getColumnIndex(DBInfo.DateRead)));
+                    rowObject.put(DBInfo.DateRead,arrDateRead[0]);
                     rowObject.put(DBInfo.COOPID,cursor.getString(cursor.getColumnIndex(DBInfo.COOPID)));
                     rowObject.put("DistrictID",districtID);
                     rowObject.put("RouteNo",routeID);
@@ -282,7 +283,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("ExportDateCounter",exportDateCounter);
                     String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
                     String []strArray = billMonth.split("/");
-                    String yr = strArray[2]; //.substring(0,4);
+                    String yr = strArray[2];
                     String month = strArray[0];
                     billMonth = yr+month;
                     rowObject.put("billmonth",billMonth);
