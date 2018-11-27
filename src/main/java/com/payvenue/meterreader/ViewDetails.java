@@ -411,10 +411,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             JSONArray jsonArray = new JSONArray(mAccount.getArrears());
             for(int i = 0; i < jsonArray.length();i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                arrearsAmountList.add(jsonObject.getString("Amount"));
-                arrearsBillMonthList.add(jsonObject.getString("BillingDate"));
+                arrearsAmountList.add(jsonObject.getString("BillAmount"));
+                arrearsBillMonthList.add(jsonObject.getString("BillMonth"));
                 arrearsPenaltyList.add(jsonObject.getString("Penalty"));
-                arrearsBillNumberList.add(jsonObject.getString("BillNumber"));
+                arrearsBillNumberList.add(jsonObject.getString("BillNo"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -642,7 +642,24 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     String amount = arrearsAmountList.get(i);
                     String _penalty = arrearsPenaltyList.get(i);
                     String[] str = billdate.split(" ");
-                    mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
+
+                    int p1 = 20 - str[0].length() - billnumber.length();
+                    String paddingChar1 = " ";
+                    for (int p = 0; p < p1; p++) {
+                        paddingChar1 = paddingChar1.concat(" ");
+                    }
+                    String str1 = str[0] + paddingChar1 + billnumber;
+
+                    int p2 = 20 - amount.length() - _penalty.length();
+                    String _paddingLeft1 = " ";
+                    for (int p = 0; p < p2; p++) {
+                        _paddingLeft1 = _paddingLeft1.concat(" ");
+                    }
+                    String str2 = amount + _paddingLeft1 + _penalty;
+
+                    mp.printText(str1,str2+"\n");
+
+                    //mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
                 }
                 mp.printText("--------------------------------------------------------------" + "\n");
             }

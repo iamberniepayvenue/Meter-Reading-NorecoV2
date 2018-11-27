@@ -44,6 +44,10 @@ public class CommonFunc {
         return Float.parseFloat(todigit);
     }
 
+    public static float toFloat(String todigit) {
+        return Float.parseFloat(todigit);
+    }
+
     public static float round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -184,10 +188,26 @@ public class CommonFunc {
     }
 
 
-    public static String calcComponentAmount(double rate, double consumption) {
+
+    public static String calcComponentAmount(float rate, double consumption) {
         DecimalFormat df = new DecimalFormat("#.####");
-        double res = rate * consumption ;
+        double res = rate * consumption;
         return df.format(res);
+
+        //float res = (float)rate * (float)consumption ;
+        //return String.valueOf(res);
+    }
+
+
+    public static double calcComponentAmounthigher(float rate, double consumption) {
+        DecimalFormat df = new DecimalFormat("#.####");
+        double res = rate * consumption;
+//        Log.e("CommonFunc","rate :"+rate);
+//        Log.e("CommonFunc","consumption :"+consumption);
+//        Log.e("CommonFunc","calcComponentAmounthigher :"+ res);
+//        Log.e("CommonFunc","calcComponentAmounthigher :"+df.format(res));
+        return  round(res,4);//df.format(res);
+
     }
 
     public static float calcComponentTax(String isvatable, float amount, float ratemultiplier) {

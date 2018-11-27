@@ -308,6 +308,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
                     MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
                     Log.e(TAG,"upload:"+url);
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     Log.e(TAG,"UnsupportedEncodingException: " + e.getMessage());

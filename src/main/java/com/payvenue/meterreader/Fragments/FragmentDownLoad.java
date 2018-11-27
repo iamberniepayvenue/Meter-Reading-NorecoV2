@@ -311,7 +311,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 }
 
                                 myPreferences.savePrefInt("rd",0);
-                                Log.e(TAG,"fetchAccount: "+ cmdAccounts);
+                                //Log.e(TAG,"fetchAccount: "+ cmdAccounts);
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
                         }
@@ -347,7 +347,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                             + "&mac=" + mac
                                             + "&tagclass=" + tagC
                                             + "&rd=1";
-                                    Log.e(TAG,"1: "+ cmdAccounts);
+                                    //Log.e(TAG,"1: "+ cmdAccounts);
                                     String ddate = DB.getDueDate(DB,_list.get(i).getRouteID());
                                     MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",_list.get(i).getRouteID(),ddate,"rd", this);
                                 }
@@ -425,7 +425,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                     }
 
                     if(myPreferences.getPrefInt(Constant.THRESHOLD_COUNT) == 0){
-                        Log.e(TAG,"cmdThreshold: "+ cmdThreshold);
+                        //Log.e(TAG,"cmdThreshold: "+ cmdThreshold);
                         MainActivity.webRequest.sendRequest(cmdThreshold, "threshold", "","","", this);
                     }
 
@@ -762,8 +762,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 String arrears = obj.getString("Arrears");
                                 String interestFlag = obj.getString("InterestFlag");
                                 JSONArray jsonArray = new JSONArray(arrears);
-                                JSONObject jsonArr = null;
-                                JSONArray jsonArray1 = null;
+                                JSONObject jsonArr;
+                                JSONArray jsonArray1 = new JSONArray();
                                 if(jsonArray.length() > 0) {
                                     for(int a = 0; a < jsonArray.length(); a++){
                                         jsonArr = new JSONObject();
@@ -771,16 +771,17 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                         if(jsonObject.getString("Status").equalsIgnoreCase("UNPAID")) {
                                             jsonArr.put("BillNo",jsonObject.getString("BillNo"));
                                             jsonArr.put("BillMonth",jsonObject.getString("BillMonth"));
-                                            jsonArr.put("TotalAmount",jsonObject.getString("TotalAmount"));
+                                            jsonArr.put("BillAmount",jsonObject.getString("BillAmount"));
                                             if(interestFlag.equalsIgnoreCase("0")){
                                                 jsonArr.put("Penalty","0");
                                             }else{
                                                 jsonArr.put("Penalty",jsonObject.getString("Penalty"));
                                             }
                                         }
+
+                                        jsonArray1.put(jsonArr);
+                                        //Log.e(TAG,"here: "+ jsonObject.getString("Penalty"));
                                     }
-                                    jsonArray1 = new JSONArray();
-                                    jsonArray1.put(jsonArr);
                                 }
 
                                 String strArr;
@@ -789,7 +790,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 }else{
                                     strArr = jsonArray1.toString();
                                 }
-
+                                //Log.e(TAG,"strArr: "+ strArr);
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 account.setDueDate(param2);
 
@@ -828,7 +829,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 }
                             }else{
 
-                                Log.e(TAG,"here");
+                                //Log.e(TAG,"here");
                                 int accountCount = DB.getDataCountThisRoute(DB,params);
                                 if(accountCount > 0) {
                                     numberOfAccountSavingPerRoutes++;
@@ -884,8 +885,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                 default:
         }
 
-        //Log.e(TAG,"deletingtable: " + numberOfTimesDeletingTable);
-        //Log.e(TAG,"numberOfRoutesDownloaded: "+ numberOfRoutesDownloaded + "numberOfAccountSavingPerRoutes : "+ numberOfAccountSavingPerRoutes);
             if(numberOfRoutesDownloaded > 0 ) {
             if(numberOfRoutesDownloaded == numberOfAccountSavingPerRoutes) {
                 if (mDialog.isShowing()) {

@@ -76,14 +76,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         Button btnGenerate, btnTakePic;
         Context mcontext;
         boolean isOvalCheck = false, isRecycleCheck = false, isStopCheck = false, isChangeCheck = false;
-        boolean isStopMeter = false;
+        boolean isStopMeter = true;
         double maxreadingvalue = 0;
         String strReading = "", strRemarks = "", strDemands = "";
         double rateMultiplier,exportMultiplier;
         double multiplier,totalAmountDueExport = 0,netBillAmountExport = 0;
         double scPercentage;// = (float) 0.05;
-        double componentAmount, componentvat, componentltax, componentftax,lifelineDiscountRate,scDiscountedAmount,
+        double componentvat, componentltax, componentftax,lifelineDiscountRate,scDiscountedAmount,
                 lifelineDiscountAmount,totalLifelineDiscount,totalComponent, billedAmount;
+        double componentAmount;
         double scSubsidy = 0;
         double sol = 0;
         double overUnder = 0;
@@ -174,6 +175,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             }
 
             Log.e(TAG,"Classification: " + a_class);
+            Log.e(TAG,"multiplier: " + multiplier);
 
             isNetMetering = mAccount.getIsNetMetering();
 
@@ -330,12 +332,17 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mAccount.setTimeRead(CommonFunc.getTimeNow());
 
             String strConsume = mAccount.getConsume();
-            float flConsume = Float.parseFloat(strConsume);
-            rateMultiplier = flConsume;
+            //float flConsume = Float.parseFloat(strConsume);
+            rateMultiplier =  Double.parseDouble(strConsume); //flConsume;
 
 
-            /**STOP METER*/
-            if(!isStopMeter) {
+            /**STOP METER
+             *
+             *  isStopMeter will be false if reading is equal to prev. reading
+             *  if pressing ok button from alert dialog..
+             *
+             * */
+            if(isStopMeter) {
                 if (isStopCheck) {
                     float av = getAveraging();
                     if (av != -2000) {
@@ -346,7 +353,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         mAccount.setReading(String.valueOf(CommonFunc.round(presreading, 1)));
                         mAccount.setConsume(String.valueOf(CommonFunc.roundOff(rateMultiplier, 1)));
                         mAccount.setActualConsumption(String.valueOf(CommonFunc.round(average, 1)));
-                        //Log.e(TAG,"here here");
                     }
                 }
             }
@@ -405,28 +411,37 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
                     if(isHigherVoltage) {
+                        String _component;
                         int fixed = 0;
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                             componentAmount = rateSchedule.getComponentRate();
-                            strComponentAmount = String.valueOf(componentAmount);
+                            strComponentAmount = String.valueOf((float) componentAmount);
                             fixed = 1;
                         }
 
 
                         if (fixed == 0) {
-                            String _strComponentAmount;
 
                             String _rateType = rateSchedule.getRateType().toUpperCase();
-                            if (_rateType.equalsIgnoreCase("PERKW") || _rateType.equalsIgnoreCase("PKW") || _rateType.equalsIgnoreCase("P/KW")) {
+                            if (_rateType.equalsIgnoreCase("PERKW") || _rateType.toLowerCase().equalsIgnoreCase("PKW") || _rateType.toLowerCase().equalsIgnoreCase("P/KW")) {
                                 demandKWMininum = Double.valueOf(mAccount.getDemandKW());
-                                _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)demandKWMininum);
-                                componentAmount = CommonFunc.toDigit(_strComponentAmount);
-                                strComponentAmount = _strComponentAmount;
+                                //_component = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(),(float) demandKWMininum);
+                                componentAmount =  CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(),(float) demandKWMininum);
+                                        //CommonFunc.roundOff(Double.valueOf(_component),4);
+                                strComponentAmount = String.valueOf(componentAmount);
                             }else{
-                                _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)rateMultiplier);
-                                componentAmount = CommonFunc.toDigit(_strComponentAmount);
-                                strComponentAmount = _strComponentAmount;
+                                /**
+                                 *  rateMultiplier is consumption with coreloss and multiplier
+                                 * */
+                                //_component = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(), (float)rateMultiplier);
+                                componentAmount = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(), (float)rateMultiplier);
+                                        //CommonFunc.roundOff(Double.valueOf(_component),4);
+                                strComponentAmount = String.valueOf(componentAmount);
                             }
+                        }
+
+                        if(fixed == 1) {
+                            componentAmount =  CommonFunc.roundOff(Double.valueOf(strComponentAmount),4);
                         }
 
                         if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
@@ -450,12 +465,18 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             sol = componentAmount;
                         }
 
-                    }else{
+//                        Log.e(TAG,"RateComponent : " + rateSchedule.getRateComponent());
+//                        Log.e(TAG,"Multiplier : " + rateMultiplier);
+//                        Log.e(TAG,"componentAmount : " + componentAmount);
+//                        Log.e(TAG,"Amount : " + strComponentAmount);
+//                        Log.e(TAG,"---------------------------------------------");
+
+                    }else{ // end of higher voltage
                         int fixed = 0;
                         if (isLowerVoltage) {
                             if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                                 componentAmount = rateSchedule.getComponentRate();
-                                strComponentAmount = String.valueOf(componentAmount);
+                                strComponentAmount = String.valueOf((float) componentAmount);
                                 fixed = 1;
                             }
                         } else {
@@ -469,8 +490,14 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                         if (fixed == 0) {
                             String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)rateMultiplier);
-                            componentAmount = CommonFunc.toDigit(_strComponentAmount);
+
+                            componentAmount = CommonFunc.roundOff(Double.valueOf(_strComponentAmount),4);
+                                    //(float)CommonFunc.toDigit(_strComponentAmount);
                             strComponentAmount = _strComponentAmount;
+                        }
+
+                        if(fixed == 1) {
+                            componentAmount = CommonFunc.roundOff(Double.valueOf(strComponentAmount),4);
                         }
 
                         if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
@@ -590,7 +617,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
 
                 totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
-                billedAmount = totalComponent + arrearsPenalty + totalArrears;
+                billedAmount =  totalComponent + totalArrears + arrearsPenalty;
 
                 /** Not included */
             /*
@@ -603,11 +630,18 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                  *          is the total computation of payment included arrears,penalty, and advance payment
                  * */
 
-                billedAmount = CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
+                billedAmount =  billedAmount - Double.valueOf(mAccount.getAdvancePayment());
+                        //billedAmount - Double.valueOf(mAccount.getAdvancePayment());
+                        //CommonFunc.roundOff(billedAmount - Double.valueOf(mAccount.getAdvancePayment()),2);
+                        //- CommonFunc.roundOff(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
+                        //billedAmount - Double.valueOf(mAccount.getAdvancePayment());
+                        //CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
                 if (isNetMetering.equalsIgnoreCase("1")) {
                     netBillAmountExport = totalComponent - totalAmountDueExport;
                 }
 
+                //Log.e(TAG,"totalamount: " + CommonFunc.roundOff(totalComponent,2));//MainActivity.dec2.format(totalComponent)
+                //Log.e(TAG,"billedAmount: " + CommonFunc.roundOff(billedAmount,2)); //MainActivity.dec2.format(billedAmount)
 
                 double exportbill = 0;
                 int exportCounter = Integer.valueOf(mAccount.getExportDateCounter());
@@ -627,7 +661,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     }
                 }
 
-                mBill = new Bill(myRates, CommonFunc.round(totalComponent,2), billedAmount,netBillAmountExport,totalAmountDueExport);
+                mBill = new Bill(myRates, CommonFunc.roundOff(totalComponent,2), CommonFunc.roundOff(billedAmount,2),netBillAmountExport,totalAmountDueExport);
                 mAccount.setBill(mBill);
             }
 
@@ -649,13 +683,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 for(int i = 0; i < jsonArray.length();i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     arrearsPenalty = arrearsPenalty + Double.valueOf(jsonObject.getString("Penalty"));
-                    totalArrears = totalArrears + Double.valueOf(jsonObject.getString("TotalAmount"));
-                    arrearsAmountList.add(jsonObject.getString("TotalAmount"));
+                    totalArrears = totalArrears + Double.valueOf(jsonObject.getString("BillAmount"));
+                    arrearsAmountList.add(jsonObject.getString("BillAmount"));
                     arrearsBillMonthList.add(jsonObject.getString("BillMonth"));
                     arrearsPenaltyList.add(jsonObject.getString("Penalty"));
                     arrearsBillNumberList.add(jsonObject.getString("BillNo"));
                 }
-
+                Log.e(TAG,"simplifyArrears: here");
                 mAccount.setPenalty(String.valueOf(arrearsPenalty));
                 mAccount.setPrevBilling(String.valueOf(totalArrears));
 
@@ -829,10 +863,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
 
                 demandKWMininum = Double.valueOf(strDemands);
-                //DecimalFormat df = new DecimalFormat("#.####");
                 double dm = CommonFunc.roundOff(demandKWMininum * multiplier,2);
                 /**Update demandKWMininum*/
-                //Log.e(TAG,"demandKWMininum: " + dm);
                 mAccount.setDemandKW(String.valueOf(dm));
             }
 
@@ -871,7 +903,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        isStopMeter = true;
+
+                        isStopMeter = false;
 
                         if(av != -2000) {
                             double _av = av + presReading;
@@ -1347,7 +1380,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 if(!isMotherMeter) {
                     Bill mBill = mAccount.getBill();
                     mRates = mBill.getRates();
-
+                    //Log.e(TAG,"mRates: "+ mRates.toString());
                     /**Check duplicate name*/
                     if (listRateSegment.size() > 0) {
                         for (RateSegmentModel seg : listRateSegment) {
@@ -1529,7 +1562,24 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         String amount = arrearsAmountList.get(i);
                         String _penalty = arrearsPenaltyList.get(i);
                         String[] str = billdate.split(" ");
-                        mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
+
+                        int p1 = 20 - str[0].length() - billnumber.length();
+                        String paddingChar1 = " ";
+                        for (int p = 0; p < p1; p++) {
+                            paddingChar1 = paddingChar1.concat(" ");
+                        }
+                        String str1 = str[0] + paddingChar1 + billnumber;
+
+                        int p2 = 20 - amount.length() - _penalty.length();
+                        String _paddingLeft1 = " ";
+                        for (int p = 0; p < p2; p++) {
+                            _paddingLeft1 = _paddingLeft1.concat(" ");
+                        }
+                        String str2 = amount + _paddingLeft1 + _penalty;
+
+                        mp.printText(str1,str2+"\n");
+
+                        //mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
                     }
                     mp.printText("--------------------------------------------------------------" + "\n");
                 }
