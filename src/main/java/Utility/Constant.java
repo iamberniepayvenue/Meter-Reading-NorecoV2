@@ -20,7 +20,7 @@ public class Constant {
     /**Development
      * 8080
      * */
-   //public static String PORT = "8080/noreco_api/billing_api.asp";
+   // public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
     public static String DISCONNECTIONNOTICE = "Note: Pls pay in the office 2 days after receipt of this \n Statement of Account or within 7 days from Due Date" +

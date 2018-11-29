@@ -334,6 +334,10 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             String strConsume = mAccount.getConsume();
             //float flConsume = Float.parseFloat(strConsume);
             rateMultiplier =  Double.parseDouble(strConsume); //flConsume;
+            Log.e(TAG,"rateMultiplier1: "+ CommonFunc.roundTwoDecimals(rateMultiplier));
+            Log.e(TAG,"rateMultiplier2: "+ rateMultiplier);
+            rateMultiplier = CommonFunc.roundOff(rateMultiplier,2);
+            Log.e(TAG,"rateMultiplier3: "+ rateMultiplier);
 
 
             /**STOP METER
@@ -425,17 +429,14 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             String _rateType = rateSchedule.getRateType().toUpperCase();
                             if (_rateType.equalsIgnoreCase("PERKW") || _rateType.toLowerCase().equalsIgnoreCase("PKW") || _rateType.toLowerCase().equalsIgnoreCase("P/KW")) {
                                 demandKWMininum = Double.valueOf(mAccount.getDemandKW());
-                                //_component = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(),(float) demandKWMininum);
-                                componentAmount =  CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(),(float) demandKWMininum);
-                                        //CommonFunc.roundOff(Double.valueOf(_component),4);
+                                demandKWMininum = CommonFunc.roundOff(demandKWMininum,2);
+                                componentAmount =  CommonFunc.calcComponentAmount(Double.parseDouble(Amount),demandKWMininum);
                                 strComponentAmount = String.valueOf(componentAmount);
                             }else{
                                 /**
                                  *  rateMultiplier is consumption with coreloss and multiplier
                                  * */
-                                //_component = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(), (float)rateMultiplier);
-                                componentAmount = CommonFunc.calcComponentAmounthigher(rateSchedule.getComponentRate(), (float)rateMultiplier);
-                                        //CommonFunc.roundOff(Double.valueOf(_component),4);
+                                componentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), rateMultiplier);
                                 strComponentAmount = String.valueOf(componentAmount);
                             }
                         }
@@ -465,10 +466,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             sol = componentAmount;
                         }
 
+//                        @SuppressLint("DefaultLocale")
+//                        String rateAmount = String.format("%.4f",Float.valueOf(Amount));
+//                        //String amount = df.format(Double.parseDouble(r.getAmount()));
 //                        Log.e(TAG,"RateComponent : " + rateSchedule.getRateComponent());
 //                        Log.e(TAG,"Multiplier : " + rateMultiplier);
 //                        Log.e(TAG,"componentAmount : " + componentAmount);
 //                        Log.e(TAG,"Amount : " + strComponentAmount);
+//                        Log.e(TAG,"rateAmount : " + CommonFunc.roundOff(Double.parseDouble(strComponentAmount),4));
+//                        Log.e(TAG,"amount : " + CommonFunc.roundOff(Double.parseDouble(Amount),4));
 //                        Log.e(TAG,"---------------------------------------------");
 
                     }else{ // end of higher voltage
@@ -489,11 +495,9 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
                         if (fixed == 0) {
-                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)rateMultiplier);
-
-                            componentAmount = CommonFunc.roundOff(Double.valueOf(_strComponentAmount),4);
-                                    //(float)CommonFunc.toDigit(_strComponentAmount);
-                            strComponentAmount = _strComponentAmount;
+                            //String _strComponentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), rateMultiplier);
+                            componentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), rateMultiplier);
+                            strComponentAmount = String.valueOf(componentAmount);
                         }
 
                         if(fixed == 1) {
@@ -567,18 +571,21 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     if (isNetMetering.equalsIgnoreCase("1")) {
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
-                            String _strComponentAmount = CommonFunc.calcComponentAmount(rateSchedule.getComponentRate(), (float)exportMultiplier);
+                            //String _strComponentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
 
-                            amountDueExport = CommonFunc.toDigit(_strComponentAmount);
+                            amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
+                                    //CommonFunc.toDigit(_strComponentAmount);
 
 
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("generation system charges")) {
-                                amountDueExport = CommonFunc.toDigit(_strComponentAmount);
+                                amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
+                                //amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering system charge")) {
-                                amountDueExport = -CommonFunc.toDigit(_strComponentAmount);
+                                amountDueExport = -CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
+                                        //-CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering retail customer charge")) {
@@ -593,7 +600,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         }
                     }
 
-
+                    strComponentAmount = String.valueOf(CommonFunc.roundOff(Double.parseDouble(strComponentAmount),4));
                     myRates.add(new Rates(rateSchedule.getRateSegment(),
                             rateSchedule.getRateCode(),
                             rateSchedule.getRateComponent(),
@@ -631,17 +638,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                  * */
 
                 billedAmount =  billedAmount - Double.valueOf(mAccount.getAdvancePayment());
-                        //billedAmount - Double.valueOf(mAccount.getAdvancePayment());
-                        //CommonFunc.roundOff(billedAmount - Double.valueOf(mAccount.getAdvancePayment()),2);
-                        //- CommonFunc.roundOff(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
-                        //billedAmount - Double.valueOf(mAccount.getAdvancePayment());
-                        //CommonFunc.round(billedAmount,2) - CommonFunc.round(CommonFunc.toDigit(mAccount.getAdvancePayment()),2);
+
                 if (isNetMetering.equalsIgnoreCase("1")) {
                     netBillAmountExport = totalComponent - totalAmountDueExport;
                 }
 
-                //Log.e(TAG,"totalamount: " + CommonFunc.roundOff(totalComponent,2));//MainActivity.dec2.format(totalComponent)
-                //Log.e(TAG,"billedAmount: " + CommonFunc.roundOff(billedAmount,2)); //MainActivity.dec2.format(billedAmount)
+                //Log.e(TAG,"totalamount: " + MainActivity.dec2.format(totalComponent) );//MainActivity.dec2.format(totalComponent) CommonFunc.roundTwoDecimals(totalComponent)
+                //Log.e(TAG,"billedAmount: " + CommonFunc.roundTwoDecimals(billedAmount)); //MainActivity.dec2.format(billedAmount)
 
                 double exportbill = 0;
                 int exportCounter = Integer.valueOf(mAccount.getExportDateCounter());
@@ -865,6 +868,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 demandKWMininum = Double.valueOf(strDemands);
                 double dm = CommonFunc.roundOff(demandKWMininum * multiplier,2);
                 /**Update demandKWMininum*/
+                dm = CommonFunc.roundOff(dm,2);
                 mAccount.setDemandKW(String.valueOf(dm));
             }
 
@@ -1479,6 +1483,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
                                 @SuppressLint("DefaultLocale")
+                                        //CommonFunc.roundOff(Double.parseDouble(strComponentAmount),4)
                                 String rateAmount = String.format("%.4f",Float.valueOf(r.getRateAmount()));
                                 String amount = df.format(Double.parseDouble(r.getAmount()));
 

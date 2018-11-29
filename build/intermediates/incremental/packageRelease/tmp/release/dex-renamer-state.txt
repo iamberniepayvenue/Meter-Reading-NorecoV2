@@ -1,4 +1,4 @@
-#Tue Nov 27 17:28:50 PHT 2018
+#Thu Nov 29 14:35:06 PHT 2018
 base.0=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/release/0
 path.0=classes.dex
 renamed.0=classes.dex
