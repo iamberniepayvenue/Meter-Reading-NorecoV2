@@ -177,6 +177,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
                 rowObject.put("PrevReading",account.getInitialReading());
                 rowObject.put("NewReading",account.getReading());
                 rowObject.put("Consume",account.getConsume());
+                rowObject.put("ActualConsumption","0");
                 rowObject.put("Latitude",account.getLatitude());
                 rowObject.put("Longitude",account.getLongitude());
                 rowObject.put("ReaderID",reader);

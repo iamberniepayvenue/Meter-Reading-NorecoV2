@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +19,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.payvenue.meterreader.Adapter.AccountAdapter;
-import com.payvenue.meterreader.provider.SearchSuggestionProvider;
 
 import java.util.ArrayList;
 
@@ -189,45 +187,13 @@ public class AccountListActivity extends AppCompatActivity {
             getSearchData(routecode, currentfilter);
         }
 
-//        if(id == R.id.search) {
-//            super.onSearchRequested();
-//        }
-
-//        if(id == R.id.clear_search) {
-//            clearSearchHistory();
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-        handleSearch();
+        //handleSearch();
     }
 
-
-    private void handleSearch() {
-        searchAccount.clear();
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-
-//            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-//                    SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
-//            suggestions.saveRecentQuery(searchQuery, null);
-
-        }else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Log.e(TAG,"handleSearch: "+ intent.getData());
-            Log.e(TAG,"handleSearch: "+ intent.getDataString());
-            Log.e(TAG,"handleSearch: "+ intent.getScheme());
-        }
-    }
-
-    public void clearSearchHistory(){
-        new SearchRecentSuggestions(this,SearchSuggestionProvider.AUTHORITY,SearchSuggestionProvider.MODE)
-                .clearHistory();
-    }
-
-    //endregion
 }

@@ -85,7 +85,18 @@
             android:name="com.payvenue.meterreader.ViewDetails"
             android:label="@string/title_activity_view_details"
             android:logo="@android:color/transparent"
-            android:showAsAction="never" />
+            android:showAsAction="never" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ViewDetails" />
+        </activity>
         <activity
             android:name="com.payvenue.meterreader.AccountListActivity"
             android:label="Accounts"
@@ -131,7 +142,18 @@
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name="com.payvenue.meterreader.Accounts"
-            android:label="@string/title_activity_account_details" />
+            android:label="@string/title_activity_account_details" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".Accounts" />
+        </activity>
         <activity android:name="com.payvenue.meterreader.BillPreview" />
     </application>
 

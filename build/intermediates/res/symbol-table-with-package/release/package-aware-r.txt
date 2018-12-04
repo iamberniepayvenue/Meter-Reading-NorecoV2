@@ -1076,6 +1076,7 @@ id masked
 id media_actions
 id menu_scan
 id menu_scanner
+id menu_search
 id message
 id middle
 id mini

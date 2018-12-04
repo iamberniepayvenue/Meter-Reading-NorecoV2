@@ -12,7 +12,9 @@ public class Constant {
     public static String LIFELINE_POLICY_COUNT = "lifeline_policy_count";
     public static String RATE_CODE_COUNT = "rate_code";
     public static String THRESHOLD_COUNT = "threshold";
-
+    public static String NET_METERING_POLICY = "net_metering_policy";
+    public static String NET_METERING_RATE_SCHEDULE = "net_metering_rate";
+    public static String TAGCLASS = "TAGCLASS";
 
     /**Production*/
     public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
@@ -20,7 +22,7 @@ public class Constant {
     /**Development
      * 8080
      * */
-   // public static String PORT = "8080/noreco_api/billing_api.asp";
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
     public static String DISCONNECTIONNOTICE = "Note: Pls pay in the office 2 days after receipt of this \n Statement of Account or within 7 days from Due Date" +

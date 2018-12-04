@@ -188,25 +188,16 @@ public class CommonFunc {
     }
 
 
-
-//    public static String calcComponentAmount(float rate, double consumption) {
-//        DecimalFormat df = new DecimalFormat("#.####");
-//        double res = rate * consumption;
-//        return df.format(res);
-//
-//    }
-
-
     public static double calcComponentAmount(double rate, double consumption) {
+        while (true) {
 
 
-        if(!Double.isNaN(rate) && !Double.isNaN(consumption)) {
-            double prod = rate * consumption;
-            return prod;
+            if (!Double.isNaN(rate) && !Double.isNaN(consumption)) {
+                return rate * consumption;
+            }
+
+
         }
-
-        return  calcComponentAmount(Double.valueOf(rate), Double.valueOf(consumption));
-
     }
 
     public static double roundTwoDecimals(double d)

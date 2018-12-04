@@ -1376,17 +1376,17 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account = gson.fromJson(details, Account.class);
                 Bill bill = account.getBill();
                 if(bill != null){
-                    amount = amount + bill.getTotalBilledAmount();
+                    amount = amount + bill.getTotalAmount();
                 }
 
                 consumption = consumption + Float.valueOf(account.getConsume());
-                Log.e(TAG,"consumption:"+consumption);
-                Log.e(TAG,"amount:"+amount);
+                //Log.e(TAG,"consumption:"+consumption);
+                //Log.e(TAG,"amount:"+amount);
             }
         }
 
         String val = String.valueOf(consumption)+":"+String.valueOf(amount);
-        Log.e(TAG,"total: "+ val);
+        //Log.e(TAG,"total: "+ val);
         sql.close();
         db.close();
         return val;

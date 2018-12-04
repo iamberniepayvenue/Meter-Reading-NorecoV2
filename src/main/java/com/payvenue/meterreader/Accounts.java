@@ -1,6 +1,7 @@
     package com.payvenue.meterreader;
 
     import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,9 +116,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         private String isNetMetering;
         private String a_class;
         private Account mAccount;
+        private Account searchAccount;
         private boolean isHigherVoltage = false;
         private boolean isLowerVoltage = false;
         private boolean isMotherMeter = false;
+        private boolean isSearch = false;
 
 
         @Override
@@ -233,17 +238,31 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         }
 
         public void setValues() {
-
-            mSerial.setText(mAccount.getMeterSerialNo());
-            mAccountName.setText(mAccount.getLastName());
-            mAccountID.setText(mAccount.getAccountID());
-            mAccountClass.setText(mAccount.getAccountClassification());
-            mAccountAddress.setText(mAccount.getAddress());
-            String prevReading = mAccount.getInitialReading();
-            if(prevReading.equalsIgnoreCase(".") || prevReading.equalsIgnoreCase("")) {
-                mPrevReading.setText(" Previous Reading: 0 kwh");
+            if(!isSearch) {
+                mSerial.setText(mAccount.getMeterSerialNo());
+                mAccountName.setText(mAccount.getLastName());
+                mAccountID.setText(mAccount.getAccountID());
+                mAccountClass.setText(mAccount.getAccountClassification());
+                mAccountAddress.setText(mAccount.getAddress());
+                String prevReading = mAccount.getInitialReading();
+                if(prevReading.equalsIgnoreCase(".") || prevReading.equalsIgnoreCase("")) {
+                    mPrevReading.setText(" Previous Reading: 0 kwh");
+                }else{
+                    mPrevReading.setText(" Previous Reading: "+prevReading+" kwh");
+                }
             }else{
-                mPrevReading.setText(" Previous Reading: "+prevReading+" kwh");
+                searchAccount = MainActivity.selectedAccount;
+                mSerial.setText(mAccount.getMeterSerialNo());
+                mAccountName.setText(mAccount.getLastName());
+                mAccountID.setText(mAccount.getAccountID());
+                mAccountClass.setText(mAccount.getAccountClassification());
+                mAccountAddress.setText(mAccount.getAddress());
+                String prevReading = mAccount.getInitialReading();
+                if(prevReading.equalsIgnoreCase(".") || prevReading.equalsIgnoreCase("")) {
+                    mPrevReading.setText(" Previous Reading: 0 kwh");
+                }else{
+                    mPrevReading.setText(" Previous Reading: "+prevReading+" kwh");
+                }
             }
         }
 
@@ -300,7 +319,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         }
 
 
-                        if(Float.valueOf(consumption) >= Float.valueOf(scPolicyMin) && Float.valueOf(consumption) <= Float.valueOf(scPolicyMax)) {
+                        if(Float.valueOf(consumption) >= (float) scPolicyMin && Float.valueOf(consumption) <= (float) scPolicyMax) {
                             canAvailSCDiscount = true;
                         }else{
                             isSCOverPolicy = true;
@@ -332,13 +351,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             mAccount.setTimeRead(CommonFunc.getTimeNow());
 
             String strConsume = mAccount.getConsume();
-            //float flConsume = Float.parseFloat(strConsume);
             rateMultiplier =  Double.parseDouble(strConsume); //flConsume;
-            Log.e(TAG,"rateMultiplier1: "+ CommonFunc.roundTwoDecimals(rateMultiplier));
-            Log.e(TAG,"rateMultiplier2: "+ rateMultiplier);
             rateMultiplier = CommonFunc.roundOff(rateMultiplier,2);
-            Log.e(TAG,"rateMultiplier3: "+ rateMultiplier);
-
 
             /**STOP METER
              *
@@ -360,13 +374,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     }
                 }
             }
-
-
-//            Log.e(TAG,"Prev: "+ mAccount.getInitialReading());
-//            Log.e(TAG,"Pres: "+ mAccount.getReading());
-//            Log.e(TAG,"consumption: " + mAccount.getActualConsumption());
-//            Log.e(TAG,"kwh:"+ mAccount.getConsume());
-
 
             /**Check Lifeliner*/
             if (a_class.toLowerCase().equalsIgnoreCase("residential")) {
@@ -415,7 +422,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
                     if(isHigherVoltage) {
-                        String _component;
                         int fixed = 0;
                         if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
                             componentAmount = rateSchedule.getComponentRate();
@@ -466,17 +472,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             sol = componentAmount;
                         }
 
-//                        @SuppressLint("DefaultLocale")
-//                        String rateAmount = String.format("%.4f",Float.valueOf(Amount));
-//                        //String amount = df.format(Double.parseDouble(r.getAmount()));
-//                        Log.e(TAG,"RateComponent : " + rateSchedule.getRateComponent());
-//                        Log.e(TAG,"Multiplier : " + rateMultiplier);
-//                        Log.e(TAG,"componentAmount : " + componentAmount);
-//                        Log.e(TAG,"Amount : " + strComponentAmount);
-//                        Log.e(TAG,"rateAmount : " + CommonFunc.roundOff(Double.parseDouble(strComponentAmount),4));
-//                        Log.e(TAG,"amount : " + CommonFunc.roundOff(Double.parseDouble(Amount),4));
-//                        Log.e(TAG,"---------------------------------------------");
-
                     }else{ // end of higher voltage
                         int fixed = 0;
                         if (isLowerVoltage) {
@@ -495,7 +490,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
 
                         if (fixed == 0) {
-                            //String _strComponentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), rateMultiplier);
                             componentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), rateMultiplier);
                             strComponentAmount = String.valueOf(componentAmount);
                         }
@@ -571,21 +565,14 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     if (isNetMetering.equalsIgnoreCase("1")) {
                         exportMultiplier = Float.valueOf(mAccount.getExportConsume());
                         if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
-                            //String _strComponentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
-
                             amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
-                                    //CommonFunc.toDigit(_strComponentAmount);
-
-
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("generation system charges")) {
                                 amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
-                                //amountDueExport = CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering system charge")) {
                                 amountDueExport = -CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
-                                        //-CommonFunc.toDigit(_strComponentAmount);
                             }
 
                             if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering retail customer charge")) {
@@ -643,8 +630,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     netBillAmountExport = totalComponent - totalAmountDueExport;
                 }
 
-                //Log.e(TAG,"totalamount: " + MainActivity.dec2.format(totalComponent) );//MainActivity.dec2.format(totalComponent) CommonFunc.roundTwoDecimals(totalComponent)
-                //Log.e(TAG,"billedAmount: " + CommonFunc.roundTwoDecimals(billedAmount)); //MainActivity.dec2.format(billedAmount)
 
                 double exportbill = 0;
                 int exportCounter = Integer.valueOf(mAccount.getExportDateCounter());
@@ -1068,6 +1053,58 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             getMenuInflater().inflate(R.menu.account_details, menu);
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+            if(searchView != null) {
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+                searchView.setIconifiedByDefault(false);
+                searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                    @Override
+                    public boolean onClose() {
+                        return false;
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        return false; //do the default
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        //NOTE: doing anything here is optional, onNewIntent is the important bit
+                        if (s.length() > 1) {
+                            MainActivity.db.getAccountDetails(MainActivity.db, s,2);
+                            isSearch = true;
+                            setValues();
+
+                        } else if (s.length() == 0) {
+                            //TODO: reset the displayed data
+                        }
+                        return false;
+                    }
+                });
+
+                int searchCloseButtonId = searchView.getContext().getResources()
+                        .getIdentifier("android:id/search_close_btn", null, null);
+                ImageView closeButton = (ImageView) searchView.findViewById(searchCloseButtonId);
+
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isSearch = false;
+                        setValues();
+
+                        int searchCloseButtonId = searchView.getContext().getResources()
+                                .getIdentifier("android:id/search_src_text", null, null);
+                        EditText et = (EditText) findViewById(searchCloseButtonId);
+                        et.setText("");
+
+                        //Clear query
+                        searchView.setQuery("", false);
+                    }
+                });
+            }
             return true;
         }
 
@@ -1093,12 +1130,18 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     showToast("Rear Facing Camera Unavailable");
                 }
             }
+
             return super.onOptionsItemSelected(item);
         }
 
         public boolean isCameraAvailable() {
             PackageManager pm = this.getPackageManager();
             return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        }
+
+        @Override
+        protected void onNewIntent(Intent intent) {
+            setIntent(intent);
         }
 
         @Override

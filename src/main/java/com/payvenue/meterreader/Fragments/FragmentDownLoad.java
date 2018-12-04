@@ -273,7 +273,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                             dueDate = obj.getString("DueDate");
                             tagClass = obj.getString("TagClass");
                             route = gson.fromJson(obj.toString(), Route.class);
-                            myPreferences.savePrefString("TAGCLASS",tagClass);
+                            myPreferences.savePrefString(Constant.TAGCLASS,tagClass);
                             /**check to avoid duplication of routes and accounts*/
                             ifRouteExist = DB.checkRouteIsExist(DB,routeID,districtID);
                             if(!ifRouteExist) {
@@ -330,9 +330,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                         if(!params.equalsIgnoreCase("1")){
 
-                            String tagC = myPreferences.getPrefString("TAGCLASS");
+                            String tagC = myPreferences.getPrefString(Constant.TAGCLASS);
                             int rd = myPreferences.getPrefInt("rd");
-                            Log.e(TAG,"rd: "+ rd);
+                            //Log.e(TAG,"rd: "+ rd);
                             if(rd == 0)  {
                                 ArrayList<Route> _list = DB.getRoute(DB);
 
@@ -410,12 +410,20 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                         if(myPreferences.getPrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT) == 0) {
                             MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
                         }
-                    }else {
+                    }else if (tagClass == "0") {
                         if (myPreferences.getPrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT) == 0) {
                             MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "", "", "", this);
                         }
 
                         if(myPreferences.getPrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
+                        }
+                    }else {
+                        if (myPreferences.getPrefInt(Constant.NET_METERING_POLICY) == 0) {
+                            MainActivity.webRequest.sendRequest(cmdPolicy, "Policy", "", "", "", this);
+                        }
+
+                        if(myPreferences.getPrefInt(Constant.NET_METERING_RATE_SCHEDULE) == 0) {
                             MainActivity.webRequest.sendRequest(cmdSchedule, "Schedule", "","","", this);
                         }
                     }
@@ -601,18 +609,26 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     PolicyCode, PolicyType,
                                     CustomerClass, MinkWh, MaxkWh,
                                     PercentAmount);
-                            if(CustomerClass.toLowerCase().contains("higher")) {
+
+                             String tclass = myPreferences.getPrefString(Constant.TAGCLASS);
+                            if(tclass.equalsIgnoreCase("1")) {
                                 if(save == arraylength) {
                                     myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,save);
                                 }else{
                                     myPreferences.savePrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT,0);
                                 }
 
-                            }else{
+                            }else if (tclass.equalsIgnoreCase("0")){
                                 if(save == arraylength) {
                                     myPreferences.savePrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT,save);
                                 }else{
                                     myPreferences.savePrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT,0);
+                                }
+                            }else {
+                                if(save == arraylength) {
+                                    myPreferences.savePrefInt(Constant.NET_METERING_POLICY,save);
+                                }else{
+                                    myPreferences.savePrefInt(Constant.NET_METERING_POLICY,0);
                                 }
                             }
                         }
@@ -669,18 +685,24 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     rateschedtype,amount,isUnderOver,islifeline,
                                     isscdiscount,dateFrom,extra1,IsExport);
 
-
-                            if(classification.toLowerCase().contains("higher")) {
+                            String tclass = myPreferences.getPrefString(Constant.TAGCLASS);
+                            if(tclass.equalsIgnoreCase("1")) {
                                 if(save == arraylength) {
                                     myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT, save);
                                 }else{
                                     myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT, 0);
                                 }
-                            }else {
+                            }else if(tclass.equalsIgnoreCase("0")){
                                 if(save == arraylength) {
                                     myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,save);
                                 }else{
                                     myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,0);
+                                }
+                            } else {
+                                if(save == arraylength) {
+                                    myPreferences.savePrefInt(Constant.NET_METERING_RATE_SCHEDULE,save);
+                                }else{
+                                    myPreferences.savePrefInt(Constant.NET_METERING_RATE_SCHEDULE,0);
                                 }
                             }
                         }
