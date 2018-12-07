@@ -814,7 +814,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             c = sql.rawQuery(myQuery, null);
         }
 
-        Log.e(TAG,"getAccountDetails :" + myQuery);
+        //Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 

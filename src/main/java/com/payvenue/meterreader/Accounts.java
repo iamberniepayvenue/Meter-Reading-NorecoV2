@@ -131,7 +131,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-            Log.e(TAG,"Current Page");
+            Log.e(TAG,TAG);
 
             db = new DataBaseHandler(this);
 
@@ -179,8 +179,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 multiplier = Float.valueOf(mAccount.getMultiplier());
             }
 
-            Log.e(TAG,"Classification: " + a_class);
-            Log.e(TAG,"multiplier: " + multiplier);
 
             isNetMetering = mAccount.getIsNetMetering();
 
@@ -627,7 +625,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 billedAmount =  billedAmount - Double.valueOf(mAccount.getAdvancePayment());
 
                 if (isNetMetering.equalsIgnoreCase("1")) {
-                    netBillAmountExport = totalComponent - totalAmountDueExport;
+                    if(totalAmountDueExport < 0) {
+                        netBillAmountExport = totalComponent + totalAmountDueExport;
+                    }else{
+                        netBillAmountExport = totalComponent - totalAmountDueExport;
+                    }
                 }
 
 
@@ -677,7 +679,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     arrearsPenaltyList.add(jsonObject.getString("Penalty"));
                     arrearsBillNumberList.add(jsonObject.getString("BillNo"));
                 }
-                Log.e(TAG,"simplifyArrears: here");
+
                 mAccount.setPenalty(String.valueOf(arrearsPenalty));
                 mAccount.setPrevBilling(String.valueOf(totalArrears));
 
@@ -1003,7 +1005,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         public void onMyDialogDismiss(int tag) {
             if(tag == 0) {
                 double consumeExport = CommonFunc.round((maxreadingvalue + Double.parseDouble(mAccount.getExportReading())) - Double.parseDouble(mAccount.getExportPreviousReading()), 2);
-                double kwhExport = consumeExport * multiplier; //+ Float.valueOf(coreLoss);
+                double kwhExport = consumeExport * multiplier;
                 mAccount.setExportConsume(String.valueOf(kwhExport));
                 mAccount.setActualExportConsume(String.valueOf(consumeExport));
                 displayButtons();
@@ -1011,7 +1013,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         }
 
         public float getAveraging() {
-            //if (mAccount.getIsChangeMeter().equals("1")) {
             float val;
                 String strAveraging = mAccount.getAveraging();
                 try {
@@ -1037,7 +1038,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     showToast("No availbale past 3 consumption(averaging)..");
                     val = -2000;
                 }
-            //}
+
 
             return val;
         }
@@ -1526,7 +1527,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
                                 @SuppressLint("DefaultLocale")
-                                        //CommonFunc.roundOff(Double.parseDouble(strComponentAmount),4)
                                 String rateAmount = String.format("%.4f",Float.valueOf(r.getRateAmount()));
                                 String amount = df.format(Double.parseDouble(r.getAmount()));
 
@@ -1626,8 +1626,6 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         String str2 = amount + _paddingLeft1 + _penalty;
 
                         mp.printText(str1,str2+"\n");
-
-                        //mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
                     }
                     mp.printText("--------------------------------------------------------------" + "\n");
                 }

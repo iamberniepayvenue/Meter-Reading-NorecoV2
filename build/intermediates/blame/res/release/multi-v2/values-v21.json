@@ -4,7 +4,7 @@
             "outputFile": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a12849bfc2e3dc74b116be95580d1b9b/res/values-v21/values-v21.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/78fe56243529a3fc2936159b937148ad/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,5",
                         "startColumns": "4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/1e5e95699f58f01a5273e2df3accf703/res/values-v21/values-v21.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/310a8799232be6b46a587db422dcc08f/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -42,7 +42,7 @@
                     }
                 },
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/e4ba7003aa0d093783e2209ec70c8ea8/res/values-v21/values-v21.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/be6b1ee9bad44cb231c93b180f44538b/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -61,7 +61,7 @@
                     }
                 },
                 {
-                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/e6d5e9f991958fa9103f0dd18d0f9791/res/values-v21/values-v21.xml",
+                    "source": "/Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/b2ae867781ece3c5388799e8d96cae8a/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,19,20,21,22,24,26,27,28,29,30,32,34,36,38,40,42,43,48,50,52,53,54,56,58,59,60,61,62,63,107,110,154,157,160,162,164,166,169,171,174,175,176,179,180,181,182,183,184,187,188,190,192,194,196,200,202,203,204,205,207,211,213,215,216,217,218,219,221,222,223,233,234,235,247",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

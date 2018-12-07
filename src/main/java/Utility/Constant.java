@@ -25,9 +25,9 @@ public class Constant {
     //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
-    public static String DISCONNECTIONNOTICE = "Note: Pls pay in the office 2 days after receipt of this \n Statement of Account or within 7 days from Due Date" +
-                " to avoid \n Penalty.";
-
+    public static String DISCONNECTIONNOTICE = "Pursuant to NORECO II Policy on Delinquent Accounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills. " +
+            " \n \n In connection hereto, please pay the aforementioned bills \n within forty eight (48) hours from receipt hereof,otherwise, we will be constrained to disconnect your electric service \n without further notice." +
+            " \n \n Please disregard this Notice of Disconnection if you have \n already paid.";
     public static String OFFICIALRECIEPT = "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
 
 
