@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -376,29 +377,43 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     }
 
     private void exportDB() {
-        File f = new File(Environment.getExternalStorageDirectory(),"Documents");
-        if(!f.exists()) {
-            f.mkdirs();
-        }
 
-        File sd = Environment.getExternalStorageDirectory();
-        File data = Environment.getDataDirectory();
-        FileChannel source = null;
-        FileChannel destination = null;
-        String currentDBPath = "/data/" + "com.payvenue.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
-        String backupDBPath = "Documents/" + DBInfo.DATABASE_NAME + ".db";
-        File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
-        try {
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Toast.makeText(mcontext, "DB Exported!", Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(mcontext, e.getMessage(), Toast.LENGTH_LONG).show();
+
+        //check if sd card is available
+        String state;
+        state = Environment.getExternalStorageState();
+        if(Environment.MEDIA_MOUNTED.equals(state))
+        {
+            File sqliteDir = Environment.getDataDirectory();
+            File root = Environment.getExternalStorageDirectory();
+            File dir = new File(root.getAbsolutePath()+"/Documents");
+            if(!dir.exists()) {
+                dir.mkdir();
+            }
+
+
+            String currentDBPath = "/data/" + "com.payvenue.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
+            File backupDB = new File(dir,DBInfo.DATABASE_NAME  +".db");
+            File currentDB = new File(sqliteDir,currentDBPath);
+
+            try {
+                FileChannel source = new FileInputStream(currentDB).getChannel();
+                FileChannel destination = new FileOutputStream(backupDB).getChannel();
+                destination.transferFrom(source, 0, source.size());
+                source.close();
+                destination.close();
+                Toast.makeText(mcontext, "DB Exported!", Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Log.e(TAG,e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG,"IOException:"+e.getMessage());
+            }
+        }
+        else
+        {
+            Toast.makeText(mcontext, "sd card not found", Toast.LENGTH_LONG).show();
         }
     }
 }
