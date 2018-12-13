@@ -35,6 +35,7 @@ import Model.Account;
 import Model.Bill;
 import Model.RateSegmentModel;
 import Model.Rates;
+import Utility.BixolonPrinterClass;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.MobilePrinter;
@@ -314,7 +315,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             } else {
                 //preparePrint();
                 if (MainActivity.mIsConnected) {
-                    preparePrint();
+                    printToBixolon();
+                    //preparePrint();
                 } else {
                     Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
                 }
@@ -433,6 +435,18 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         return name;
+    }
+
+    public void printToBixolon() {
+        BixolonPrinterClass b = new BixolonPrinterClass(this);
+        b.printText("Account No:"+ mAccount.getAccountID()+"\n");
+        b.printText("Address:"+mAccount.getAddress()+"\n");
+        b.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
+        b.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to \n");
+        b.printText("Due Date: "+mAccount.getDueDate()+"\n");//
+        b.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
+        b.printText("Multiplier:" + mAccount.getMultiplier()+"  Consumer Type: RES" +"\n");
+        b.printText("Consumption:" + mAccount.getActualConsumption()+"  BillMonth:" + mAccount.getBillMonth()+"\n");
     }
 
     public void preparePrint() {

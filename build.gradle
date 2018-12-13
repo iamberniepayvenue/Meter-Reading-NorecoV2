@@ -59,7 +59,7 @@ allprojects {
 
 dependencies {
     //implementation 'com.android.support:support-v4:26.1.0'
-    implementation files('libs/BixolonPrinter.jar')
+    implementation files('libs/BixolonPrinterClass.jar')
     implementation files('libs/bixolon_printer.jar')
     implementation files('libs/WoosimLib240.jar')
     implementation files('libs/woosimprinter_bt.jar')
