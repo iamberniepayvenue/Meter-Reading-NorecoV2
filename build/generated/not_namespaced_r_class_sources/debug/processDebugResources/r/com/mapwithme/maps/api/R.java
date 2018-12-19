@@ -21,9 +21,9 @@ public final class R {
         public static final int btn_green_selector = 0x7f080062;
         public static final int gray = 0x7f08006d;
         public static final int green = 0x7f08006e;
-        public static final int overflow = 0x7f0800a0;
-        public static final int pattern = 0x7f0800a1;
-        public static final int shadow = 0x7f0800a7;
+        public static final int overflow = 0x7f0800a1;
+        public static final int pattern = 0x7f0800a2;
+        public static final int shadow = 0x7f0800a8;
     }
     public static final class id {
         private id() {}

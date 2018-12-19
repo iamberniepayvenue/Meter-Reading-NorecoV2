@@ -9,6 +9,8 @@ import com.woosim.bt.WoosimPrinter;
 
 import java.io.IOException;
 
+import static com.payvenue.meterreader.MainActivity.whichPrinter;
+
 
 public class MobilePrinter {
 
@@ -18,9 +20,8 @@ public class MobilePrinter {
     static private byte[] cardData;
     static private byte[] extractdata = new byte[300];
     static String EUC_KR = "EUC-KR";
-    static final int LINE_CHARS = 63;
+    static int LINE_CHARS = 63;
     private static final String TAG = "MobilePrinter";
-
 
 
     public MobilePrinter(Context c) {
@@ -66,6 +67,12 @@ public class MobilePrinter {
 
 
     public void printText(String leftText, String rightText) {
+        //byte[] init = {0x1b, '@'};
+        //woosim.controlCommand(init, init.length);
+
+        if(whichPrinter.equalsIgnoreCase("bix")) {
+            LINE_CHARS = 47;
+        }
 
         int padding = LINE_CHARS - leftText.length() - rightText.length();
         String paddingChar = " ";
@@ -95,24 +102,42 @@ public class MobilePrinter {
     }
 
     public void printTextEmphasized(String leftText, String rightText) {
+
         int padding = 30 - leftText.length() - rightText.length();
+        int font = 1;
+        boolean emphasis = false;
+        if(whichPrinter.equalsIgnoreCase("bix")) {
+            padding = 46 - leftText.length() - rightText.length();
+            emphasis = true;
+            font = 0;
+        }
+
         String paddingChar = " ";
         for (int i = 0; i < padding; i++) {
             paddingChar = paddingChar.concat(" ");
         }
 
-        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, false);
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, font, emphasis);
         woosim.printSpool(true);
     }
 
     public void printTextEmphasized1(String leftText, String rightText) {
         int padding = 31 - leftText.length() - rightText.length();
+
+        int font = 1;
+        boolean emphasis = false;
+        if(whichPrinter.equalsIgnoreCase("bix")) {
+            padding = 46 - leftText.length() - rightText.length();
+            font = 0;
+            emphasis = true;
+        }
+
         String paddingChar = " ";
         for (int i = 0; i < padding; i++) {
             paddingChar = paddingChar.concat(" ");
         }
 
-        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, false);
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, font, emphasis);
         woosim.printSpool(true);
     }
 
@@ -146,7 +171,12 @@ public class MobilePrinter {
     }
 
     public void printextEmphasized(String text) {
-        woosim.saveSpool(EUC_KR, text , 2, false);
+        int font = 2;
+        if(whichPrinter.equalsIgnoreCase("bix")) {
+            font = 1;
+        }
+
+        woosim.saveSpool(EUC_KR, text , font, false);
         woosim.printSpool(true);
     }
 
@@ -157,15 +187,22 @@ public class MobilePrinter {
 
 
     public void printBitmap(String path) {
+
         try {
-            int r = woosim.printBitmap(path);
+            woosim.printBitmap(path);
             byte[] ff ={0x0c};
             woosim.controlCommand(ff, 1);
             woosim.printSpool(true);
         } catch (IOException e) {
-            e.printStackTrace();
             Log.e(TAG,"printBitmap : " + e.getMessage());
         }
+    }
+
+    public void printBMPByte(byte[] b,int length) {
+        woosim.printBitmap(b,length);
+        byte[] ff ={0x0c};
+        woosim.controlCommand(ff, 1);
+        woosim.printSpool(true);
     }
 
     public void barcode(String AccountID) {
@@ -173,10 +210,12 @@ public class MobilePrinter {
     }
 
     public int setConnection(String address) {
-
         int reVal = woosim.BTConnection(address, false);
-
         return reVal;
+    }
+
+    public void disconnect() {
+        woosim.closeConnection();
     }
 
     private static void ToastMessage() {

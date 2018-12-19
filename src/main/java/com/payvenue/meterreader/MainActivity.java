@@ -41,6 +41,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bixolon.printer.BixolonPrinter;
 import com.mapswithme.maps.api.MapsWithMeApi;
 import com.payvenue.meterreader.Fragments.FragmentDownLoad;
 import com.payvenue.meterreader.Fragments.FragmentFound;
@@ -49,6 +50,7 @@ import com.payvenue.meterreader.Fragments.FragmentReading;
 import com.payvenue.meterreader.Fragments.FragmentRoute;
 import com.payvenue.meterreader.Fragments.FragmentUpload;
 import com.payvenue.meterreader.Fragments.RatesFragment;
+import com.payvenue.meterreader.Interface.BixolonInterface;
 import com.woosim.bt.WoosimPrinter;
 
 import java.text.DecimalFormat;
@@ -60,18 +62,19 @@ import Model.Account;
 import Model.Bill;
 import Model.ConnSettings;
 import Model.Reader;
+import Utility.BixolonPrinterClass;
 import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.MobilePrinter;
+import Utility.MyProgressBar;
 import Utility.WebRequest;
 import device.scanner.DecodeResult;
 import device.scanner.IScannerService;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BixolonInterface {
     private static Thread thread;
     private static Handler handler;
-
 
     // private DataBaseHandler datasource;
 
@@ -95,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
     static private BluetoothAdapter mBtAdapter;
     public static ArrayAdapter<String> mPairedDevicesArrayAdapter;
     static ArrayAdapter<String> mNewDevicesArrayAdapter;
-    static String address;
+    public static String address;
     public static Dialog dialog;
-    static boolean mIsConnected = false;
+    public static boolean mIsConnected = false;
 
     public static View header;
     public static TextView tv_userid;
@@ -110,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
     public static String myMode;
     public static Reader reader;
     public static ConnSettings connSettings;
-    //public static Cursor cursorRateSegment;
-    //public static ArrayList<Components> componentsList = new ArrayList<>();
+    public static String whichPrinter;
+    public static BixolonPrinterClass bp;
 
 
 
@@ -122,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
     static String EUC_KR = "EUC-KR";
     static final int LINE_CHARS = 62;
     private static final String TAG = "MainActivity";
+    private MyProgressBar myProgressBar;
+
 
     public interface Modes {
 
@@ -202,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -284,7 +291,18 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
                     case R.id.summary:
-                        printAccountSummary();
+                        if(mIsConnected) {
+                            myProgressBar = MyProgressBar.newInstance(MainActivity.this);
+                            if(whichPrinter.equalsIgnoreCase("woo")) {
+                                myProgressBar.setTitle("Printing process...");
+                                printAccountSummary();
+                            }else{
+                                myProgressBar.setTitle("Printing process...");
+                                printLogoBix();
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Printer is not connected.",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     default:
                         break;
@@ -659,30 +677,50 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             mBtAdapter.cancelDiscovery();
             // Get the device MAC address, which is the last 17 chars in the View
+
+
+
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
+            String printerName = info.substring(0,info.length()-17);
+            int reVal = 0;
+            if(printerName.toLowerCase().contains("woosim")) {
+                whichPrinter = "woo";
+                reVal = printer.setConnection(address);
+            }else {
+                whichPrinter = "bix";
+                bp = BixolonPrinterClass.newInstance(getApplicationContext());
+                bp.setConnection(address);
+            }
 
-            int reVal = printer.setConnection(address);
-
+            //reVal = printer.setConnection(address);
             if (reVal == 1) {
-                Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
+                if(whichPrinter.equalsIgnoreCase("woo")) {
+                    Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+
                 mIsConnected = true;
-                t.show();
+
             } else if (reVal == -2) {
-                Toast t = Toast.makeText(getBaseContext(), "NOT CONNECTED", Toast.LENGTH_SHORT);
-                t.show();
+                if(whichPrinter.equalsIgnoreCase("woo")) {
+                    Toast t = Toast.makeText(getBaseContext(), "NOT CONNECTED", Toast.LENGTH_SHORT);
+                    t.show();
+                }
             } else if (reVal == -5) {
                 Toast t = Toast.makeText(getBaseContext(), "DEVICE IS NOT BONDED", Toast.LENGTH_SHORT);
                 t.show();
             } else if (reVal == -6) {
-                Toast t = Toast.makeText(getBaseContext(), "ALREADY CONNECTED", Toast.LENGTH_SHORT);
-                t.show();
+                if(whichPrinter.equalsIgnoreCase("woo")) {
+                    Toast t = Toast.makeText(getBaseContext(), "ALREADY CONNECTED", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+
             } else if (reVal == -8) {
                 Toast t = Toast.makeText(getBaseContext(), "Please enable your Bluetooth and re-run this program!", Toast.LENGTH_LONG);
                 t.show();
             } else {
-                Toast t = Toast.makeText(getBaseContext(), "ELSE", Toast.LENGTH_SHORT);
-                t.show();
+                Log.e(TAG,"here: "+reVal);
             }
 
             dialog.dismiss();
@@ -691,39 +729,85 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    public void printAccountSummary() {
+    public void woosimPrint(MobilePrinter mp) {
+        String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
+        mp.printBitmap(path);
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("                      READING STATISTICS                      "+ "\n");
+        mp.printText("\n");
+        mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records     :   "+ db.getActiveRecords(db) + "\n");
+        mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
+        mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
+        mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+        mp.printText("Zero Consumption  :   "+db.getZeroConsumption(db));
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("\n");
+        db.getReader(db);
+        mp.printText("Reader : "+reader.getReaderName(),""+CommonFunc.getDateComplete() + "\n");
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("\n");
+        mp.printText("                       READING SUMMARY                        "+ "\n");
+        mp.printText("=============================================================="+ "\n");
+        mp.printText("  Account    Reading    KWH Used    Amount    Time   Remarks"  + "\n");
+        mp.printText("=============================================================="+ "\n");
+    }
 
-        if(mIsConnected) {
+    public void bixolonPrint() {
+        if(bp == null) {
+            bp = BixolonPrinterClass.newInstance(this);
+        }
+
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("             READING STATISTICS"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records     :   "+ db.getActiveRecords(db) + "\n");
+        bp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
+        bp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
+        bp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+        bp.printText("Zero Consumption  :   "+db.getZeroConsumption(db),BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        db.getReader(db);
+        bp.printText("Reader : "+reader.getReaderName(),""+CommonFunc.getDateComplete() + "\n");
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("              READING SUMMARY"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("================================================"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText(" Account Reading  KWHUsed  Amount  Time  Remarks"  + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        bp.printText("================================================"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+    }
+
+    public void printLogoBix() {
+        if(bp != null) {
+            Log.e(TAG,"not null");
+            bp.printBitmap(this);
+        }else{
+            Log.e(TAG,"null");
+            BixolonPrinterClass.newInstance(this).printBitmap(this);
+        }
+    }
+
+    public void printAccountSummary() {
+        final MobilePrinter mp = MobilePrinter.getInstance(this);
             //ArrayList<Account> list = new ArrayList<>();
             ArrayList<Account> list =  db.summaryDetails(db);
-            MobilePrinter mp = MobilePrinter.getInstance(this);
-            String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
-            mp.printBitmap(path);
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("                      READING STATISTICS                      "+ "\n");
-            mp.printText("\n");
-            mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records       :   "+ db.getActiveRecords(db) + "\n");
-            mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
-            mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
-            mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
-            mp.printText("Zero Consumption  :   "+db.getZeroConsumption(db));
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("\n");
-            db.getReader(db);
-            mp.printText("Reader : "+reader.getReaderName(),""+CommonFunc.getDateComplete() + "\n");
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("\n");
-            mp.printText("                       READING SUMMARY                        "+ "\n");
-            mp.printText("=============================================================="+ "\n");
-            mp.printText("  Account    Reading    KWH Used    Amount    Time   Remarks"  + "\n");
-            mp.printText("=============================================================="+ "\n");
+
+            if(whichPrinter.equalsIgnoreCase("woo")){
+                woosimPrint(mp);
+            }else{
+                bixolonPrint();
+            }
+
             if(list.size() > 0) {
                 try{
-
                     for(Account a: list) {
                         String accountID = a.getAccountID();
                         String reading = a.getReading();
@@ -736,7 +820,7 @@ public class MainActivity extends AppCompatActivity {
                         double _amount = 0;
                         String amount;
                         if (bill != null) {
-                            amount = MainActivity.dec2.format(bill.getTotalBilledAmount());
+                            amount = MainActivity.dec2.format(bill.getTotalAmount());
                         }else{
                             amount = MainActivity.dec2.format(_amount);
                         }
@@ -754,7 +838,12 @@ public class MainActivity extends AppCompatActivity {
 
                             String firstString = accountID + spacing + reading;
 
-                            int padding2 = 15 - kwh.length() - amount.length();
+                            int padding2;
+                            if(whichPrinter.equalsIgnoreCase("woo")){
+                                padding2 = 15 - kwh.length() - amount.length();
+                            }else {
+                                padding2 = 8 - kwh.length() - amount.length();
+                            }
                             String spacing2 = " ";
                             for (int p = 0; p < padding2; p++) {
                                 spacing2 = spacing2.concat(" ");
@@ -769,38 +858,71 @@ public class MainActivity extends AppCompatActivity {
                             }
                             String thirdString = time + spacing3 + remarks;
 
-                            int finalPadding = 40 - firstString.length() - secondString.length();
+                            int finalPadding;
+                            if(whichPrinter.equalsIgnoreCase("woo")) {
+                                finalPadding = 40 - firstString.length() - secondString.length();
+                            }else {
+                                finalPadding = 30 - firstString.length() - secondString.length();
+                            }
+
                             String finalSpacing = " ";
                             for (int p = 0; p < finalPadding; p++) {
                                 finalSpacing = finalSpacing.concat(" ");
                             }
 
                             String finalString = firstString + finalSpacing + secondString;
-
-                            mp.printText(finalString, thirdString + "\n");
+                            String fstring = finalString +"  "+ thirdString;
+                            if(whichPrinter.equalsIgnoreCase("woo")) {
+                                mp.printText(finalString, thirdString + "\n");
+                            }else {
+                                bp.printText(fstring+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                            }
                         //}
 
                     }
 
-                    mp.printText("\n");
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText("\n");
+                    }else {
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                    }
+
                     DecimalFormat df = new DecimalFormat("#,###.00");
                     String total = db.getSumConsumption(db);
                     String [] arrString = total.split(":");
 
-                    mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                    }else {
+                        bp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                    }
                 }catch (NullPointerException e) {
                     Log.e(TAG,"printAccountSummary:"+e.getMessage());
                 }
-                mp.printText("\n");
-                mp.printText("\n");
-                mp.printText("\n");
-                mp.printText("\n");
-                mp.printText("\n");
+
+                if(whichPrinter.equalsIgnoreCase("woo")) {
+                    mp.printText("\n");
+                    mp.printText("\n");
+                    mp.printText("\n");
+                    mp.printText("\n");
+                    mp.printText("\n");
+                }
             }
 
-        }else{
-            Toast.makeText(this,"Printer is not connected.",Toast.LENGTH_SHORT).show();
-        }
+            myProgressBar.dismissDialog();
     }
 
+    @Override
+    public void afterPrint(boolean success) {
+        if(success) {
+            printAccountSummary();
+        }else{
+            Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
+        }
+    }
 }

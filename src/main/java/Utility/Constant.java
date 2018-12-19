@@ -28,8 +28,13 @@ public class Constant {
     public static String DISCONNECTIONNOTICE = "Pursuant to NORECO II Policy on Delinquent Accounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills. " +
             " \n \n In connection hereto, please pay the aforementioned bills \n within forty eight (48) hours from receipt hereof,otherwise, we will be constrained to disconnect your electric service \n without further notice." +
             " \n \n Please disregard this Notice of Disconnection if you have \n already paid.";
-    public static String OFFICIALRECIEPT = "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
 
+    public static String DISCONNECTIONNOTICE_BIX = "Pursuant to NORECO II Policy on Delinquent \nAccounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills."+
+            "In connection hereto, please pay the aforementioned bills within forty eight (48) hours from receipt hereof,otherwise, we will be constrained to disconnect your electric service without further notice." +
+            "Please disregard this Notice of Disconnection if you have already paid.";
+
+    public static String OFFICIALRECIEPT = "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
+    public static String OFFICIALRECIEPT_BIX = "This is not an Official Receipt. Payment of this bill does not mean payment of previous \n delinquencies if any.";
 
     public static String WARNING = "WARNING!SUBJECT TO DISCONNECTION";
 

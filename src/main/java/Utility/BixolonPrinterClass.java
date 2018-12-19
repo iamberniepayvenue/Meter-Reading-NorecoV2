@@ -2,30 +2,41 @@ package Utility;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
+import com.payvenue.meterreader.Interface.BixolonInterface;
+import com.payvenue.meterreader.MainActivity;
+import com.payvenue.meterreader.R;
+
 
 public class BixolonPrinterClass {
 
     private static BixolonPrinterClass mInstance;
     private static Context context;
-    private static BixolonPrinter bixolonPrinter;
+    public static BixolonPrinter bixolonPrinter;
     private static Boolean connectedPrinter = false;
     private static final int LINE_CHARS = 42;
+    static private byte[] cardData;
+    static private byte[] extractdata = new byte[300];
+    private static final String TAG = "BixolonPrinterClass";
+
 
     public BixolonPrinterClass(Context mContext) {
         context = mContext;
+        bixolonPrinter = getBixolonPrinter();
     }
 
     public static synchronized BixolonPrinterClass newInstance(Context context) {
 
         if(mInstance == null) {
+            Log.e("here","here");
             mInstance = new BixolonPrinterClass(context);
-            bixolonPrinter = getBixolonPrinter();
         }
 
         return mInstance;
@@ -43,25 +54,29 @@ public class BixolonPrinterClass {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-            // Log.i("Handler", msg.what + " " + msg.arg1 + " " + msg.arg2);
+             Log.e("Handler", msg.what + " " + msg.arg1 + " " + msg.arg2);
 
             switch (msg.what) {
 
                 case BixolonPrinter.MESSAGE_STATE_CHANGE:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_STATE_CHANGE");
+                    Log.e("Handler", "BixolonPrinter.MESSAGE_STATE_CHANGE");
                     switch (msg.arg1) {
                         case BixolonPrinter.STATE_CONNECTED:
-                            Log.i("Handler", "BixolonPrinter.STATE_CONNECTED");
+                            MainActivity.mIsConnected = true;
+                            Log.e("Handler", "BixolonPrinter.STATE_CONNECTED");
+                            Toast.makeText(context,"SUCCESS CONNECTION!",Toast.LENGTH_SHORT).show();
                             connectedPrinter = true;
                             break;
 
                         case BixolonPrinter.STATE_CONNECTING:
-                            Log.i("Handler", "BixolonPrinter.STATE_CONNECTING");
+                            Log.e("Handler", "BixolonPrinter.STATE_CONNECTING");
+                            Toast.makeText(context,"Please restart printer device",Toast.LENGTH_SHORT).show();
                             connectedPrinter = false;
                             break;
 
                         case BixolonPrinter.STATE_NONE:
-                            Log.i("Handler", "BixolonPrinter.STATE_NONE");
+                            Log.e("Handler", "BixolonPrinter.STATE_NONE");
+                            //Toast.makeText(context, "NOT CONNECTED", Toast.LENGTH_SHORT).show();
                             connectedPrinter = false;
                             break;
                     }
@@ -101,7 +116,7 @@ public class BixolonPrinterClass {
 
                 case BixolonPrinter.MESSAGE_TOAST:
                     Log.e("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    // Toast.makeText(getApplicationContext(), msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
                     break;
 
                 // The list of paired printers
@@ -115,15 +130,15 @@ public class BixolonPrinterClass {
                     break;
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
+                    Log.e("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
                     break;
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP");
+                    Log.e("Handler", "BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP");
                     break;
 
                 case BixolonPrinter.MESSAGE_USB_DEVICE_SET:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_USB_DEVICE_SET");
+                    Log.e("Handler", "BixolonPrinter.MESSAGE_USB_DEVICE_SET");
                     if (msg.obj == null) {
                         Toast.makeText(context, "No connected device", Toast.LENGTH_SHORT).show();
                     } else {
@@ -133,7 +148,7 @@ public class BixolonPrinterClass {
                     break;
 
                 case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
-                    Log.i("Handler", "BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET");
+                    Log.e("Handler", "BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET");
                     if (msg.obj == null) {
 
                     }
@@ -143,28 +158,50 @@ public class BixolonPrinterClass {
         }
     };
 
-
-    public void printText(String textToPrint) {
-        printText(textToPrint, BixolonPrinter.ALIGNMENT_LEFT, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
+    public void setConnection(String address) {
+        bixolonPrinter.connect(address);
     }
 
-    public void printText(String textToPrint, int alignment) {
-        printText(textToPrint, alignment, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
+    public void printText(String textToPrint,int size) {
+        bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+        bixolonPrinter.printText(textToPrint,BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_A,size,false);
+        //bixolonPrinter.lineFeed(1,false);
+        //printText(textToPrint, BixolonPrinter.ALIGNMENT_LEFT, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
     }
 
-    public void printText(String textToPrint, int alignment, int attribute) {
-
-        if (textToPrint.length() <= LINE_CHARS) {
-            bixolonPrinter.printText(textToPrint, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-        } else {
-            String textToPrintInNextLine = null;
-            while (textToPrint.length() > LINE_CHARS) {
-                textToPrintInNextLine = textToPrint.substring(0, LINE_CHARS);
-                textToPrintInNextLine = textToPrintInNextLine.substring(0, textToPrintInNextLine.lastIndexOf(" ")).trim() + "\n";
-                bixolonPrinter.printText(textToPrintInNextLine, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
-                textToPrint = textToPrint.substring(textToPrintInNextLine.length(), textToPrint.length());
-            }
-            bixolonPrinter.printText(textToPrint, alignment, attribute, BixolonPrinter.TEXT_SIZE_HORIZONTAL1, false);
+    public void printText(String leftText, String rightText) {
+        int LINE_CHARS = 47;
+        int padding = LINE_CHARS - leftText.length() - rightText.length();
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
         }
+
+        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")) {
+            printText(leftText + paddingChar + rightText,BixolonPrinter.TEXT_SIZE_HORIZONTAL2);
+        }else {
+            printText(leftText + paddingChar + rightText,BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        }
+    }
+
+    public void printBitmap(final BixolonInterface mListener) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+                    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
+                    bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
+                    bixolonPrinter.lineFeed(2,false);
+                    //bixolonPrinter.printText("",BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_A,BixolonPrinter.TEXT_SIZE_HORIZONTAL1,false);
+                    Log.e(TAG,"printBitmap");
+                    mListener.afterPrint(true);
+                }catch (Exception e){
+                    Log.e(TAG,"Printing: "+ e.getMessage());
+                    mListener.afterPrint(false);
+                }
+            }
+        };
+        t.start();
     }
 }

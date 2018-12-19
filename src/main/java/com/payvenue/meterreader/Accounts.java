@@ -1,67 +1,73 @@
     package com.payvenue.meterreader;
 
     import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
+    import android.app.SearchManager;
+    import android.content.Context;
+    import android.content.DialogInterface;
+    import android.content.Intent;
+    import android.content.pm.PackageManager;
+    import android.database.Cursor;
+    import android.media.AudioManager;
+    import android.media.ToneGenerator;
+    import android.os.Build;
+    import android.os.Bundle;
+    import android.support.annotation.Nullable;
+    import android.support.constraint.ConstraintLayout;
+    import android.support.design.widget.Snackbar;
+    import android.support.v4.content.ContextCompat;
+    import android.support.v7.app.AlertDialog;
+    import android.support.v7.app.AppCompatActivity;
+    import android.text.Editable;
+    import android.text.TextWatcher;
+    import android.util.Log;
+    import android.view.KeyEvent;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.view.WindowManager;
+    import android.view.inputmethod.EditorInfo;
+    import android.view.inputmethod.InputMethodManager;
+    import android.widget.Button;
+    import android.widget.CheckBox;
+    import android.widget.EditText;
+    import android.widget.ImageView;
+    import android.widget.SearchView;
+    import android.widget.TextView;
+    import android.widget.Toast;
 
-import com.payvenue.meterreader.Camera.ZBarScannerActivity;
-import com.payvenue.meterreader.Fragments.MyDialogFragment;
-import com.payvenue.meterreader.Interface.MyDialogInterface;
+    import com.payvenue.meterreader.Camera.ZBarScannerActivity;
+    import com.payvenue.meterreader.Fragments.MyDialogFragment;
+    import com.payvenue.meterreader.Interface.BixolonInterface;
+    import com.payvenue.meterreader.Interface.MyDialogInterface;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    import org.json.JSONArray;
+    import org.json.JSONException;
+    import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+    import java.text.DecimalFormat;
+    import java.util.ArrayList;
+    import java.util.List;
 
-import DataBase.DataBaseHandler;
-import Model.Account;
-import Model.Bill;
-import Model.LifeLineSubsidyModel;
-import Model.Policies;
-import Model.RateSchedule;
-import Model.RateSegmentModel;
-import Model.Rates;
-import Model.Thresholds;
-import Utility.CommonFunc;
-import Utility.Constant;
-import Utility.MobilePrinter;
-import ZBar.ZBarConstants;
+    import DataBase.DataBaseHandler;
+    import Model.Account;
+    import Model.Bill;
+    import Model.LifeLineSubsidyModel;
+    import Model.Policies;
+    import Model.RateSchedule;
+    import Model.RateSegmentModel;
+    import Model.Rates;
+    import Model.Thresholds;
+    import Utility.BixolonPrinterClass;
+    import Utility.CommonFunc;
+    import Utility.Constant;
+    import Utility.MobilePrinter;
+    import Utility.MyProgressBar;
+    import ZBar.ZBarConstants;
 
-import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
+    import static Utility.BixolonPrinterClass.bixolonPrinter;
+    import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
+    import static com.payvenue.meterreader.MainActivity.address;
+    import static com.payvenue.meterreader.MainActivity.whichPrinter;
 
 
     /**
@@ -69,7 +75,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
      */
 
 
-    public class Accounts extends AppCompatActivity implements View.OnClickListener,MyDialogInterface {
+    public class Accounts extends AppCompatActivity implements View.OnClickListener,MyDialogInterface,BixolonInterface {
 
         private static final String TAG = "Accounts";
         ConstraintLayout constraintButton;
@@ -121,6 +127,8 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
         private boolean isLowerVoltage = false;
         private boolean isMotherMeter = false;
         private boolean isSearch = false;
+
+        private MyProgressBar myProgressBar;
 
 
         @Override
@@ -1185,7 +1193,14 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     calculateBill();
                     /**PRINTING SOA*/
                     if (MainActivity.mIsConnected) {
-                        preparePrint();
+                         myProgressBar = MyProgressBar.newInstance(this);
+                        if(whichPrinter.equalsIgnoreCase("bix")){
+                            myProgressBar.setTitle("Printing process...");
+                            printLogoBix();
+                        }else{
+                            myProgressBar.setTitle("Printing process...");
+                            preparePrint();
+                        }
                     } else {
                         showToast("Printer is not connected.");
                     }
@@ -1401,6 +1416,10 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             return name;
         }
 
+        public void printLogoBix() {
+            BixolonPrinterClass.newInstance(this).printBitmap(this);
+        }
+
         public void preparePrint() {
             DecimalFormat df = new DecimalFormat("#.####");
             ArrayList<String> vatListCode = new ArrayList<>();
@@ -1443,7 +1462,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                     }
                 }
 
-                MobilePrinter mp = MobilePrinter.getInstance(this);
+
                 String a_class = mAccount.getAccountClassification();
                 if(a_class.toLowerCase().contains("residential")) {
                     a_class = "Res";
@@ -1458,8 +1477,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
     //            mp.printText("                         (NORECO2)\n");
     //            mp.printText("                   STATEMENT OF ACCOUNT\n");
     //            mp.printText("================================================================\n");
-            String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
-            mp.printBitmap(path);
+
+
+            MobilePrinter mp = MobilePrinter.getInstance(this);
+
+            if(whichPrinter.equalsIgnoreCase("woo")){
+                String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
+                mp.printBitmap(path);
+            }
+
             mp.printText("\n");
             mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
             mp.printextEmphasized(name+"\n");
@@ -1481,8 +1507,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
             if(isNetMetering.equalsIgnoreCase("1")) {
                 mp.printText("Net-Metering Customer - IMPORT BILL\n");
             }
-            mp.printText("--------------------------------------------------------------"+"\n");
-            mp.printText("Date                Prev                 Pres              KWH"+"\n");
+                if(whichPrinter.contains("woo")) {
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                    mp.printText("Date                Prev                 Pres              KWH" + "\n");
+                }else{
+                    mp.printText("------------------------------------------------" + "\n");
+                    mp.printText("Date          Prev            Pres           KWH" + "\n");
+                }
 
                 int padding = 20 - dateRead.length() - mAccount.getConsume().length();
                 String spacing = " ";
@@ -1497,7 +1528,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
                 String strLeft = dateRead + _spacing +mAccount.getInitialReading();
                 mp.printText(strLeft,strRight+"\n");
-            mp.printText("--------------------------------------------------------------"+"\n");
+                if(whichPrinter.contains("woo")) {
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                }else{
+                    mp.printText("------------------------------------------------" + "\n");
+                }
 
             /**
              * NOTE
@@ -1526,6 +1561,7 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                         for (Rates r : mRates) {
                             if (r.getRateSegment().equals(rateSegmentCode)) {
                                 String codeName = r.getCodeName();
+                                String rateComponent = r.getCode();
                                 @SuppressLint("DefaultLocale")
                                 String rateAmount = String.format("%.4f",Float.valueOf(r.getRateAmount()));
                                 String amount = df.format(Double.parseDouble(r.getAmount()));
@@ -1539,7 +1575,16 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                 String rightText = rateAmount + paddingChar2 + amount;
 
                                 if (codeName.contains("VAT on")) {
-                                    vatListCode.add(codeName);
+                                    if(whichPrinter.equalsIgnoreCase("bix")) {
+                                        if(codeName.length() > 18) {
+                                            vatListCode.add(rateComponent);
+                                        }else {
+                                            vatListCode.add(codeName);
+                                        }
+                                    }else {
+                                        vatListCode.add(codeName);
+                                    }
+
                                     vatListValue.add(rightText);
                                 }
 
@@ -1549,7 +1594,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                     if (canAvailLifelineDiscount) {
                                         mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalLifeLineDiscount())) + "\n");
                                     } else {
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        if(whichPrinter.equalsIgnoreCase("bix")) {
+                                            if (codeName.length() > 18) {
+                                                mp.printText("  " + rateComponent, rightText + "\n");
+                                            } else {
+                                                mp.printText("  " + codeName, rightText + "\n");
+                                            }
+                                        }else {
+                                            mp.printText("  " + codeName, rightText + "\n");
+                                        }
                                     }
                                 }
 
@@ -1557,7 +1610,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                     if (canAvailSCDiscount) {
                                         mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
                                     } else {
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        if(whichPrinter.equalsIgnoreCase("bix")) {
+                                            if (codeName.length() > 18) {
+                                                mp.printText("  " + rateComponent, rightText + "\n");
+                                            } else {
+                                                mp.printText("  " + codeName, rightText + "\n");
+                                            }
+                                        }else {
+                                            mp.printText("  " + codeName, rightText + "\n");
+                                        }
                                     }
                                 }
 
@@ -1570,7 +1631,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                     if(!sn.equalsIgnoreCase("")){
                                         mp.printText(codeName, rightText + "\n");
                                     }else{
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        if(whichPrinter.equalsIgnoreCase("bix")){
+                                            if(codeName.length() > 18) {
+                                                mp.printText("  " + rateComponent, rightText + "\n");
+                                            }else {
+                                                mp.printText("  " + codeName, rightText + "\n");
+                                            }
+                                        }else {
+                                            mp.printText("  " + codeName, rightText + "\n");
+                                        }
                                     }
                                 }
 
@@ -1584,7 +1653,15 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                                             paddingChar1 = paddingChar1.concat(" ");
                                         }
                                         String rightText1 = rateAmount + paddingChar1 + amountExport;
-                                        rateComponentForExport.add(codeName);
+                                        if(whichPrinter.equalsIgnoreCase("bix")) {
+                                            if(codeName.length() > 18) {
+                                                rateComponentForExport.add(rateComponent);
+                                            }else {
+                                                rateComponentForExport.add(codeName);
+                                            }
+                                        }else{
+                                            rateComponentForExport.add(codeName);
+                                        }
                                         exportRateDueAmount.add(rightText1);
                                     }
                                 }
@@ -1602,8 +1679,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 mp.printText("", "" + "\n");
 
                 if(arrearsBillMonthList.size() > 0) {
-                    mp.printText("BillingMonth        BillNumber         Amount        Surcharge" + "\n");
-                    mp.printText("--------------------------------------------------------------" + "\n");
+                    if(whichPrinter.contains("woo")) {
+                        mp.printText("BillingDate        BillNumber         Amount         Surcharge" + "\n");
+                        mp.printText("--------------------------------------------------------------" + "\n");
+                    }else{
+                        mp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n");
+                        mp.printText("------------------------------------------------" + "\n");
+                    }
                     for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                         String billdate = arrearsBillMonthList.get(i);
                         String billnumber = arrearsBillNumberList.get(i);
@@ -1627,7 +1709,12 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
                         mp.printText(str1,str2+"\n");
                     }
-                    mp.printText("--------------------------------------------------------------" + "\n");
+
+                    if(whichPrinter.contains("woo")) {
+                        mp.printText("--------------------------------------------------------------" + "\n");
+                    }else{
+                        mp.printText("------------------------------------------------" + "\n");
+                    }
                 }
 
 
@@ -1644,8 +1731,13 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             if(isNetMetering.equalsIgnoreCase("1")) {
                 mp.printTextBoldRight("","EXPORT BILL"+"\n");
-                mp.printText("--------------------------------------------------------------"+"\n");
-                mp.printText("Date                Prev                 Pres              KWH"+"\n");
+                if(whichPrinter.contains("woo")) {
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                    mp.printText("Date                Prev                 Pres              KWH" + "\n");
+                }else {
+                    mp.printText("------------------------------------------------" + "\n");
+                    mp.printText("Date         Prev           Pres             KWH" + "\n");
+                }
                 String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
                 int padding1 = 20 - dateRead.length() - mAccount.getExportPreviousReading().length();
@@ -1662,7 +1754,11 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 }
                 String strLeft1 = mAccount.getExportReading() + _paddingLeft1 + exportConsume;
                 mp.printText(strRight1,strLeft1+"\n");
-                mp.printText("--------------------------------------------------------------"+"\n");
+                if(whichPrinter.contains("woo")) {
+                    mp.printText("--------------------------------------------------------------" + "\n");
+                }else {
+                    mp.printText("------------------------------------------------" + "\n");
+                }
 
                 if(!isMotherMeter) {
                     mp.printText("Customer Charge to DU\n");
@@ -1681,17 +1777,33 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
                 if(arrearsBillMonthList.size() > 0) {
                     mp.printText("\n");
                     mp.printText("\n");
-                    mp.printText(Constant.DISCONNECTIONNOTICE+"\n");
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText(Constant.DISCONNECTIONNOTICE + "\n");
+                    }else {
+                        mp.printText(Constant.DISCONNECTIONNOTICE_BIX + "\n");
+                    }
                     mp.printText("\n");
-                    mp.printText(Constant.OFFICIALRECIEPT+"\n");
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText(Constant.OFFICIALRECIEPT + "\n");
+                    }else {
+                        mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
+                    }
                     mp.printText("\n");
-                    mp.printText("                "+Constant.WARNING+"                 "+"\n");
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText("                " + Constant.WARNING + "                 " + "\n");
+                    }else {
+                        mp.printText("     " + Constant.WARNING + "\n");
+                    }
                 }else{
                     mp.printText("\n");
                     mp.printText("\n");
                     mp.printText(Constant.FOOTERMESSAGE+"\n");
                     mp.printText("\n");
-                    mp.printText(Constant.OFFICIALRECIEPT+"\n");
+                    if(whichPrinter.equalsIgnoreCase("woo")) {
+                        mp.printText(Constant.OFFICIALRECIEPT + "\n");
+                    }else {
+                        mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
+                    }
                 }
 
                 mp.printText("\n");
@@ -1702,6 +1814,19 @@ import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_RE
 
             }catch (NullPointerException e) {
                 Log.e(TAG,"preparePrint : "+ e.getMessage());
+            }
+
+            myProgressBar.dismissDialog();
+        }
+
+        @Override
+        public void afterPrint(boolean success) {
+            if(success) {
+                bixolonPrinter.disconnect();
+                MobilePrinter.getInstance(this).setConnection(address);
+                preparePrint();
+            }else{
+                Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
             }
         }
     }

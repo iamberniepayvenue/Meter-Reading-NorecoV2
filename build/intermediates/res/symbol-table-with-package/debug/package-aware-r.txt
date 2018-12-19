@@ -857,6 +857,7 @@ drawable my_border
 drawable navigation_empty_icon
 drawable no_accounts
 drawable noreco
+drawable noreco_logo
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low

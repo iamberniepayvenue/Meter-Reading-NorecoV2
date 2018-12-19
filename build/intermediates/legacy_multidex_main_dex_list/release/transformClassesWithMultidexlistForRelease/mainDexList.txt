@@ -64,6 +64,10 @@ android/support/design/widget/FloatingActionButton$Size.class
 android/support/design/widget/SwipeDismissBehavior$SwipeDirection.class
 android/support/design/widget/TabLayout$Mode.class
 android/support/design/widget/TabLayout$TabGravity.class
+android/support/multidex/MultiDex$V14$ElementConstructor.class
+android/support/multidex/MultiDex$V14$ICSElementConstructor.class
+android/support/multidex/MultiDex$V14$JBMR11ElementConstructor.class
+android/support/multidex/MultiDex$V14$JBMR2ElementConstructor.class
 android/support/multidex/MultiDex$V14.class
 android/support/multidex/MultiDex$V19.class
 android/support/multidex/MultiDex$V4.class
