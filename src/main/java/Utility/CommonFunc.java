@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.bixolon.printer.BixolonPrinter;
+import com.payvenue.meterreader.MainActivity;
 import com.payvenue.meterreader.R;
 
 import java.io.File;
@@ -29,7 +31,7 @@ import java.util.Locale;
  */
 
 public class CommonFunc {
-
+    private static final String TAG = "CommonFunc";
     public static double roundOff(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -342,6 +344,74 @@ public class CommonFunc {
             return file.exists();
         }
         return false;
+    }
+
+    public static void printingNormal(String text,String text2,int emphasized,int emphasized1,int emphasizedNormalFont,int tag) {
+        /** tag 0 = woosim 1 = bix*/
+        BixolonPrinterClass bp;
+        MobilePrinter mp;
+
+
+        if(tag == 1) {
+            bp = MainActivity.bp;
+
+            if(bp == null) {
+                bp = BixolonPrinterClass.newInstance(MainActivity.mContext);
+            }
+
+            if(emphasized == 1) {
+                if(text2.equalsIgnoreCase("")){
+                    bp.printText(text,BixolonPrinter.TEXT_SIZE_HORIZONTAL2);
+                }else {
+                    bp.printText(text,text2);
+                }
+
+            } else if (emphasized1 == 1) {
+                if(!text2.equalsIgnoreCase("")){
+                    bp.printText(text,text2);
+                }
+
+            }else if (emphasizedNormalFont == 1) {
+                if(text2.equalsIgnoreCase("")){
+                    bp.printText(text,BixolonPrinter.TEXT_SIZE_HORIZONTAL2);
+                }
+
+            }else {
+                if(text2.equalsIgnoreCase("")){
+                    bp.printText(text,BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                }else{
+                    bp.printText(text,text2);
+                }
+            }
+
+        } else {
+            mp = MainActivity.printer;
+            if(mp == null) {
+                mp = MobilePrinter.getInstance(MainActivity.mContext);
+            }
+
+            if(emphasized == 1) {
+                if(text2.equalsIgnoreCase("")){
+                    mp.printextEmphasized(text);
+                }else{
+                    mp.printText(text,text2);
+                }
+            } else if (emphasized1 == 1) {
+                if(!text2.equalsIgnoreCase("")){
+                    mp.printTextEmphasized1(text,text2);
+                }
+            }else if (emphasizedNormalFont == 1) {
+                if(text2.equalsIgnoreCase("")){
+                    mp.printextEmphasizedNormalFont(text);
+                }
+            }else {
+                if(text2.equalsIgnoreCase("")){
+                    mp.printText(text);
+                }else{
+                    mp.printText(text,text2);
+                }
+            }
+        }
     }
 
     /**

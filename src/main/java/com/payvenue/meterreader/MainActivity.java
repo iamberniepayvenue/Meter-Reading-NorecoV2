@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     public static ConnSettings connSettings;
     public static String whichPrinter;
     public static BixolonPrinterClass bp;
-
+    public static Context mContext;
 
 
     static WoosimPrinter woosim;
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         gps = new GPSTracker(this);
 
         printer = MobilePrinter.getInstance(this);
-
+        mContext = this;
 
         MapsWithMeApi.isMapsWithMeInstalled(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,12 +293,12 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                     case R.id.summary:
                         if(mIsConnected) {
                             myProgressBar = MyProgressBar.newInstance(MainActivity.this);
-                            if(whichPrinter.equalsIgnoreCase("woo")) {
+                            if(whichPrinter.equalsIgnoreCase("bix")) {
                                 myProgressBar.setTitle("Printing process...");
                                 printAccountSummary();
                             }else{
                                 myProgressBar.setTitle("Printing process...");
-                                printLogoBix();
+                                printAccountSummary();
                             }
                         }else{
                             Toast.makeText(getApplicationContext(),"Printer is not connected.",Toast.LENGTH_SHORT).show();
@@ -684,13 +684,13 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
             int reVal = 0;
-            if(printerName.toLowerCase().contains("woosim")) {
-                whichPrinter = "woo";
-                reVal = printer.setConnection(address);
-            }else {
+            if(!printerName.toLowerCase().contains("woosim")) {
                 whichPrinter = "bix";
                 bp = BixolonPrinterClass.newInstance(getApplicationContext());
                 bp.setConnection(address);
+            }else {
+                whichPrinter = "woo";
+                reVal = printer.setConnection(address);
             }
 
             //reVal = printer.setConnection(address);
@@ -761,6 +761,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
             bp = BixolonPrinterClass.newInstance(this);
         }
 
+        bp.printBitmap();
         bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         bp.printText("             READING STATISTICS"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
@@ -785,18 +786,21 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         bp.printText("================================================"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
     }
 
-    public void printLogoBix() {
-        if(bp != null) {
-            Log.e(TAG,"not null");
-            bp.printBitmap(this);
-        }else{
-            Log.e(TAG,"null");
-            BixolonPrinterClass.newInstance(this).printBitmap(this);
-        }
-    }
+//    public void printLogoBix() {
+//        if(bp != null) {
+//            bp.printBitmap(this);
+//        }else{
+//            BixolonPrinterClass.newInstance(this).printBitmap(this);
+//        }
+//    }
 
     public void printAccountSummary() {
-        final MobilePrinter mp = MobilePrinter.getInstance(this);
+        MobilePrinter mp = printer;
+        if(mp == null) {
+            mp = MobilePrinter.getInstance(this);
+        }
+
+
             //ArrayList<Account> list = new ArrayList<>();
             ArrayList<Account> list =  db.summaryDetails(db);
 

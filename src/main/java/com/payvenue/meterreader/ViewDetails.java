@@ -20,8 +20,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bixolon.printer.BixolonPrinter;
 import com.mapswithme.maps.api.MapsWithMeApi;
-import com.payvenue.meterreader.Interface.BixolonInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,11 +42,9 @@ import Utility.Constant;
 import Utility.MobilePrinter;
 import Utility.MyProgressBar;
 
-import static Utility.BixolonPrinterClass.bixolonPrinter;
-import static com.payvenue.meterreader.MainActivity.address;
 import static com.payvenue.meterreader.MainActivity.whichPrinter;
 
-public class ViewDetails extends AppCompatActivity implements OnClickListener,BixolonInterface {
+public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
     int myPurpose = 0;
@@ -73,6 +71,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
     ArrayList<String> arrearsBillNumberList = new ArrayList<>();
     private boolean isSearch = false;
     private MyProgressBar myProgressBar;
+    BixolonPrinterClass bp;
 
     @SuppressLint("NewApi")
     @Override
@@ -98,7 +97,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
             IsMotherMeter = true;
         }
 
-
+        bp = MainActivity.bp;
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
         simplifyArrears();
@@ -320,16 +319,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                         "Can't Generate Billing for erroneous reading.",
                         Toast.LENGTH_SHORT).show();
             } else {
-                //preparePrint();
                 if (MainActivity.mIsConnected) {
                     myProgressBar = MyProgressBar.newInstance(ViewDetails.this);
-                    Log.e(TAG,"printer: "+ whichPrinter);
                     if(whichPrinter.equalsIgnoreCase("bix")){
-                        //myProgressBar.setTitle("Printing process...");
+                        myProgressBar.setTitle("Printing process...");
+                        preparePrint();
                         //printLogoBix();
                     }else{
-                        //myProgressBar.setTitle("Printing process...");
-                        //preparePrint();
+                        myProgressBar.setTitle("Printing process...");
+                        preparePrint();
                     }
                 } else {
                     Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
@@ -450,9 +448,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
 
         return name;
     }
-    public void printLogoBix() {
-        BixolonPrinterClass.newInstance(this).printBitmap(this);
-    }
+//    public void printLogoBix() {
+//
+//        if(bp == null) {
+//            bp = BixolonPrinterClass.newInstance(this);
+//        }
+//
+//        bp.printBitmap(this);
+//
+//    }
+
     public void preparePrint() {
         DecimalFormat df = new DecimalFormat("#.####");
         ArrayList<String> vatListCode = new ArrayList<>();
@@ -514,38 +519,72 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
 ////        mp.printText("================================================================\n");
 
 
-        MobilePrinter mp = MobilePrinter.getInstance(this);
+        MobilePrinter mp = null;
+        int mPrinter;
 
-        if(whichPrinter.equalsIgnoreCase("woo")){
+        if(whichPrinter.equalsIgnoreCase("woo")) {
+            mPrinter = 0;
+        }else if (whichPrinter.equalsIgnoreCase("bix")) {
+            mPrinter = 1;
+        }else {
+            mPrinter = 0;
+        }
+
+        if(mPrinter != 1){
+            mp = MainActivity.printer;
+            if(mp == null) {
+                mp = MobilePrinter.getInstance(this);
+            }
+
             String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
             mp.printBitmap(path);
+        }else {
+           bp.printBitmap();
         }
-        mp.printText("\n");
-        mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
-        mp.printextEmphasized(name+"\n");
-        mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
-        mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
-        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");
-        mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
-        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-        mp.printText("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n");
-        mp.printText("Consumption:" + mAccount.getActualConsumption(),"BillMonth:" + mAccount.getBillMonth()+"\n");
+
+        CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Account No:"+ mAccount.getAccountID()+"\n","",1,0,0,mPrinter);
+        CommonFunc.printingNormal(name+"\n","",1,0,0,mPrinter);
+        CommonFunc.printingNormal(mAccount.getAddress()+"\n","",0,0,1,mPrinter);
+        CommonFunc.printingNormal("Meter No:" + mAccount.getMeterSerialNo()+"\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Due Date: "+mAccount.getDueDate()+"\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Meter Reader:" + MainActivity.reader.getReaderName()+"\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n",0,0,0,mPrinter);
+        CommonFunc.printingNormal("Consumption:" + mAccount.getActualConsumption(),"BillMonth:" + mAccount.getBillMonth()+"\n",0,0,0,mPrinter);
+
+
+
+
+//        mp.printText("\n");
+//        mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
+//        mp.printextEmphasized(name+"\n");
+//        mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
+//        mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
+//        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");
+//        mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
+//        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
+//        mp.printText("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n");
+//        mp.printText("Consumption:" + mAccount.getActualConsumption(),"BillMonth:" + mAccount.getBillMonth()+"\n");
         if(a_class.equalsIgnoreCase("HV")) {
-            mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
+            CommonFunc.printingNormal("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n",0,0,0,mPrinter);
+            //mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
         }else{
-            mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
+            CommonFunc.printingNormal("Coreloss:" + mAccount.getCoreloss()+"\n","",0,0,0,mPrinter);
+            //mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
         }
 
         if(mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-            mp.printText("Net-Metering Customer - IMPORT BILL\n");
+            CommonFunc.printingNormal("Net-Metering Customer - IMPORT BILL\n","",0,0,0,mPrinter);
+            //mp.printText("Net-Metering Customer - IMPORT BILL\n");
         }
 
-        if(whichPrinter.contains("woo")) {
+        if(mPrinter == 1) {
+            bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+            bp.printText("Date          Prev            Pres           KWH" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        }else{
             mp.printText("--------------------------------------------------------------" + "\n");
             mp.printText("Date                Prev                 Pres              KWH" + "\n");
-        }else{
-            mp.printText("------------------------------------------------" + "\n");
-            mp.printText("Date          Prev            Pres           KWH" + "\n");
         }
 
 
@@ -562,12 +601,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
             _spacing = _spacing.concat(" ");
         }
         String strLeft = mAccount.getReading() + _spacing + mAccount.getConsume();
-
-        mp.printText(strRight,strLeft+"\n");
-        if(whichPrinter.contains("woo")) {
-            mp.printText("--------------------------------------------------------------" + "\n");
+        CommonFunc.printingNormal(strRight,strLeft+"\n",0,0,0,mPrinter);
+        //mp.printText(strRight,strLeft+"\n");
+        if(mPrinter == 1) {
+            bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         }else{
-            mp.printText("------------------------------------------------" + "\n");
+            mp.printText("--------------------------------------------------------------" + "\n");
         }
 
         if(!IsMotherMeter) {
@@ -580,11 +619,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                     if(duplicateSegmentName.size() > 0) {
                         for(String seg : duplicateSegmentName) {
                             if (!seg.equalsIgnoreCase(segmentName)) {
-                                mp.printText(segmentName + "\n");
+                                //mp.printText(segmentName + "\n");
+                                CommonFunc.printingNormal(segmentName + "\n","",0,0,0,mPrinter);
                             }
                         }
                     }else{
-                        mp.printText(segmentName + "\n");
+                        CommonFunc.printingNormal(segmentName + "\n","",0,0,0,mPrinter);
+                        //mp.printText(segmentName + "\n");
                     }
 
 
@@ -623,16 +664,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                             if (codeName.equalsIgnoreCase("Subsidy on Lifeline")) {
 
                                 if (!mAccount.getTotalLifeLineDiscount().equalsIgnoreCase("0.0")) {
-                                    mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalLifeLineDiscount())) + "\n");
+                                    CommonFunc.printingNormal("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalLifeLineDiscount())) + "\n",0,0,0,mPrinter);
+                                    //mp.printText("  Lifeline Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalLifeLineDiscount())) + "\n");
                                 } else {
-                                    if(whichPrinter.equalsIgnoreCase("bix")) {
+                                    if(mPrinter == 1) {
                                         if (codeName.length() > 18) {
-                                            mp.printText("  " + rateComponent, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + rateComponent, rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + rateComponent, rightText + "\n");
                                         } else {
-                                            mp.printText("  " + codeName, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + codeName, rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + codeName, rightText + "\n");
                                         }
                                     }else {
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        CommonFunc.printingNormal("  " + codeName, rightText + "\n",0,0,0,mPrinter);
+                                        //mp.printText("  " + codeName, rightText + "\n");
                                     }
                                 }
                             }
@@ -640,16 +685,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                             if (codeName.equalsIgnoreCase("Senior Citizens Subsidy")) {
 
                                 if (!mAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
-                                    mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
+                                    CommonFunc.printingNormal("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n",0,0,0,mPrinter);
+                                    //mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
                                 } else {
-                                    if(whichPrinter.equalsIgnoreCase("bix")) {
+                                    if(mPrinter == 1) {
                                         if (codeName.length() > 18) {
-                                            mp.printText("  " + rateComponent, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + rateComponent,rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + rateComponent, rightText + "\n");
                                         } else {
-                                            mp.printText("  " + codeName, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + codeName,rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + codeName, rightText + "\n");
                                         }
                                     }else {
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        CommonFunc.printingNormal("  " + codeName + rateComponent,rightText + "\n",0,0,0,mPrinter);
+                                        //mp.printText("  " + codeName, rightText + "\n");
                                     }
                                 }
                             }
@@ -658,16 +707,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                             if (!codeName.equalsIgnoreCase("Subsidy on Lifeline") && !codeName.equalsIgnoreCase("Senior Citizens Subsidy") && !codeName.contains("VAT on")) {
                                 String sn = segmentName(duplicateSegmentName,codeName);
                                 if(!sn.equalsIgnoreCase("")){
-                                    mp.printText(codeName, rightText + "\n");
+                                    CommonFunc.printingNormal(codeName,rightText + "\n",0,0,0,mPrinter);
+                                    //mp.printText(codeName, rightText + "\n");
                                 }else{
-                                    if(whichPrinter.equalsIgnoreCase("bix")){
+                                    if(mPrinter == 1){
                                         if(codeName.length() > 18) {
-                                            mp.printText("  " + rateComponent, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + rateComponent,rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + rateComponent, rightText + "\n");
                                         }else {
-                                            mp.printText("  " + codeName, rightText + "\n");
+                                            CommonFunc.printingNormal("  " + codeName,rightText + "\n",0,0,0,mPrinter);
+                                            //mp.printText("  " + codeName, rightText + "\n");
                                         }
                                     }else {
-                                        mp.printText("  " + codeName, rightText + "\n");
+                                        CommonFunc.printingNormal("  " + codeName,rightText + "\n",0,0,0,mPrinter);
+                                        //mp.printText("  " + codeName, rightText + "\n");
                                     }
                                 }
                             }
@@ -682,7 +735,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                                         paddingChar2 = paddingChar2.concat(" ");
                                     }
                                     String rightText1 = rateAmount + paddingChar2 + amountExport;
-                                    if(whichPrinter.equalsIgnoreCase("bix")) {
+                                    if(mPrinter == 1) {
                                         if(codeName.length() > 18) {
                                             rateComponentForExport.add(rateComponent);
                                         }else {
@@ -700,22 +753,27 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                 } // end loop
             }
 
-            mp.printText("VAT Charges" + "\n");
+            //mp.printText("VAT Charges" + "\n");
+            CommonFunc.printingNormal("VAT Charges" + "\n","",0,0,0,mPrinter);
             for (int i = 0; i < vatListCode.size(); i++) {
-                mp.printText("  " + vatListCode.get(i), vatListValue.get(i) + "\n");
+                CommonFunc.printingNormal("  " + vatListCode.get(i),vatListValue.get(i) + "\n",0,0,0,mPrinter);
+                //mp.printText("  " + vatListCode.get(i), vatListValue.get(i) + "\n");
             }
 
-            mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
-            mp.printText("", "" + "\n");
+            CommonFunc.printingNormal("\n","", 0,0,0,mPrinter);
+            CommonFunc.printingNormal("Total Current Due",MainActivity.dec2.format(mBill.getTotalAmount())+ "\n",1,0,0,mPrinter);
+            CommonFunc.printingNormal("\n","", 0,0,0,mPrinter);
+            //mp.printTextEmphasized("Total Current Due", MainActivity.dec2.format(mBill.getTotalAmount()));
+            //mp.printText("", "" + "\n");
 
             if(arrearsBillMonthList.size() > 0) {
 
-                if(whichPrinter.contains("woo")) {
+                if(mPrinter == 1) {
+                    bp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                    bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                }else{
                     mp.printText("BillingDate        BillNumber         Amount         Surcharge" + "\n");
                     mp.printText("--------------------------------------------------------------" + "\n");
-                }else{
-                    mp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n");
-                    mp.printText("------------------------------------------------" + "\n");
                 }
                 for (int i = 0; i < arrearsBillMonthList.size(); i++) {
                     String billdate = arrearsBillMonthList.get(i);
@@ -737,38 +795,51 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                         _paddingLeft1 = _paddingLeft1.concat(" ");
                     }
                     String str2 = amount + _paddingLeft1 + _penalty;
+                    CommonFunc.printingNormal(str1,str2+"\n",0,0,0,mPrinter);
+                    //mp.printText(str1,str2+"\n");
 
-                    mp.printText(str1,str2+"\n");
-
-                    //mp.printText(str[0], billnumber, amount, _penalty + "\n", 0);
                 }
-                if(whichPrinter.contains("woo")) {
-                    mp.printText("--------------------------------------------------------------" + "\n");
+                if(mPrinter == 1) {
+                    bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 }else{
-                    mp.printText("------------------------------------------------" + "\n");
+                    mp.printText("--------------------------------------------------------------" + "\n");
                 }
             }
-            mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
-            mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
-            mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
-            mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
-            mp.printText("", "" + "\n");
-            mp.printText("", "" + "\n");
-            mp.printText("", "" + "\n");
-            mp.printText("", "" + "\n");
+
+            CommonFunc.printingNormal("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n",0,0,0,mPrinter);
+            CommonFunc.printingNormal("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n",0,0,0,mPrinter);
+            CommonFunc.printingNormal("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n",0,0,0,mPrinter);
+            CommonFunc.printingNormal("\n","", 0,0,0,mPrinter);
+            CommonFunc.printingNormal("TOTAL AMOUNT PAYABLE",MainActivity.dec2.format(mBill.getTotalBilledAmount()) +"\n",0,1,0,mPrinter);
+            CommonFunc.printingNormal("\n","", 0,0,0,mPrinter);
+            CommonFunc.printingNormal("\n", "" ,0,0,0,mPrinter);
+            CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+            CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+
+//            mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
+//            mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
+//            mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
+//            mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
+//            mp.printText("", "" + "\n");
+//            mp.printText("", "" + "\n");
+//            mp.printText("", "" + "\n");
+//            mp.printText("", "" + "\n");
 
         }
 
 
         if(mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
-            mp.printTextBoldRight("","EXPORT BILL"+"\n");
-            if(whichPrinter.contains("woo")) {
+
+            if(mPrinter == 1) {
+                CommonFunc.printingNormal("EXPORT BILL"+"\n","",1,0,0,mPrinter);
+                bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                bp.printText("Date         Prev           Pres             KWH" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+            }else {
+                mp.printTextBoldRight("","EXPORT BILL"+"\n");
                 mp.printText("--------------------------------------------------------------" + "\n");
                 mp.printText("Date                Prev                 Pres              KWH" + "\n");
-            }else {
-                mp.printText("------------------------------------------------" + "\n");
-                mp.printText("Date         Prev           Pres             KWH" + "\n");
             }
+
             String exportConsume = MainActivity.dec2.format(Double.valueOf(mAccount.getExportConsume()));
 
             int padding3 = 20 - dateRead.length() - mAccount.getExportPreviousReading().length();
@@ -784,87 +855,103 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener,Bi
                 _spacing2 = _spacing2.concat(" ");
             }
             String strLeft1 = mAccount.getExportReading() + _spacing2 + exportConsume;
-            mp.printText(strRight1,strLeft1+"\n");
-            if(whichPrinter.contains("woo")) {
-                mp.printText("--------------------------------------------------------------" + "\n");
+            CommonFunc.printingNormal(""+strRight1,strLeft1+"\n",0,0,0,mPrinter);
+            //mp.printText(strRight1,strLeft1+"\n");
+            if(mPrinter == 1) {
+                bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             }else {
-                mp.printText("------------------------------------------------" + "\n");
-
+                mp.printText("--------------------------------------------------------------" + "\n");
             }
 
             if(!IsMotherMeter) {
-                mp.printText("Customer Charge to DU\n");
+                CommonFunc.printingNormal("Customer Charge to DU\n","",0,0,0,mPrinter);
+                //mp.printText("Customer Charge to DU\n");
                 for (int i = 0; i < rateComponentForExport.size(); i++) {
-                    mp.printText("  " + rateComponentForExport.get(i),  exportRateDueAmount.get(i) + "\n");
+                    CommonFunc.printingNormal("  " + rateComponentForExport.get(i),  exportRateDueAmount.get(i) + "\n",0,0,0,mPrinter);
+                    //mp.printText("  " + rateComponentForExport.get(i),  exportRateDueAmount.get(i) + "\n");
                 }
-                mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
-
-                mp.printText("\n");
-                mp.printText("\n");
-                mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n");
-
+                CommonFunc.printingNormal("Amount Export Due",MainActivity.dec2.format(mBill.getTotalAmountDueExport())+ "\n",1,0,0,mPrinter);
+                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+                CommonFunc.printingNormal("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n",1,0,0,mPrinter);
+                //mp.printTextEmphasized("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()));
+                //mp.printText("\n");
+                //mp.printText("\n");
+                //mp.printTextEmphasized("NET BILL AMOUNT", MainActivity.dec2.format(mBill.getNetBillAmountExport()) + "\n");
             }
         }
 
 
 
         if(arrearsBillMonthList.size() > 0) {
-            mp.printText("\n");
-            mp.printText("\n");
-            if(whichPrinter.equalsIgnoreCase("woo")) {
+
+            if(mPrinter == 1) {
+                bp.printNextLine(2);
+                bp.printText(Constant.DISCONNECTIONNOTICE_BIX + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                bp.printNextLine(1);
+            }else {
+                mp.printText("\n");
+                mp.printText("\n");
                 mp.printText(Constant.DISCONNECTIONNOTICE + "\n");
-            }else {
-                mp.printText(Constant.DISCONNECTIONNOTICE_BIX + "\n");
+                mp.printText("\n");
             }
-            mp.printText("\n");
-            if(whichPrinter.equalsIgnoreCase("woo")) {
+
+            if(mPrinter == 1) {
+                bp.printText(Constant.OFFICIALRECIEPT_BIX + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                bp.printNextLine(1);
+            }else {
                 mp.printText(Constant.OFFICIALRECIEPT + "\n");
-            }else {
-                mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
+                mp.printText("\n");
             }
-            mp.printText("\n");
-            if(whichPrinter.equalsIgnoreCase("woo")) {
-                mp.printText("                " + Constant.WARNING + "                 " + "\n");
+
+            if(mPrinter == 1) {
+                bp.printText("     " + Constant.WARNING + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             }else {
-                mp.printText("     " + Constant.WARNING + "\n");
+                mp.printText("                " + Constant.WARNING + "                 " + "\n");
             }
         }else{
+            CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+            CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+            CommonFunc.printingNormal(Constant.FOOTERMESSAGE+"\n","",0,0,0,mPrinter);
+            //mp.printText(Constant.FOOTERMESSAGE+"\n");
             mp.printText("\n");
-            mp.printText("\n");
-            mp.printText(Constant.FOOTERMESSAGE+"\n");
-            mp.printText("\n");
-            if(whichPrinter.equalsIgnoreCase("woo")) {
-                mp.printText(Constant.OFFICIALRECIEPT + "\n");
+            if(mPrinter == 1) {
+                bp.printText(Constant.OFFICIALRECIEPT_BIX + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             }else {
-                mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
+                mp.printText(Constant.OFFICIALRECIEPT + "\n");
             }
         }
 
         if (!mAccount.getPrintCount().equalsIgnoreCase("0")) {
-            mp.printText("REPRINTED" + "\n");
+            //mp.printText("REPRINTED" + "\n");
+            CommonFunc.printingNormal("REPRINTED" + "\n","",0,0,0,mPrinter);
         }
-        mp.printText("\n");
-        mp.printText("\n");
-        mp.printText("\n");
-        mp.printText("\n");
+        CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
+        CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
         db.updateAccountToPrinted(db,"Printed");
         myProgressBar.dismissDialog();
     }
 
-    @Override
-    public void afterPrint(boolean success) {
-        if(success) {
-            bixolonPrinter.disconnect();
-            MobilePrinter mp = MobilePrinter.getInstance(this);
-            int r = mp.setConnection(address);
-            if(r == -6) {
-                mp.disconnect();
-                mp.setConnection(address);
-            }
-
-            preparePrint();
-        }else{
-            Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
-        }
-    }
+//    @Override
+//    public void afterPrint(boolean success) {
+//        if(success) {
+//            Log.e(TAG,"here: "+ bp.connectedPrinter);
+//            if(!bp.connectedPrinter) {
+//                bp = BixolonPrinterClass.newInstance(ViewDetails.this);
+//            }
+//
+//            preparePrint();
+//        }else{
+//            myProgressBar.dismissDialog();
+//            try{
+//                Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
+//            }catch (RuntimeException e){
+//                Log.e(TAG,"e:" + e.getMessage());
+//                Toast.makeText(this,"- Error Printing",Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        Log.e(TAG,"afterPrint:" + success);
+//    }
 }

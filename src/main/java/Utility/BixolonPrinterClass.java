@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
-import com.payvenue.meterreader.Interface.BixolonInterface;
 import com.payvenue.meterreader.MainActivity;
 import com.payvenue.meterreader.R;
 
@@ -20,7 +19,7 @@ public class BixolonPrinterClass {
     private static BixolonPrinterClass mInstance;
     private static Context context;
     public static BixolonPrinter bixolonPrinter;
-    private static Boolean connectedPrinter = false;
+    public static Boolean connectedPrinter = false;
     private static final int LINE_CHARS = 42;
     static private byte[] cardData;
     static private byte[] extractdata = new byte[300];
@@ -76,7 +75,6 @@ public class BixolonPrinterClass {
 
                         case BixolonPrinter.STATE_NONE:
                             Log.e("Handler", "BixolonPrinter.STATE_NONE");
-                            //Toast.makeText(context, "NOT CONNECTED", Toast.LENGTH_SHORT).show();
                             connectedPrinter = false;
                             break;
                     }
@@ -165,10 +163,16 @@ public class BixolonPrinterClass {
     public void printText(String textToPrint,int size) {
         bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         bixolonPrinter.printText(textToPrint,BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_A,size,false);
-        //bixolonPrinter.lineFeed(1,false);
-        //printText(textToPrint, BixolonPrinter.ALIGNMENT_LEFT, BixolonPrinter.TEXT_ATTRIBUTE_FONT_C);
+    }
+    public void printTextBoldRight(String leftText, String rightText) {
+        bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+        bixolonPrinter.printText(leftText+"\n",BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_A,0,false);
+        bixolonPrinter.printText(rightText+"\n",BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_B,0,false);
     }
 
+    public void printNextLine(int lines) {
+        bixolonPrinter.lineFeed(lines,false);
+    }
     public void printText(String leftText, String rightText) {
         int LINE_CHARS = 47;
         int padding = LINE_CHARS - leftText.length() - rightText.length();
@@ -176,32 +180,37 @@ public class BixolonPrinterClass {
         for (int i = 0; i < padding; i++) {
             paddingChar = paddingChar.concat(" ");
         }
-
-        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")) {
-            printText(leftText + paddingChar + rightText,BixolonPrinter.TEXT_SIZE_HORIZONTAL2);
+        String toPrint = leftText + paddingChar + rightText;
+        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")
+                || leftText.equalsIgnoreCase("Amount Export Due") || leftText.equalsIgnoreCase("NET BILL AMOUNT")) {
+            printText(toPrint,BixolonPrinter.TEXT_SIZE_HORIZONTAL2);
         }else {
-            printText(leftText + paddingChar + rightText,BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+            printText(toPrint,BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         }
     }
 
-    public void printBitmap(final BixolonInterface mListener) {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-                    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
-                    bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
-                    bixolonPrinter.lineFeed(2,false);
-                    //bixolonPrinter.printText("",BixolonPrinter.ALIGNMENT_LEFT,BixolonPrinter.TEXT_ATTRIBUTE_FONT_A,BixolonPrinter.TEXT_SIZE_HORIZONTAL1,false);
-                    Log.e(TAG,"printBitmap");
-                    mListener.afterPrint(true);
-                }catch (Exception e){
-                    Log.e(TAG,"Printing: "+ e.getMessage());
-                    mListener.afterPrint(false);
-                }
-            }
-        };
-        t.start();
+    public void printBitmap() {
+        bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
+        bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
+//        Thread t = new Thread() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                try {
+//                    bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
+//                    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
+//                    bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
+//                    bixolonPrinter.lineFeed(2,false);
+//                    Log.e(TAG,"printBitmap");
+//                    mListener.afterPrint(true);
+//                }catch (Exception e){
+//                    Log.e(TAG,"Printing: "+ e.getMessage());
+//                    mListener.afterPrint(false);
+//                }
+//                Looper.loop();
+//            }
+//        };
+//        t.start();
     }
 }

@@ -70,9 +70,9 @@ public class MobilePrinter {
         //byte[] init = {0x1b, '@'};
         //woosim.controlCommand(init, init.length);
 
-        if(whichPrinter.equalsIgnoreCase("bix")) {
-            LINE_CHARS = 47;
-        }
+//        if(whichPrinter.equalsIgnoreCase("bix")) {
+//            LINE_CHARS = 47;
+//        }
 
         int padding = LINE_CHARS - leftText.length() - rightText.length();
         String paddingChar = " ";
@@ -80,8 +80,9 @@ public class MobilePrinter {
             paddingChar = paddingChar.concat(" ");
         }
 
-        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")) {
-            woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, true);
+        if(leftText.equalsIgnoreCase("Total Current Due") || leftText.equalsIgnoreCase("TOTAL AMOUNT PAYABLE")
+                || leftText.equalsIgnoreCase("Amount Export Due") || leftText.equalsIgnoreCase("NET BILL AMOUNT")) {
+            woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 1, false);
             woosim.printSpool(true);
         }else {
             woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
@@ -126,11 +127,11 @@ public class MobilePrinter {
 
         int font = 1;
         boolean emphasis = false;
-        if(whichPrinter.equalsIgnoreCase("bix")) {
-            padding = 46 - leftText.length() - rightText.length();
-            font = 0;
-            emphasis = true;
-        }
+//        if(whichPrinter.equalsIgnoreCase("bix")) {
+//            padding = 46 - leftText.length() - rightText.length();
+//            font = 0;
+//            emphasis = true;
+//        }
 
         String paddingChar = " ";
         for (int i = 0; i < padding; i++) {
@@ -172,11 +173,11 @@ public class MobilePrinter {
 
     public void printextEmphasized(String text) {
         int font = 2;
-        if(whichPrinter.equalsIgnoreCase("bix")) {
-            font = 1;
-        }
+//        if(whichPrinter.equalsIgnoreCase("bix")) {
+//            font = 1;
+//        }
 
-        woosim.saveSpool(EUC_KR, text , font, false);
+        woosim.saveSpool(EUC_KR,text,font,false);
         woosim.printSpool(true);
     }
 

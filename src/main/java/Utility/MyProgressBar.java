@@ -2,6 +2,7 @@ package Utility;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Looper;
 
 public class MyProgressBar {
     private static MyProgressBar mInstance;
@@ -31,10 +32,15 @@ public class MyProgressBar {
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressDialog.show();
+                try {
+                    Looper.prepare();
+                    progressDialog.show();
+                    Looper.loop();
+                }catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
             }
         },100);
-
     }
 
     public void dismissDialog() {
@@ -44,6 +50,8 @@ public class MyProgressBar {
 
         progressDialog.setCancelable(true);
         if(progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }else {
             progressDialog.dismiss();
         }
     }
