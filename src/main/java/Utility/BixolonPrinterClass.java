@@ -69,7 +69,15 @@ public class BixolonPrinterClass {
 
                         case BixolonPrinter.STATE_CONNECTING:
                             Log.e("Handler", "BixolonPrinter.STATE_CONNECTING");
-                            Toast.makeText(context,"Please restart printer device",Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(!connectedPrinter) {
+                                        Toast.makeText(context,"Please restart printer device",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            },1000);
+
                             connectedPrinter = false;
                             break;
 
