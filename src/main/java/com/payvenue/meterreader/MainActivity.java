@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     static String EUC_KR = "EUC-KR";
     static final int LINE_CHARS = 62;
     private static final String TAG = "MainActivity";
-    private MyProgressBar myProgressBar;
+    private  MyProgressBar myProgressBar;
 
 
     public interface Modes {
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
 
         printer = MobilePrinter.getInstance(this);
         mContext = this;
+        myProgressBar = MyProgressBar.newInstance(mContext);
 
         MapsWithMeApi.isMapsWithMeInstalled(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -292,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                         break;
                     case R.id.summary:
                         if(mIsConnected) {
-                            myProgressBar = MyProgressBar.newInstance(MainActivity.this);
                             if(whichPrinter.equalsIgnoreCase("bix")) {
                                 myProgressBar.setTitle("Printing process...");
                                 printAccountSummary();

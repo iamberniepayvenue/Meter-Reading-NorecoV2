@@ -86,7 +86,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         db = new DataBaseHandler(this);
         Log.e(TAG,"Current Page");
         Bundle b = getIntent().getExtras();
-
+        myProgressBar = MyProgressBar.newInstance(ViewDetails.this);
 
         if (b != null) {
             myPurpose = b.getInt("purpose");
@@ -320,15 +320,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             } else {
                 if (MainActivity.mIsConnected) {
-                    myProgressBar = MyProgressBar.newInstance(ViewDetails.this);
-                    if(whichPrinter.equalsIgnoreCase("bix")){
-                        myProgressBar.setTitle("Printing process...");
-                        preparePrint();
-                        //printLogoBix();
-                    }else{
-                        myProgressBar.setTitle("Printing process...");
-                        preparePrint();
-                    }
+                    myProgressBar.setTitle("Printing process...");
+                    preparePrint();
                 } else {
                     Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
                 }
@@ -932,26 +925,4 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         db.updateAccountToPrinted(db,"Printed");
         myProgressBar.dismissDialog();
     }
-
-//    @Override
-//    public void afterPrint(boolean success) {
-//        if(success) {
-//            Log.e(TAG,"here: "+ bp.connectedPrinter);
-//            if(!bp.connectedPrinter) {
-//                bp = BixolonPrinterClass.newInstance(ViewDetails.this);
-//            }
-//
-//            preparePrint();
-//        }else{
-//            myProgressBar.dismissDialog();
-//            try{
-//                Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
-//            }catch (RuntimeException e){
-//                Log.e(TAG,"e:" + e.getMessage());
-//                Toast.makeText(this,"- Error Printing",Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//        Log.e(TAG,"afterPrint:" + success);
-//    }
 }

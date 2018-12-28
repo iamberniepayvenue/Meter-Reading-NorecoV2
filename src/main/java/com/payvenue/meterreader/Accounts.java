@@ -150,17 +150,14 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
             }
 
             mcontext = this;
+            myProgressBar = MyProgressBar.newInstance(mcontext);
 
             /**Initalize Rate Segment*/
             listRateSegment = db.getRateSegment(db);
 
-
             if (!MainActivity.gps.canGetLocation()) {
                 MainActivity.gps.showSettingAlert();
             }
-
-
-
 
             mAccount =  MainActivity.selectedAccount;
             a_class = mAccount.getAccountClassification();
@@ -199,11 +196,6 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
             setValues();
 
         }
-
-
-
-
-        //region Functions
 
         public void initViews() {
 
@@ -1194,15 +1186,8 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
                     calculateBill();
                     /**PRINTING SOA*/
                     if (MainActivity.mIsConnected) {
-                         myProgressBar = MyProgressBar.newInstance(this);
-                        if(whichPrinter.equalsIgnoreCase("bix")){
-                            myProgressBar.setTitle("Printing process...");
-                            preparePrint();
-                            //printLogoBix();
-                        }else{
-                            myProgressBar.setTitle("Printing process...");
-                            preparePrint();
-                        }
+                        myProgressBar.setTitle("Printing process...");
+                        preparePrint();
                     } else {
                         showToast("Printer is not connected.");
                     }
@@ -1854,15 +1839,4 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
 
             myProgressBar.dismissDialog();
         }
-
-//        @Override
-//        public void afterPrint(boolean success) {
-//            if(success) {
-//                bixolonPrinter.disconnect();
-//                MobilePrinter.getInstance(this).setConnection(address);
-//                preparePrint();
-//            }else{
-//                Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
-//            }
-//        }
     }

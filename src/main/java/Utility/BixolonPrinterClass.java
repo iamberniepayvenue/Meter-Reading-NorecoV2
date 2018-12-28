@@ -53,12 +53,8 @@ public class BixolonPrinterClass {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-             Log.e("Handler", msg.what + " " + msg.arg1 + " " + msg.arg2);
-
             switch (msg.what) {
-
                 case BixolonPrinter.MESSAGE_STATE_CHANGE:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_STATE_CHANGE");
                     switch (msg.arg1) {
                         case BixolonPrinter.STATE_CONNECTED:
                             MainActivity.mIsConnected = true;
@@ -128,11 +124,6 @@ public class BixolonPrinterClass {
                 // The list of paired printers
                 case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
                     Log.e("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
-                    if (msg.obj == null) {
-
-                    } else {
-
-                    }
                     break;
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
