@@ -38,10 +38,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 import DataBase.DBInfo;
 import Model.Account;
 import Model.Bill;
+import Model.Components;
+import Model.Rates;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.NetworkUtil;
@@ -205,10 +208,12 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             mDialog.setMessage("Uploading data.Please wait.");
             mDialog.show();
             JSONArray resultSet;
-            JSONObject rowObject;
+            JSONObject rowObject,jObComRate;
             String details,districtID,reader;
-            Account account;
+            String jsonBillSum = null;
 
+            Account account;
+            String coopName,accountID,mBillMonth = null,accountClass,totalkWh,totalAmount = null;
             Gson gson = new GsonBuilder().create();
 
             JSONObject FinalData;
@@ -219,8 +224,10 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 resultSet = new JSONArray();
                 rowObject = new JSONObject();
                 FinalData = new JSONObject();
+                jObComRate = new JSONObject();
 
-                String accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
+
+                accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
                 details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                 String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
                 int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -228,13 +235,16 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 districtID = MainActivity.db.getDistrictID(MainActivity.db,routeID);
                 reader = MainActivity.db.getReaderID(MainActivity.db);
                 account = gson.fromJson(details, Account.class);
+                coopName = cursor.getString(cursor.getColumnIndex(DBInfo.COOPID));
+                accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
+                totalkWh = cursor.getString(cursor.getColumnIndex("Extra2"));
                 try {
                     rowObject.put(DBInfo.DateSync,cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
                     rowObject.put(DBInfo.DateRead,arrDateRead[0]);
-                    rowObject.put(DBInfo.COOPID,cursor.getString(cursor.getColumnIndex(DBInfo.COOPID)));
+                    rowObject.put(DBInfo.COOPID,coopName);
                     rowObject.put("DistrictID",districtID);
                     rowObject.put("RouteNo",routeID);
-                    rowObject.put("AccountID",cursor.getString(cursor.getColumnIndex(DBInfo.AccountID)));
+                    rowObject.put("AccountID",accountID);
                     rowObject.put("LastName",cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
                     rowObject.put("FirstName",cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
                     rowObject.put("MiddleName",cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
@@ -262,6 +272,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     if(!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
                         exportBillAmount = mBill.getNetBillAmountExport();
                         billAmount = mBill.getTotalAmount();
+                        totalAmount = String.valueOf(MainActivity.dec2.format(mBill.getTotalAmount()));
                     }
 
                     rowObject.put("ExportBillAmount",exportBillAmount);
@@ -275,7 +286,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     rowObject.put("IsCheckSubMeterType",cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
                     rowObject.put("DemandKWReading",account.getDemandKW());
                     rowObject.put("ExportBill",account.getExportBill());
-                    rowObject.put("Mac",CommonFunc.getMacAddress());
+
                     String exportDateCounter = "0";
                     if(account.getExportDateCounter() != null) {
                         exportDateCounter = account.getExportDateCounter();
@@ -287,7 +298,19 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     String yr = strArray[2];
                     String month = strArray[0];
                     billMonth = yr+month;
+                    mBillMonth = yr+"_"+month;
                     rowObject.put("billmonth",billMonth);
+
+                    ArrayList<Components> summary = new ArrayList<>();
+                    for(Rates rates : mBill.getRates()) {
+                        if(!rates.getCode().toLowerCase().contains("vat")) {
+                            summary.add(new Components(rates.getAmount(),rates.getCode()));
+                        }
+                    }
+
+                    jsonBillSum = gson.toJson(summary);
+                    jObComRate.put("ratesDetails",jsonBillSum);
+
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -295,8 +318,11 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 resultSet.put(rowObject);
 
+
+
                 try {
                     FinalData.put("readAccounts", resultSet);
+                    //FinalData.put("comDetails",jsonSumm);
                     FinalData.put("columnid", String.valueOf(columnID));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
@@ -306,10 +332,11 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 String url = null;
                 try {
-                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
-                    MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
-                    Log.e(TAG,"upload:"+url);
 
+                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&rates="+URLEncoder.encode(jsonBillSum,"UTF-8") + "&BillMonth="+ mBillMonth + "&TotalkWh="+totalkWh + "&TotalAmount="+ totalAmount + "&Classification=" + accountClass;
+                    MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
+                    //Log.e(TAG,"upload:"+ url);
+                    //Log.e(TAG,"upload:"+strRequest + "&data=" + FinalData.toString() + "&rates="+ jsonBillSum);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     Log.e(TAG,"UnsupportedEncodingException: " + e.getMessage());

@@ -297,13 +297,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                     + "&tagclass=" + tagClass
                                     + "&rd=0";
                                 /**rd means download all thus not downloaded accounts*/
-//                                int offset = DB.getAccountSaveCount(DB, routeID);
-//                                if(offset > 0) {
-//                                    cmdAccounts = cmdAccounts + "&offset=" + offset;
-//                                }else{
                                     cmdAccounts = cmdAccounts + "&offset=0";
-                                //}
-
                             if(numberOfTimesDeletingTable == 0) {
                                 int update_error = MyPreferences.getInstance(ctx).getPrefInt("update_error");
                                 if(update_error == 1){
@@ -311,7 +305,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
                                 }
 
                                 myPreferences.savePrefInt("rd",0);
-                                //Log.e(TAG,"fetchAccount: "+ cmdAccounts);
                                 MainActivity.webRequest.sendRequest(cmdAccounts, "Accounts",routeID,dueDate,urlParam, this);
                             }
                         }
@@ -332,7 +325,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener, IVoll
 
                             String tagC = myPreferences.getPrefString(Constant.TAGCLASS);
                             int rd = myPreferences.getPrefInt("rd");
-                            //Log.e(TAG,"rd: "+ rd);
                             if(rd == 0)  {
                                 ArrayList<Route> _list = DB.getRoute(DB);
 

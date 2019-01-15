@@ -1,19 +1,19 @@
 package Model;
 
 public class Components {
-    private String rateComponent;
-    private String details;
+    private String amount;
+    private String component;
 
-    public Components(String rateComponent, String details) {
-        this.rateComponent = rateComponent;
-        this.details = details;
+    public Components(String amount, String component) {
+        this.amount = amount;
+        this.component = component;
     }
 
     public String getRateComponent() {
-        return rateComponent;
+        return amount;
     }
 
     public String getDetails() {
-        return details;
+        return component;
     }
 }

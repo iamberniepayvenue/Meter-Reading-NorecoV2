@@ -1,13 +1,10 @@
-#Fri Dec 28 16:01:03 PHT 2018
-path.3=classes.dex
-path.2=classes.dex
+#Tue Jan 15 18:30:55 PHT 2019
+path.2=classes_0.dex
 path.1=classes.dex
 path.0=classes.dex
-renamed.3=classes4.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex
-base.3=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/debug/3
-base.2=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/debug/0
-base.1=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/debug/2
-base.0=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/dexMerger/debug/1
+base.2=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/dex/debug/mergeLibDexDebug/out
+base.1=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/dex/debug/mergeProjectDexDebug/out
+base.0=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/dex/debug/mergeExtDexDebug/out

@@ -1541,7 +1541,7 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
                     _spacing = _spacing.concat(" ");
                 }
                 String strLeft = dateRead + _spacing +mAccount.getInitialReading();
-                CommonFunc.printingNormal(strRight,strLeft+"\n",0,0,0,mPrinter);
+                CommonFunc.printingNormal(strLeft,strRight+"\n",0,0,0,mPrinter);
                 if(mPrinter == 1) {
                     bp.printText("------------------------------------------------" + "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 }else{
