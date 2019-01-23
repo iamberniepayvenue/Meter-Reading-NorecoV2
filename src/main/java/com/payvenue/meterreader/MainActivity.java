@@ -786,14 +786,6 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         bp.printText("================================================"+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
     }
 
-//    public void printLogoBix() {
-//        if(bp != null) {
-//            bp.printBitmap(this);
-//        }else{
-//            BixolonPrinterClass.newInstance(this).printBitmap(this);
-//        }
-//    }
-
     public void printAccountSummary() {
         MobilePrinter mp = printer;
         if(mp == null) {

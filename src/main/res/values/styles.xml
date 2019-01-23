@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -34,9 +34,9 @@
     </style> -->
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary" >@color/colorPrimary</item>
+        <item name="colorPrimaryDark" >@color/colorPrimaryDark</item>
+        <item name="colorAccent" >@color/colorAccent</item>
     </style>
 
     <!-- <style name="myCustomMenuTextApearance" parent="@android:style/Widget.Holo.Light.ActionBar">

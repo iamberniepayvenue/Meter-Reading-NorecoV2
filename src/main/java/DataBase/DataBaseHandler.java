@@ -1,5 +1,6 @@
 package DataBase;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -63,11 +64,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.execSQL(DBInfo.CREATE_FOUNDMETERS);
         sql.execSQL(DBInfo.CREATE_LIFELINEDISCOUNT);
         sql.execSQL(DBInfo.CREATE_THRESHOLD);
+
+        Log.e(TAG,"onCreate");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        Log.e(TAG,"onUpgrade");
     }
 
     public void errorDownLoad(DataBaseHandler db,Context context) {
@@ -405,8 +408,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public String getBillMonth(DataBaseHandler db,String classification) {
         SQLiteDatabase sql = db.getReadableDatabase();
         Cursor cursor;
-        String query = "Select "+DBInfo.DateAdded+" From " + DBInfo.TBlRateSchedule + " Where " + DBInfo.Classification + " Like '" + classification + "' Group By " + DBInfo.DateAdded;
-        cursor = sql.rawQuery(query,null,null);
+        String query = "Select "+DBInfo.DateAdded+" From " + DBInfo.TBlRateSchedule + " Where " + DBInfo.Classification + " Like '" + classification + "' Limit 1 ";
+        cursor = sql.rawQuery(query,null);
 
         while (cursor.moveToNext()) {
             return cursor.getString(cursor.getColumnIndex("DateAdded"));
@@ -533,10 +536,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
         String stmt = "select count(AccountID) as count from accounts where AccountID = '"+accountid+"'";
         int val = 0;
-        Cursor cursor = sql.rawQuery(stmt,null,null);
+        @SuppressLint("Recycle")
+        Cursor cursor = sql.rawQuery(stmt,null);
         while(cursor.moveToNext()) {
             val = cursor.getInt(cursor.getColumnIndex("count"));
         }
+
 
         return val;
     }
@@ -545,7 +550,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
         int count = 0;
         String statement = "select count(AccountID) as count from accounts where RouteNo = '"+route+"'";
-        Cursor cursor = sql.rawQuery(statement,null,null);
+        Cursor cursor = sql.rawQuery(statement,null);
         if(cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 count = cursor.getInt(cursor.getColumnIndex("count"));
@@ -583,7 +588,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ArrayList<Policies> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
         String statement = "SELECT * From " + DBInfo.TBLPolicy + " Where CustomerClass Like '"+ classification +"' ORDER BY PolicyCode ASC;";
-        Cursor c = sql.rawQuery(statement, null);
+        @SuppressLint("Recycle") Cursor c = sql.rawQuery(statement, null);
 
         if(c.moveToFirst()) {
             while(!c.isAfterLast()) {
@@ -1145,7 +1150,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Account account;
         Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select AccountID,ReadingDetails,ReadStatus From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed'";
+        String statement = "Select AccountID,ReadingDetails,ReadStatus From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed' Order By AccountID";
         Cursor cursor = sql.rawQuery(statement,null);
         if(cursor.moveToFirst()) {
             while(!cursor.isAfterLast()) {
@@ -1225,6 +1230,15 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         }
 
         return count;
+    }
+
+    public void updateStatus(DataBaseHandler db,String accountID) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBInfo.ReadStatus, "Unread");
+        sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + accountID + "'", null);
+        sql.close();
+        db.close();
     }
 
     /**Life Liner/ Lifeline Subsidy*/

@@ -31,48 +31,59 @@ public class WebRequest {
         this.c = c;
     }
 
-    public void sendRequest(String url, final String myType, final String params, final String param2,final String param3, final IVolleyListener listener) {
+    public void sendRequest(String url, final String myType, final String params, final String param2, final String param3, final IVolleyListener listener) {
         //Log.e(TAG,"url : " + url);
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                String res = response.toString();
                 if (myType.equalsIgnoreCase("NotFound") || myType.equalsIgnoreCase("uploadData")) {
+
                     try {
-                        JSONObject array = new JSONObject(params);
-                        String columnID = array.getString("columnid");
-                        MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
+                        if (response.length() > 0) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                res = obj.getString("result");
+                                if (res.equalsIgnoreCase("404")) {
+
+                                } else {
+                                    JSONObject array = new JSONObject(params);
+                                    String columnID = array.getString("columnid");
+                                    MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
+                                }
+                            }
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e(TAG,"JSONException: " + e.getMessage());
                     }
                 }
 
-                if(myType.equalsIgnoreCase("FM")) {
+                if (myType.equalsIgnoreCase("FM")) {
                     try {
                         JSONObject array = new JSONObject(params);
                         String columnID = array.getString("columnid");
                         MainActivity.db.updateUploadStatusFoundMeter(MainActivity.db, columnID);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e(TAG,"JSONException: " + e.getMessage());
+                        Log.e(TAG, "JSONException: " + e.getMessage());
                     }
                 }
 
-                if(myType.equalsIgnoreCase("Accounts")) {
+                if (myType.equalsIgnoreCase("Accounts")) {
                     //Log.e(TAG,response.toString());
                 }
 
-                listener.onSuccess(myType,response.toString(),params,param2,param3);
+                listener.onSuccess(myType, res, params, param2, param3);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"error:"+ error.getMessage());
-                listener.onFailed(error,myType);
+                Log.e(TAG, "error:" + error.getMessage());
+                listener.onFailed(error, myType);
             }
         });
 
-        request.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 
@@ -85,8 +96,8 @@ public class WebRequest {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"error : " + error.getMessage());
-                if(tag.equalsIgnoreCase("saveAccount")) {
+                Log.e(TAG, "error : " + error.getMessage());
+                if (tag.equalsIgnoreCase("saveAccount")) {
                     MyPreferences.getInstance(c).savePrefInt("update_error", 1);
                 }
             }

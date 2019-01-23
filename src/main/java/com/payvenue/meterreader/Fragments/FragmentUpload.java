@@ -136,6 +136,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 v.setEnabled(false);
                 MainActivity.db.resetAllAccounts(MainActivity.db);
                 getDataCount();
+                setValues();
                 v.setEnabled(true);
 
             }
@@ -213,7 +214,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             String jsonBillSum = null;
 
             Account account;
-            String coopName,accountID,mBillMonth = null,accountClass,totalkWh,totalAmount = null;
+            String coopName,accountID,mBillMonth = null,accountClass,totalkWh,totalAmount = null,subclass;
             Gson gson = new GsonBuilder().create();
 
             JSONObject FinalData;
@@ -228,6 +229,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
 
                 accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
+                subclass = cursor.getString(cursor.getColumnIndex(DBInfo.SubClassification));
                 details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                 String routeID = cursor.getString(cursor.getColumnIndex(DBInfo.RouteNo));
                 int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
@@ -293,14 +295,15 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     }
 
                     rowObject.put("ExportDateCounter",exportDateCounter);
-                    String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
-                    String []strArray = billMonth.split("/");
-                    String yr = strArray[2];
-                    String month = strArray[0];
-                    billMonth = yr+month;
-                    mBillMonth = yr+"_"+month;
-                    rowObject.put("billmonth",billMonth);
+                    mBillMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
+                    //String []strArray = billMonth.split("/");
+                    //String yr = strArray[2];
+                    //String month = strArray[0];
+                    //billMonth = yr+month;
+                    //mBillMonth = yr+"_"+month;
+                    rowObject.put("billmonth",mBillMonth);
 
+                    //Log.e(TAG,mBillMonth);
                     ArrayList<Components> summary = new ArrayList<>();
                     for(Rates rates : mBill.getRates()) {
                         if(!rates.getCode().toLowerCase().contains("vat")) {
@@ -322,7 +325,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 try {
                     FinalData.put("readAccounts", resultSet);
-                    //FinalData.put("comDetails",jsonSumm);
                     FinalData.put("columnid", String.valueOf(columnID));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
@@ -333,10 +335,9 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 String url = null;
                 try {
 
-                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&rates="+URLEncoder.encode(jsonBillSum,"UTF-8") + "&BillMonth="+ mBillMonth + "&TotalkWh="+totalkWh + "&TotalAmount="+ totalAmount + "&Classification=" + accountClass;
+                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&rates="+URLEncoder.encode(jsonBillSum,"UTF-8") + "&BillMonth="+ mBillMonth + "&TotalkWh="+totalkWh + "&TotalAmount="+ totalAmount + "&Classification=" + URLEncoder.encode(subclass,"UTF-8");
                     MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
                     //Log.e(TAG,"upload:"+ url);
-                    //Log.e(TAG,"upload:"+strRequest + "&data=" + FinalData.toString() + "&rates="+ jsonBillSum);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     Log.e(TAG,"UnsupportedEncodingException: " + e.getMessage());
@@ -352,14 +353,24 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
     @Override
     public void onSuccess(String type, String response,String params,String param2,String param3) {
 
-        if(Integer.valueOf(param2) == lengthOfData) {
+        if(response.equalsIgnoreCase("404")) {
             if (mDialog.isShowing()) {
                 mDialog.dismiss();
             }
-            lengthOfData = 0;
-            countToUpload = 0;
-            Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(mcontext,"Billing Summary Details table not exist...",Toast.LENGTH_SHORT).show();
+        }else{
+            if(Integer.valueOf(param2) == lengthOfData) {
+                if (mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+                lengthOfData = 0;
+                countToUpload = 0;
+                Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
+            }
         }
+
 
 
         getDataCount();

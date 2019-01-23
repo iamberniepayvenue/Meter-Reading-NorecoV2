@@ -1921,10 +1921,10 @@
         <item>RATES</item>
         <item>EXIT</item>
     </string-array><string-array name="array_hosts">
+        <item>192.168.20.254</item>
         
         
         
-        <item>"dev.teslasuite.com"</item>
     </string-array><array name="nav_drawer_icons">
         <item>@drawable/ic_reader</item>
         <item>@drawable/ic_accounts</item>
@@ -1958,9 +1958,9 @@
     </style><style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">#ffffff</item>
     </style><style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style><style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textColor">#FFFFFF</item>
     </style><style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/><style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/><style name="MyOverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">

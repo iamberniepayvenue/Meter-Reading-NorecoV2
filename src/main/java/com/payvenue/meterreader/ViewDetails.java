@@ -277,6 +277,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 menu.findItem(R.id.btnGen).setVisible(false);
                 menu.findItem(R.id.btnEdit).setVisible(false);
                 menu.findItem(R.id.btnRead).setVisible(false);
+                menu.findItem(R.id.btnCancel).setVisible(false);
                 break;
             case MainActivity.Modes.MODE_2://3333
             case MainActivity.Modes.MODE_3:
@@ -288,12 +289,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 }
                 menu.findItem(R.id.btnGen).setVisible(true);
                 menu.findItem(R.id.btnRead).setVisible(false);
+                menu.findItem(R.id.btnCancel).setVisible(true);
                 break;
             case MainActivity.Modes.MODE_4://4444
                 menu.findItem(R.id.search).setVisible(false);
                 menu.findItem(R.id.btnGen).setVisible(false);
                 menu.findItem(R.id.btnEdit).setVisible(false);
                 menu.findItem(R.id.btnRead).setVisible(true);
+                menu.findItem(R.id.btnCancel).setVisible(false);
                 break;
         }
 
@@ -353,7 +356,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         {
             Intent intent = new Intent(this, Accounts.class);
             startActivityForResult(intent, 5);
+        }
 
+        if(id == R.id.btnCancel) {
+            db.updateStatus(db,mAccount.getAccountID());
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

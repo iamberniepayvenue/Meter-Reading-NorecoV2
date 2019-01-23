@@ -23,4 +23,8 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.widget.SearchView" />
 
+    <item
+        android:id="@+id/btnCancel"
+        android:title="Cancel"
+        app:showAsAction="ifRoom|withText"/>
 </menu>

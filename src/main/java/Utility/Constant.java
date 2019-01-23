@@ -16,13 +16,14 @@ public class Constant {
     public static String NET_METERING_RATE_SCHEDULE = "net_metering_rate";
     public static String TAGCLASS = "TAGCLASS";
 
+
     /**Production*/
-    //public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
+    public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
 
     /**Development
      * 8080
      * */
-    public static String PORT = "8080/noreco_api/billing_api.asp";
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
     public static String DISCONNECTIONNOTICE = "Pursuant to NORECO II Policy on Delinquent Accounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills. " +
