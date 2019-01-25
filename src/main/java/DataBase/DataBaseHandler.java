@@ -420,110 +420,60 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
     public int saveAccount(DataBaseHandler db, Account account, String details,String routeID,String arrears,String rd) {
-        int count = 0;
 
         SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         int val = accountIsExist(db,account.getAccountID());
-        if(rd.equalsIgnoreCase("rd")){
-            Log.e(TAG,account.getAccountID());
+        /**rd  means redownload*/
 
-            if(val == 0) {
-                cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
-                cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
-                cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
-                cv.put(DBInfo.COOPID, account.getCoopID());
-                cv.put(DBInfo.FirstName, account.getFirstName());
-                cv.put(DBInfo.MiddleName, account.getMiddleName());
-                cv.put(DBInfo.LastName, account.getLastName());
-                cv.put(DBInfo.TownCode, account.getTownCode());
-                cv.put(DBInfo.RouteNo, routeID);
-                cv.put(DBInfo.AccountID, account.getAccountID());
-                cv.put(DBInfo.AccountType, account.getAccountType());
-                cv.put(DBInfo.AccountClassification, account.getAccountClassification());
-                cv.put(DBInfo.SubClassification, account.getSubClassification());
-                cv.put(DBInfo.SequenceNo, account.getSequenceNo());
-                cv.put(DBInfo.ReadStatus, "Unread");
-                cv.put(DBInfo.EditCount, 0);
-                cv.put(DBInfo.PrintCount, 0);
-                cv.put(DBInfo.DueDate, account.getDueDate());
-                cv.put(DBInfo.DisoDate, account.getDisoDate());
-                cv.put(DBInfo.AccountStatus, account.getAccountStatus());
-                cv.put(DBInfo.ReadingDetails, details);
-                cv.put(DBInfo.UploadStatus, account.getUploadStatus());
-                cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
-                //cv.put(DBInfo.PoleRental,account.getPoleRental());
-                //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
-                //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
-                cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
-                cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
-                cv.put(DBInfo.Averaging, account.getAveraging());
-                cv.put(DBInfo.Arrears, arrears);
-                cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
-                cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
-                cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
-                cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
-                cv.put(DBInfo.Coreloss, account.getCoreloss());
-                cv.put(DBInfo.ExportBill,account.getExportBill());
-                cv.put(DBInfo.ExportDateCounter,account.getExportDateCounter());
-                cv.put(DBInfo.kWhReading,account.getkWhReading());
-                long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
-
-                if (save != 0) {
-                    String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
-                    MainActivity.webRequest.sendRequest(url,"saveAccount");
-                }
+        if(val == 0) {
+            cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
+            cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
+            cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
+            cv.put(DBInfo.COOPID, account.getCoopID());
+            cv.put(DBInfo.FirstName, account.getFirstName());
+            cv.put(DBInfo.MiddleName, account.getMiddleName());
+            cv.put(DBInfo.LastName, account.getLastName());
+            cv.put(DBInfo.TownCode, account.getTownCode());
+            cv.put(DBInfo.RouteNo, routeID);
+            cv.put(DBInfo.AccountID, account.getAccountID());
+            cv.put(DBInfo.AccountType, account.getAccountType());
+            cv.put(DBInfo.AccountClassification, account.getAccountClassification());
+            cv.put(DBInfo.SubClassification, account.getSubClassification());
+            cv.put(DBInfo.SequenceNo, account.getSequenceNo());
+            cv.put(DBInfo.ReadStatus, "Unread");
+            cv.put(DBInfo.EditCount, 0);
+            cv.put(DBInfo.PrintCount, 0);
+            cv.put(DBInfo.DueDate, account.getDueDate());
+            cv.put(DBInfo.DisoDate, account.getDisoDate());
+            cv.put(DBInfo.AccountStatus, account.getAccountStatus());
+            cv.put(DBInfo.ReadingDetails, details);
+            cv.put(DBInfo.UploadStatus, account.getUploadStatus());
+            cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
+            //cv.put(DBInfo.PoleRental,account.getPoleRental());
+            //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
+            //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
+            cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
+            cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
+            cv.put(DBInfo.Averaging, account.getAveraging());
+            cv.put(DBInfo.Arrears, arrears);
+            cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
+            cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
+            cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
+            cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
+            cv.put(DBInfo.Coreloss, account.getCoreloss());
+            cv.put(DBInfo.ExportBill,account.getExportBill());
+            cv.put(DBInfo.ExportDateCounter,account.getExportDateCounter());
+            cv.put(DBInfo.kWhReading,account.getkWhReading());
+            long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
+            if (save != 0) {
+                String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
+                MainActivity.webRequest.sendRequest(url,"saveAccount");
             }
         }else{
-            if(val == 0) {
-                //Log.e(TAG,"account-here" + account.getAccountID());
-                cv.put(DBInfo.DateSync, CommonFunc.getDateOnly());
-                cv.put(DBInfo.DateRead, CommonFunc.getDateOnly());
-                cv.put(DBInfo.DateUploaded, CommonFunc.getDateOnly());
-                cv.put(DBInfo.COOPID, account.getCoopID());
-                cv.put(DBInfo.FirstName, account.getFirstName());
-                cv.put(DBInfo.MiddleName, account.getMiddleName());
-                cv.put(DBInfo.LastName, account.getLastName());
-                cv.put(DBInfo.TownCode, account.getTownCode());
-                cv.put(DBInfo.RouteNo, routeID);
-                cv.put(DBInfo.AccountID, account.getAccountID());
-                cv.put(DBInfo.AccountType, account.getAccountType());
-                cv.put(DBInfo.AccountClassification, account.getAccountClassification());
-                cv.put(DBInfo.SubClassification, account.getSubClassification());
-                cv.put(DBInfo.SequenceNo, account.getSequenceNo());
-                cv.put(DBInfo.ReadStatus, "Unread");
-                cv.put(DBInfo.EditCount, 0);
-                cv.put(DBInfo.PrintCount, 0);
-                cv.put(DBInfo.DueDate, account.getDueDate());
-                cv.put(DBInfo.DisoDate, account.getDisoDate());
-                cv.put(DBInfo.AccountStatus, account.getAccountStatus());
-                cv.put(DBInfo.ReadingDetails, details);
-                cv.put(DBInfo.UploadStatus, account.getUploadStatus());
-                cv.put(DBInfo.MeterSerialNo, account.getMeterSerialNo());
-                //cv.put(DBInfo.PoleRental,account.getPoleRental());
-                //cv.put(DBInfo.SpaceRental,account.getSpaceRental());
-                //cv.put(DBInfo.PilferagePenalty,account.getPilferagePenalty());
-                cv.put(DBInfo.UnderOverRecovery, account.getUnderOverRecovery());
-                cv.put(DBInfo.LastReadingDate, account.getLastReadingDate());
-                cv.put(DBInfo.Averaging, account.getAveraging());
-                cv.put(DBInfo.Arrears, arrears);
-                cv.put(DBInfo.IsNetMetering, account.getIsNetMetering());
-                cv.put(DBInfo.IsCheckSubMeterType, account.getIsCheckSubMeterType());
-                cv.put(DBInfo.CheckMeterAccountNo, account.getCheckMeterAccountNo());
-                cv.put(DBInfo.CheckMeterName, account.getCheckMeterName());
-                cv.put(DBInfo.Coreloss, account.getCoreloss());
-                cv.put(DBInfo.ExportBill, account.getExportBill());
-                cv.put(DBInfo.ExportDateCounter, account.getExportDateCounter());
-                cv.put(DBInfo.kWhReading, account.getkWhReading());
-
-                long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
-
-                if (save != 0) {
-                    String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
-                    MainActivity.webRequest.sendRequest(url, "saveAccount");
-                    //Log.e(TAG, "update is read: " + url);
-                }
-            }
+            /**if already save, means IsRead is not successfully updated to 2, update the accountID */
+            String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
+            MainActivity.webRequest.sendRequest(url,"saveAccount");
         }
 
         sql.close();
@@ -534,7 +484,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public int accountIsExist(DataBaseHandler db,String accountid) {
         SQLiteDatabase sql = db.getReadableDatabase();
-        String stmt = "select count(AccountID) as count from accounts where AccountID = '"+accountid+"'";
+        String stmt = String.format("select count(AccountID) as count from accounts where AccountID = '%s'", accountid);
         int val = 0;
         @SuppressLint("Recycle")
         Cursor cursor = sql.rawQuery(stmt,null);
@@ -544,20 +494,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
         return val;
-    }
-
-    public int getAccountSaveCount(DataBaseHandler db,String route) {
-        SQLiteDatabase sql = db.getReadableDatabase();
-        int count = 0;
-        String statement = "select count(AccountID) as count from accounts where RouteNo = '"+route+"'";
-        Cursor cursor = sql.rawQuery(statement,null);
-        if(cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                count = cursor.getInt(cursor.getColumnIndex("count"));
-            }
-        }
-
-        return count;
     }
 
     public void updateSerialNumber(DataBaseHandler db,String accountID,String newMeterSerial) {
@@ -574,12 +510,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase sql = db.getReadableDatabase();
 
-        String query = "SELECT * From " + DBInfo.TBlRateSchedule
-                + " ORDER BY RateSched,Classification ASC";
+        String query = String.format("SELECT * From %s ORDER BY RateSched,Classification ASC", DBInfo.TBlRateSchedule);
 
-        Cursor c = sql.rawQuery(query, null);
-
-        return c;
+        return sql.rawQuery(query, null);
 
     }
 

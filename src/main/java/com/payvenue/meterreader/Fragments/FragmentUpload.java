@@ -209,7 +209,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             mDialog.setMessage("Uploading data.Please wait.");
             mDialog.show();
             JSONArray resultSet;
-            JSONObject rowObject,jObComRate;
+            JSONObject rowObject;
             String details,districtID,reader;
             String jsonBillSum = null;
 
@@ -225,7 +225,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                 resultSet = new JSONArray();
                 rowObject = new JSONObject();
                 FinalData = new JSONObject();
-                jObComRate = new JSONObject();
+
 
 
                 accountClass = cursor.getString(cursor.getColumnIndex(DBInfo.AccountClassification));
@@ -312,7 +312,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
                     }
 
                     jsonBillSum = gson.toJson(summary);
-                    jObComRate.put("ratesDetails",jsonBillSum);
 
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage());
@@ -334,7 +333,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
                 String url = null;
                 try {
-
                     url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&rates="+URLEncoder.encode(jsonBillSum,"UTF-8") + "&BillMonth="+ mBillMonth + "&TotalkWh="+totalkWh + "&TotalAmount="+ totalAmount + "&Classification=" + URLEncoder.encode(subclass,"UTF-8");
                     MainActivity.webRequest.sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
                     //Log.e(TAG,"upload:"+ url);
@@ -345,7 +343,6 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
             }
         }catch (IllegalArgumentException i) {
             Toast.makeText(getContext(),i.getMessage(),Toast.LENGTH_LONG).show();
-            Log.e(TAG,"IllegalArgumentException: " + i.getMessage());
         }
     }
 
@@ -383,7 +380,7 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
         if (mDialog.isShowing()) {
             mDialog.dismiss();
         }
-        Log.e(TAG,"error volley: " + error.getMessage());
+
         if(error.getMessage() == null) {
             Toast.makeText(mcontext,"Failed to upload",Toast.LENGTH_SHORT).show();
         }else{
@@ -403,15 +400,13 @@ public class FragmentUpload extends Fragment implements IVolleyListener {
 
     @Override
     public void onDestroy() {
-        super.onDestroy(); // Always call the superclass
-
-        // Stop method tracing that the activity started during onCreate()
+        super.onDestroy();
         android.os.Debug.stopMethodTracing();
     }
 
     @Override
     public void onPause() {
-        super.onPause(); // Always call the superclass method first
+        super.onPause();
     }
 
     private void exportDB() {
