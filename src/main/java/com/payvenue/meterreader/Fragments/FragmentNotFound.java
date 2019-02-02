@@ -146,7 +146,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         mDialog.show();
         JSONArray resultSet;
         JSONObject rowObject;
-        String details,districtID,reader;
+        String details,districtID,reader,billMonth = null;
         Account account;
         Gson gson = new GsonBuilder().create();
 
@@ -178,17 +178,18 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
                 rowObject.put("NewReading",account.getReading());
                 rowObject.put("Consume",account.getConsume());
                 rowObject.put("ActualConsumption","0");
+                rowObject.put("ExportBillAmount","0");
                 rowObject.put("Latitude",account.getLatitude());
                 rowObject.put("Longitude",account.getLongitude());
                 rowObject.put("ReaderID",reader);
                 rowObject.put("ReadStatus",cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus)));
                 rowObject.put("Remarks",account.getRemarks());
                 rowObject.put("DueDate",cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
-                String billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
-                String []strArray = billMonth.split("/");
-                String yr = strArray[2];
-                String month = strArray[0];
-                billMonth = yr+month;
+                billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
+//                String []strArray = billMonth.split("/");
+//                String yr = strArray[2];
+//                String month = strArray[0];
+//                billMonth = yr+month;
                 rowObject.put("billmonth",billMonth);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
@@ -206,17 +207,17 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
             }
 
 
-            Log.e(TAG, "Upload Not Found: " + strRequest + "&data="+ FinalData.toString());
+            //Log.e(TAG, "Upload Not Found: " + strRequest + "&data="+ FinalData.toString());
 
             String url;
             try {
-                url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8");
+                url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&BillMonth="+billMonth;
+               // Log.e(TAG, "Upload Not Found: " + url);
                 MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void getSearchData() {
@@ -249,11 +250,15 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
     @Override
     public void onSuccess(String type, String response,String params,String param2,String param3) {
         getSearchData();
+
         if (mDialog.isShowing()) {
             mDialog.dismiss();
         }
-
-        Toast.makeText(mcontxt, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
+        if(response.equals("404")) {
+            Toast.makeText(mcontxt, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(mcontxt, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

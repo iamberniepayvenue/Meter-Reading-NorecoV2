@@ -17,6 +17,22 @@ public class Constant {
     public static String TAGCLASS = "TAGCLASS";
 
 
+    public static String ROUTE_STATUS = "r_s";
+    public static String RATE_SCHEDULE_STATUS = "rs_s";
+    public static String POLICY_STATUS = "p_s";
+    public static String ACCOUNT_STATUS = "a_s";
+    public static String COOP_DETAILS_STATUS = "cd_s";
+    public static String RATE_COMPONENT_STATUS = "rc_s";
+    public static String RATE_SEGMENT_STATUS = "r_s_s";
+    public static String LIFELINE_POLICY_STATUS = "lp_s";
+    public static String RATE_CODE_STATUS = "rc_s";
+    public static String THRESHOLD_STATUS = "t_s";
+
+    public static String YES = "yes";
+    public static String NO = "no";
+
+
+
     /**Production*/
     //public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
 

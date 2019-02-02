@@ -12,10 +12,13 @@ public class Route extends Reader {
     private String AccountIDFrom;
     private String DueDate;
     private String TagClass;
+    private String DownloadRef;
+    private String SequenceNoFrom;
+    private String SequenceNoTo;
 
 
 
-    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName) {
+    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName,String downloadRef,String sequenceNoFrom,String sequenceNoTo) {
         super(coopID,readerID,readerName);
         DistrictID = districtID;
         RouteID = routeID;
@@ -23,6 +26,9 @@ public class Route extends Reader {
         AccountIDFrom = accountIDFrom;
         DueDate = dueDate;
         TagClass = tagClass;
+        DownloadRef = downloadRef;
+        SequenceNoFrom = sequenceNoFrom;
+        SequenceNoTo = sequenceNoTo;
     }
 
 
@@ -50,5 +56,15 @@ public class Route extends Reader {
         return TagClass;
     }
 
+    public String getDownloadRef() {
+        return DownloadRef;
+    }
 
+    public String getSequenceNoFrom() {
+        return SequenceNoFrom;
+    }
+
+    public String getSequenceNoTo() {
+        return SequenceNoTo;
+    }
 }

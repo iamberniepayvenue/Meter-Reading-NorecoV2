@@ -40,6 +40,12 @@ public class DBInfo implements BaseColumns {
     public static String RouteID = "RouteID";
     public static String AccountIDFrom = "AccountIDFrom";
     public static String AccountIDTo = "AccountIDTo";
+    public static String TagClass = "TagClass";
+    public static String DownloadRef = "DownloadRef";
+    public static String SequenceNoFrom = "SequenceNoFrom";
+    public static String SequenceNoTo = "SequenceNoTo";
+
+
 
     public static String Host = "Host";
     public static String Port = "Port";
@@ -171,7 +177,9 @@ public class DBInfo implements BaseColumns {
             + "(_id INTEGER PRIMARY KEY AUTOINCREMENT ," + COOPID
             + " TEXT," + ReaderID + " TEXT, " + DistrictID
             + " TEXT, " + RouteID + " TEXT, " + AccountIDFrom
-            + " TEXT, " + AccountIDTo + " TEXT)";
+            + " TEXT, " + AccountIDTo + " TEXT, " + DueDate
+            + " TEXT, " + TagClass + " TEXT, " + DownloadRef
+            + " TEXT, " + SequenceNoFrom + " TEXT, " + SequenceNoTo + " TEXT)";
 
     public static final String CREATE_CONN = "CREATE TABLE "
             + DBInfo.TBLConn_settings + "(" + COOPID + " TEXT ,"

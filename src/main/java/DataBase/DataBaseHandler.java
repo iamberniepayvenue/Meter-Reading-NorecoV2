@@ -29,8 +29,6 @@ import Model.ReadingDetailsModel;
 import Model.Route;
 import Model.Thresholds;
 import Utility.CommonFunc;
-import Utility.Constant;
-import Utility.MyPreferences;
 
 
 public class DataBaseHandler extends SQLiteOpenHelper {
@@ -73,49 +71,83 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Log.e(TAG,"onUpgrade");
     }
 
-    public void errorDownLoad(DataBaseHandler db,Context context) {
+    public void errorDownLoad(DataBaseHandler db,Context context,String tag) {
         SQLiteDatabase sql = db.getReadableDatabase();
 
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
+        switch (tag) {
+            case "Routes":
+                sql.execSQL("Delete from " + DBInfo.TBLRoutes + "");
+                break;
+            case "RateSchedule":
+                sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
+                break;
+            case "Policy":
+                sql.execSQL("Delete from " + DBInfo.TBLPolicy + "");
+                break;
+            case "Accounts":
+                /**
+                 * no actions made here... maybe some accounts saved, but there's problem encountered connection
+                 * download again.
+                 * */
+                break;
+            case "RateCode":
+                sql.execSQL("Delete from " + DBInfo.TBLRateCode + "");
+                break;
+            case "CoopDetails":
+                sql.execSQL("Delete from " + DBInfo.TBLUtility + "");
+                break;
+            case "RateComponent":
+                sql.execSQL("Delete from " + DBInfo.TBlRateComponent + "");
+                break;
+            case "lifeline":
+                sql.execSQL("Delete from " + DBInfo.TBLLifeLineDiscount + "");
+                break;
+                default:
         }
 
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
-        }
 
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_COMPONENT_COUNT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBlRateComponent + "");
-        }
-
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SEGMENT_COUNT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBLRateSegment + "");
-        }
-
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT) == 0
-                || MyPreferences.getInstance(context).getPrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBLPolicy + "");
-        }
-
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.LIFELINE_POLICY_COUNT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBLLifeLineDiscount + "");
-        }
-
-        if(MyPreferences.getInstance(context).getPrefInt(Constant.THRESHOLD_COUNT) == 0) {
-            sql.execSQL("Delete from " + DBInfo.TBLThreshold + "");
-        }
-
-
-        sql.execSQL("Delete from " + DBInfo.TBLRoutes + "");
-        sql.execSQL("Delete from " + DBInfo.TBLConn_settings + "");
-        sql.execSQL("Delete from " + DBInfo.TBLRateCode + "");
-        sql.execSQL("Delete from " + DBInfo.TBLSettings + "");
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SCHEDULE_COUNT_HIGHERVOLT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBlRateSchedule + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_COMPONENT_COUNT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBlRateComponent + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.RATE_SEGMENT_COUNT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBLRateSegment + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.BILLING_POLICY_NONHIGHVOLT_COUNT) == 0
+//                || MyPreferences.getInstance(context).getPrefInt(Constant.BILLING_POLICY_HIGHVOLT_COUNT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBLPolicy + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.LIFELINE_POLICY_COUNT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBLLifeLineDiscount + "");
+//        }
+//
+//        if(MyPreferences.getInstance(context).getPrefInt(Constant.THRESHOLD_COUNT) == 0) {
+//            sql.execSQL("Delete from " + DBInfo.TBLThreshold + "");
+//        }
+//
+//
+//        sql.execSQL("Delete from " + DBInfo.TBLRoutes + "");
+//        sql.execSQL("Delete from " + DBInfo.TBLConn_settings + "");
+//        sql.execSQL("Delete from " + DBInfo.TBLRateCode + "");
+//        sql.execSQL("Delete from " + DBInfo.TBLSettings + "");
         sql.execSQL("Delete from sqlite_sequence");
         sql.close();
         db.close();
     }
 
-    public void saveRoute(DataBaseHandler db, Route route) {
+    public int saveRoute(DataBaseHandler db, Route route) {
+
+        int count = 0;
 
         SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -126,29 +158,44 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.RouteID, route.getRouteID());
         cv.put(DBInfo.AccountIDFrom, route.getAccountIDFrom());
         cv.put(DBInfo.AccountIDTo, route.getAccountIDTo());
+        cv.put(DBInfo.DueDate, route.getDueDate());
+        cv.put(DBInfo.TagClass, route.getTagClass());
+        cv.put(DBInfo.DownloadRef, route.getDownloadRef());
+        cv.put(DBInfo.SequenceNoFrom, route.getSequenceNoFrom());
+        cv.put(DBInfo.SequenceNoTo, route.getSequenceNoTo());
 
-        sql.insert(DBInfo.TBLRoutes, null, cv);
+        long c = sql.insert(DBInfo.TBLRoutes, null, cv);
+        if(c != 0) {
+            count = 1;
+        }
         sql.close();
         db.close();
 
+        return count;
     }
 
     public ArrayList<Route> getRoute(DataBaseHandler db) {
         ArrayList<Route> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
 
-        String statement = "SELECT * FROM routes";
+        String statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID";
         Cursor c = sql.rawQuery(statement,null);
 
         if(c.moveToFirst()) {
             while (!c.isAfterLast()) {
                 String coopid = c.getString(c.getColumnIndex(DBInfo.COOPID));
                 String readerid = c.getString(c.getColumnIndex(DBInfo.ReaderID));
+                String readername = c.getString(c.getColumnIndex(DBInfo.ReaderName));
                 String districtid = c.getString(c.getColumnIndex(DBInfo.DistrictID));
                 String routeid = c.getString(c.getColumnIndex(DBInfo.RouteID));
                 String idfrom = c.getString(c.getColumnIndex(DBInfo.AccountIDFrom));
                 String idTo = c.getString(c.getColumnIndex(DBInfo.AccountIDTo));
-                list.add(new Route(districtid,routeid,idTo,idfrom,"","",coopid,readerid,""));
+                String dueDate = c.getString(c.getColumnIndex(DBInfo.DueDate));
+                String tagClass = c.getString(c.getColumnIndex(DBInfo.TagClass));
+                String downLoadRef = c.getString(c.getColumnIndex(DBInfo.DownloadRef));
+                String sequenceNoFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
+                String sequenceNoTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
+                list.add(new Route(districtid,routeid,idTo,idfrom,dueDate,tagClass,coopid,readerid,readername,downLoadRef,sequenceNoFrom,sequenceNoTo));
                 c.moveToNext();
             }
         }
@@ -202,14 +249,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return res;
     }
 
-    public void syncSettingsInfo(DataBaseHandler db, Reader reader) {
+    public void syncSettingsInfo(DataBaseHandler db, Route route) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(DBInfo.COOPID, reader.getCoopID());
-        cv.put(DBInfo.ReaderID, reader.getReaderID());
-        cv.put(DBInfo.ReaderName, reader.getReaderName());
+        cv.put(DBInfo.COOPID, route.getCoopID());
+        cv.put(DBInfo.ReaderID, route.getReaderID());
+        cv.put(DBInfo.ReaderName, route.getReaderName());
 
         sql.insert(DBInfo.TBLSettings, null, cv);
 
@@ -471,7 +518,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 MainActivity.webRequest.sendRequest(url,"saveAccount");
             }
         }else{
-            /**if already save, means IsRead is not successfully updated to 2, update the accountID */
+            /**if already save, means IsRead is not successfully updated to 2, update the accountID
+             * bpu is billing_profile update
+             * */
             String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
             MainActivity.webRequest.sendRequest(url,"saveAccount");
         }
@@ -618,12 +667,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
     public Cursor getAccountList(DataBaseHandler db, String mode) {
-
+        Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = db.getReadableDatabase();
         String myQuery = "";
 
         myQuery = "Select a.*,r.DistrictID From " + DBInfo.TBLACCOUNTINFO + " a Left Join " + DBInfo.TBLRoutes + " r On a.RouteNo = r.RouteID Where " +
                 "(a.ReadStatus = '" + mode + "') And UploadStatus = '"+ 0 +"'";
+
 
 
         Cursor c = sql.rawQuery(myQuery, null);

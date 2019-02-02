@@ -26,13 +26,15 @@ public class WebRequest {
     Context c;
     private static final String TAG = "WebRequest";
 
+    private RequestListener requestListener;
+
 
     public WebRequest(Context c) {
         this.c = c;
     }
 
     public void sendRequest(String url, final String myType, final String params, final String param2, final String param3, final IVolleyListener listener) {
-        //Log.e(TAG,"url : " + url);
+
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -91,19 +93,94 @@ public class WebRequest {
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.e(TAG,"response : " + response);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "error : " + error.getMessage());
-                if (tag.equalsIgnoreCase("saveAccount")) {
-                    MyPreferences.getInstance(c).savePrefInt("update_error", 1);
-                }
+//                if (tag.equalsIgnoreCase("saveAccount")) {
+//                    MyPreferences.getInstance(c).savePrefInt("update_error", 1);
+//                }
             }
         });
 
 
+        VolleySingleton.getInstance(c).addToRequestQueue(request);
+    }
+
+    public void sendRequestUpload(String url, final String myType, final String params,final String param2){
+        /**
+         *      params = reading data in json form
+         *      param2 = count of data for uploading from cursor
+         *
+         * */
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                String res;
+                if (myType.equalsIgnoreCase("uploadData")) {
+                    try {
+                        if (response.length() > 0) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                res = obj.getString("result");
+                                if (res.equalsIgnoreCase("404")) {
+                                    requestListener.onRequestListener("404","");
+                                } else {
+                                    JSONObject array = new JSONObject(params);
+                                    String columnID = array.getString("columnid");
+                                    MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
+                                    requestListener.onRequestListener("200",param2);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestListener.onRequestListener("500",error.getMessage());
+            }
+        });
+
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingleton.getInstance(c).addToRequestQueue(request);
+    }
+
+
+    public interface RequestListener {
+        void onRequestListener(String response,String param);
+    }
+
+    public void setRequestListener(String url,String myType,String params,String param2,RequestListener listener) {
+        this.requestListener = listener;
+        sendRequestUpload(url,myType,params,param2);
+    }
+
+    public void setRequestListenerDownload(String url,RequestListener listener) {
+        this.requestListener = listener;
+        download(url);
+    }
+
+
+    public void download(String url) {
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                requestListener.onRequestListener(response.toString(),"");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestListener.onRequestListener("500",error.getMessage());
+            }
+        });
+
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 }

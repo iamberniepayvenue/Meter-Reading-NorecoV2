@@ -90,8 +90,8 @@ public class CommonFunc {
                 if (res1.length() > 0) {
                     res1.deleteCharAt(res1.length() - 1);
                 }
-                return res1.toString().toLowerCase();
-                //return "00:54:06:b7:28:2c";
+                //return res1.toString().toLowerCase();
+                return "00:fd:20:44:bb:55";
             }
         } catch (Exception ex) {
         }

@@ -238,7 +238,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
     public void prepareData() {
 
         Cursor c = db.getFoundMeters(db);
-        String columnid;
+        String columnid,billMonth;
 
         if (c.getCount() == 0) {
             Toast.makeText(mcontext, "No data to upload.", Toast.LENGTH_SHORT).show();
@@ -263,6 +263,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                     myobj.put("ReaderID", MainActivity.reader.getReaderID());
                     myobj.put("ReadStatus", "Found");
                     myobj.put("Mac",CommonFunc.getMacAddress());
+                    billMonth = MainActivity.db.getBillMonth(MainActivity.db,"Residential");
                     myArray.put(myobj);
 
                     columnid = c.getString(0);
@@ -276,13 +277,13 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                         e.printStackTrace();
                     }
 
-                    String url = "http://" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8");
-                    Log.e(TAG, "FM :" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + FinalData.toString());
+                    String url = "http://" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort()
+                            + "?cmd=uploadData" + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8") + "&BillMonth="+billMonth;
+                    //Log.e(TAG, "FM :" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + FinalData.toString());
                     MainActivity.webRequest.sendRequest(url, "FM", FinalData.toString(), "", "", this);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-
                 }
         }
     }
