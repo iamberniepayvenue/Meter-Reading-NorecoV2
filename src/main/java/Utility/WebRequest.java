@@ -33,7 +33,7 @@ public class WebRequest {
         this.c = c;
     }
 
-    public void sendRequest(String url, final String myType, final String params, final String param2, final String param3, final IVolleyListener listener) {
+    public void sendRequest(final String url, final String myType, final String params, final String param2, final String param3, final IVolleyListener listener) {
 
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
@@ -71,11 +71,15 @@ public class WebRequest {
                     }
                 }
 
-                if (myType.equalsIgnoreCase("Accounts")) {
-                    //Log.e(TAG,response.toString());
+                if(myType.equalsIgnoreCase("accounts")) {
+                    /***
+                     *  param2 = duedate
+                     *  params = routeid
+                     * */
+                    listener.onSuccess(myType, res, params, url, param2);
+                }else {
+                    listener.onSuccess(myType, res, params, param2, param3);
                 }
-
-                listener.onSuccess(myType, res, params, param2, param3);
             }
         }, new Response.ErrorListener() {
             @Override

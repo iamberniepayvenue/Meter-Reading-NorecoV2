@@ -31,6 +31,27 @@ public class Constant {
     public static String YES = "yes";
     public static String NO = "no";
 
+    public static int rateschedsize = 0;
+    public static int rateshedsave = 0;
+    public static int billingpolicysize = 0;
+    public static int billingpolicysave = 0;
+    public static int accountssave = 0;
+    public static int accountssize = 0;
+    public static int ratecodesize = 0;
+    public static int ratecodesave = 0;
+    public static int coopdetailssize = 0;
+    public static int coopdetailssave = 0;
+    public static int ratecomponentsize = 0;
+    public static int ratecomponentsave = 0;
+    public static int ratesegmentsize = 0;
+    public static int ratesegmentsave = 0;
+    public static int lifelinepolicysave = 0;
+    public static int lifelinepolicysize = 0;
+    public static int thresholdsize = 0;
+    public static int thresholdsave = 0;
+
+    public static int decoy_save_account = 0;
+
 
 
     /**Production*/

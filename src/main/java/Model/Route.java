@@ -15,10 +15,11 @@ public class Route extends Reader {
     private String DownloadRef;
     private String SequenceNoFrom;
     private String SequenceNoTo;
+    private int IsDownload;
 
 
 
-    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName,String downloadRef,String sequenceNoFrom,String sequenceNoTo) {
+    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName,String downloadRef,String sequenceNoFrom,String sequenceNoTo,int isDownload) {
         super(coopID,readerID,readerName);
         DistrictID = districtID;
         RouteID = routeID;
@@ -29,6 +30,7 @@ public class Route extends Reader {
         DownloadRef = downloadRef;
         SequenceNoFrom = sequenceNoFrom;
         SequenceNoTo = sequenceNoTo;
+        IsDownload = isDownload;
     }
 
 
@@ -66,5 +68,13 @@ public class Route extends Reader {
 
     public String getSequenceNoTo() {
         return SequenceNoTo;
+    }
+
+    public int getIsDownload() {
+        return IsDownload;
+    }
+
+    public void setIsDownload(int isDownload) {
+        IsDownload = isDownload;
     }
 }

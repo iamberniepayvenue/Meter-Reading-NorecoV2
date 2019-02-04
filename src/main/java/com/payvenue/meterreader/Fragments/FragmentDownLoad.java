@@ -45,10 +45,11 @@ import Utility.WebRequest;
 
 public class FragmentDownLoad extends Fragment implements OnClickListener { //, IVolleyListener
 
-    private Button BtnDownLoad, BtnDelete;
+    private static Button BtnDownLoad;
+    private Button BtnDelete;
     private static View rootView;
     SQLiteDatabase database;
-    String mac;
+    static String mac;
     static Snackbar snackbar;
     public static String baseurl;
 
@@ -77,27 +78,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     private boolean isRatesScheduleErrorDownloading = false;
 
 
-    private static int rateschedsize = 0;
-    private static int rateshedsave = 0;
-    private static int billingpolicysize = 0;
-    private static int billingpolicysave = 0;
-    private static int accountssave = 0;
-    private static int accountssize = 0;
-    private static int ratecodesize = 0;
-    private static int ratecodesave = 0;
-    private static int coopdetailssize = 0;
-    private static int coopdetailssave = 0;
-    private static int ratecomponentsize = 0;
-    private static int ratecomponentsave = 0;
-    private static int ratesegmentsize = 0;
-    private static int ratesegmentsave = 0;
-    private static int lifelinepolicysave = 0;
-    private static int lifelinepolicysize = 0;
-    private static int thresholdsize = 0;
-    private static int thresholdsave = 0;
-
-
-    private ArrayList<Route> routeArrayList = new ArrayList<>();
+    private static ArrayList<Route> routeArrayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -239,9 +220,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     return;
                 }
 
+                final int[] save = {0};
                 baseurl = "http://" + txtHost + ":" + strPort;
                 String cmdRoute = baseurl + "?cmd=getRoutes&mac=" + mac;
-                Log.e(TAG, "accounts: " + cmdRoute);
+                Log.e(TAG, "routes: " + cmdRoute);
                 MainActivity.webRequest.setRequestListenerDownload(cmdRoute, new WebRequest.RequestListener() {
                     @Override
                     public void onRequestListener(String response, String param) {
@@ -249,6 +231,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         mTvView.append(response);
 
                         if (response.equalsIgnoreCase("500")) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
                             setSnackbar("Failed, " + param);
                             snackbar.show();
                             return;
@@ -256,7 +241,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
 
                         try {
-                            int save = 0;
+
                             JSONArray jsonArray = new JSONArray(response);
                             Route route = null;
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -283,12 +268,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 ifRouteExist = DB.checkRouteIsExist(DB, routeID, districtID);
 
                                 if (!ifRouteExist) {
-                                    save = +DB.saveRoute(DB, route);
+                                    save[0] = save[0] + DB.saveRoute(DB, route);
                                 }
-
-
                             }
 
+
+                            Log.e(TAG, "route save: " + save[0]);
+                            Log.e(TAG, "route length: " + jsonArray.length());
                             if (jsonArray.length() == 0) {
                                 if (mDialog.isShowing()) {
                                     mDialog.dismiss();
@@ -299,24 +285,21 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 return;
                             }
 
-                            if (jsonArray.length() != save) {
-                                if (mDialog.isShowing()) {
-                                    mDialog.dismiss();
-                                }
-
-                                setSnackbar("Routes not completely downloaded \n please fix error or download again");
-                                snackbar.show();
-                                DB.errorDownLoad(DB, getContext(), "Routes");
-                                return;
-                            }
-
-                            if (jsonArray.length() == save) {
+                            if (jsonArray.length() == save[0]) {
                                 setSnackbar("routes completed..");
                                 snackbar.show();
                                 DB.syncSettingsInfo(DB, route);
                                 routeArrayList = DB.getRoute(DB);
-
                                 downloadRateSchedule();
+                            }
+
+                            if (jsonArray.length() > 0 || save[0] == 0) {
+                                if (mDialog.isShowing()) {
+                                    mDialog.dismiss();
+                                }
+
+                                setSnackbar("routes saved already..");
+                                snackbar.show();
                             }
 
                         } catch (JSONException e) {
@@ -327,8 +310,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                     }
                 });
-
-
 
 
 //                MainActivity.webRequest.sendRequest(cmdRoute, "dlRoutes", "", "", "", this);
@@ -351,299 +332,152 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public void checkDataNotSuccessfullyDownloaded() {
 
-        if(myPreferences.getPrefString(Constant.ACCOUNT_STATUS).equalsIgnoreCase(Constant.NO)){
-            downloadAccouns();
+        if (myPreferences.getPrefString(Constant.ACCOUNT_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadAccounts(getContext(), 0);
         }
 
-        if(myPreferences.getPrefString(Constant.RATE_CODE_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadRateCode();
+        if (myPreferences.getPrefString(Constant.RATE_CODE_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadRateCode(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.COOP_DETAILS_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadCoopDetails();
+        if (myPreferences.getPrefString(Constant.COOP_DETAILS_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadCoopDetails(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.RATE_COMPONENT_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadRateComponent();
+        if (myPreferences.getPrefString(Constant.RATE_COMPONENT_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadRateComponent(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.RATE_SEGMENT_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadRateSegment();
+        if (myPreferences.getPrefString(Constant.RATE_SEGMENT_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadRateSegment(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.POLICY_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadBillingPolicy();
+        if (myPreferences.getPrefString(Constant.POLICY_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadBillingPolicy(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.RATE_SCHEDULE_STATUS).equalsIgnoreCase(Constant.NO)) {
+        if (myPreferences.getPrefString(Constant.RATE_SCHEDULE_STATUS).equalsIgnoreCase(Constant.NO)) {
             downloadRateSchedule();
         }
 
-        if(myPreferences.getPrefString(Constant.LIFELINE_POLICY_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadLifeLineDiscountPolicy();
+        if (myPreferences.getPrefString(Constant.LIFELINE_POLICY_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadLifeLineDiscountPolicy(getContext());
         }
 
-        if(myPreferences.getPrefString(Constant.THRESHOLD_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadThreshold();
+        if (myPreferences.getPrefString(Constant.THRESHOLD_STATUS).equalsIgnoreCase(Constant.NO)) {
+            downloadThreshold(getContext());
         }
     }
 
     public void downloadRateSchedule() {
+        ArrayList<String> tagclassList = new ArrayList<>();
+        String tagclass = "";
+        String coopID = "";
         for (Route r : routeArrayList) {
-            mDialog.setMessage("DownLoading Rate Schedule...");
-            mDialog.show();
-            String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + r.getCoopID() + "&mac=" + mac + "&tagclass=" + r.getTagClass();
-            new downloadRateScheduleAsync().execute(cmdSchedule);
-        }
-
-        if (rateschedsize != rateshedsave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
+            if (!r.getTagClass().equalsIgnoreCase(tagclass)) {
+                tagclass = r.getTagClass();
+                coopID = r.getCoopID();
+                tagclassList.add(tagclass);
             }
-
-            DB.errorDownLoad(DB, getContext(), "RateSchedule");
-            setSnackbar("Rate Schedule not completely downloaded...Download again");
-            snackbar.show();
-            return;
         }
 
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
+        mDialog.setMessage("DownLoading Rate Schedule...");
+        mDialog.show();
+        int length = tagclassList.size();
+        for (String str : tagclassList) {
+            String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
+            new downloadRateScheduleAsync(getContext(), length).execute(cmdSchedule);
         }
-
-        Log.e(TAG,"rateschedule_save: "+ rateshedsave);
-        setSnackbar("Rate Schedule Completed.");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.RATE_SCHEDULE_STATUS,Constant.YES);
-        downloadBillingPolicy();
     }
 
-    public void downloadBillingPolicy() {
+    public static void downloadBillingPolicy(Context context) {
+
+        ArrayList<String> tagclassList = new ArrayList<>();
+        String tagclass = "";
+        String coopID = "";
+
+        for (Route r : routeArrayList) {
+            if (!r.getTagClass().equalsIgnoreCase(tagclass)) {
+                tagclass = r.getTagClass();
+                coopID = r.getCoopID();
+                tagclassList.add(tagclass);
+            }
+
+        }
+
+
         mDialog.setMessage("DownLoading billing policy...");
         mDialog.show();
-        for (Route r : routeArrayList) {
-            String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + r.getCoopID() + "&mac=" + mac + "&tagclass=" + r.getTagClass();
-            new downloadBillingPolicyAsync().execute(cmdPolicy);
+        int length = tagclassList.size();
+        for (String str : tagclassList) {
+            String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
+            new downloadBillingPolicyAsync(context, length).execute(cmdPolicy);
         }
-
-        if (billingpolicysize != billingpolicysave) {
-
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "Policy");
-            setSnackbar("Billing policy not completely downloaded...Download again");
-            snackbar.show();
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"billingpolicysave: "+ billingpolicysave);
-        setSnackbar("Billing Policy Completed.");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.POLICY_STATUS,Constant.YES);
-        downloadRateCode();
     }
 
-    public void downloadRateCode() {
+    public static void downloadRateCode(Context context) {
         if (routeArrayList.size() > 0) {
             mDialog.setMessage("DownLoading rate codes...");
             mDialog.show();
 
-            String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=" + routeArrayList.get(0).getCoopID() + "&mac=" + mac;
-            new downloadRateCodeAsync().execute(cmdRateCode);
+            String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            new downloadRateCodeAsync(context).execute(cmdRateCode);
         }
-
-        if (ratecodesize != ratecodesave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "RateCode");
-            setSnackbar("Rate Code not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"ratecodesave: "+ ratecodesave);
-        setSnackbar("Rate Code completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.RATE_CODE_STATUS,Constant.YES);
-        downloadCoopDetails();
     }
 
 
-    public void downloadCoopDetails() {
+    public static void downloadCoopDetails(Context context) {
         if (routeArrayList.size() > 0) {
             mDialog.setMessage("DownLoading details...");
             mDialog.show();
-            String cmdCoopDetails = baseurl + "?cmd=getCoopDetails&coopid=" + routeArrayList.get(0).getCoopID() + "&mac=" + mac;
-            new downloadCoopDetailsAsync().execute(cmdCoopDetails);
+            String cmdCoopDetails = baseurl + "?cmd=getCoopDetails&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            new downloadCoopDetailsAsync(context).execute(cmdCoopDetails);
         }
-
-        if (coopdetailssize != coopdetailssave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "CoopDetails");
-            setSnackbar("Details not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.COOP_DETAILS_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"coopdetailssave: "+ coopdetailssave);
-        setSnackbar("Coop details completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.COOP_DETAILS_STATUS,Constant.YES);
-        downloadRateComponent();
     }
 
-    public void downloadRateComponent() {
+    public static void downloadRateComponent(Context context) {
         if (routeArrayList.size() > 0) {
             mDialog.setMessage("DownLoading rate component...");
             mDialog.show();
-            String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=" + routeArrayList.get(0).getCoopID() + "&mac=" + mac;
-            new downloadRateComponentAsync().execute(cmdRateComponent);
+            String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            new downloadRateComponentAsync(context).execute(cmdRateComponent);
         }
-
-        if (ratecomponentsize != ratecomponentsave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "RateComponent");
-            setSnackbar("Rate Component not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"ratecomponentsave: "+ ratecomponentsave);
-        setSnackbar("Rate Component completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS,Constant.YES);
-        downloadRateSegment();
     }
 
-    public void downloadRateSegment() {
+    public static void downloadRateSegment(Context context) {
         if (routeArrayList.size() > 0) {
             mDialog.setMessage("DownLoading rate segment...");
             mDialog.show();
-            String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=" + routeArrayList.get(0).getCoopID() + "&mac=" + mac;
-            new downloadRateSegmentAsync().execute(cmdRateSegment);
+            String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            new downloadRateSegmentAsync(context).execute(cmdRateSegment);
         }
-
-        if (ratesegmentsize != ratesegmentsave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "RateSegment");
-            setSnackbar("Rate Segment not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"ratesegmentsave: "+ ratesegmentsave);
-        setSnackbar("Rate Segment completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS,Constant.YES);
-        downloadLifeLineDiscountPolicy();
-
     }
 
 
-    public void downloadLifeLineDiscountPolicy() {
+    public static void downloadLifeLineDiscountPolicy(Context context) {
         if (routeArrayList.size() > 0) {
             mDialog.setMessage("DownLoading lifeline discount policy...");
             mDialog.show();
-            String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + routeArrayList.get(0).getCoopID() + "&mac=" + mac;
-            new downloadLifeLineDiscountPolicyAsync().execute(cmdLifeLineDiscount);
+            String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            new downloadLifeLineDiscountPolicyAsync(context).execute(cmdLifeLineDiscount);
         }
-
-        if (lifelinepolicysize != lifelinepolicysave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "lifeline");
-            setSnackbar("Lifeline Discount Policy not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"lifelinepolicysave: "+ lifelinepolicysave);
-        setSnackbar("Lifeline Discount Policy completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS,Constant.YES);
-        downloadThreshold();
-
     }
 
 
-    public void downloadThreshold() {
+    public static void downloadThreshold(Context context) {
         mDialog.setMessage("DownLoading threshold...");
         mDialog.show();
         String cmdThreshold = baseurl + "?cmd=threshold&mac=" + mac;
-
-        new downloadThresholdAsync().execute(cmdThreshold);
-        if (thresholdsize != thresholdsave) {
-            if (mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-
-            DB.errorDownLoad(DB, getContext(), "threshold");
-            setSnackbar("Threshold not completely downloaded...Download again");
-            snackbar.show();
-            myPreferences.savePrefString(Constant.THRESHOLD_STATUS, Constant.NO);
-            return;
-        }
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-
-        Log.e(TAG,"thresholdsave: "+ thresholdsave);
-        setSnackbar("Threshold completed...");
-        snackbar.show();
-        myPreferences.savePrefString(Constant.THRESHOLD_STATUS,Constant.YES);
-        downloadAccouns();
+        new downloadThresholdAsync(context).execute(cmdThreshold);
     }
 
-    public void downloadAccouns() {
-        mDialog.setMessage("DownLoading accounts...");
+    public static void downloadAccounts(final Context context, int counter) {
+        mDialog.setMessage("DownLoading " + Constant.accountssave + " accounts...");
         mDialog.show();
-        for (Route r : routeArrayList) {
-            String cmdAccounts = baseurl + "?cmd=getaccounts&coopid=" + r.getCoopID()
+
+        if (routeArrayList.size() > 0 && counter < routeArrayList.size()) {
+            Route r = routeArrayList.get(counter);
+            String cmdAccounts = baseurl + "?cmd=getaccounts&coopid=NORECO2"
                     + "&districtid=" + URLEncoder.encode(r.getDistrictID())
                     + "&routeid=" + URLEncoder.encode(r.getRouteID())
                     + "&idFrom=" + r.getAccountIDFrom()
@@ -659,49 +493,80 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 cmdAccounts = cmdAccounts + "&sequenceNoFrom=" + r.getSequenceNoFrom() + "&sequenceNoTo=" + r.getSequenceNoTo();
             }
 
-            Log.e(TAG, "accounts: " + cmdAccounts);
-            new downloadAccountsAsync().execute(cmdAccounts, r.getDueDate(), r.getRouteID());
-        }
-
-        if (accountssize != accountssave) {
+            new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID());
+        } else {
             if (mDialog.isShowing()) {
                 mDialog.dismiss();
             }
 
-            DB.errorDownLoad(DB, getContext(), "Accounts");
-            setSnackbar("Accounts not completely downloaded...Download again");
-            snackbar.show();
-            return;
-        }
+            int downloadRoute = DB.getRoutesDownloadCount(DB);
 
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
+            if (routeArrayList.size() == downloadRoute) {
 
-        if(accountssave > 0) {
-            Log.e(TAG, "accountssave: " + accountssave);
-            setSnackbar("Accounts Completed...");
-            snackbar.show();
-            updateReaderTable();
-            BtnDownLoad.setEnabled(true);
-            myPreferences.savePrefString(Constant.ACCOUNT_STATUS, Constant.YES);
+                if (Constant.accountssize != Constant.accountssave) {
+                    if (mDialog.isShowing()) {
+                        mDialog.dismiss();
+                    }
+
+                    DB.errorDownLoad(DB, context, "Accounts");
+                    setSnackbar("Accounts not completely downloaded...Download again");
+                    snackbar.show();
+                    mTvView.setText("");
+                    mTvView.append("Accounts not completely downloaded...Download again");
+                    return;
+                }
+
+                if (mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+
+                if (Constant.accountssave > 0 && Constant.accountssize == Constant.accountssave) {
+                    Log.e(TAG, "accountssave: " + Constant.accountssave);
+                    setSnackbar("Accounts Completed...");
+                    snackbar.show();
+                    //updateReaderTable();
+                    BtnDownLoad.setEnabled(true);
+                    myPreferences.savePrefString(Constant.ACCOUNT_STATUS, Constant.YES);
+                }
+
+                if (Constant.accountssave == 0) {
+                    setSnackbar("No available accounts...");
+                    snackbar.show();
+                }
+
+            }
+
+            if(routeArrayList.size() != downloadRoute) {
+                if (mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+                setSnackbar("Maybe there is no available accounts in this route " + routeArrayList.get(counter - 1).getRouteID());
+                snackbar.show();
+            }
         }
     }
 
 
     public static class downloadRateScheduleAsync extends AsyncTask<String, Void, Void> {
 
-        public downloadRateScheduleAsync() {
+        Context context;
+        int lengthOfClassification;
+        int count = 0;
 
+        public downloadRateScheduleAsync(Context context, int lengthOfClassification) {
+            this.context = context;
+            this.lengthOfClassification = lengthOfClassification;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
-            Log.e(TAG,"rateschedule: "+strings[0]);
+            Log.e(TAG, "rateschedule: " + strings[0]);
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
-
+                    count++;
                     mTvView.setText("");
                     mTvView.append(response);
                     if (response.equalsIgnoreCase("500")) {
@@ -734,7 +599,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        rateschedsize = +jsonArray.length();
+                        Constant.rateschedsize = Constant.rateschedsize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             String ratesegment = obj.getString("RateSegment");
@@ -751,20 +616,46 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String IsExport = obj.getString("IsExport");
 
 
-                            rateshedsave = rateshedsave + DB.saveRateSchedule(DB, ratesegment,
+                            Constant.rateshedsave = Constant.rateshedsave + DB.saveRateSchedule(DB, ratesegment,
                                     ratecomponent, printorder, classification,
                                     rateschedtype, amount, isUnderOver, islifeline,
                                     isscdiscount, dateFrom, extra1, IsExport);
 
                         }
 
+
+                        if (Constant.rateschedsize != Constant.rateshedsave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "RateSchedule");
+                            setSnackbar("Rate Schedule not completely downloaded...Download again");
+                            snackbar.show();
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+
+                        if (count == lengthOfClassification) {
+                            if (Constant.rateshedsave > 0 && Constant.rateschedsize == Constant.rateshedsave) {
+                                setSnackbar("Rate Schedule Completed.");
+                                snackbar.show();
+                                myPreferences.savePrefString(Constant.RATE_SCHEDULE_STATUS, Constant.YES);
+                                downloadBillingPolicy(context);
+                            }
+                        }
+
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         setSnackbar("RateSchedule, " + e.getMessage());
                         snackbar.show();
                     }
-
-
                 }
             });
 
@@ -774,18 +665,21 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadBillingPolicyAsync extends AsyncTask<String, Void, Void> {
 
+        Context context;
+        int lengthOfClassification;
+        int count;
 
-        public downloadBillingPolicyAsync() {
-
+        public downloadBillingPolicyAsync(Context context, int lengthOfClassification) {
+            this.context = context;
+            this.lengthOfClassification = lengthOfClassification;
         }
 
         @Override
         protected Void doInBackground(final String... strings) {
-            Log.e(TAG,"BillingPolicy: "+strings[0]);
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
-
+                    count++;
                     mTvView.setText("");
                     mTvView.append(response);
 
@@ -815,7 +709,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        billingpolicysize = +jsonArray.length();
+                        Constant.billingpolicysize = Constant.billingpolicysize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             String PolicyCode = obj.getString("PolicyCode");
@@ -825,12 +719,43 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String MaxkWh = obj.getString("MaxkWh");
                             String PercentAmount = obj.getString("PercentAmount");
 
-                            billingpolicysave = billingpolicysave + DB.saveBillingPolicy(DB,
+                            Constant.billingpolicysave = Constant.billingpolicysave + DB.saveBillingPolicy(DB,
                                     PolicyCode, PolicyType,
                                     CustomerClass, MinkWh, MaxkWh,
                                     PercentAmount);
                         }
+
+
+                        if (lengthOfClassification == count) {
+
+                            if (Constant.billingpolicysize != Constant.billingpolicysave) {
+                                if (mDialog.isShowing()) {
+                                    mDialog.dismiss();
+                                }
+
+                                DB.errorDownLoad(DB, context, "Policy");
+                                setSnackbar("Billing policy not completely downloaded...Download again");
+                                snackbar.show();
+                                return;
+                            }
+
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            if (Constant.billingpolicysave > 0 && Constant.billingpolicysize == Constant.billingpolicysave) {
+                                Log.e(TAG, "billingpolicysave: " + Constant.billingpolicysave);
+                                setSnackbar("Billing Policy Completed.");
+                                snackbar.show();
+                                myPreferences.savePrefString(Constant.POLICY_STATUS, Constant.YES);
+                                downloadRateCode(context);
+                            }
+                        }
+
                     } catch (JSONException e) {
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         e.printStackTrace();
                         setSnackbar("Billing Policy, " + e.getMessage());
                         snackbar.show();
@@ -845,15 +770,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadRateCodeAsync extends AsyncTask<String, Void, Void> {
 
+        Context context;
 
-        public downloadRateCodeAsync() {
-
+        public downloadRateCodeAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
 
-            Log.e(TAG,"RateCode: "+strings[0]);
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -885,12 +810,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("No available Rate Codes");
                             snackbar.show();
 
+                            mTvView.setText("No available Rate Codes");
+
                             myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.NO);
 
                             return;
                         }
 
-                        rateschedsize = +jsonArray.length();
+                        Constant.ratecodesize = Constant.ratecodesize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             String CoopID = obj.getString("PowerUtilityID");
@@ -899,12 +826,41 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String Details = obj.getString("Details");
                             String IsActive = obj.getString("IsActive");
 
-                            ratecodesave = ratecodesave + DB.saveRateCode(DB, CoopID, CoopName, RateCode, Details, IsActive);
+                            Constant.ratecodesave = Constant.ratecodesave + DB.saveRateCode(DB, CoopID, CoopName, RateCode, Details, IsActive);
+                        }
 
+
+                        if (Constant.ratecodesize != Constant.ratecodesave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "RateCode");
+                            setSnackbar("Rate Code not completely downloaded...Download again");
+                            snackbar.show();
+                            mTvView.setText("Rate Code not completely downloaded...Download again");
+
+                            myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.NO);
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.ratecodesave > 0 && Constant.ratecodesize == Constant.ratecodesave) {
+                            setSnackbar("Rate Code completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.YES);
+                            downloadCoopDetails(context);
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
                         setSnackbar("Rate Code, " + e.getMessage());
                         snackbar.show();
                     }
@@ -917,16 +873,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadCoopDetailsAsync extends AsyncTask<String, Void, Void> {
 
+        Context context;
 
-        public downloadCoopDetailsAsync() {
-
+        public downloadCoopDetailsAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
-
-            Log.e(TAG,"CoopDetails: "+strings[0]);
-
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -956,12 +910,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                             setSnackbar("No Details for this coop...");
                             snackbar.show();
-
+                            mTvView.setText("");
+                            mTvView.append("No Details for this coop...");
                             myPreferences.savePrefString(Constant.COOP_DETAILS_STATUS, Constant.NO);
                             return;
                         }
 
-                        coopdetailssize = +jsonArray.length();
+                        Constant.coopdetailssize = Constant.coopdetailssize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
 
                             JSONObject obj = jsonArray.getJSONObject(i);
@@ -977,14 +932,46 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String telno = obj.getString("TelNo");
                             String tinno = obj.getString("Extra2");
 
-                            coopdetailssave = +DB.saveCoopDetails(DB, CoopID, CoopName, CoopType,
+                            Constant.coopdetailssave = Constant.coopdetailssave + DB.saveCoopDetails(DB, CoopID, CoopName, CoopType,
                                     Classification, ReadingToDueDate, Acronym,
                                     BillingCode, businessaddress, telno, tinno);
 
 
                         }
+
+
+                        if (Constant.coopdetailssize != Constant.coopdetailssave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "CoopDetails");
+                            setSnackbar("Details not completely downloaded...Download again");
+                            snackbar.show();
+                            mTvView.setText("");
+                            mTvView.append("Details not completely downloaded...Download again");
+                            myPreferences.savePrefString(Constant.COOP_DETAILS_STATUS, Constant.NO);
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.coopdetailssave > 0 && Constant.coopdetailssize == Constant.coopdetailssave) {
+                            setSnackbar("Coop details completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.COOP_DETAILS_STATUS, Constant.YES);
+                            downloadRateComponent(context);
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                         setSnackbar("Coop Details, " + e.getMessage());
                         snackbar.show();
                     }
@@ -997,13 +984,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadRateComponentAsync extends AsyncTask<String, Void, Void> {
 
-        public downloadRateComponentAsync() {
+        Context context;
+
+        public downloadRateComponentAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
-
-            Log.e(TAG,"RateComponent: "+strings[0]);
 
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
@@ -1039,7 +1027,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        ratecomponentsize = +jsonArray.length();
+                        Constant.ratecomponentsize = Constant.ratecomponentsize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             String CoopID = obj.getString("PowerUtilityID");
@@ -1048,11 +1036,44 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String Details = obj.getString("Details");
                             String IsActive = obj.getString("IsActive");
                             String Notes1 = obj.getString("Notes1");
-                            ratecomponentsave = +DB.saveRateComponent(DB, CoopID, CoopName, RateComponent, Details, IsActive, Notes1);
+                            Constant.ratecomponentsave = Constant.ratecomponentsave + DB.saveRateComponent(DB, CoopID, CoopName, RateComponent, Details, IsActive, Notes1);
+                        }
+
+
+                        if (Constant.ratecomponentsize != Constant.ratecomponentsave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "RateComponent");
+                            setSnackbar("Rate Component not completely downloaded...Download again");
+                            snackbar.show();
+                            mTvView.setText("");
+                            mTvView.append("Rate Component not completely downloaded...Download again");
+                            myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS, Constant.NO);
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.ratecomponentsave > 0 && Constant.ratecomponentsize == Constant.ratecomponentsave) {
+                            Log.e(TAG, "ratecomponentsave: " + Constant.ratecomponentsave);
+                            setSnackbar("Rate Component completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS, Constant.YES);
+                            downloadRateSegment(context);
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                         setSnackbar("Rate Component, " + e.getMessage());
                         snackbar.show();
                     }
@@ -1063,15 +1084,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     }
 
     public static class downloadRateSegmentAsync extends AsyncTask<String, Void, Void> {
+        Context context;
 
-        public downloadRateSegmentAsync() {
-
+        public downloadRateSegmentAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
 
-            Log.e(TAG,"RateSegment: "+strings[0]);
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1086,7 +1107,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                         setSnackbar("Failed Download Rate Segment ," + param);
                         snackbar.show();
-
+                        mTvView.setText("");
+                        mTvView.append("Failed Download Rate Segment ," + param);
                         myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS, Constant.NO);
                         return;
                     }
@@ -1103,10 +1125,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             snackbar.show();
 
                             myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS, Constant.NO);
+
+                            mTvView.setText("");
+                            mTvView.append("No Rate Segment...");
                             return;
                         }
 
-                        ratesegmentsize = +jsonArray.length();
+                        Constant.ratesegmentsize = Constant.ratesegmentsize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
 
                             JSONObject obj = jsonArray.getJSONObject(i);
@@ -1117,15 +1142,45 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String Details = obj.getString("Details");
                             String IsActive = obj.getString("IsActive");
 
-                            ratesegmentsave = +DB.saveRateSegment(DB, CoopID, RateSegmentCode,
+                            Constant.ratesegmentsave = Constant.ratesegmentsave + DB.saveRateSegment(DB, CoopID, RateSegmentCode,
                                     RateSegmentName, Details, IsActive);
 
                         }
 
+                        if (Constant.ratesegmentsize != Constant.ratesegmentsave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "RateSegment");
+                            setSnackbar("Rate Segment not completely downloaded...Download again");
+                            snackbar.show();
+                            mTvView.setText("");
+                            mTvView.append("Rate Segment not completely downloaded...Download again");
+                            myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS, Constant.NO);
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.ratesegmentsave > 0 && Constant.ratesegmentsize == Constant.ratesegmentsave) {
+                            setSnackbar("Rate Segment completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.RATE_SEGMENT_STATUS, Constant.YES);
+                            downloadLifeLineDiscountPolicy(context);
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         setSnackbar("Rate Segment, " + e.getMessage());
                         snackbar.show();
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                     }
                 }
             });
@@ -1135,14 +1190,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadLifeLineDiscountPolicyAsync extends AsyncTask<String, Void, Void> {
 
+        Context context;
 
-        public downloadLifeLineDiscountPolicyAsync() {
-
+        public downloadLifeLineDiscountPolicyAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
-            Log.e(TAG,"LifeLineDiscount: "+strings[0]);
+
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1158,6 +1214,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         setSnackbar("Failed Download Lifeline discount policy ," + param);
                         snackbar.show();
 
+                        mTvView.setText("");
+                        mTvView.append("Failed Download Lifeline discount policy ," + param);
                         myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS, Constant.NO);
                         return;
                     }
@@ -1171,26 +1229,56 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                             setSnackbar("No Lifeline policy...");
                             snackbar.show();
-
+                            mTvView.setText("");
+                            mTvView.append("No Lifeline policy...");
                             myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS, Constant.NO);
                             return;
                         }
 
-                        lifelinepolicysize = +jsonArray.length();
+                        Constant.lifelinepolicysize = Constant.lifelinepolicysize + jsonArray.length();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject object = jsonArray.getJSONObject(i);
                             String lifeLineKwh = object.getString(DBInfo.LifelineConsumption);
                             String percent = object.getString(DBInfo.LifelinePercentage);
                             String decimal = object.getString(DBInfo.LifelineInDecimal);
-                            lifelinepolicysave = +DB.saveLifeLifePolicy(DB, lifeLineKwh, percent, decimal);
+                            Constant.lifelinepolicysave = Constant.lifelinepolicysave + DB.saveLifeLifePolicy(DB, lifeLineKwh, percent, decimal);
                         }
 
+                        if (Constant.lifelinepolicysize != Constant.lifelinepolicysave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
 
+                            DB.errorDownLoad(DB, context, "lifeline");
+                            setSnackbar("Lifeline Discount Policy not completely downloaded...Download again");
+                            snackbar.show();
+
+                            mTvView.setText("");
+                            mTvView.append("Lifeline Discount Policy not completely downloaded...Download again");
+                            myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS, Constant.NO);
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.lifelinepolicysave > 0 && Constant.lifelinepolicysize == Constant.lifelinepolicysave) {
+                            setSnackbar("Lifeline Discount Policy completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.LIFELINE_POLICY_STATUS, Constant.YES);
+                            downloadThreshold(context);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         setSnackbar("Lifeline Policy, " + e.getMessage());
                         snackbar.show();
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                     }
                 }
             });
@@ -1201,16 +1289,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static class downloadThresholdAsync extends AsyncTask<String, Void, Void> {
 
+        Context context;
 
-
-        public downloadThresholdAsync() {
-
+        public downloadThresholdAsync(Context context) {
+            this.context = context;
         }
 
         @Override
         protected Void doInBackground(String... strings) {
 
-            Log.e(TAG,"Threshold: "+strings[0]);
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1225,8 +1312,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                         setSnackbar("Failed Download threshold ," + param);
                         snackbar.show();
-
                         myPreferences.savePrefString(Constant.THRESHOLD_STATUS, Constant.NO);
+                        mTvView.setText("");
+                        mTvView.append("Failed Download threshold ," + param);
                         return;
                     }
 
@@ -1240,23 +1328,56 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                             setSnackbar("No threshold...");
                             snackbar.show();
-
                             myPreferences.savePrefString(Constant.THRESHOLD_STATUS, Constant.NO);
+                            mTvView.setText("");
+                            mTvView.append("No threshold...");
                             return;
                         }
 
-                        thresholdsize = +jsonArray.length();
+                        Constant.thresholdsize = Constant.thresholdsize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject object = jsonArray.getJSONObject(i);
                             String settingcode = object.getString(DBInfo.SettingsCode);
                             String percent = object.getString("Details");
 
-                            thresholdsave = +DB.saveThreshold(DB, settingcode, percent);
+                            Constant.thresholdsave = Constant.thresholdsave + DB.saveThreshold(DB, settingcode, percent);
                         }
+
+                        if (Constant.thresholdsize != Constant.thresholdsave) {
+                            if (mDialog.isShowing()) {
+                                mDialog.dismiss();
+                            }
+
+                            DB.errorDownLoad(DB, context, "threshold");
+                            setSnackbar("Threshold not completely downloaded...Download again");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.THRESHOLD_STATUS, Constant.NO);
+                            mTvView.setText("");
+                            mTvView.append("Threshold not completely downloaded...Download again");
+                            return;
+                        }
+
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+
+                        if (Constant.thresholdsave > 0 && Constant.thresholdsize == Constant.thresholdsave) {
+                            Log.e(TAG, "thresholdsave: " + Constant.thresholdsave);
+                            setSnackbar("Threshold completed...");
+                            snackbar.show();
+                            myPreferences.savePrefString(Constant.THRESHOLD_STATUS, Constant.YES);
+                            downloadAccounts(context, 0);
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         setSnackbar("Threshold, " + e.getMessage());
                         snackbar.show();
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                     }
 
                 }
@@ -1267,9 +1388,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     }
 
     public static class downloadAccountsAsync extends AsyncTask<String, Void, Void> {
+        Context context;
+        int sizeOfRoute;
+        int counter;
 
-        public downloadAccountsAsync() {
 
+        public downloadAccountsAsync(Context context, int sizeOfRoute, int counter) {
+            this.context = context;
+            this.sizeOfRoute = sizeOfRoute;
+            this.counter = counter;
         }
 
         @Override
@@ -1279,7 +1406,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 @Override
                 public void onRequestListener(String response, String param) {
 
-                    mTvView.setText("");
                     mTvView.append(response);
 
                     if (response.equalsIgnoreCase("500")) {
@@ -1290,6 +1416,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         setSnackbar("Download Accounts failed, " + param);
                         snackbar.show();
                         myPreferences.savePrefString(Constant.ACCOUNT_STATUS, Constant.NO);
+                        mTvView.setText("");
+                        mTvView.append("Download Accounts failed, " + param);
                         return;
                     }
 
@@ -1301,14 +1429,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         if (jsonArray.length() > 0) {
                             a = jsonArray.getJSONObject(0).getString("AccountID");
                             if (!a.equalsIgnoreCase("0")) {
-                                accountssize = +jsonArray.length();
+                                Constant.accountssize = Constant.accountssize + jsonArray.length();
                             }
                         }
 
-
+                        String acc = null;
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
-                            String acc = obj.getString("AccountID");
+                            acc = obj.getString("AccountID");
                             if (!acc.equalsIgnoreCase("0")) {
                                 details = new JSONObject();
                                 details.put("BillMonth", "");
@@ -1368,21 +1496,36 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 String routeID = strings[2];
                                 String dueDate = strings[1];
                                 account.setDueDate(dueDate);
-                                accountssave = accountssave + DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
-                            } else {
-
+                                Constant.accountssave = Constant.accountssave + DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
+                                Constant.decoy_save_account = Constant.decoy_save_account + Constant.accountssave;
                             }
                         }
+
 
                         if (jsonArray.length() > 0) {
-                            if (!a.equalsIgnoreCase("0")) {
-                                new downloadAccountsAsync().execute(strings[0]);
+                            if (!acc.equalsIgnoreCase("0")) {
+                                downloadAccounts(context, counter);
+                            } else {
+                                if (Constant.decoy_save_account > 0) {
+                                    Log.e(TAG, "here update is download");
+                                    Constant.decoy_save_account = 0;
+                                    DB.updateRouteIsDownload(DB, 1, strings[2]);
+                                    downloadAccounts(context, counter + 1);
+                                }else{
+                                    downloadAccounts(context, counter + 1);
+                                }
                             }
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         setSnackbar("Accounts, " + e.getMessage());
                         snackbar.show();
+                        mTvView.setText("");
+                        mTvView.append(e.getMessage());
                     }
 
                 }
@@ -1397,7 +1540,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         /** check table is attempt to clear */
 
-        for(Route r: routeArrayList) {
+        for (Route r : routeArrayList) {
             String cmdUpdateReaderTable = baseurl + "?cmd=update&routeid=" + r.getRouteID() + "&mac=" + mac;
             MainActivity.webRequest.sendRequest(cmdUpdateReaderTable, "updateReaderTable");
         }
@@ -1425,6 +1568,177 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 //            mTvView.setText("");
 //        }
     }
+
+    ///***
+    //                     *  param2 = duedate
+    //                     *  params = routeid
+    //                     * */
+    //                    listener.onSuccess(myType, res, params, url, param2);
+//    @Override
+//    public void onSuccess(String type, String response, String params, String param2, String param3) {
+//        switch (type) {
+//            case "accounts":
+//                mTvView.setText("");
+//                mTvView.append(response);
+//
+//                try {
+//                    JSONObject details;
+//                    Account account;
+//                    String a = "";
+//                    JSONArray jsonArray = new JSONArray(response);
+//                    if (jsonArray.length() > 0) {
+//                        a = jsonArray.getJSONObject(0).getString("AccountID");
+//                        if (!a.equalsIgnoreCase("0")) {
+//                            Constant.accountssize = Constant.accountssize + jsonArray.length();
+//                        }
+//                    }
+//
+//
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject obj = jsonArray.getJSONObject(i);
+//                        String acc = obj.getString("AccountID");
+//                        if (!acc.equalsIgnoreCase("0")) {
+//                            details = new JSONObject();
+//                            details.put("BillMonth", "");
+//                            details.put("PrevBilling", "0");
+//                            details.put("Address", obj.getString("Address"));
+//                            details.put("SeniorCitizenStatus", obj.getString("SeniorCitizenStatus"));
+//                            details.put("SCExpiryDate", obj.getString("SCExpiryDate"));
+//                            details.put("Penalty", "0");
+//                            details.put("RateSched", obj.getString("RateSched"));
+//                            details.put("Multiplier", obj.getString("Multiplier"));
+//                            details.put("DemandKW", obj.getString("DemandKW"));
+//                            details.put("AdvancePayment", obj.getString("AdvancePayment"));
+//                            details.put("BillDeposit", obj.getString("BillDeposit"));
+//                            details.put("LastReadingDate", obj.getString("LastReadingDate"));
+//                            details.put("InitialReading", obj.getString("InitialReading"));
+//                            details.put("ExportPreviousReading", obj.getString("ExportReading"));
+//                            details.put("IsChangeMeter", obj.getString("IsChangeMeter"));
+//                            details.put("MeterBrand", obj.getString("MeterBrand"));
+//                            details.put("Consume", "0");
+//                            details.put("ExportConsume", "0");
+//                            details.put("Reading", "0");
+//                            details.put("ExportReading", "0");
+//                            details.put("Remarks", "");
+//                            String arrears = obj.getString("Arrears");
+//                            String interestFlag = obj.getString("InterestFlag");
+//                            JSONArray jsonArrears = new JSONArray(arrears);
+//                            JSONObject jsonArr;
+//                            JSONArray jsonArray1 = new JSONArray();
+//                            if (jsonArrears.length() > 0) {
+//                                for (int aa = 0; aa < jsonArrears.length(); aa++) {
+//                                    jsonArr = new JSONObject();
+//                                    JSONObject jsonObject = jsonArrears.getJSONObject(aa);
+//                                    if (jsonObject.getString("Status").equalsIgnoreCase("UNPAID")) {
+//                                        jsonArr.put("BillNo", jsonObject.getString("BillNo"));
+//                                        jsonArr.put("BillMonth", jsonObject.getString("BillMonth"));
+//                                        jsonArr.put("BillAmount", jsonObject.getString("BillAmount"));
+//                                        if (interestFlag.equalsIgnoreCase("0")) {
+//                                            jsonArr.put("Penalty", "0");
+//                                        } else {
+//                                            jsonArr.put("Penalty", jsonObject.getString("Penalty"));
+//                                        }
+//                                    }
+//
+//                                    jsonArray1.put(jsonArr);
+//
+//                                }
+//                            }
+//
+//                            String strArr;
+//                            if (jsonArray.length() == 0) {
+//                                strArr = arrears;
+//                            } else {
+//                                strArr = jsonArray1.toString();
+//                            }
+//
+//                            account = gson.fromJson(obj.toString(), Account.class);
+//                            account.setDueDate(param3);
+//                            Constant.accountssave = Constant.accountssave + DB.saveAccount(DB, account, details.toString(), params, strArr, "");
+//                            mDialog.setMessage("DownLoading "+Constant.accountssave+" accounts...");
+//                            mDialog.show();
+//                        }
+//                    } //end loop
+//
+//
+//
+//                    Log.e(TAG, "accountssize:" + Constant.accountssize);
+//                    Log.e(TAG, "accountssave:" + Constant.accountssave);
+//
+//                    if (jsonArray.length() > 0 && !a.equalsIgnoreCase("0")) {
+//                        //sendRequest(cmdAccounts,"accounts",r.getRouteID(),r.getDueDate(),"",listener);
+//                        /**
+//                         *  param2 = url
+//                         *  params = routeid
+//                         *  param3 = duedate
+//                         *
+//                         * */
+//                        MainActivity.webRequest.sendRequest(param2,"accounts",params,param3,"",listener);
+//                    }
+//
+//
+//                    if (sizeOfRoute == count) {
+//                        if (Constant.accountssize != Constant.accountssave) {
+//                            if (mDialog.isShowing()) {
+//                                mDialog.dismiss();
+//                            }
+//
+//                            DB.errorDownLoad(DB, getContext(), "Accounts");
+//                            setSnackbar("Accounts not completely downloaded...Download again");
+//                            snackbar.show();
+//                            mTvView.setText("");
+//                            mTvView.append("Accounts not completely downloaded...Download again");
+//                            return;
+//                        }
+//
+//                        if (mDialog.isShowing()) {
+//                            mDialog.dismiss();
+//                        }
+//
+//
+//                        if (Constant.accountssave > 0 && Constant.accountssize != Constant.accountssave) {
+//                            Log.e(TAG, "accountssave: " + Constant.accountssave);
+//                            setSnackbar("Accounts Completed...");
+//                            snackbar.show();
+//                            //updateReaderTable();
+//                            BtnDownLoad.setEnabled(true);
+//                            myPreferences.savePrefString(Constant.ACCOUNT_STATUS, Constant.YES);
+//                        }
+//
+//                        if (Constant.accountssave == 0) {
+//                            setSnackbar("No available accounts...");
+//                            snackbar.show();
+//                        }
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    if (mDialog.isShowing()) {
+//                        mDialog.dismiss();
+//                    }
+//                    setSnackbar("Accounts, " + e.getMessage());
+//                    snackbar.show();
+//                    mTvView.setText("");
+//                    mTvView.append(e.getMessage());
+//                }
+//                break;
+//        }
+//    }
+//
+//    @Override
+//    public void onFailed(VolleyError error, String type) {
+//        if (mDialog.isShowing()) {
+//            mDialog.dismiss();
+//        }
+//
+//        setSnackbar("Download Accounts failed, " + error.getMessage());
+//        snackbar.show();
+//        myPreferences.savePrefString(Constant.ACCOUNT_STATUS, Constant.NO);
+//        mTvView.setText("");
+//        mTvView.append("Download Accounts failed, " + error.getMessage());
+//        return;
+//    }
+
     //endregion
 
     //region IListener
@@ -2181,8 +2495,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 //
 //        BtnDownLoad.setEnabled(true);
 //    }
-
-
 
 
 //    @Override

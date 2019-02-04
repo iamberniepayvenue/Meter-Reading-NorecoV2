@@ -44,6 +44,7 @@ public class DBInfo implements BaseColumns {
     public static String DownloadRef = "DownloadRef";
     public static String SequenceNoFrom = "SequenceNoFrom";
     public static String SequenceNoTo = "SequenceNoTo";
+    public static String IsDownload = "IsDownload";
 
 
 
@@ -179,7 +180,8 @@ public class DBInfo implements BaseColumns {
             + " TEXT, " + RouteID + " TEXT, " + AccountIDFrom
             + " TEXT, " + AccountIDTo + " TEXT, " + DueDate
             + " TEXT, " + TagClass + " TEXT, " + DownloadRef
-            + " TEXT, " + SequenceNoFrom + " TEXT, " + SequenceNoTo + " TEXT)";
+            + " TEXT, " + SequenceNoFrom + " TEXT, " + SequenceNoTo
+            + " TEXT, " + IsDownload + " INTEGER)";
 
     public static final String CREATE_CONN = "CREATE TABLE "
             + DBInfo.TBLConn_settings + "(" + COOPID + " TEXT ,"

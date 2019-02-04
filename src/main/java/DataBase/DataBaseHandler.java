@@ -45,7 +45,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
 
-
     @Override
     public void onCreate(SQLiteDatabase sql) {
 
@@ -63,15 +62,15 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.execSQL(DBInfo.CREATE_LIFELINEDISCOUNT);
         sql.execSQL(DBInfo.CREATE_THRESHOLD);
 
-        Log.e(TAG,"onCreate");
+        Log.e(TAG, "onCreate");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        Log.e(TAG,"onUpgrade");
+        Log.e(TAG, "onUpgrade");
     }
 
-    public void errorDownLoad(DataBaseHandler db,Context context,String tag) {
+    public void errorDownLoad(DataBaseHandler db, Context context, String tag) {
         SQLiteDatabase sql = db.getReadableDatabase();
 
         switch (tag) {
@@ -102,7 +101,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             case "lifeline":
                 sql.execSQL("Delete from " + DBInfo.TBLLifeLineDiscount + "");
                 break;
-                default:
+            default:
         }
 
 
@@ -163,9 +162,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cv.put(DBInfo.DownloadRef, route.getDownloadRef());
         cv.put(DBInfo.SequenceNoFrom, route.getSequenceNoFrom());
         cv.put(DBInfo.SequenceNoTo, route.getSequenceNoTo());
-
+        cv.put(DBInfo.IsDownload, 0);
         long c = sql.insert(DBInfo.TBLRoutes, null, cv);
-        if(c != 0) {
+        if (c != 0) {
             count = 1;
         }
         sql.close();
@@ -179,6 +178,55 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
 
         String statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID";
+        Cursor c = sql.rawQuery(statement, null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                String coopid = c.getString(c.getColumnIndex(DBInfo.COOPID));
+                String readerid = c.getString(c.getColumnIndex(DBInfo.ReaderID));
+                String readername = c.getString(c.getColumnIndex(DBInfo.ReaderName));
+                String districtid = c.getString(c.getColumnIndex(DBInfo.DistrictID));
+                String routeid = c.getString(c.getColumnIndex(DBInfo.RouteID));
+                String idfrom = c.getString(c.getColumnIndex(DBInfo.AccountIDFrom));
+                String idTo = c.getString(c.getColumnIndex(DBInfo.AccountIDTo));
+                String dueDate = c.getString(c.getColumnIndex(DBInfo.DueDate));
+                String tagClass = c.getString(c.getColumnIndex(DBInfo.TagClass));
+                String downLoadRef = c.getString(c.getColumnIndex(DBInfo.DownloadRef));
+                String sequenceNoFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
+                String sequenceNoTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
+                int isDownload = c.getInt(c.getColumnIndex(DBInfo.IsDownload));
+                list.add(new Route(districtid, routeid, idTo, idfrom, dueDate, tagClass, coopid, readerid, readername, downLoadRef, sequenceNoFrom, sequenceNoTo, isDownload));
+                c.moveToNext();
+            }
+        }
+
+        sql.close();
+        db.close();
+        return list;
+    }
+
+    public int getRoutesDownloadCount(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String stmt = "select count(RouteID) as count from routes where IsDownload = 1";
+        int val = 0;
+        @SuppressLint("Recycle")
+        Cursor cursor = sql.rawQuery(stmt, null);
+        while(cursor.moveToNext())
+
+        {
+            val = cursor.getInt(cursor.getColumnIndex("count"));
+        }
+
+        return val;
+    }
+
+
+
+    public ArrayList<Route> getRouteStatusZero(DataBaseHandler db) {
+        ArrayList<Route> list = new ArrayList<>();
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        String statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID WHERE IsDownload = 0";
         Cursor c = sql.rawQuery(statement,null);
 
         if(c.moveToFirst()) {
@@ -195,7 +243,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 String downLoadRef = c.getString(c.getColumnIndex(DBInfo.DownloadRef));
                 String sequenceNoFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
                 String sequenceNoTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
-                list.add(new Route(districtid,routeid,idTo,idfrom,dueDate,tagClass,coopid,readerid,readername,downLoadRef,sequenceNoFrom,sequenceNoTo));
+                int isDownload = c.getInt(c.getColumnIndex(DBInfo.IsDownload));
+                list.add(new Route(districtid,routeid,idTo,idfrom,dueDate,tagClass,coopid,readerid,readername,downLoadRef,sequenceNoFrom,sequenceNoTo,isDownload));
                 c.moveToNext();
             }
         }
@@ -234,6 +283,16 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             readerID = cursor.getString(cursor.getColumnIndex(DBInfo.ReaderID));
         }
         return readerID;
+    }
+
+    public void updateRouteIsDownload(DataBaseHandler db,int status,String routid) {
+        Log.e(TAG,"update route isdownload");
+        SQLiteDatabase sql = db.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBInfo.IsDownload,status);
+        sql.update(DBInfo.TBLRoutes, cv, "RouteID='" + routid +"'" , null);
+        db.close();
+        sql.close();
     }
 
     public boolean checkRouteIsExist(DataBaseHandler db,String routeID,String districtID) {
@@ -301,11 +360,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         data.put(DBInfo.Notes1, ".");
         data.put(DBInfo.Notes2, ".");
 
-        long save = sql.insert(DBInfo.TBLRateCode, null, data);
+        sql.insert(DBInfo.TBLRateCode, null, data);
         sql.close();
         db.close();
 
-        return  (int)save;
+        return 1;
     }
 
     public int saveCoopDetails(DataBaseHandler db, String coopid,
@@ -331,7 +390,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         long save = sql.insert(DBInfo.TBLUtility, null, cv);
         sql.close();
         db.close();
-        return (int)save;
+        return 1;
     }
 
     public int saveRateComponent(DataBaseHandler db, String coopid,
@@ -514,6 +573,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             cv.put(DBInfo.kWhReading,account.getkWhReading());
             long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
             if (save != 0) {
+                Log.e(TAG,"accountid: " + account.getAccountID());
                 String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
                 MainActivity.webRequest.sendRequest(url,"saveAccount");
             }
