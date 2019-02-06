@@ -3,7 +3,6 @@ package com.payvenue.meterreader.Fragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,7 +48,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     private static Button BtnDownLoad;
     private Button BtnDelete;
     private static View rootView;
-    SQLiteDatabase database;
+
     static String mac;
     static Snackbar snackbar;
     public static String baseurl;
@@ -274,8 +273,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             }
 
 
-                            Log.e(TAG, "route save: " + save[0]);
-                            Log.e(TAG, "route length: " + jsonArray.length());
                             if (jsonArray.length() == 0) {
                                 if (mDialog.isShowing()) {
                                     mDialog.dismiss();
@@ -290,6 +287,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 setSnackbar("routes completed..");
                                 snackbar.show();
                                 DB.syncSettingsInfo(DB, route);
+                                DB.saveConnection(DB, route.getCoopID(), txtHost, strPort);
+                                MainActivity.setConnSettings();
+                                MainActivity.setReader();
                                 routeArrayList = DB.getRoute(DB);
                                 downloadRateSchedule();
                             }
@@ -301,6 +301,17 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                                 setSnackbar("routes saved already..");
                                 snackbar.show();
+                            }
+
+                            int routeCount = DB.getRoutesCount(DB);
+                            if(jsonArray.length() == 0 && routeCount > 0) {
+                                routeArrayList = DB.getRoute(DB);
+                                checkDataNotSuccessfullyDownloaded();
+                            }
+
+                            if(jsonArray.length() > 0 && routeCount > 0 && save[0] == 0) {
+                                routeArrayList = DB.getRoute(DB);
+                                checkDataNotSuccessfullyDownloaded();
                             }
 
                         } catch (JSONException e) {
@@ -341,9 +352,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
             downloadRateCode(getContext());
         }
 
-        if (myPreferences.getPrefString(Constant.COOP_DETAILS_STATUS).equalsIgnoreCase(Constant.NO)) {
-            downloadCoopDetails(getContext());
-        }
+//        if (myPreferences.getPrefString(Constant.COOP_DETAILS_STATUS).equalsIgnoreCase(Constant.NO)) {
+//            downloadCoopDetails(getContext());
+//        }
 
         if (myPreferences.getPrefString(Constant.RATE_COMPONENT_STATUS).equalsIgnoreCase(Constant.NO)) {
             downloadRateComponent(getContext());
@@ -382,8 +393,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
             }
         }
 
-        mDialog.setMessage("DownLoading Rate Schedule...");
-        mDialog.show();
         int length = tagclassList.size();
         for (String str : tagclassList) {
             String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
@@ -406,9 +415,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         }
 
-
-        mDialog.setMessage("DownLoading billing policy...");
-        mDialog.show();
         int length = tagclassList.size();
         for (String str : tagclassList) {
             String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
@@ -418,38 +424,31 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadRateCode(Context context) {
         if (routeArrayList.size() > 0) {
-            mDialog.setMessage("DownLoading rate codes...");
-            mDialog.show();
-
-            String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=NORECO2&mac=" + mac;
             new downloadRateCodeAsync(context).execute(cmdRateCode);
         }
     }
 
 
-    public static void downloadCoopDetails(Context context) {
-        if (routeArrayList.size() > 0) {
-            mDialog.setMessage("DownLoading details...");
-            mDialog.show();
-            String cmdCoopDetails = baseurl + "?cmd=getCoopDetails&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
-            new downloadCoopDetailsAsync(context).execute(cmdCoopDetails);
-        }
-    }
+//    public static void downloadCoopDetails(Context context) {
+//        if (routeArrayList.size() > 0) {
+////            mDialog.setMessage("DownLoading details...");
+////            mDialog.show();
+//            String cmdCoopDetails = baseurl + "?cmd=getCoopDetails&coopid=NORECO2&mac=" + mac;
+//            new downloadCoopDetailsAsync(context).execute(cmdCoopDetails);
+//        }
+//    }
 
     public static void downloadRateComponent(Context context) {
         if (routeArrayList.size() > 0) {
-            mDialog.setMessage("DownLoading rate component...");
-            mDialog.show();
-            String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=NORECO2&mac=" + mac;
             new downloadRateComponentAsync(context).execute(cmdRateComponent);
         }
     }
 
     public static void downloadRateSegment(Context context) {
         if (routeArrayList.size() > 0) {
-            mDialog.setMessage("DownLoading rate segment...");
-            mDialog.show();
-            String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+            String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=NORECO2&mac=" + mac;
             new downloadRateSegmentAsync(context).execute(cmdRateSegment);
         }
     }
@@ -457,17 +456,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadLifeLineDiscountPolicy(Context context) {
         if (routeArrayList.size() > 0) {
-            mDialog.setMessage("DownLoading lifeline discount policy...");
-            mDialog.show();
-            String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=" + routeArrayList.get(1).getCoopID() + "&mac=" + mac;
+
+            String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=NORECO2&mac=" + mac;
             new downloadLifeLineDiscountPolicyAsync(context).execute(cmdLifeLineDiscount);
         }
     }
 
 
     public static void downloadThreshold(Context context) {
-        mDialog.setMessage("DownLoading threshold...");
-        mDialog.show();
         String cmdThreshold = baseurl + "?cmd=threshold&mac=" + mac;
         new downloadThresholdAsync(context).execute(cmdThreshold);
     }
@@ -535,7 +531,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     setSnackbar("No available accounts...");
                     snackbar.show();
                 }
-
             }
 
             if(routeArrayList.size() != downloadRoute) {
@@ -856,7 +851,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("Rate Code completed...");
                             snackbar.show();
                             myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.YES);
-                            downloadCoopDetails(context);
+                            downloadRateComponent(context);
+                            //downloadCoopDetails(context);
                         }
 
                     } catch (JSONException e) {

@@ -5,6 +5,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -72,6 +74,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     private boolean isSearch = false;
     private MyProgressBar myProgressBar;
     BixolonPrinterClass bp;
+    Snackbar snackbar;
 
     @SuppressLint("NewApi")
     @Override
@@ -109,6 +112,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
     //region Functions
+
+    public void setSnackbar(String msg) {
+
+        snackbar = Snackbar.make(findViewById(R.id.relativeLayout_view_details), msg, Snackbar.LENGTH_LONG);
+    }
 
     public void initViews() {
 
@@ -148,18 +156,24 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mConsume.setText(mAccount.getConsume());
             mLocation.setText(mAccount.getLatitude() + "," + mAccount.getLongitude());
         }else{
+
             searchAccount = MainActivity.selectedAccount;
-            viewacctid.setText(searchAccount.getAccountID());
-            viewacctserial.setText(searchAccount.getMeterSerialNo());
-            //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
-            viewacctname.setText(searchAccount.getLastName());
-            viewacctadd.setText(searchAccount.getAddress());
-            txtclass.setText(searchAccount.getAccountClassification());
-            txtmeterbrand.setText(searchAccount.getMeterBrand());
-            mReading.setText(searchAccount.getReading());
-            mPrevReading.setText(searchAccount.getInitialReading());
-            mConsume.setText(searchAccount.getConsume());
-            mLocation.setText(searchAccount.getLatitude() + "," + searchAccount.getLongitude());
+            if(searchAccount != null) {
+                viewacctid.setText(searchAccount.getAccountID());
+                viewacctserial.setText(searchAccount.getMeterSerialNo());
+                //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
+                viewacctname.setText(searchAccount.getLastName());
+                viewacctadd.setText(searchAccount.getAddress());
+                txtclass.setText(searchAccount.getAccountClassification());
+                txtmeterbrand.setText(searchAccount.getMeterBrand());
+                mReading.setText(searchAccount.getReading());
+                mPrevReading.setText(searchAccount.getInitialReading());
+                mConsume.setText(searchAccount.getConsume());
+                mLocation.setText(searchAccount.getLatitude() + "," + searchAccount.getLongitude());
+            }else{
+                    setSnackbar("No results found...");
+                    snackbar.show();
+            }
         }
     }
 
@@ -211,10 +225,17 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         if(searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
                 @Override
-                public boolean onClose() {
-                    return false;
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    isSearch = false;
+                    setValues();
+                    return true;
                 }
             });
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -339,6 +360,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         if (id == R.id.btnEdit) {
+            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),0);
             int editCount = db.getEditAttemp(db,mAccount.getAccountID());
 
 //            if(editCount == 3) {
@@ -347,8 +369,6 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 Intent intent = new Intent(this, Accounts.class);
                 startActivityForResult(intent, 5);
 //            }
-
-
         }
 
         if (id == R.id.btnRead)

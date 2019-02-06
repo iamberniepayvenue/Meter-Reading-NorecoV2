@@ -176,7 +176,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     public void prepareData() {
 
         PortNumber = txtPort.getText().toString();
-        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
+        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=NORECO2&mac=" + CommonFunc.getMacAddress();
 
 
         if (PortNumber.trim().length() == 0) {
@@ -217,6 +217,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
             Gson gson = new GsonBuilder().create();
 
             JSONObject FinalData;
+
 
             while (cursor.moveToNext()) {
 
@@ -294,14 +295,8 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                     rowObject.put("ExportDateCounter", exportDateCounter);
                     mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
-                    //String []strArray = billMonth.split("/");
-                    //String yr = strArray[2];
-                    //String month = strArray[0];
-                    //billMonth = yr+month;
-                    //mBillMonth = yr+"_"+month;
                     rowObject.put("billmonth", mBillMonth);
 
-                    //Log.e(TAG,mBillMonth);
                     ArrayList<Components> summary = new ArrayList<>();
                     for (Rates rates : mBill.getRates()) {
                         if (!rates.getCode().toLowerCase().contains("vat")) {

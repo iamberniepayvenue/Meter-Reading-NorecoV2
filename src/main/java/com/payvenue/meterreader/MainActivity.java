@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     public static void setReader() {
 
         db.getReader(db);
-
+        Log.e(TAG,"here....");
         // Display current reader name
 
         header = navigationView.getHeaderView(0);

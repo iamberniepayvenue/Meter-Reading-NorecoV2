@@ -1,71 +1,72 @@
     package com.payvenue.meterreader;
 
     import android.annotation.SuppressLint;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
+    import android.app.SearchManager;
+    import android.content.Context;
+    import android.content.DialogInterface;
+    import android.content.Intent;
+    import android.content.pm.PackageManager;
+    import android.database.Cursor;
+    import android.media.AudioManager;
+    import android.media.ToneGenerator;
+    import android.os.Build;
+    import android.os.Bundle;
+    import android.support.annotation.Nullable;
+    import android.support.constraint.ConstraintLayout;
+    import android.support.design.widget.Snackbar;
+    import android.support.v4.content.ContextCompat;
+    import android.support.v4.view.MenuItemCompat;
+    import android.support.v7.app.AlertDialog;
+    import android.support.v7.app.AppCompatActivity;
+    import android.text.Editable;
+    import android.text.TextWatcher;
+    import android.util.Log;
+    import android.view.KeyEvent;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.view.WindowManager;
+    import android.view.inputmethod.EditorInfo;
+    import android.view.inputmethod.InputMethodManager;
+    import android.widget.Button;
+    import android.widget.CheckBox;
+    import android.widget.EditText;
+    import android.widget.ImageView;
+    import android.widget.SearchView;
+    import android.widget.TextView;
+    import android.widget.Toast;
 
-import com.bixolon.printer.BixolonPrinter;
-import com.payvenue.meterreader.Camera.ZBarScannerActivity;
-import com.payvenue.meterreader.Fragments.MyDialogFragment;
-import com.payvenue.meterreader.Interface.MyDialogInterface;
+    import com.bixolon.printer.BixolonPrinter;
+    import com.payvenue.meterreader.Camera.ZBarScannerActivity;
+    import com.payvenue.meterreader.Fragments.MyDialogFragment;
+    import com.payvenue.meterreader.Interface.MyDialogInterface;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+    import org.json.JSONArray;
+    import org.json.JSONException;
+    import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+    import java.text.DecimalFormat;
+    import java.util.ArrayList;
+    import java.util.List;
 
-import DataBase.DataBaseHandler;
-import Model.Account;
-import Model.Bill;
-import Model.LifeLineSubsidyModel;
-import Model.Policies;
-import Model.RateSchedule;
-import Model.RateSegmentModel;
-import Model.Rates;
-import Model.Thresholds;
-import Utility.BixolonPrinterClass;
-import Utility.CommonFunc;
-import Utility.Constant;
-import Utility.MobilePrinter;
-import Utility.MyProgressBar;
-import ZBar.ZBarConstants;
+    import DataBase.DataBaseHandler;
+    import Model.Account;
+    import Model.Bill;
+    import Model.LifeLineSubsidyModel;
+    import Model.Policies;
+    import Model.RateSchedule;
+    import Model.RateSegmentModel;
+    import Model.Rates;
+    import Model.Thresholds;
+    import Utility.BixolonPrinterClass;
+    import Utility.CommonFunc;
+    import Utility.Constant;
+    import Utility.MobilePrinter;
+    import Utility.MyProgressBar;
+    import ZBar.ZBarConstants;
 
-import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
-import static com.payvenue.meterreader.MainActivity.whichPrinter;
+    import static com.payvenue.meterreader.Fragments.FragmentReading.ZBAR_SCANNER_REQUEST;
+    import static com.payvenue.meterreader.MainActivity.whichPrinter;
 
 
     /**
@@ -251,12 +252,12 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
                 }
             }else{
                 searchAccount = MainActivity.selectedAccount;
-                mSerial.setText(mAccount.getMeterSerialNo());
-                mAccountName.setText(mAccount.getLastName());
-                mAccountID.setText(mAccount.getAccountID());
-                mAccountClass.setText(mAccount.getAccountClassification());
-                mAccountAddress.setText(mAccount.getAddress());
-                String prevReading = mAccount.getInitialReading();
+                mSerial.setText(searchAccount.getMeterSerialNo());
+                mAccountName.setText(searchAccount.getLastName());
+                mAccountID.setText(searchAccount.getAccountID());
+                mAccountClass.setText(searchAccount.getAccountClassification());
+                mAccountAddress.setText(searchAccount.getAddress());
+                String prevReading = searchAccount.getInitialReading();
                 if(prevReading.equalsIgnoreCase(".") || prevReading.equalsIgnoreCase("")) {
                     mPrevReading.setText(" Previous Reading: 0 kwh");
                 }else{
@@ -1060,10 +1061,17 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
             if(searchView != null) {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
                 searchView.setIconifiedByDefault(false);
-                searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.menu_search), new MenuItemCompat.OnActionExpandListener() {
                     @Override
-                    public boolean onClose() {
-                        return false;
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        isSearch = false;
+                        setValues();
+                        return true;
                     }
                 });
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

@@ -220,6 +220,20 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return val;
     }
 
+    public int getRoutesCount(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String stmt = "select count(RouteID) as count from routes";
+        int val = 0;
+        @SuppressLint("Recycle")
+        Cursor cursor = sql.rawQuery(stmt, null);
+        while(cursor.moveToNext())
+
+        {
+            val = cursor.getInt(cursor.getColumnIndex("count"));
+        }
+
+        return val;
+    }
 
 
     public ArrayList<Route> getRouteStatusZero(DataBaseHandler db) {
@@ -573,7 +587,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             cv.put(DBInfo.kWhReading,account.getkWhReading());
             long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
             if (save != 0) {
-                Log.e(TAG,"accountid: " + account.getAccountID());
+                //Log.e(TAG,"accountid: " + account.getAccountID());
                 String url = FragmentDownLoad.baseurl + "?cmd=bpu&accountid=" + account.getAccountID();
                 MainActivity.webRequest.sendRequest(url,"saveAccount");
             }
@@ -850,10 +864,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         } else if(tag == 1) {
             myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > "+Integer.valueOf(accountid)+" Limit 1";
         }else if (tag == 2) {
-            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%' AND ReadStatus = 'Unread' Limit 1";
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' Limit 1";
         }
-
-
 
         Cursor c = sql.rawQuery(myQuery, null);
 
@@ -928,14 +940,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<Account> searchItem(DataBaseHandler db, String item) {
+    public ArrayList<Account> searchItem(DataBaseHandler db, String item,String mode) {
         ArrayList<Account> myList = new ArrayList<>();
         Gson gson = new GsonBuilder().create();
         Account account = null;
         String details = null;
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select ReadingDetails,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification From " + DBInfo.TBLACCOUNTINFO + " Where AccountID Like '%"+item+"%' Or LastName Like '%"+item+"%' Or  AccountClassification Like '%"+item+"%' Or MeterSerialNo Like '%"+item+"%'";
-
+        String statement = "Select ReadingDetails,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%"+item+"%' Or LastName Like '%"+item+"%' Or  AccountClassification Like '%"+item+"%' Or MeterSerialNo Like '%"+item+"%') And ReadStatus='"+mode+"'";
         Cursor cursor = sql.rawQuery(statement,null);
         if(cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
@@ -952,9 +963,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     }catch (JsonSyntaxException e) {
                         Log.e(TAG,"searchItem : " + e.getMessage());
                     }
-
                 }
-
         }
 
         cursor.close();

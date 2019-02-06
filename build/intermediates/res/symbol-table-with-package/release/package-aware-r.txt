@@ -1127,6 +1127,8 @@ id radio
 id rates
 id readacct
 id relativeLayout
+id relativeLayout_activity_accounts
+id relativeLayout_view_details
 id resultList
 id right
 id right_icon
