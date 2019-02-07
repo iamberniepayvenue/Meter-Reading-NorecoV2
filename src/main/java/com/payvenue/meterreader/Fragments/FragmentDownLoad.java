@@ -632,10 +632,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-
 
                         if (count == lengthOfClassification) {
                             if (Constant.rateshedsave > 0 && Constant.rateschedsize == Constant.rateshedsave) {
@@ -735,10 +731,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 setSnackbar("Billing policy not completely downloaded...Download again");
                                 snackbar.show();
                                 return;
-                            }
-
-                            if (mDialog.isShowing()) {
-                                mDialog.dismiss();
                             }
 
                             if (Constant.billingpolicysave > 0 && Constant.billingpolicysize == Constant.billingpolicysave) {
@@ -843,9 +835,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
+
 
                         if (Constant.ratecodesave > 0 && Constant.ratecodesize == Constant.ratecodesave) {
                             setSnackbar("Rate Code completed...");
@@ -955,9 +945,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
+
 
                         if (Constant.coopdetailssave > 0 && Constant.coopdetailssize == Constant.coopdetailssave) {
                             setSnackbar("Coop details completed...");
@@ -1056,9 +1044,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
+
 
                         if (Constant.ratecomponentsave > 0 && Constant.ratecomponentsize == Constant.ratecomponentsave) {
                             Log.e(TAG, "ratecomponentsave: " + Constant.ratecomponentsave);
@@ -1164,10 +1150,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-
                         if (Constant.ratesegmentsave > 0 && Constant.ratesegmentsize == Constant.ratesegmentsave) {
                             setSnackbar("Rate Segment completed...");
                             snackbar.show();
@@ -1264,10 +1246,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             return;
                         }
 
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-
                         if (Constant.lifelinepolicysave > 0 && Constant.lifelinepolicysize == Constant.lifelinepolicysave) {
                             setSnackbar("Lifeline Discount Policy completed...");
                             snackbar.show();
@@ -1360,10 +1338,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             mTvView.setText("");
                             mTvView.append("Threshold not completely downloaded...Download again");
                             return;
-                        }
-
-                        if (mDialog.isShowing()) {
-                            mDialog.dismiss();
                         }
 
                         if (Constant.thresholdsave > 0 && Constant.thresholdsize == Constant.thresholdsave) {

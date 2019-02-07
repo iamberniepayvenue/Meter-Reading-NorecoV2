@@ -1,2 +1,2 @@
-# Referenced at /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/merged_manifests/release/AndroidManifest.xml:41
+# Referenced at /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/merged_manifests/release/AndroidManifest.xml:44
 -keep class android.support.multidex.MultiDexApplication { <init>(); }

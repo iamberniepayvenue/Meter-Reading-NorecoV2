@@ -122,10 +122,12 @@
         private String a_class;
         private Account mAccount;
         private Account searchAccount;
+        private Account tempAccount;
         private boolean isHigherVoltage = false;
         private boolean isLowerVoltage = false;
         private boolean isMotherMeter = false;
         private boolean isSearch = false;
+        private boolean iskeyboardsearch = false;
 
         private MyProgressBar myProgressBar;
         BixolonPrinterClass bp;
@@ -161,6 +163,28 @@
             }
 
             mAccount =  MainActivity.selectedAccount;
+            tempAccount = mAccount;
+
+            setData();
+
+            policiesArrayList = db.getBillingPolicy(db,a_class);
+
+            scPercentage = getSCDiscount();
+
+            initViews();
+            setValues();
+
+        }
+
+        public void setData() {
+
+            if(isSearch) {
+                mAccount = searchAccount;
+            }else{
+                mAccount = tempAccount;
+            }
+
+
             a_class = mAccount.getAccountClassification();
 
             if(mAccount.getIsCheckSubMeterType().toLowerCase().equalsIgnoreCase("m")) {
@@ -188,14 +212,6 @@
 
 
             isNetMetering = mAccount.getIsNetMetering();
-
-            policiesArrayList = db.getBillingPolicy(db,a_class);
-
-            scPercentage = getSCDiscount();
-
-            initViews();
-            setValues();
-
         }
 
         public void initViews() {
@@ -829,6 +845,8 @@
 
         public void checkReading() {
 
+            setData();
+
             mAccount.setReading(strReading);
 
             initialRead = mAccount.getInitialReading();
@@ -1069,8 +1087,7 @@
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        isSearch = false;
-                        setValues();
+                        finish();
                         return true;
                     }
                 });
@@ -1122,8 +1139,7 @@
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                // return true;
-                this.finish();
+                finish();
             }
             if (id == R.id.menu_scanner) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1149,10 +1165,10 @@
             return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
         }
 
-        @Override
-        protected void onNewIntent(Intent intent) {
-            setIntent(intent);
-        }
+//        @Override
+//        protected void onNewIntent(Intent intent) {
+//            setIntent(intent);
+//        }
 
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1191,6 +1207,8 @@
                         mAccount.setRemarks(strRemarks);
                     }
 
+
+
                     calculateBill();
                     /**PRINTING SOA*/
                     if (MainActivity.mIsConnected) {
@@ -1219,9 +1237,10 @@
 //                    }
                     //Intent intent = new Intent(this, BillPreview.class);
                     db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),1);
+                    this.finish();
                     Intent intent = new Intent(this, Accounts.class);
                     startActivity(intent);
-                    this.finish();
+
                     break;
                 case R.id.btnTakePic:
                     break;
@@ -1310,7 +1329,10 @@
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
+
                 hideKeyboard();
+
+
 
                 switch (textView.getId()) {
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.payvenue.meterreader"
     android:versionCode="1"
     android:versionName="1noreco" >
@@ -7,6 +8,8 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="27" />
+
+    <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -84,6 +87,7 @@
         <activity
             android:name="com.payvenue.meterreader.ViewDetails"
             android:label="@string/title_activity_view_details"
+            android:launchMode="singleTop"
             android:logo="@android:color/transparent"
             android:showAsAction="never" >
             <intent-filter>
@@ -142,7 +146,8 @@
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name="com.payvenue.meterreader.Accounts"
-            android:label="@string/title_activity_account_details" >
+            android:label="@string/title_activity_account_details"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

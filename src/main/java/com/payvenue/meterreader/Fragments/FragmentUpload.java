@@ -351,7 +351,11 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                                 mDialog.dismiss();
                                             }
 
-                                            Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
+                                            Constant.COUNT_404 = Constant.COUNT_404 + 1;
+                                            if(Constant.COUNT_404 < 2) {
+                                                Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
+                                            }
+
                                             return;
 
                                         case "500":

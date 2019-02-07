@@ -52,15 +52,17 @@ public class Constant {
 
     public static int decoy_save_account = 0;
 
+    public static int COUNT_404 = 0;
+
 
 
     /**Production*/
-    //public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
+    public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
 
     /**Development
      * 8080
      * */
-    public static String PORT = "8080/noreco_api/billing_api.asp";
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
     public static String DISCONNECTIONNOTICE = "Pursuant to NORECO II Policy on Delinquent Accounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills. " +

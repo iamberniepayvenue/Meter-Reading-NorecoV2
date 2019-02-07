@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.payvenue.meterreader"
-    android:versionCode="1"
-    android:versionName="1.0">
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.payvenue.meterreader">
+    <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -83,11 +83,13 @@
         <activity
             android:name=".Camera.ZBarScannerActivity"
             android:screenOrientation="landscape" />
+
         <activity
             android:name=".ViewDetails"
             android:label="@string/title_activity_view_details"
             android:logo="@android:color/transparent"
-            android:showAsAction="never">
+            android:showAsAction="never"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -98,6 +100,7 @@
             <meta-data android:name="android.app.default_searchable"
                 android:value=".ViewDetails" />
         </activity>
+
         <activity
             android:name=".AccountListActivity"
             android:label="Accounts"
@@ -143,7 +146,8 @@
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name=".Accounts"
-            android:label="@string/title_activity_account_details">
+            android:label="@string/title_activity_account_details"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
