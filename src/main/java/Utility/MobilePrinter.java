@@ -22,6 +22,7 @@ public class MobilePrinter {
     static String EUC_KR = "EUC-KR";
     static int LINE_CHARS = 63;
     private static final String TAG = "MobilePrinter";
+    private int device_tag = 0;
 
 
     public MobilePrinter(Context c) {
@@ -42,6 +43,10 @@ public class MobilePrinter {
             woosim.setHandle(acthandler);
         }
         return woosim;
+    }
+
+    public void setDeviceTag(int device_tag) {
+        this.device_tag = device_tag;
     }
 
     public Handler acthandler = new Handler() {
@@ -73,6 +78,10 @@ public class MobilePrinter {
 //        if(whichPrinter.equalsIgnoreCase("bix")) {
 //            LINE_CHARS = 47;
 //        }
+
+        if(device_tag == 1) {
+            LINE_CHARS = 47;
+        }
 
         int padding = LINE_CHARS - leftText.length() - rightText.length();
         String paddingChar = " ";
@@ -124,6 +133,10 @@ public class MobilePrinter {
 
     public void printTextEmphasized1(String leftText, String rightText) {
         int padding = 31 - leftText.length() - rightText.length();
+
+        if(device_tag == 1) {
+            padding = 46 - leftText.length() - rightText.length();
+        }
 
         int font = 1;
         boolean emphasis = false;

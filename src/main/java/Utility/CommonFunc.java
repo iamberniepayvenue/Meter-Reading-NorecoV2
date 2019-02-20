@@ -355,9 +355,9 @@ public class CommonFunc {
         if(tag == 1) {
             bp = MainActivity.bp;
 
-            if(bp == null) {
-                bp = BixolonPrinterClass.newInstance(MainActivity.mContext);
-            }
+//            if(bp == null) {
+//                bp = BixolonPrinterClass.newInstance(MainActivity.mContext);
+//            }
 
             if(emphasized == 1) {
                 if(text2.equalsIgnoreCase("")){

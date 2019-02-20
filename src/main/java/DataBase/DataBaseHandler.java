@@ -806,12 +806,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateAccountToPrinted(DataBaseHandler db,String status) {
+    public void updateAccountToPrinted(DataBaseHandler db,String accountid,String status) {
         SQLiteDatabase sql = db.getReadableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(DBInfo.ReadStatus, status);
         cv.put(DBInfo.PrintCount,CommonFunc.toDigit(MainActivity.selectedAccount.getPrintCount()) + 1);
-        sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + MainActivity.selectedAccount.getAccountID() + "'", null);
+        sql.update(DBInfo.TBLACCOUNTINFO, cv, "AccountID='" + accountid + "'", null);
         sql.close();
         db.close();
     }

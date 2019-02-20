@@ -4,7 +4,6 @@ ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-164:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-164:12
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:2:1-164:12
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-13:12
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/be8854c4088390d7f319575de78f3d48/AndroidManifest.xml:2:1-11:12
 MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a8e2c22750ad4f237beccd087a1848f1/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/9ce5a26467985b5af0bb902d6f396569/AndroidManifest.xml:17:1-22:12
@@ -12,6 +11,7 @@ MERGED from [com.android.support:multidex:1.0.3] /Users/johnrychristianpaduhilao
 MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/486c14999b5af76aafae27b7a988e77e/AndroidManifest.xml:2:1-11:12
 MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/68b6eb836e9d2be141c0443c60096d45/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/6fa72b97e6f12b89b7a82bbc827c1dcd/AndroidManifest.xml:17:1-22:12
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-13:12
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/80d88a59ae401e39e0b14dd2bfc2d0a4/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/5752498194f51a2de6aff6b592534d96/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/eed68387cac90f14602c9af582533707/AndroidManifest.xml:17:1-22:12
@@ -120,12 +120,12 @@ ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-
 		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:36:22-72
 application
 ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:42:5-162:19
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/be8854c4088390d7f319575de78f3d48/AndroidManifest.xml:9:5-20
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/be8854c4088390d7f319575de78f3d48/AndroidManifest.xml:9:5-20
 MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/486c14999b5af76aafae27b7a988e77e/AndroidManifest.xml:9:5-20
 MERGED from [com.android.volley:volley:1.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/volley-1.1.1.aar/486c14999b5af76aafae27b7a988e77e/AndroidManifest.xml:9:5-20
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20
 	android:label
 		ADDED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml:45:9-41
 	tools:ignore
@@ -276,8 +276,6 @@ uses-sdk
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
 INJECTED from /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/AndroidManifest.xml
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/be8854c4088390d7f319575de78f3d48/AndroidManifest.xml:5:5-7:41
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/be8854c4088390d7f319575de78f3d48/AndroidManifest.xml:5:5-7:41
 MERGED from [com.android.support:design:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/a8e2c22750ad4f237beccd087a1848f1/AndroidManifest.xml:20:5-44
@@ -292,6 +290,8 @@ MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhi
 MERGED from [com.android.support:support-v4:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/68b6eb836e9d2be141c0443c60096d45/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/6fa72b97e6f12b89b7a82bbc827c1dcd/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:cardview-v7:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.1.1.aar/6fa72b97e6f12b89b7a82bbc827c1dcd/AndroidManifest.xml:20:5-44
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:lib] /Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/lib/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/80d88a59ae401e39e0b14dd2bfc2d0a4/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-fragment:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/80d88a59ae401e39e0b14dd2bfc2d0a4/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/johnrychristianpaduhilao/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/5752498194f51a2de6aff6b592534d96/AndroidManifest.xml:20:5-44

@@ -56,26 +56,16 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     static TextView mTvView;
     TextView lblMAC;
     EditText txtPort;
-    String strPort, txtHost, dueDate;
-    private String tagRoutid = "";
+    String strPort, txtHost;
     Spinner spinHost;
     public static ProgressDialog mDialog;
     static DataBaseHandler DB;
     Context ctx;
-    private int numberOfRoutesDownloaded = 0;
-    private int numberOfAccountSavingPerRoutes = 0;
-    //private int numberOfRoutesPassing = 0;
-    private int numberOfTimesDeletingTable = 0;
     private static final String TAG = "FragmentDownLoad";
     private boolean ifRouteExist = false;
     private static MyPreferences myPreferences;
-    private int totalAccountSave = 0;
-    private int accountSavePerRoute = 0;
-    private int routeLength = 0;
-    private int rdsuccess = 0;
-    private boolean noAccounts = false;
     private static Gson gson;
-    private boolean isRatesScheduleErrorDownloading = false;
+    static String billMonth;
 
 
     private static ArrayList<Route> routeArrayList = new ArrayList<>();
@@ -157,26 +147,26 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         BtnDownLoad.setClickable(false);
     }
 
-    public void showToast(String message) {
-        Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
-        //MainActivity.db.errorDownLoad(MainActivity.db, getContext());
-        numberOfTimesDeletingTable++;
-        setZeroPreference();
+//    public void showToast(String message) {
+//        Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
+//        //MainActivity.db.errorDownLoad(MainActivity.db, getContext());
+//        numberOfTimesDeletingTable++;
+//        setZeroPreference();
+//
+//        if (mDialog.isShowing()) {
+//            mDialog.dismiss();
+//        }
+//    }
 
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-    }
-
-    public void clearData() {
-        numberOfTimesDeletingTable++;
-        //MainActivity.db.errorDownLoad(MainActivity.db, getContext());
-        setZeroPreference();
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-    }
+//    public void clearData() {
+//        numberOfTimesDeletingTable++;
+//        //MainActivity.db.errorDownLoad(MainActivity.db, getContext());
+//        setZeroPreference();
+//
+//        if (mDialog.isShowing()) {
+//            mDialog.dismiss();
+//        }
+//    }
 
     public void setZeroPreference() {
         //myPreferences.savePrefInt(Constant.RATE_SCHEDULE_COUNT_NON_HIGHERVOLT,0);
@@ -200,10 +190,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         switch (v.getId()) {
 
             case R.id.btnDownLoad:
-
-                totalAccountSave = 0;
-                numberOfTimesDeletingTable = 0;
-                numberOfAccountSavingPerRoutes = 0;
                 strPort = txtPort.getText().toString();
                 if (strPort.trim().length() == 0) {//|| txtHost.trim().length() == 0
                     Toast.makeText(ctx, "Please provide a Host and Port to download data.", Toast.LENGTH_LONG).show();
@@ -395,7 +381,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         int length = tagclassList.size();
         for (String str : tagclassList) {
-            String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
+            String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=NORECO2&mac=" + mac + "&tagclass=" + str;
             new downloadRateScheduleAsync(getContext(), length).execute(cmdSchedule);
         }
     }
@@ -412,12 +398,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 coopID = r.getCoopID();
                 tagclassList.add(tagclass);
             }
-
         }
 
         int length = tagclassList.size();
         for (String str : tagclassList) {
-            String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=" + coopID + "&mac=" + mac + "&tagclass=" + str;
+            String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=NORECO2&mac=" + mac + "&tagclass=" + str;
             new downloadBillingPolicyAsync(context, length).execute(cmdPolicy);
         }
     }
@@ -483,7 +468,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     + "&tagclass=" + r.getTagClass()
                     + "&rd=0"
                     + "&sequenceRef=" + r.getDownloadRef()
-                    + "&offset=0";
+                    + "&offset=0"
+                    + "&billmoth="+billMonth;
 
 
             if (r.getDownloadRef().equalsIgnoreCase("1")) {
@@ -595,7 +581,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             myPreferences.savePrefString(Constant.RATE_SCHEDULE_STATUS, Constant.NO);
                             return;
                         }
-
+                        String dateFrom = "";
                         Constant.rateschedsize = Constant.rateschedsize + jsonArray.length();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
@@ -608,7 +594,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             String isUnderOver = obj.getString("IsOverUnder");
                             String islifeline = obj.getString("IsLifeLine");
                             String isscdiscount = obj.getString("IsSCDiscount");
-                            String dateFrom = obj.getString("BillMonth");
+                            dateFrom = obj.getString("BillMonth");
                             String extra1 = obj.getString("RateComponentDetails");
                             String IsExport = obj.getString("IsExport");
 
@@ -635,6 +621,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                         if (count == lengthOfClassification) {
                             if (Constant.rateshedsave > 0 && Constant.rateschedsize == Constant.rateshedsave) {
+                                billMonth = dateFrom;
                                 setSnackbar("Rate Schedule Completed.");
                                 snackbar.show();
                                 myPreferences.savePrefString(Constant.RATE_SCHEDULE_STATUS, Constant.YES);

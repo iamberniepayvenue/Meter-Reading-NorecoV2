@@ -132,7 +132,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:singleLine="true"
                         android:text="name"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="#FFF" />
@@ -349,6 +348,22 @@
 
                     <TextView
                         android:id="@+id/mConsume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:layout_marginRight="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bill Amount:"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+                    <TextView
+                        android:id="@+id/tv_bill_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </TableRow>

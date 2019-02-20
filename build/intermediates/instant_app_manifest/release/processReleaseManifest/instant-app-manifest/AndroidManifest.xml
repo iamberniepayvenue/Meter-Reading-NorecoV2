@@ -7,7 +7,7 @@
     android:versionName="1noreco" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="17"
         android:targetSdkVersion="27" />
 
     <dist:module dist:instant="true" />
