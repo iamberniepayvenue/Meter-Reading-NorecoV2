@@ -784,6 +784,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
     public Cursor getAccountList(DataBaseHandler db, String mode) {
+        //"Read' Or ReadStatus='Printed"
         Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = db.getReadableDatabase();
         String myQuery = "";
@@ -826,7 +827,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(), a.getPrevBilling(), a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
                     a.getPenalty(), a.getRateSched(), a.getMultiplier(), a.getDemandKW(), a.getAdvancePayment(), a.getBillDeposit(), a.getLastReadingDate(),
                     a.getInitialReading(), a.getIsChangeMeter(), a.getMeterBrand(), a.getConsume(), a.getReading(),
-                    a.getRemarks(), a.getLatitude(), a.getLongitude(), a.getTotalLifeLineDiscount(), a.getTotalSCDiscount(), null, a.getOverUnderDiscount(),
+                    a.getRemarks(), a.getLatitude(), a.getLongitude(), a.getTotalLifeLineDiscount(), a.getTotalSCDiscount(), a.getBill(), a.getOverUnderDiscount(),
                     isStopMeter, a.getExportConsume(), a.getExportReading(), a.getExportPreviousReading(), a.getSeniorSubsidy(), a.getLifeLineSubsidy(), a.getIsNetMetering(), a.getTimeRead());
         } else {
             readingDetailsModel = new ReadingDetailsModel(a.getBillMonth(), a.getPrevBilling(), a.getAddress(), a.getSeniorCitizenStatus(), a.getSCExpiryDate(),
@@ -1215,7 +1216,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             if (tag.equalsIgnoreCase("summ")) {
                 strQuery += " Where ReadStatus='Read'";
             } else {
-                strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed'";
+                strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate'";
             }
 
         } else if (status.equalsIgnoreCase("unread")) {

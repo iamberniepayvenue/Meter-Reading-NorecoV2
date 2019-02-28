@@ -131,6 +131,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     private boolean isSearch = false;
     private boolean iskeyboardsearch = false;
     private boolean isClickGenerate = true;
+    private boolean isNoneAverage = false;
 
     BixolonPrinterClass bp;
 
@@ -275,7 +276,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     }
 
     public void showToast(String message) {
-        Toast.makeText(mcontext, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mcontext, message, Toast.LENGTH_LONG).show();
     }
 
     public void setSnackbar(String msg) {
@@ -289,15 +290,15 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         mAccount.setRemarks(strRemarks);
 
-        if (mAccount.getConsume().equals("0") && !mAccount.getRemarks().isEmpty()) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate", isStopCheck);
-            return;
-        }
-
-        if (isChangeCheck) {
-            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate", isStopCheck);
-            return;
-        }
+//        if (mAccount.getConsume().equals("0") && !mAccount.getRemarks().isEmpty()) {
+//            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate", isStopCheck);
+//            return;
+//        }
+//
+//        if (isChangeCheck) {
+//            MainActivity.db.updateReadAccount(MainActivity.db, "Cannot Generate", isStopCheck);
+//            return;
+//        }
 
         try {
             /** initialRead is Previous Reading more details in checkingReading method*/
@@ -361,30 +362,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         String strConsume = mAccount.getConsume();
         rateMultiplier = Double.parseDouble(strConsume); //flConsume;
         rateMultiplier = CommonFunc.roundOff(rateMultiplier, 2);
-
-        /**STOP METER
-         *
-         *  isStopMeter will be false if reading is equal to prev. reading
-         *  if pressing ok button from alert dialog..
-         *
-         * */
-        if (isStopMeter) {
-            if (isStopCheck) {
-                float av = getAveraging();
-                if (av != -2000) {
-                    double presentRead = CommonFunc.roundOff(Double.parseDouble(mAccount.getReading()), 1);
-                    double average = (av + presentRead) - Double.parseDouble(initialRead);
-                    double presreading = av + presentRead;
-                    rateMultiplier = (average) * multiplier + Float.valueOf(coreLoss);
-                    mAccount.setReading(String.valueOf(CommonFunc.round(presreading, 1)));
-                    mAccount.setConsume(String.valueOf(CommonFunc.roundOff(rateMultiplier, 1)));
-                    mAccount.setActualConsumption(String.valueOf(CommonFunc.round(average, 1)));
-                } else {
-                    mAccount.setConsume(String.valueOf(CommonFunc.roundOff(0, 1)));
-                    mAccount.setActualConsumption(String.valueOf(CommonFunc.round(0, 1)));
-                }
-            }
-        }
 
         /**Check Lifeliner*/
         if (a_class.toLowerCase().equalsIgnoreCase("residential")) {
@@ -677,7 +654,12 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         String billmonth = db.getBillMonth(db, a_class);
         mAccount.setBillMonth(billmonth);
 
-        MainActivity.db.updateReadAccount(MainActivity.db, "Read", isStopCheck);
+        String stat = "Read";
+        if(isStopMeter){
+            stat = "Cannot Generate";
+        }
+
+        MainActivity.db.updateReadAccount(MainActivity.db, stat, isStopMeter);
     }
 
     private void simplifyArrears() {
@@ -830,6 +812,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 } else {
                     isStopCheck = false;
                 }
+
+                Log.e(TAG,"isStopCheck:"+isStopCheck);
                 break;
             case R.id.mChange:
                 if (!isChangeCheck) {
@@ -906,39 +890,48 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             }
         }
 
+        final double av = getAveraging();
+        if(isStopCheck) {
+            isStopMeter = true;
+            if (av != -2000) {
+                double _av = av + presReading;
+                mAccount.setReading(String.valueOf(CommonFunc.round(_av, 1)));
+                setKwh(_av, 0);
+            } else {
+                setKwh(0, 1);
+            }
+        }else {
+            if (initialRead.equalsIgnoreCase(mAccount.getReading())) {
 
-        if (initialRead.equalsIgnoreCase(mAccount.getReading())) {
-            final double av = getAveraging();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Stop Meter");
-            builder.setMessage("This is stop meter or not?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Stop Meter");
+                builder.setMessage("This is stop meter or not?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isStopMeter = true;
+                        if (av != -2000) {
+                            double _av = av + presReading;
+                            mAccount.setReading(String.valueOf(CommonFunc.round(_av, 1)));
+                            setKwh(_av, 0);
+                        } else {
+                            setKwh(0, 1);
+                        }
+                    }
+                });
 
-                    isStopMeter = false;
-
-                    if (av != -2000) {
-                        double _av = av + presReading;
-                        mAccount.setReading(String.valueOf(CommonFunc.round(_av, 1)));
-                        setKwh(_av, 0);
-                    } else {
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         setKwh(0, 1);
                     }
-                }
-            });
+                });
 
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    setKwh(0, 1);
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        } else {
-            setKwh(consume, 1);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                setKwh(consume, 1);
+            }
         }
     }
 
@@ -1055,11 +1048,12 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             }
 
             val = finalArray.length() == 3 ? flConsumption / 3 : flConsumption;
-
+            isNoneAverage = false;
         } catch (JSONException e) {
             e.printStackTrace();
             showToast("No availbale past 3 consumption(averaging)..");
             val = -2000;
+            isNoneAverage = true;
         }
 
 
@@ -1227,14 +1221,20 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 calculateBill();
                 /**PRINTING SOA*/
                 if (MainActivity.mIsConnected) {
-                    preparePrint();
+                    if(isNoneAverage){
+                        showToast("Cannot generate SOA, please verify to main office...");
+                    }else{
+                        preparePrint();
+                    }
                 } else {
                     /***
                      *  isClickGenerate only tagging for toast message isClickGenerate can be false during calculateBill function
                      *  this will turn to false if reader input none in reading textbox..
                      */
-
-                    if (isClickGenerate) {
+                    if(isNoneAverage){
+                        showToast("Cannot generate SOA, please verify to main office...");
+                    }
+                    else if (isClickGenerate) {
                         showToast("Printer is not connected.");
                     }
                 }

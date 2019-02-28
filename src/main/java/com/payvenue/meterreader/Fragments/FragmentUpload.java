@@ -194,7 +194,8 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
         }
 
         try {
-            Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, "Read' Or ReadStatus='Printed");
+            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate";
+            Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, mode);
 
             if (cursor.getCount() == 0) {
                 if (mDialog.isShowing()) {
@@ -240,6 +241,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                 accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
                 reader = MainActivity.db.getReaderID(MainActivity.db);
                 account = gson.fromJson(details, Account.class);
+                String readStatus = cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus));
 
                 if (account.getBill() == null) {
                     MainActivity.db.updateStatus(MainActivity.db,accountID);
@@ -264,7 +266,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         rowObject.put("Latitude", account.getLatitude());
                         rowObject.put("Longitude", account.getLongitude());
                         rowObject.put("ReaderID", reader);
-                        rowObject.put("ReadStatus", cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus)));
+                        rowObject.put("ReadStatus", readStatus);
                         rowObject.put("Remarks", account.getRemarks());
                         rowObject.put("DueDate", cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
                         rowObject.put("NewMeterSerial", cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
@@ -305,6 +307,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
                         rowObject.put("billmonth", mBillMonth);
 
+
                         ArrayList<Components> summary = new ArrayList<>();
                         for (Rates rates : mBill.getRates()) {
                             if (!rates.getCode().toLowerCase().contains("vat")) {
@@ -318,14 +321,8 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                         FinalData.put("readAccounts", resultSet);
                         FinalData.put("columnid", String.valueOf(columnID));
-//                    try {
-//                        FinalData.put("readAccounts", resultSet);
-//                        FinalData.put("columnid", String.valueOf(columnID));
-//                    } catch (JSONException e) {
-//                        // TODO Auto-generated catch block
-//                        Log.e(TAG, "JSONException1: " + e.getMessage());
-//                        e.printStackTrace();
-//                    }
+                        //Log.e(TAG,"to upload: "+ FinalData.toString());
+
                         String url;
                         url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8")
                                 + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
@@ -381,9 +378,6 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                         setValues();
                                     }
                                 });
-                        //sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
-                        //Log.e(TAG,"upload:"+ url);
-
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                         e.printStackTrace();

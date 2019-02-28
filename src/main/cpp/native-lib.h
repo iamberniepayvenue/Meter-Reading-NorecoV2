@@ -1,0 +1,8 @@
+//
+// Created by Johnry Christian Paduhilao on 28/02/2019.
+//
+
+#ifndef METER_READING_NORECO_NATIVE_LIB_H
+#define METER_READING_NORECO_NATIVE_LIB_H
+
+#endif //METER_READING_NORECO_NATIVE_LIB_H
