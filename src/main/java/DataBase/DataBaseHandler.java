@@ -734,8 +734,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String sub = RouteCode.substring(0, 3);
         String routeID = RouteCode.replace(sub, "");
 
-        myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where " +
-                " ReadStatus = '" + mode + "' AND  RouteNo = '" + routeID + "' ";
+        myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = '" + mode + "'";
+        if(mode.equalsIgnoreCase("Read")) {
+            myQuery = myQuery + " OR ReadStatus = 'Cannot Generate'";
+        }
+
+        myQuery = myQuery + " AND  RouteNo = '" + routeID + "' ";
 
         if (mode.equalsIgnoreCase("Printed")) {
             myQuery = myQuery + " Order By DateRead ASC";

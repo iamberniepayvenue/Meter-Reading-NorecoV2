@@ -122,6 +122,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     public void setSnackbar(String msg) {
 
         snackbar = Snackbar.make(findViewById(R.id.relativeLayout_view_details), msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     public void initViews() {
@@ -341,7 +342,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     menu.findItem(R.id.btnEdit).setVisible(true);
                     menu.findItem(R.id.btnCancel).setVisible(true);
                 }
-                menu.findItem(R.id.btnGen).setVisible(true);
+
+                if(!mAccount.getReadStatus().equalsIgnoreCase("Cannot Generate")){
+                    menu.findItem(R.id.btnGen).setVisible(true);
+                }else{
+                    menu.findItem(R.id.btnGen).setVisible(false);
+                    setSnackbar("Stop meter...");
+                }
+
+
                 menu.findItem(R.id.btnRead).setVisible(false);
 
                 break;
