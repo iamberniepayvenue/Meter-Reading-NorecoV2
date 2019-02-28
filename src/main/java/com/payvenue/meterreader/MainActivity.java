@@ -710,6 +710,7 @@ public class MainActivity extends AppCompatActivity  {
             }
 
 
+
             //reVal = printer.setConnection(address);
             if (reVal == 1) {
                 setSuccessConnection();

@@ -69,7 +69,7 @@ public class FragmentRoute extends Fragment {
             public void run() {
                 getRoute();
             }
-        },1000);
+        },500);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

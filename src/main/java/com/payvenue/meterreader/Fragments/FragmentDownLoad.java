@@ -578,15 +578,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     return;
                 }
             }
-
-//            if (routeArrayList.size() != downloadRoute) {
-//                if (mDialog.isShowing()) {
-//                    mDialog.dismiss();
-//                }
-//
-//                setSnackbar("Maybe there is no available accounts in this route " + routeArrayList.get(counter - 1).getRouteID());
-//                snackbar.show();
-//            }
         }
     }
 
