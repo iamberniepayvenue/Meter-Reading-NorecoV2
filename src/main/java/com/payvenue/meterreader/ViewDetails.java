@@ -50,6 +50,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
     int myPurpose = 0;
+    String _disctrictNo = "";
 
     Double latitude = 0.00;
     Double longtitude = 0.00;
@@ -93,8 +94,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         if (b != null) {
             myPurpose = b.getInt("purpose");
+            _disctrictNo = b.getString("disctrictNo");
         }
 
+        Log.e(TAG,"_districtID: "+ _disctrictNo);
         originalAccount = MainActivity.selectedAccount;
         callAccounts();
         initViews();
@@ -263,7 +266,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s, 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(), 2);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -286,7 +289,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(), 0);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -333,12 +336,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 menu.findItem(R.id.search).setVisible(false);
                 if (mAccount.getUploadStatus().equals("1")) {
                     menu.findItem(R.id.btnEdit).setVisible(false);
+                    menu.findItem(R.id.btnCancel).setVisible(false);
                 } else {
                     menu.findItem(R.id.btnEdit).setVisible(true);
+                    menu.findItem(R.id.btnCancel).setVisible(true);
                 }
                 menu.findItem(R.id.btnGen).setVisible(true);
                 menu.findItem(R.id.btnRead).setVisible(false);
-                menu.findItem(R.id.btnCancel).setVisible(true);
+
                 break;
             case MainActivity.Modes.MODE_4://4444
                 menu.findItem(R.id.search).setVisible(false);
@@ -393,19 +398,21 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         if (id == R.id.btnEdit) {
-            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), 0);
+            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(), 0);
             int editCount = db.getEditAttemp(db, mAccount.getAccountID());
 
 //            if(editCount == 3) {
 //                Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
 //            }else{
             Intent intent = new Intent(this, Accounts.class);
+            intent.putExtra("disctrictNo",_disctrictNo);
             startActivityForResult(intent, 5);
 //            }
         }
 
         if (id == R.id.btnRead) {
             Intent intent = new Intent(this, Accounts.class);
+            intent.putExtra("disctrictNo",_disctrictNo);
             startActivityForResult(intent, 5);
         }
 
@@ -463,6 +470,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             case R.id.btnReadAccount:
 
                 Intent intent = new Intent(this, Accounts.class);
+                intent.putExtra("disctrictNo",_disctrictNo);
                 startActivityForResult(intent, 1);
 
                 break;

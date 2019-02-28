@@ -52,6 +52,9 @@ public class AccountListActivity extends AppCompatActivity {
         // Grab the data to display on this activity
         Bundle b = getIntent().getExtras();
         routecode = b.getString("RouteCode");
+        Log.e(TAG,"Routecode: "+routecode);
+        String[] district = routecode.split("-");
+        final String districtno = district[0];
         ivNoAccounts = findViewById(R.id.iv_no_accounts);
         listvew = (ListView) findViewById(R.id.list);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,7 +64,8 @@ public class AccountListActivity extends AppCompatActivity {
                 String accountid = ((TextView) view.findViewById(R.id.accountid)).getText().toString();
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid,0);
+                b.putString("disctrictNo",districtno);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,0);
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);

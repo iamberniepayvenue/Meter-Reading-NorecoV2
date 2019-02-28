@@ -240,9 +240,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                 accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
                 reader = MainActivity.db.getReaderID(MainActivity.db);
                 account = gson.fromJson(details, Account.class);
-                Log.e(TAG, "accountid:" + accountID);
-                Log.e(TAG, "details: " + details);
-                Log.e(TAG, "getbill: " + account.getBill());
+
                 if (account.getBill() == null) {
                     MainActivity.db.updateStatus(MainActivity.db,accountID);
                 } else {
@@ -277,13 +275,11 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         rowObject.put("ActualConsumption", cursor.getString(cursor.getColumnIndex("Extra2")));
                         //add billmonth from rate schedule date_from
                         Bill mBill = account.getBill();
-                        Log.e(TAG, "mBill: " + mBill.toString());
+
                         double exportBillAmount = 0;
                         double billAmount = 0;
                         if (!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
                             exportBillAmount = mBill.getNetBillAmountExport();
-                            Log.e(TAG, "exportBillAmount:" + exportBillAmount);
-                            Log.e(TAG, "accountid:" + accountID);
                             billAmount = mBill.getTotalAmount();
                             totalAmount = String.valueOf(MainActivity.dec2.format(mBill.getTotalAmount()));
                         }

@@ -561,6 +561,15 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
+        Log.e(TAG,"address: " + address);
+
+        if(address != null) {
+            int res = printer.setConnection(address);
+            if(res == 1) {
+                mIsConnected = true;
+            }
+        }
+
         super.onResume();
 
     }
@@ -673,6 +682,8 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
     };
+
+
 
 
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {

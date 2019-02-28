@@ -22,10 +22,10 @@ public class Constant {
     public static String POLICY_STATUS = "p_s";
     public static String ACCOUNT_STATUS = "a_s";
     public static String COOP_DETAILS_STATUS = "cd_s";
-    public static String RATE_COMPONENT_STATUS = "rc_s";
+    public static String RATE_COMPONENT_STATUS = "rcom_s";
     public static String RATE_SEGMENT_STATUS = "r_s_s";
     public static String LIFELINE_POLICY_STATUS = "lp_s";
-    public static String RATE_CODE_STATUS = "rc_s";
+    public static String RATE_CODE_STATUS = "rcod_s";
     public static String THRESHOLD_STATUS = "t_s";
 
     public static String YES = "yes";
@@ -49,6 +49,7 @@ public class Constant {
     public static int lifelinepolicysize = 0;
     public static int thresholdsize = 0;
     public static int thresholdsave = 0;
+    public static int dupilcateaccounts = 0;
 
     public static int decoy_save_account = 0;
 

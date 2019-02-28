@@ -4,6 +4,7 @@ package com.payvenue.meterreader.Fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -43,7 +44,7 @@ public class FragmentRoute extends Fragment {
 
 
         view = inflater.inflate(R.layout.fragment_route, container, false);
-
+        checkRouteIfHasAccounts();
         Bundle b = getArguments();
 
         if (b != null) {
@@ -63,8 +64,12 @@ public class FragmentRoute extends Fragment {
 
         listview = view.findViewById(R.id.listView);
         ivNoAccounts = view.findViewById(R.id.iv_no_accounts);
-        getRoute();
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getRoute();
+            }
+        },1000);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,11 +86,13 @@ public class FragmentRoute extends Fragment {
 
     }
 
+    public void checkRouteIfHasAccounts() {
+        MainActivity.db.removeRoutes(MainActivity.db);
+    }
+
     public void getRoute() {
 
-
         Cursor cursor = MainActivity.db.getRoutes(MainActivity.db);
-
 
         if (!cursor.isClosed()) {
             if(cursor.getCount() > 0) {
