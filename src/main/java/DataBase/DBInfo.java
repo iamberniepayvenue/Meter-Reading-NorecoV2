@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 public class DBInfo implements BaseColumns {
 
     // Databse Name
-    public static final String DATABASE_NAME = "mpa_reader_app";
+    public static final String DATABASE_NAME = "mpa_reader_app.db";
 
     // Table Name
     public static final String TBLACCOUNTINFO = "accounts";

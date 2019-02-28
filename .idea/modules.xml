@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Meter-Reading-Noreco.iml" filepath="$PROJECT_DIR$/Meter-Reading-Noreco.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java/java.iml" filepath="$PROJECT_DIR$/java/java.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openCVLibrary/openCVLibrary.iml" filepath="$PROJECT_DIR$/openCVLibrary/openCVLibrary.iml" />
     </modules>
   </component>
 </project>

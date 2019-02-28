@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.NetworkInterface;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,7 +92,7 @@ public class CommonFunc {
                     res1.deleteCharAt(res1.length() - 1);
                 }
                 //return res1.toString().toLowerCase();
-                return "00:fd:20:44:bb:55";
+                return "D8:CE:3A:35:84:98";
             }
         } catch (Exception ex) {
         }
@@ -355,9 +356,9 @@ public class CommonFunc {
         if(tag == 1) {
             bp = MainActivity.bp;
 
-            if(bp == null) {
-                bp = BixolonPrinterClass.newInstance(MainActivity.mContext);
-            }
+//            if(bp == null) {
+//                bp = BixolonPrinterClass.newInstance(MainActivity.mContext);
+//            }
 
             if(emphasized == 1) {
                 if(text2.equalsIgnoreCase("")){
@@ -467,5 +468,19 @@ public class CommonFunc {
         }
     }
 
-
+    public static String generateSha(String args) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(args.getBytes());
+            byte[] bytes = messageDigest.digest();
+            StringBuilder buffer = new StringBuilder();
+            for (byte b : bytes) {
+                buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+            return buffer.toString();
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
+    }
 }

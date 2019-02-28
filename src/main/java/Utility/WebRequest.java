@@ -162,6 +162,7 @@ public class WebRequest {
 
     public void setRequestListener(String url,String myType,String params,String param2,RequestListener listener) {
         this.requestListener = listener;
+        Log.e(TAG,"upload : " + url);
         sendRequestUpload(url,myType,params,param2);
     }
 

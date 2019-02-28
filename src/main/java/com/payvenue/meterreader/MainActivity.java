@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -35,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
+import com.bxl.config.editor.BXLConfigLoader;
 import com.mapswithme.maps.api.MapsWithMeApi;
 import com.payvenue.meterreader.Fragments.FragmentDownLoad;
 import com.payvenue.meterreader.Fragments.FragmentFound;
@@ -50,7 +53,6 @@ import com.payvenue.meterreader.Fragments.FragmentReading;
 import com.payvenue.meterreader.Fragments.FragmentRoute;
 import com.payvenue.meterreader.Fragments.FragmentUpload;
 import com.payvenue.meterreader.Fragments.RatesFragment;
-import com.payvenue.meterreader.Interface.BixolonInterface;
 import com.woosim.bt.WoosimPrinter;
 
 import java.text.DecimalFormat;
@@ -67,12 +69,13 @@ import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.MobilePrinter;
 import Utility.MyProgressBar;
+import Utility.NorecoBixolonPrinter;
 import Utility.WebRequest;
 import device.scanner.DecodeResult;
 import device.scanner.IScannerService;
 
 
-public class MainActivity extends AppCompatActivity implements BixolonInterface {
+public class MainActivity extends AppCompatActivity  {
     private static Thread thread;
     private static Handler handler;
 
@@ -128,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     private  MyProgressBar myProgressBar;
 
 
+    int bixTag = 0;
+    private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
+    private static NorecoBixolonPrinter bxlPrinter = null;
+
     public interface Modes {
 
         String MODE_1 = "Unread";
@@ -138,13 +145,16 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         String MODE_5 = "Found";
     }
 
-
+//    static {
+//        System.loadLibrary("opencv_java");
+//    }
 
     @SuppressWarnings("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (android.os.Build.VERSION.SDK_INT > 9) {
+        final int ANDROID_NOUGAT = 24;
+        if (Build.VERSION.SDK_INT >= ANDROID_NOUGAT) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
@@ -175,8 +185,10 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         gps = new GPSTracker(this);
 
         printer = MobilePrinter.getInstance(this);
+        bxlPrinter = new NorecoBixolonPrinter(this);
+        bp = BixolonPrinterClass.newInstance(getApplicationContext());
         mContext = this;
-        myProgressBar = MyProgressBar.newInstance(mContext);
+
 
         MapsWithMeApi.isMapsWithMeInstalled(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,13 +305,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                         break;
                     case R.id.summary:
                         if(mIsConnected) {
-                            if(whichPrinter.equalsIgnoreCase("bix")) {
-                                myProgressBar.setTitle("Printing process...");
-                                printAccountSummary();
-                            }else{
-                                myProgressBar.setTitle("Printing process...");
-                                printAccountSummary();
-                            }
+                            printAccountSummary();
                         }else{
                             Toast.makeText(getApplicationContext(),"Printer is not connected.",Toast.LENGTH_SHORT).show();
                         }
@@ -361,9 +367,6 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     public static void setReader() {
 
         db.getReader(db);
-
-        // Display current reader name
-
         header = navigationView.getHeaderView(0);
         tv_userid = (TextView) header.findViewById(R.id.tv_userid);
         tv_name = (TextView) header.findViewById(R.id.tv_name);
@@ -373,8 +376,6 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
             tv_name.setText(reader.getReaderName());
             tv_userid.setText(reader.getReaderID());
         }
-
-
     }
 
 
@@ -546,6 +547,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         }
         iScanner = null;
 
+        bxlPrinter.printerClose();
 
     }
 
@@ -558,6 +560,15 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
 
     @Override
     public void onResume() {
+
+        Log.e(TAG,"address: " + address);
+
+        if(address != null) {
+            int res = printer.setConnection(address);
+            if(res == 1) {
+                mIsConnected = true;
+            }
+        }
 
         super.onResume();
 
@@ -673,6 +684,8 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
     };
 
 
+
+
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             mBtAdapter.cancelDiscovery();
@@ -683,38 +696,37 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
+
             int reVal = 0;
             if(!printerName.toLowerCase().contains("woosim")) {
                 whichPrinter = "bix";
-                bp = BixolonPrinterClass.newInstance(getApplicationContext());
-                bp.setConnection(address);
+//                bp = BixolonPrinterClass.newInstance(getApplicationContext(),address);
+//                bp.setConnection(address);
+                //startConnectionBixolon(printerName);
+                reVal = printer.setConnection(address);
             }else {
                 whichPrinter = "woo";
                 reVal = printer.setConnection(address);
             }
 
+
+
             //reVal = printer.setConnection(address);
             if (reVal == 1) {
-                if(whichPrinter.equalsIgnoreCase("woo")) {
-                    Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
-                    t.show();
-                }
-
-                mIsConnected = true;
-
+                setSuccessConnection();
             } else if (reVal == -2) {
-                if(whichPrinter.equalsIgnoreCase("woo")) {
+                //if(whichPrinter.equalsIgnoreCase("woo")) {
                     Toast t = Toast.makeText(getBaseContext(), "NOT CONNECTED", Toast.LENGTH_SHORT);
                     t.show();
-                }
+                //}
             } else if (reVal == -5) {
                 Toast t = Toast.makeText(getBaseContext(), "DEVICE IS NOT BONDED", Toast.LENGTH_SHORT);
                 t.show();
             } else if (reVal == -6) {
-                if(whichPrinter.equalsIgnoreCase("woo")) {
+                //if(whichPrinter.equalsIgnoreCase("woo")) {
                     Toast t = Toast.makeText(getBaseContext(), "ALREADY CONNECTED", Toast.LENGTH_SHORT);
                     t.show();
-                }
+                //}
 
             } else if (reVal == -8) {
                 Toast t = Toast.makeText(getBaseContext(), "Please enable your Bluetooth and re-run this program!", Toast.LENGTH_LONG);
@@ -730,16 +742,37 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
 
 
     public void woosimPrint(MobilePrinter mp) {
-        String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
-        mp.printBitmap(path);
+        if(bixTag == 1) {
+            mp.printText("     Negros Oriental II Electric Cooperative\n");
+            mp.printText("             Real St., Dumaguete City\n");
+            mp.printText("                   (NORECO2)\n");
+            mp.printText("             STATEMENT OF ACCOUNT\n");
+            mp.printText("================================================\n");
+        }else {
+            String path = CommonFunc.getPrivateAlbumStorageDir(this,"noreco_logo.bmp").toString();
+            mp.printBitmap(path);
+        }
+
         mp.printText("\n");
         mp.printText("\n");
-        mp.printText("                      READING STATISTICS                      "+ "\n");
-        mp.printText("\n");
-        mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records     :   "+ db.getActiveRecords(db) + "\n");
-        mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
-        mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
-        mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+        if(bixTag == 1) {
+            mp.printText("             READING STATISTICS"+ "\n");
+            mp.printText("\n");
+            mp.printText("Total Records    : "+ db.getTotalRecords(db)+" Active Records    :   "+ db.getActiveRecords(db) + "\n");
+            mp.printText("Inactive Records : "+ db.getInActiveRecords(db) +" Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
+            mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ")+" Missed Records    :   "+ db.MissedAccount(db) + "\n");
+            mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ")+ " New Connection    :   "+ db.newConnectionCount(db)  + "\n");
+        }else {
+            mp.printText("                      READING STATISTICS                      "+ "\n");
+            mp.printText("\n");
+            mp.printText("Total Records     :   "+ db.getTotalRecords(db),"Active Records     :   "+ db.getActiveRecords(db) + "\n");
+            mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
+            mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
+            mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+        }
+
+
+
         mp.printText("Zero Consumption  :   "+db.getZeroConsumption(db));
         mp.printText("\n");
         mp.printText("\n");
@@ -750,10 +783,18 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
         mp.printText("\n");
         mp.printText("\n");
         mp.printText("\n");
-        mp.printText("                       READING SUMMARY                        "+ "\n");
-        mp.printText("=============================================================="+ "\n");
-        mp.printText("  Account    Reading    KWH Used    Amount    Time   Remarks"  + "\n");
-        mp.printText("=============================================================="+ "\n");
+        if(bixTag == 1) {
+            mp.printText("              READING SUMMARY"+ "\n");
+            mp.printText("================================================"+ "\n");
+            mp.printText(" Account Reading  KWHUsed  Amount  Time  Remarks"+ "\n");
+            mp.printText("================================================"+ "\n");
+        }else {
+            mp.printText("                       READING SUMMARY                        "+ "\n");
+            mp.printText("=============================================================="+ "\n");
+            mp.printText("  Account    Reading    KWH Used    Amount    Time   Remarks"  + "\n");
+            mp.printText("=============================================================="+ "\n");
+        }
+
     }
 
     public void bixolonPrint() {
@@ -788,6 +829,7 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
 
     public void printAccountSummary() {
         MobilePrinter mp = printer;
+
         if(mp == null) {
             mp = MobilePrinter.getInstance(this);
         }
@@ -797,11 +839,14 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
             ArrayList<Account> list =  db.summaryDetails(db);
 
             if(whichPrinter.equalsIgnoreCase("woo")){
-                woosimPrint(mp);
+                //woosimPrint(mp);
             }else{
-                bixolonPrint();
+                //bixolonPrint();
+                bixTag = 1;
+                printer.setDeviceTag(1);
             }
 
+            woosimPrint(mp);
             if(list.size() > 0) {
                 try{
                     for(Account a: list) {
@@ -871,16 +916,17 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                             if(whichPrinter.equalsIgnoreCase("woo")) {
                                 mp.printText(finalString, thirdString + "\n");
                             }else {
-                                bp.printText(fstring+ "\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                                mp.printText(fstring,"\n");
+                                //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                             }
                         //}
-
                     }
 
                     if(whichPrinter.equalsIgnoreCase("woo")) {
                         mp.printText("\n");
                     }else {
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        mp.printText("\n");
+                        //bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                     }
 
                     DecimalFormat df = new DecimalFormat("#,###.00");
@@ -890,12 +936,18 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                     if(whichPrinter.equalsIgnoreCase("woo")) {
                         mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
                     }else {
-                        bp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                        bp.printText("\n",BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        mp.printText("\n");
+                        mp.printText("\n");
+                        mp.printText("\n");
+                        mp.printText("\n");
+                        mp.printText("\n");
+                        //bp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+//                        bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+//                        bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+//                        bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+//                        bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+//                        bp.printText("\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                     }
                 }catch (NullPointerException e) {
                     Log.e(TAG,"printAccountSummary:"+e.getMessage());
@@ -910,15 +962,52 @@ public class MainActivity extends AppCompatActivity implements BixolonInterface 
                 }
             }
 
-            myProgressBar.dismissDialog();
+
     }
 
-    @Override
-    public void afterPrint(boolean success) {
-        if(success) {
-            printAccountSummary();
-        }else{
-            Toast.makeText(this,"Error Printing",Toast.LENGTH_SHORT).show();
+
+    public void startConnectionBixolon(final String printername) {
+        mHandler.obtainMessage(0).sendToTarget();
+        boolean res = bxlPrinter.printerOpen(portType,printername,address,true);
+        if (res) {
+            setSuccessConnection();
+        } else {
+            mHandler.obtainMessage(1, 0, 0, "Fail to connect printer!!").sendToTarget();
         }
     }
+
+    public void setSuccessConnection() {
+        Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
+        t.show();
+        mIsConnected = true;
+    }
+    public final Handler mHandler = new Handler(new Handler.Callback() {
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean handleMessage(Message msg) {
+            Log.e(TAG,"handler: " + msg.what);
+            switch (msg.what) {
+
+                case 0:
+                    //getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    break;
+                case 1:
+                    String data = (String) msg.obj;
+                    if (data != null && data.length() > 0) {
+                        Log.e(TAG,"mHandler: " + data);
+                        Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG).show();
+                    }
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    break;
+            }
+            return false;
+        }
+    });
+
+    public static NorecoBixolonPrinter getPrinterInstance()
+    {
+        return bxlPrinter;
+    }
+
+
 }

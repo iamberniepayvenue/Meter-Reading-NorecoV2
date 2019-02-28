@@ -1048,6 +1048,12 @@ id item3
 id item4
 id item_touch_helper_previous_elevation
 id iv_no_accounts
+id label_account_id
+id label_account_name
+id label_address
+id label_classification
+id label_previous_reading
+id label_serial
 id largeLabel
 id lblDemand
 id lblDemandVal
@@ -1127,6 +1133,8 @@ id radio
 id rates
 id readacct
 id relativeLayout
+id relativeLayout_activity_accounts
+id relativeLayout_view_details
 id resultList
 id right
 id right_icon
@@ -1255,6 +1263,7 @@ id tvExportPrevLabel
 id tvTotalCurrentDue
 id tvUnderOverRecovery
 id tvUnderOverRecoveryLabel
+id tv_bill_amount
 id tv_name
 id tv_userid
 id txRouteCode

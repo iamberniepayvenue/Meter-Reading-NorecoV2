@@ -71,6 +71,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     Context mcontext;
     String strPort;
     EditText txtPort;
+    Gson gson;
 
     private static final String TAG = "FragmentUpload";
 
@@ -81,6 +82,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        Log.e(TAG, TAG);
         rootView = inflater.inflate(R.layout.fragment_upload, container, false);
 
         mcontext = getActivity();
@@ -176,7 +178,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     public void prepareData() {
 
         PortNumber = txtPort.getText().toString();
-        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.getMacAddress();
+        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=NORECO2&mac=" + CommonFunc.getMacAddress();
 
 
         if (PortNumber.trim().length() == 0) {
@@ -192,7 +194,8 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
         }
 
         try {
-            Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, "Read' Or ReadStatus='Printed");
+            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate";
+            Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, mode);
 
             if (cursor.getCount() == 0) {
                 if (mDialog.isShowing()) {
@@ -214,9 +217,11 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
             Account account;
             String coopName, accountID, mBillMonth = null, accountClass, totalkWh, totalAmount = null, subclass;
-            Gson gson = new GsonBuilder().create();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gson = gsonBuilder.create();
 
             JSONObject FinalData;
+
 
             while (cursor.moveToNext()) {
 
@@ -233,157 +238,160 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                 int columnID = cursor.getInt(cursor.getColumnIndex("_id"));
                 String[] arrDateRead = cursor.getString(cursor.getColumnIndex(DBInfo.DateRead)).split(" ");
                 districtID = MainActivity.db.getDistrictID(MainActivity.db, routeID);
+                accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
                 reader = MainActivity.db.getReaderID(MainActivity.db);
                 account = gson.fromJson(details, Account.class);
-                coopName = cursor.getString(cursor.getColumnIndex(DBInfo.COOPID));
-                accountID = cursor.getString(cursor.getColumnIndex(DBInfo.AccountID));
-                totalkWh = cursor.getString(cursor.getColumnIndex("Extra2"));
-                try {
-                    rowObject.put(DBInfo.DateSync, cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
-                    rowObject.put(DBInfo.DateRead, arrDateRead[0]);
-                    rowObject.put(DBInfo.COOPID, coopName);
-                    rowObject.put("DistrictID", districtID);
-                    rowObject.put("RouteNo", routeID);
-                    rowObject.put("AccountID", accountID);
-                    rowObject.put("LastName", cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
-                    rowObject.put("FirstName", cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
-                    rowObject.put("MiddleName", cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
-                    rowObject.put("Address", account.getAddress());
-                    rowObject.put("MeterSerialNo", cursor.getString(cursor.getColumnIndex(DBInfo.MeterSerialNo)));
-                    rowObject.put("PrevReading", account.getInitialReading());
-                    rowObject.put("NewReading", account.getReading());
-                    rowObject.put("Consume", account.getConsume());
-                    rowObject.put("Latitude", account.getLatitude());
-                    rowObject.put("Longitude", account.getLongitude());
-                    rowObject.put("ReaderID", reader);
-                    rowObject.put("ReadStatus", cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus)));
-                    rowObject.put("Remarks", account.getRemarks());
-                    rowObject.put("DueDate", cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
-                    rowObject.put("NewMeterSerial", cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
-                    rowObject.put("ExportReading", account.getExportReading());
-                    rowObject.put("IsExport", account.getIsNetMetering());
-                    rowObject.put("PrevExportReading", account.getExportPreviousReading());
-                    rowObject.put("ExportConsumption", account.getExportConsume());
-                    rowObject.put("ActualConsumption", cursor.getString(cursor.getColumnIndex("Extra2")));
-                    //add billmonth from rate schedule date_from
-                    Bill mBill = account.getBill();
-                    double exportBillAmount = 0;
-                    double billAmount = 0;
-                    if (!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
-                        exportBillAmount = mBill.getNetBillAmountExport();
-                        billAmount = mBill.getTotalAmount();
-                        totalAmount = String.valueOf(MainActivity.dec2.format(mBill.getTotalAmount()));
-                    }
+                String readStatus = cursor.getString(cursor.getColumnIndex(DBInfo.ReadStatus));
 
-                    rowObject.put("ExportBillAmount", exportBillAmount);
-                    rowObject.put("BillAmount", billAmount);
-                    float lifelineDiscount = Float.valueOf(account.getTotalLifeLineDiscount());
-                    rowObject.put("LifelineDiscount", String.valueOf(-lifelineDiscount));
-                    rowObject.put("LifelineSubsidy", account.getLifeLineSubsidy());
-                    rowObject.put("SCDiscount", account.getTotalSCDiscount());
-                    rowObject.put("SCSubsidy", account.getSeniorSubsidy());
-                    rowObject.put("UORDiscount", account.getOverUnderDiscount());
-                    rowObject.put("IsCheckSubMeterType", cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
-                    rowObject.put("DemandKWReading", account.getDemandKW());
-                    rowObject.put("ExportBill", account.getExportBill());
+                if (account.getBill() == null) {
+                    MainActivity.db.updateStatus(MainActivity.db,accountID);
+                } else {
+                    coopName = cursor.getString(cursor.getColumnIndex(DBInfo.COOPID));
+                    totalkWh = cursor.getString(cursor.getColumnIndex("Extra2"));
+                    try {
+                        rowObject.put(DBInfo.DateSync, cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
+                        rowObject.put(DBInfo.DateRead, arrDateRead[0]);
+                        rowObject.put(DBInfo.COOPID, coopName);
+                        rowObject.put("DistrictID", districtID);
+                        rowObject.put("RouteNo", routeID);
+                        rowObject.put("AccountID", accountID);
+                        rowObject.put("LastName", cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
+                        rowObject.put("FirstName", cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
+                        rowObject.put("MiddleName", cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
+                        rowObject.put("Address", account.getAddress());
+                        rowObject.put("MeterSerialNo", cursor.getString(cursor.getColumnIndex(DBInfo.MeterSerialNo)));
+                        rowObject.put("PrevReading", account.getInitialReading());
+                        rowObject.put("NewReading", account.getReading());
+                        rowObject.put("Consume", account.getConsume());
+                        rowObject.put("Latitude", account.getLatitude());
+                        rowObject.put("Longitude", account.getLongitude());
+                        rowObject.put("ReaderID", reader);
+                        rowObject.put("ReadStatus", readStatus);
+                        rowObject.put("Remarks", account.getRemarks());
+                        rowObject.put("DueDate", cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
+                        rowObject.put("NewMeterSerial", cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
+                        rowObject.put("ExportReading", account.getExportReading());
+                        rowObject.put("IsExport", account.getIsNetMetering());
+                        rowObject.put("PrevExportReading", account.getExportPreviousReading());
+                        rowObject.put("ExportConsumption", account.getExportConsume());
+                        rowObject.put("ActualConsumption", cursor.getString(cursor.getColumnIndex("Extra2")));
+                        //add billmonth from rate schedule date_from
+                        Bill mBill = account.getBill();
 
-                    String exportDateCounter = "0";
-                    if (account.getExportDateCounter() != null) {
-                        exportDateCounter = account.getExportDateCounter();
-                    }
-
-                    rowObject.put("ExportDateCounter", exportDateCounter);
-                    mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
-                    //String []strArray = billMonth.split("/");
-                    //String yr = strArray[2];
-                    //String month = strArray[0];
-                    //billMonth = yr+month;
-                    //mBillMonth = yr+"_"+month;
-                    rowObject.put("billmonth", mBillMonth);
-
-                    //Log.e(TAG,mBillMonth);
-                    ArrayList<Components> summary = new ArrayList<>();
-                    for (Rates rates : mBill.getRates()) {
-                        if (!rates.getCode().toLowerCase().contains("vat")) {
-                            summary.add(new Components(rates.getAmount(), rates.getCode()));
+                        double exportBillAmount = 0;
+                        double billAmount = 0;
+                        if (!cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)).equalsIgnoreCase("M")) {
+                            exportBillAmount = mBill.getNetBillAmountExport();
+                            billAmount = mBill.getTotalAmount();
+                            totalAmount = String.valueOf(MainActivity.dec2.format(mBill.getTotalAmount()));
                         }
-                    }
 
-                    jsonBillSum = gson.toJson(summary);
+                        rowObject.put("ExportBillAmount", exportBillAmount);
+                        rowObject.put("BillAmount", billAmount);
+                        float lifelineDiscount = Float.valueOf(account.getTotalLifeLineDiscount());
+                        rowObject.put("LifelineDiscount", String.valueOf(-lifelineDiscount));
+                        rowObject.put("LifelineSubsidy", account.getLifeLineSubsidy());
+                        rowObject.put("SCDiscount", account.getTotalSCDiscount());
+                        rowObject.put("SCSubsidy", account.getSeniorSubsidy());
+                        rowObject.put("UORDiscount", account.getOverUnderDiscount());
+                        rowObject.put("IsCheckSubMeterType", cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
+                        rowObject.put("DemandKWReading", account.getDemandKW());
+                        rowObject.put("ExportBill", account.getExportBill());
 
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage());
-                    e.printStackTrace();
-                }
+                        String exportDateCounter = "0";
+                        if (account.getExportDateCounter() != null) {
+                            exportDateCounter = account.getExportDateCounter();
+                        }
 
-                resultSet.put(rowObject);
+                        rowObject.put("ExportDateCounter", exportDateCounter);
+                        mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
+                        rowObject.put("billmonth", mBillMonth);
 
 
-                try {
-                    FinalData.put("readAccounts", resultSet);
-                    FinalData.put("columnid", String.valueOf(columnID));
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    Log.e(TAG, "JSONException1: " + e.getMessage());
-                    e.printStackTrace();
-                }
+                        ArrayList<Components> summary = new ArrayList<>();
+                        for (Rates rates : mBill.getRates()) {
+                            if (!rates.getCode().toLowerCase().contains("vat")) {
+                                summary.add(new Components(rates.getAmount(), rates.getCode()));
+                            }
+                        }
 
-                String url;
-                try {
-                    url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8")
-                            + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
-                            + "&BillMonth=" + mBillMonth + "&TotalkWh=" + totalkWh
-                            + "&TotalAmount=" + totalAmount + "&Classification=" + URLEncoder.encode(subclass, "UTF-8");
-                    MainActivity.webRequest.setRequestListener(url, "UploadData", FinalData.toString(), String.valueOf(countToUpload),
-                            new WebRequest.RequestListener() {
-                                @Override
-                                public void onRequestListener(String response, String param) {
+                        jsonBillSum = gson.toJson(summary);
 
-                                    switch (response) {
-                                        case "200":
-                                            if (Integer.valueOf(param) == lengthOfData) {
+                        resultSet.put(rowObject);
+
+                        FinalData.put("readAccounts", resultSet);
+                        FinalData.put("columnid", String.valueOf(columnID));
+                        //Log.e(TAG,"to upload: "+ FinalData.toString());
+
+                        String url;
+                        url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8")
+                                + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
+                                + "&BillMonth=" + mBillMonth + "&TotalkWh=" + totalkWh
+                                + "&TotalAmount=" + totalAmount + "&Classification=" + URLEncoder.encode(subclass, "UTF-8");
+                        MainActivity.webRequest.setRequestListener(url, "UploadData", FinalData.toString(), String.valueOf(countToUpload),
+                                new WebRequest.RequestListener() {
+                                    @Override
+                                    public void onRequestListener(String response, String param) {
+
+                                        switch (response) {
+                                            case "200":
+                                                if (Integer.valueOf(param) == lengthOfData) {
+                                                    if (mDialog.isShowing()) {
+                                                        mDialog.dismiss();
+                                                    }
+
+                                                    Log.e(TAG,"count upload:"+param);
+                                                    lengthOfData = 0;
+                                                    countToUpload = 0;
+                                                    Toast.makeText(mcontext, "Data successfully uploaded", Toast.LENGTH_SHORT).show();
+                                                }
+                                                break;
+                                            case "404":
                                                 if (mDialog.isShowing()) {
                                                     mDialog.dismiss();
                                                 }
 
-                                                lengthOfData = 0;
-                                                countToUpload = 0;
-                                                Toast.makeText(mcontext, "Data successfully uploaded", Toast.LENGTH_SHORT).show();
-                                            }
-                                            break;
-                                        case "404":
-                                            if (mDialog.isShowing()) {
-                                                mDialog.dismiss();
-                                            }
+                                                Constant.COUNT_404 = Constant.COUNT_404 + 1;
+                                                if (Constant.COUNT_404 < 2) {
+                                                    Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
+                                                }
 
-                                            Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
-                                            return;
+                                                return;
 
-                                        case "500":
-                                            if (mDialog.isShowing()) {
-                                                mDialog.dismiss();
-                                            }
+                                            case "500":
+                                                if (mDialog.isShowing()) {
+                                                    mDialog.dismiss();
+                                                }
 
-                                            if (param == null) {
-                                                Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(mcontext, "Error: " + param, Toast.LENGTH_SHORT).show();
-                                            }
+                                                if (param == null) {
+                                                    Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(mcontext, "Error: " + param, Toast.LENGTH_SHORT).show();
+                                                }
 
-                                           return;
-                                        default:
+                                                return;
+                                            default:
+                                        }
+
+
+                                        getDataCount();
+                                        setValues();
                                     }
-
-
-                                    getDataCount();
-                                    setValues();
-                                }
-                            });
-                    //sendRequest(url, "UploadData",FinalData.toString(),String.valueOf(countToUpload),"", this);
-                    //Log.e(TAG,"upload:"+ url);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "UnsupportedEncodingException: " + e.getMessage());
+                                });
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "UnsupportedEncodingException: " + e.getMessage());
+                    } catch (NullPointerException e) {
+                        if (mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+                        cursor.moveToLast();
+                        Log.e(TAG, "NullPointerException: " + e.getMessage());
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         } catch (IllegalArgumentException i) {

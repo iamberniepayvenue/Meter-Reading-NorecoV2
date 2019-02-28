@@ -5,6 +5,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +31,7 @@ public class AccountListActivity extends AppCompatActivity {
     ListView listvew;
     String currentfilter = "";
     String routecode;
+    Snackbar snackbar;
     private static final String TAG = "AccountListActivity";
 
     ArrayList<Account> myAccounts = new ArrayList<>();
@@ -49,6 +52,9 @@ public class AccountListActivity extends AppCompatActivity {
         // Grab the data to display on this activity
         Bundle b = getIntent().getExtras();
         routecode = b.getString("RouteCode");
+        Log.e(TAG,"Routecode: "+routecode);
+        String[] district = routecode.split("-");
+        final String districtno = district[0];
         ivNoAccounts = findViewById(R.id.iv_no_accounts);
         listvew = (ListView) findViewById(R.id.list);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,7 +64,8 @@ public class AccountListActivity extends AppCompatActivity {
                 String accountid = ((TextView) view.findViewById(R.id.accountid)).getText().toString();
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid,0);
+                b.putString("disctrictNo",districtno);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,0);
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);
@@ -69,6 +76,11 @@ public class AccountListActivity extends AppCompatActivity {
 
         getSearchData(routecode, currentfilter);
 
+    }
+
+    public void setSnackbar(String msg) {
+
+        snackbar = Snackbar.make(findViewById(R.id.relativeLayout_activity_accounts), msg, Snackbar.LENGTH_LONG);
     }
 
     private void getSearchData(String routecode, String filter) {
@@ -112,13 +124,19 @@ public class AccountListActivity extends AppCompatActivity {
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         if(searchView != null) {
             searchAccount.clear();
-            // Assumes current activity is the searchable activity
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
                 @Override
-                public boolean onClose() {
-                    return false;
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    getSearchData(routecode, currentfilter);
+                    return true;
                 }
             });
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -131,7 +149,12 @@ public class AccountListActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s);
+                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s,MainActivity.myMode);
+                        if(searchAccount.isEmpty()) {
+                            setSnackbar("No results found...");
+                            snackbar.show();
+                        }
+
                         AccountAdapter adapter = new AccountAdapter(searchAccount);
                         listvew.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
@@ -174,6 +197,7 @@ public class AccountListActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
+            getSearchData(routecode, currentfilter);
             this.finish();
         }
 
@@ -195,5 +219,4 @@ public class AccountListActivity extends AppCompatActivity {
         setIntent(intent);
         //handleSearch();
     }
-
 }

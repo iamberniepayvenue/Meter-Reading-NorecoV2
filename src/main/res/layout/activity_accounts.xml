@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:gravity="center">
+    android:gravity="center"
+    android:id="@+id/relativeLayout_activity_accounts">
 
     <ListView
         android:id="@+id/list"

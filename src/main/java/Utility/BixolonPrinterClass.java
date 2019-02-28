@@ -1,6 +1,5 @@
 package Utility;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
-import com.payvenue.meterreader.MainActivity;
 import com.payvenue.meterreader.R;
 
 
@@ -20,10 +18,9 @@ public class BixolonPrinterClass {
     private static Context context;
     public static BixolonPrinter bixolonPrinter;
     public static Boolean connectedPrinter = false;
-    private static final int LINE_CHARS = 42;
-    static private byte[] cardData;
-    static private byte[] extractdata = new byte[300];
     private static final String TAG = "BixolonPrinterClass";
+    private static String pairedDevice;
+
 
 
     public BixolonPrinterClass(Context mContext) {
@@ -34,7 +31,7 @@ public class BixolonPrinterClass {
     public static synchronized BixolonPrinterClass newInstance(Context context) {
 
         if(mInstance == null) {
-            Log.e("here","here");
+            Log.e(TAG,"create instance");
             mInstance = new BixolonPrinterClass(context);
         }
 
@@ -43,119 +40,143 @@ public class BixolonPrinterClass {
 
     public static BixolonPrinter getBixolonPrinter() {
         if(bixolonPrinter == null) {
-            bixolonPrinter = new BixolonPrinter(context,handler,null);
+            bixolonPrinter = new BixolonPrinter(context,mHandler,null);
         }
         return bixolonPrinter;
     }
 
-    @SuppressLint("HandlerLeak")
-    private static final Handler handler = new Handler() {
+    public static final Handler mHandler = new Handler(new Handler.Callback() {
         @SuppressWarnings("unchecked")
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
+            Log.e(TAG,"handler: " + msg.what);
             switch (msg.what) {
-                case BixolonPrinter.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BixolonPrinter.STATE_CONNECTED:
-                            MainActivity.mIsConnected = true;
-                            Log.e("Handler", "BixolonPrinter.STATE_CONNECTED");
-                            Toast.makeText(context,"SUCCESS CONNECTION!",Toast.LENGTH_SHORT).show();
-                            connectedPrinter = true;
-                            break;
 
-                        case BixolonPrinter.STATE_CONNECTING:
-                            Log.e("Handler", "BixolonPrinter.STATE_CONNECTING");
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(!connectedPrinter) {
-                                        Toast.makeText(context,"Please restart printer device",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            },1000);
-
-                            connectedPrinter = false;
-                            break;
-
-                        case BixolonPrinter.STATE_NONE:
-                            Log.e("Handler", "BixolonPrinter.STATE_NONE");
-                            connectedPrinter = false;
-                            break;
+                case 0:
+                    //getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    break;
+                case 1:
+                    String data = (String) msg.obj;
+                    if (data != null && data.length() > 0) {
+                        Log.e(TAG,"mHandler: " + data);
+                        Toast.makeText(context, data, Toast.LENGTH_LONG).show();
                     }
-                    break;
 
-                case BixolonPrinter.MESSAGE_WRITE:
-                    switch (msg.arg1) {
-                        case BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT:
-                            Log.e("Handler", "BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT");
-                            break;
-
-                        case BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT:
-                            Log.e("Handler", "BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT");
-                            break;
-
-                        case BixolonPrinter.PROCESS_DEFINE_NV_IMAGE:
-                            Log.e("Handler", "BixolonPrinter.PROCESS_DEFINE_NV_IMAGE");
-                            break;
-
-                        case BixolonPrinter.PROCESS_REMOVE_NV_IMAGE:
-                            Log.e("Handler", "BixolonPrinter.PROCESS_REMOVE_NV_IMAGE");
-                            break;
-
-                        case BixolonPrinter.PROCESS_UPDATE_FIRMWARE:
-                            Log.e("Handler", "BixolonPrinter.PROCESS_UPDATE_FIRMWARE");
-                            break;
-                    }
-                    break;
-
-                case BixolonPrinter.MESSAGE_READ:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_READ");
-                    break;
-
-                case BixolonPrinter.MESSAGE_DEVICE_NAME:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_DEVICE_NAME - " + msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
-                    break;
-
-                case BixolonPrinter.MESSAGE_TOAST:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
-                    Toast.makeText(context, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
-                    break;
-
-                // The list of paired printers
-                case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
-                    break;
-
-                case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_PRINT_COMPLETE");
-                    break;
-
-                case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP");
-                    break;
-
-                case BixolonPrinter.MESSAGE_USB_DEVICE_SET:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_USB_DEVICE_SET");
-                    if (msg.obj == null) {
-                        Toast.makeText(context, "No connected device", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // DialogManager.showUsbDialog(MainActivity.this,
-                        // (Set<UsbDevice>) msg.obj, mUsbReceiver);
-                    }
-                    break;
-
-                case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
-                    Log.e("Handler", "BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET");
-                    if (msg.obj == null) {
-
-                    }
-                    // DialogManager.showNetworkDialog(PrintingActivity.this, (Set<String>) msg.obj);
                     break;
             }
+            return false;
         }
-    };
+    });
 
-    public void setConnection(String address) {
+//    @SuppressLint("HandlerLeak")
+//    private static final Handler handler = new Handler() {
+//        @SuppressWarnings("unchecked")
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case BixolonPrinter.MESSAGE_STATE_CHANGE:
+//                    switch (msg.arg1) {
+//                        case BixolonPrinter.STATE_CONNECTED:
+//                            MainActivity.mIsConnected = true;
+//                            Log.e("Handler", "NorecoBixolonPrinter.STATE_CONNECTED");
+//                            Toast.makeText(context,"SUCCESS CONNECTION!",Toast.LENGTH_SHORT).show();
+//                            connectedPrinter = true;
+//                            break;
+//
+//                        case BixolonPrinter.STATE_CONNECTING:
+//                            Log.e("Handler", "NorecoBixolonPrinter.STATE_CONNECTING");
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if(!connectedPrinter) {
+//                                        Toast.makeText(context,"Connecting",Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            },1000);
+//
+//                            connectedPrinter = false;
+//                            break;
+//
+//                        case BixolonPrinter.STATE_NONE:
+//                            Log.e("Handler", "NorecoBixolonPrinter.STATE_NONE");
+//                            connectedPrinter = false;
+//                            break;
+//                    }
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_WRITE:
+//                    switch (msg.arg1) {
+//                        case BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT:
+//                            Log.e("Handler", "NorecoBixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT");
+//                            break;
+//
+//                        case BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT:
+//                            Log.e("Handler", "NorecoBixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT");
+//                            break;
+//
+//                        case BixolonPrinter.PROCESS_DEFINE_NV_IMAGE:
+//                            Log.e("Handler", "NorecoBixolonPrinter.PROCESS_DEFINE_NV_IMAGE");
+//                            break;
+//
+//                        case BixolonPrinter.PROCESS_REMOVE_NV_IMAGE:
+//                            Log.e("Handler", "NorecoBixolonPrinter.PROCESS_REMOVE_NV_IMAGE");
+//                            break;
+//
+//                        case BixolonPrinter.PROCESS_UPDATE_FIRMWARE:
+//                            Log.e("Handler", "NorecoBixolonPrinter.PROCESS_UPDATE_FIRMWARE");
+//                            break;
+//                    }
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_READ:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_READ");
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_DEVICE_NAME:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_DEVICE_NAME - " + msg.getData().getString(BixolonPrinter.KEY_STRING_DEVICE_NAME));
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_TOAST:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_TOAST - " + msg.getData().getString("toast"));
+//                    Toast.makeText(context, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+//                    break;
+//
+//                // The list of paired printers
+//                case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET");
+//                    setConnection(pairedDevice);
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_PRINT_COMPLETE");
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP");
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_USB_DEVICE_SET:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_USB_DEVICE_SET");
+//                    if (msg.obj == null) {
+//                        Toast.makeText(context, "No connected device", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        // DialogManager.showUsbDialog(MainActivity.this,
+//                        // (Set<UsbDevice>) msg.obj, mUsbReceiver);
+//                    }
+//                    break;
+//
+//                case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
+//                    Log.e("Handler", "NorecoBixolonPrinter.MESSAGE_NETWORK_DEVICE_SET");
+//                    if (msg.obj == null) {
+//
+//                    }
+//                    // DialogManager.showNetworkDialog(PrintingActivity.this, (Set<String>) msg.obj);
+//                    break;
+//            }
+//        }
+//    };
+
+    public static void setConnection(String address) {
         bixolonPrinter.connect(address);
     }
 
@@ -192,24 +213,5 @@ public class BixolonPrinterClass {
         bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
         bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
-//        Thread t = new Thread() {
-//            @Override
-//            public void run() {
-//                Looper.prepare();
-//                try {
-//                    bixolonPrinter.setSingleByteFont(BixolonPrinter.CODE_PAGE_858_EURO);
-//                    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.noreco);
-//                    bixolonPrinter.printBitmap(bitmap,BixolonPrinter.ALIGNMENT_CENTER,600, 50, false);
-//                    bixolonPrinter.lineFeed(2,false);
-//                    Log.e(TAG,"printBitmap");
-//                    mListener.afterPrint(true);
-//                }catch (Exception e){
-//                    Log.e(TAG,"Printing: "+ e.getMessage());
-//                    mListener.afterPrint(false);
-//                }
-//                Looper.loop();
-//            }
-//        };
-//        t.start();
     }
 }

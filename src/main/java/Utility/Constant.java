@@ -22,10 +22,10 @@ public class Constant {
     public static String POLICY_STATUS = "p_s";
     public static String ACCOUNT_STATUS = "a_s";
     public static String COOP_DETAILS_STATUS = "cd_s";
-    public static String RATE_COMPONENT_STATUS = "rc_s";
+    public static String RATE_COMPONENT_STATUS = "rcom_s";
     public static String RATE_SEGMENT_STATUS = "r_s_s";
     public static String LIFELINE_POLICY_STATUS = "lp_s";
-    public static String RATE_CODE_STATUS = "rc_s";
+    public static String RATE_CODE_STATUS = "rcod_s";
     public static String THRESHOLD_STATUS = "t_s";
 
     public static String YES = "yes";
@@ -49,18 +49,21 @@ public class Constant {
     public static int lifelinepolicysize = 0;
     public static int thresholdsize = 0;
     public static int thresholdsave = 0;
+    public static int dupilcateaccounts = 0;
 
     public static int decoy_save_account = 0;
+
+    public static int COUNT_404 = 0;
 
 
 
     /**Production*/
-    //public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
+    public static String PORT = "8080/teslaclient/noreco_api/billing_api.asp";
 
     /**Development
      * 8080
      * */
-    public static String PORT = "8080/noreco_api/billing_api.asp";
+    //public static String PORT = "8080/noreco_api/billing_api.asp";
 
 
     public static String DISCONNECTIONNOTICE = "Pursuant to NORECO II Policy on Delinquent Accounts (FIN 11-6), we are serving you this 48 - Hour NOTICE OF DISCONNECTION due to your unpaid electric bills. " +

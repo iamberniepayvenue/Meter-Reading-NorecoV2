@@ -1,2 +1,2 @@
-include ':lib'
+include ':lib', ':java', 'openCVLibrary'
 //include ':app', ':my-library-module'

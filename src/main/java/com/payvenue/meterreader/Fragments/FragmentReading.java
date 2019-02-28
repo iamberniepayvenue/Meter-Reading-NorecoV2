@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +41,7 @@ import Model.Account;
 import Utility.GPSTracker;
 import ZBar.ZBarConstants;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.payvenue.meterreader.MainActivity.iScanner;
 import static com.payvenue.meterreader.MainActivity.mDecodeResult;
 
@@ -65,6 +67,7 @@ public class FragmentReading extends Fragment implements OnClickListener {
 
     ArrayAdapter<String> spinnerArrayAdapter;
     Spinner spinRoute;
+    InputMethodManager imm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,7 +108,13 @@ public class FragmentReading extends Fragment implements OnClickListener {
             }
         });
 
-
+        try {
+            imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            hideKeyboard();
+        } catch (Exception e) {
+            Log.e(TAG,"InputMethodManager: " + e.getMessage());
+            // TODO: handle exception
+        }
     }
 
 
@@ -201,6 +210,13 @@ public class FragmentReading extends Fragment implements OnClickListener {
                 break;
         }
 
+    }
+
+    public void hideKeyboard() {
+        try {
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e) {
+        }
     }
 
     @Override
