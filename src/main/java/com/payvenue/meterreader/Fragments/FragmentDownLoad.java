@@ -247,7 +247,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                                 if(routeCount > 0) {
                                     routeArrayList.clear();
-                                    routeArrayList = DB.getRoute(DB);
+                                    routeArrayList = DB.getRoute(DB,"0");
                                     downloadAccounts(getContext(),0,"1"); //String rd
                                 }else {
                                     setSnackbar("Device not registered \n or routes not available...");
@@ -264,7 +264,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                         MainActivity.setConnSettings();
                                         MainActivity.setReader();
                                         routeArrayList.clear();
-                                        routeArrayList = DB.getRoute(DB);
+                                        routeArrayList = DB.getRoute(DB,"0");
                                         downloadRateSchedule();
                                     }
                                 }
@@ -277,7 +277,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     setSnackbar("routes saved already..");
                                     snackbar.show();
                                     routeArrayList.clear();
-                                    routeArrayList = DB.getRoute(DB);
+                                    routeArrayList = DB.getRoute(DB,"0");
                                     Log.e(TAG,"here1");
                                     if(routeCount > 0) {
                                         Log.e(TAG,"here2");
@@ -288,7 +288,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     //
                                     Log.e(TAG,"here3");
                                     routeArrayList.clear();
-                                    routeArrayList = DB.getRoute(DB);
+                                    routeArrayList = DB.getRoute(DB,"0");
                                     checkDataNotSuccessfullyDownloaded();
                                     downloadAccounts(getContext(), 0, "1");
                                 }
@@ -508,7 +508,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 cmdAccounts = cmdAccounts + "&sequenceNoFrom=" + r.getSequenceNoFrom() + "&sequenceNoTo=" + r.getSequenceNoTo();
             }
 
-            new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID());
+            new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID(),String.valueOf(r.getPrimaryKey()));
         } else {
             if (mDialog.isShowing()) {
                 mDialog.dismiss();
@@ -1416,7 +1416,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         @Override
         protected Void doInBackground(final String... strings) {
-
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1510,10 +1509,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 account = gson.fromJson(obj.toString(), Account.class);
                                 String routeID = strings[2];
                                 String dueDate = strings[1];
+                                String routeIDPrimaryKey = strings[3];
                                 account.setDueDate(dueDate);
+                                account.setRoutePrimaryKey(routeIDPrimaryKey);
                                 saveCount = saveCount + DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
                                 Constant.decoy_save_account = Constant.decoy_save_account + saveCount;
-
                             }
                         }
 

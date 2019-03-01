@@ -25,18 +25,22 @@ import com.payvenue.meterreader.Adapter.AccountAdapter;
 import java.util.ArrayList;
 
 import Model.Account;
+import Model.Route;
 
 public class AccountListActivity extends AppCompatActivity {
 
     ListView listvew;
     String currentfilter = "";
     String routecode;
+    String routePrimarykey;
     Snackbar snackbar;
     private static final String TAG = "AccountListActivity";
 
     ArrayList<Account> myAccounts = new ArrayList<>();
     ArrayList<Account> searchAccount = new ArrayList<>();
     ImageView ivNoAccounts;
+    private ArrayList<Route> routeList;
+    private int routeCount;
 
     @SuppressLint("NewApi")
     @Override
@@ -52,9 +56,11 @@ public class AccountListActivity extends AppCompatActivity {
         // Grab the data to display on this activity
         Bundle b = getIntent().getExtras();
         routecode = b.getString("RouteCode");
-        Log.e(TAG,"Routecode: "+routecode);
+        routePrimarykey = b.getString("RouteID"); // primary key
         String[] district = routecode.split("-");
         final String districtno = district[0];
+        String routeno = district[1];
+        Log.e(TAG,"routeno: "+routeno);
         ivNoAccounts = findViewById(R.id.iv_no_accounts);
         listvew = (ListView) findViewById(R.id.list);
         listvew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,14 +71,15 @@ public class AccountListActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
                 b.putString("disctrictNo",districtno);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,0);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,routePrimarykey,0);
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);
             }
-
         });
 
+
+        routeCount = MainActivity.db.countsOfRouteNoInRoutesTable(MainActivity.db,routeno,districtno);
 
         getSearchData(routecode, currentfilter);
 
@@ -86,7 +93,13 @@ public class AccountListActivity extends AppCompatActivity {
     private void getSearchData(String routecode, String filter) {
 
         try{
-            myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter);
+            MainActivity.selectedRouteList = MainActivity.db.getRoute(MainActivity.db,routePrimarykey);
+
+            if(routeCount > 1) {
+                myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter,1);
+            }else{
+                myAccounts = MainActivity.db.getAccountList(MainActivity.db, routecode, MainActivity.myMode, filter,0);
+            }
 
             if(myAccounts.size() > 0) {
                 AccountAdapter adapter = new AccountAdapter(myAccounts);
@@ -149,7 +162,7 @@ public class AccountListActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s,MainActivity.myMode);
+                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s,MainActivity.myMode,routePrimarykey); //add primary key in routemodel during download
                         if(searchAccount.isEmpty()) {
                             setSnackbar("No results found...");
                             snackbar.show();

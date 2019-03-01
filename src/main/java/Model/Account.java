@@ -87,6 +87,7 @@ public class Account extends Person {
     private String ExportDateCounter;
     private String kWhReading;
     private String TimeRead;
+    private String RoutePrimaryKey;
 
 
 
@@ -719,5 +720,13 @@ public class Account extends Person {
 
     public String getTimeRead() {
         return TimeRead;
+    }
+
+    public String getRoutePrimaryKey() {
+        return RoutePrimaryKey;
+    }
+
+    public void setRoutePrimaryKey(String routePrimaryKey) {
+        RoutePrimaryKey = routePrimaryKey;
     }
 }

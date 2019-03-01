@@ -7,6 +7,7 @@ senior citizen discount = if 1 - 20 kwh(consumption) for senior seniordiscount =
 
 Extra1 used for New Meter Serial Number
 Extra2 used for Actual Consumption Regular Bill
+Notes1 used for routeid which is primary key (_id)
 
 During Upload :
  update ExportReading from connection_profile by new ExportReading...
