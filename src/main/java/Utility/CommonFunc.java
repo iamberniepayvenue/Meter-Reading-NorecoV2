@@ -92,7 +92,7 @@ public class CommonFunc {
                     res1.deleteCharAt(res1.length() - 1);
                 }
                 return res1.toString().toLowerCase();
-                //return "D8:CE:3A:35:84:98";
+                //return "D8:CE:3A:35:80:44";
             }
         } catch (Exception ex) {
         }

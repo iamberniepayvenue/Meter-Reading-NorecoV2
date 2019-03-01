@@ -66,7 +66,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     private static MyPreferences myPreferences;
     private static Gson gson;
     static String billMonth;
-
+    final int[] save = {0};
 
     private static ArrayList<Route> routeArrayList = new ArrayList<>();
 
@@ -165,12 +165,15 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 int status = NetworkUtil.getConnectivityStatusString(ctx);
 
                 if (status == 0) {
+                    if (mDialog.isShowing()) {
+                        mDialog.dismiss();
+                    }
                     Toast.makeText(ctx, "Please check your internet connection.", Toast.LENGTH_LONG).show();
                     enableButton();
                     return;
                 }
 
-                final int[] save = {0};
+
                 baseurl = "http://" + txtHost + ":" + strPort;
 
                 String cmdRoute = baseurl + "?cmd=getRoutes&mac=" + mac;
@@ -195,7 +198,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                             JSONArray jsonArray = new JSONArray(response);
                             Route route = null;
+                            int countOfExist = 0;
                             for (int i = 0; i < jsonArray.length(); i++) {
+                                ifRouteExist = false;
                                 JSONObject obj = jsonArray.getJSONObject(i);
                                 String coopID = obj.getString("CoopID");
 
@@ -233,6 +238,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
                                 ifRouteExist = DB.checkRouteIsExist(DB, routeID, districtID,from,to,reference);
 
+                                if(ifRouteExist) {
+                                    countOfExist = countOfExist + 1;
+                                }
+
                                 if (!ifRouteExist) {
                                     save[0] = save[0] + DB.saveRoute(DB, route);
                                 }
@@ -248,6 +257,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 if(routeCount > 0) {
                                     routeArrayList.clear();
                                     routeArrayList = DB.getRoute(DB,"0");
+                                    if(billMonth == null) {
+                                        String acclas = getAccntClass(routeArrayList);
+                                        billMonth = DB.getBillMonth(DB,acclas);
+                                    }
+
                                     downloadAccounts(getContext(),0,"1"); //String rd
                                 }else {
                                     setSnackbar("Device not registered \n or routes not available...");
@@ -255,8 +269,14 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     return;
                                 }
                             } else {
+                                int jsonlength = jsonArray.length();
                                 if(jsonArray.length() > 0) {
-                                    if (jsonArray.length() == save[0]) {
+                                    if(countOfExist > 0) {
+                                        jsonlength = jsonlength - countOfExist;
+                                    }
+
+
+                                    if (jsonlength == save[0]) {
                                         setSnackbar("routes completed..");
                                         snackbar.show();
                                         DB.syncSettingsInfo(DB, route);
@@ -265,6 +285,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                         MainActivity.setReader();
                                         routeArrayList.clear();
                                         routeArrayList = DB.getRoute(DB,"0");
+                                        countOfExist = 0;
                                         downloadRateSchedule();
                                     }
                                 }
@@ -281,6 +302,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     Log.e(TAG,"here1");
                                     if(routeCount > 0) {
                                         Log.e(TAG,"here2");
+                                        if(billMonth == null) {
+                                            String acclas = getAccntClass(routeArrayList);
+                                            billMonth = DB.getBillMonth(DB,acclas);
+                                        }
+
                                         checkDataNotSuccessfullyDownloaded();
                                         downloadAccounts(getContext(), 0, "1");
                                     }
@@ -289,6 +315,11 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     Log.e(TAG,"here3");
                                     routeArrayList.clear();
                                     routeArrayList = DB.getRoute(DB,"0");
+                                    if(billMonth == null) {
+                                        String acclas = getAccntClass(routeArrayList);
+                                        billMonth = DB.getBillMonth(DB,acclas);
+                                    }
+
                                     checkDataNotSuccessfullyDownloaded();
                                     downloadAccounts(getContext(), 0, "1");
                                 }
@@ -318,6 +349,23 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 break;
         }
 
+    }
+
+    public String getAccntClass(ArrayList<Route> arrayList) {
+        if(arrayList.size() > 0) {
+            String aclass = arrayList.get(0).getTagClass();
+
+            switch(aclass) {
+                case "0" :
+                    return "Residential";
+                case "1" :
+                        return "Higher Voltage";
+                case "2" :
+                    return "Net Metering";
+            }
+        }
+
+        return "";
     }
 
     public void checkDataNotSuccessfullyDownloaded() {
@@ -381,6 +429,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 String cmdSchedule = baseurl + "?cmd=getRateSchedule&coopid=NORECO2&mac=" + mac + "&tagclass=" + str;
                 new downloadRateScheduleAsync(getContext(), length).execute(cmdSchedule);
             }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 
@@ -406,6 +458,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 String cmdPolicy = baseurl + "?cmd=getBillingPolicy&coopid=NORECO2&mac=" + mac + "&tagclass=" + str;
                 new downloadBillingPolicyAsync(context, length).execute(cmdPolicy);
             }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 
@@ -418,6 +474,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
             if (routeArrayList.size() > 0) {
                 String cmdRateCode = baseurl + "?cmd=getRateCode&coopid=NORECO2&mac=" + mac;
                 new downloadRateCodeAsync(context).execute(cmdRateCode);
+            }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
             }
         }
     }
@@ -442,6 +502,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 String cmdRateComponent = baseurl + "?cmd=getRateComponent&coopid=NORECO2&mac=" + mac;
                 new downloadRateComponentAsync(context).execute(cmdRateComponent);
             }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 
@@ -453,6 +517,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
             if (routeArrayList.size() > 0) {
                 String cmdRateSegment = baseurl + "?cmd=getRateSegment&coopid=NORECO2&mac=" + mac;
                 new downloadRateSegmentAsync(context).execute(cmdRateSegment);
+            }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
             }
         }
     }
@@ -467,6 +535,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 String cmdLifeLineDiscount = baseurl + "?cmd=ld&coopid=NORECO2&mac=" + mac;
                 new downloadLifeLineDiscountPolicyAsync(context).execute(cmdLifeLineDiscount);
             }
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 
@@ -477,6 +549,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
             mDialog.setMessage("DownLoading Data.Please wait.");
             mDialog.show();
             new downloadThresholdAsync(context).execute(cmdThreshold);
+        }else {
+            if (mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 

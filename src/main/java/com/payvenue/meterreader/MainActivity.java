@@ -31,7 +31,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity  {
     static final int LINE_CHARS = 62;
     private static final String TAG = "MainActivity";
     private  MyProgressBar myProgressBar;
-
+    public static int OnBackButton = 0;
 
     int bixTag = 0;
     private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
@@ -343,7 +342,10 @@ public class MainActivity extends AppCompatActivity  {
         setConnSettings();
         exportLogo();
 
+
+        Log.e(TAG,"onabckbuttonmain: " + OnBackButton);
     }//end of create
+
 
     private void exportLogo() {
 
@@ -563,14 +565,19 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
-        Log.e(TAG,"address: " + address);
-
-        if(address != null) {
-            int res = printer.setConnection(address);
-            if(res == 1) {
-                mIsConnected = true;
-            }
-        }
+//        Log.e(TAG,"address: " + address);
+//        Log.e(TAG,"OnBackButton: " + OnBackButton);
+//        if(OnBackButton == 0) {
+//            if (address != null) {
+//                if(!mIsConnected){
+//                    int res = printer.setConnection(address);
+//                    if (res == 1) {
+//                        mIsConnected = true;
+//                        Toast.makeText(this,"printer connected",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        }
 
         super.onResume();
 
@@ -581,16 +588,6 @@ public class MainActivity extends AppCompatActivity  {
         super.onRestart();
 
     }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
 
     //region printing
 

@@ -162,8 +162,6 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                 ivNoAccounts.setVisibility(View.VISIBLE);
             }
         }
-
-
     }
 
     public void showDialog() {

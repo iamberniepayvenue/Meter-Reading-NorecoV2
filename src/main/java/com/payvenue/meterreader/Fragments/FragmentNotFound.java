@@ -71,7 +71,9 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
                 view.setEnabled(false);
                 Bundle b = new Bundle();
                 String RouteCode = ((TextView) view.findViewById(R.id.txRouteCode)).getText().toString();
-                b.putString("RouteCode", RouteCode.trim());
+                String RouteID = ((TextView) view.findViewById(R.id.txtRouteId)).getText().toString();
+                b.putString("RouteCode", RouteCode);
+                b.putString("RouteID", RouteID);
                 Intent intent = new Intent(mcontxt, AccountListActivity.class);
                 intent.putExtras(b);
                 startActivity(intent);
@@ -226,9 +228,9 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         if (!cursor.isClosed()) {
 
             if(cursor.getCount() > 0) {
-                String[] FromFieldNames = new String[]{"RouteCode",};
+                String[] FromFieldNames = new String[]{"RouteCode","_id"};
 
-                int[] toViewIDs = new int[]{R.id.txRouteCode};
+                int[] toViewIDs = new int[]{R.id.txRouteCode,R.id.txtRouteId};
                 SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
                         getActivity(), // context
                         R.layout.route_list, // row_layout

@@ -790,7 +790,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 myQuery = myQuery + " Order BY AccountID, cast(IFNULL(SequenceNo, 99999) as REAL) ASC ";
             }
         }
-        //Log.e(TAG,"here: "+ myQuery);
+        Log.e(TAG,"here: "+ myQuery);
 
         Cursor c = sql.rawQuery(myQuery, null);
 
