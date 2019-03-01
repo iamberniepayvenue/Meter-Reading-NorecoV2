@@ -16,10 +16,11 @@ public class Route extends Reader {
     private String SequenceNoFrom;
     private String SequenceNoTo;
     private int IsDownload;
+    private int primaryKey;
 
 
 
-    public Route(String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName,String downloadRef,String sequenceNoFrom,String sequenceNoTo,int isDownload) {
+    public Route(int primaryKey,String districtID, String routeID, String accountIDTo, String accountIDFrom, String dueDate,String tagClass,String coopID,String readerID,String readerName,String downloadRef,String sequenceNoFrom,String sequenceNoTo,int isDownload) {
         super(coopID,readerID,readerName);
         DistrictID = districtID;
         RouteID = routeID;
@@ -31,6 +32,7 @@ public class Route extends Reader {
         SequenceNoFrom = sequenceNoFrom;
         SequenceNoTo = sequenceNoTo;
         IsDownload = isDownload;
+        this.primaryKey = primaryKey;
     }
 
 
@@ -76,5 +78,13 @@ public class Route extends Reader {
 
     public void setIsDownload(int isDownload) {
         IsDownload = isDownload;
+    }
+
+    public void setPrimaryKey(int primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public int getPrimaryKey() {
+        return primaryKey;
     }
 }

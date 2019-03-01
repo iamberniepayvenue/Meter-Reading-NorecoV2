@@ -76,7 +76,9 @@ public class FragmentRoute extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Bundle b = new Bundle();
                 String RouteCode = ((TextView) view.findViewById(R.id.txRouteCode)).getText().toString();
+                String RouteID = ((TextView) view.findViewById(R.id.txtRouteId)).getText().toString();
                 b.putString("RouteCode", RouteCode);
+                b.putString("RouteID", RouteID);
                 Intent intent = new Intent(view.getContext(), AccountListActivity.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);
@@ -96,9 +98,9 @@ public class FragmentRoute extends Fragment {
 
         if (!cursor.isClosed()) {
             if(cursor.getCount() > 0) {
-                String[] FromFieldNames = new String[]{"RouteCode",};
+                String[] FromFieldNames = new String[]{"RouteCode","_id"};
 
-                int[] toViewIDs = new int[]{R.id.txRouteCode};
+                int[] toViewIDs = new int[]{R.id.txRouteCode,R.id.txtRouteId};
 
                 // create adapter to map coloums of the database to the elements of
                 // the UI

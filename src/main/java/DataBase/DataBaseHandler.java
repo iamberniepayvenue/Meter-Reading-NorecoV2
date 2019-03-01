@@ -171,11 +171,16 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return 1;
     }
 
-    public ArrayList<Route> getRoute(DataBaseHandler db) {
+    public ArrayList<Route> getRoute(DataBaseHandler db,String _id) {
         ArrayList<Route> list = new ArrayList<>();
         SQLiteDatabase sql = db.getReadableDatabase();
+        String statement = "";
+        if(_id.equalsIgnoreCase("0")){
+            statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID";
+        }else{
+            statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID WHERE _id = '"+_id+"'";
+        }
 
-        String statement = "SELECT r.*,s.* FROM routes r LEFT JOIN settings s ON r.ReaderID = s.ReaderID";
         Cursor c = sql.rawQuery(statement, null);
 
         if (c.moveToFirst()) {
@@ -193,7 +198,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 String sequenceNoFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
                 String sequenceNoTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
                 int isDownload = c.getInt(c.getColumnIndex(DBInfo.IsDownload));
-                list.add(new Route(districtid, routeid, idTo, idfrom, dueDate, tagClass, coopid, readerid, readername, downLoadRef, sequenceNoFrom, sequenceNoTo, isDownload));
+                int primaryKey = c.getInt(c.getColumnIndex("_id"));
+                list.add(new Route(primaryKey,districtid, routeid, idTo, idfrom, dueDate, tagClass, coopid, readerid, readername, downLoadRef, sequenceNoFrom, sequenceNoTo, isDownload));
                 c.moveToNext();
             }
         }
@@ -229,6 +235,19 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return val;
     }
 
+    public int countsOfRouteNoInRoutesTable(DataBaseHandler db,String routeID,String district) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String strQuery = "Select Count(_id) as _count From " + DBInfo.TBLRoutes + " Where RouteID = '" + routeID + "' AND DistrictID = '" +district+"'";
+        Cursor c = sql.rawQuery(strQuery, null);
+        int _count = 0;
+        if(c.moveToNext()) {
+            while (!c.isAfterLast()) {
+                _count = c.getInt(c.getColumnIndex("_count"));
+                c.moveToNext();
+            }
+        }
+        return _count;
+    }
 
     public ArrayList<Route> getRouteStatusZero(DataBaseHandler db) {
         ArrayList<Route> list = new ArrayList<>();
@@ -252,7 +271,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 String sequenceNoFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
                 String sequenceNoTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
                 int isDownload = c.getInt(c.getColumnIndex(DBInfo.IsDownload));
-                list.add(new Route(districtid, routeid, idTo, idfrom, dueDate, tagClass, coopid, readerid, readername, downLoadRef, sequenceNoFrom, sequenceNoTo, isDownload));
+                int primaryKey = c.getInt(c.getColumnIndex("_id"));
+                list.add(new Route(primaryKey,districtid, routeid, idTo, idfrom, dueDate, tagClass, coopid, readerid, readername, downLoadRef, sequenceNoFrom, sequenceNoTo, isDownload));
                 c.moveToNext();
             }
         }
@@ -590,6 +610,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             cv.put(DBInfo.ExportBill, account.getExportBill());
             cv.put(DBInfo.ExportDateCounter, account.getExportDateCounter());
             cv.put(DBInfo.kWhReading, account.getkWhReading());
+            cv.put(DBInfo.Notes1,account.getRoutePrimaryKey());
             long save = sql.insert(DBInfo.TBLACCOUNTINFO, null, cv);
             if (save != 0) {
                 //Log.e(TAG,"accountid: " + account.getAccountID());
@@ -673,9 +694,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
         Cursor c = sql.rawQuery(
                 "SELECT (DistrictID||'-'||RouteID ) AS RouteCode ,_id FROM "
-                        + DBInfo.TBLRoutes, null);
+                        + DBInfo.TBLRoutes + " ORDER BY DueDate,RouteID", null);
         return c;
     }
+
+
 
     public void removeRoutes(DataBaseHandler db) {
         SQLiteDatabase sql = db.getReadableDatabase();
@@ -692,7 +715,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 String accTo = c.getString(c.getColumnIndex(DBInfo.AccountIDTo));
                 String seqFrom = c.getString(c.getColumnIndex(DBInfo.SequenceNoFrom));
                 String seqTo = c.getString(c.getColumnIndex(DBInfo.SequenceNoTo));
-                Route route = new Route(districtid,routeno,accTo,accFrom,"","","","","",ref,seqFrom,seqTo,0);
+                int primaryKey = c.getInt(c.getColumnIndex("_id"));
+                Route route = new Route(primaryKey,districtid,routeno,accTo,accFrom,"","","","","",ref,seqFrom,seqTo,0);
                 boolean result = checkRouteNoInAccount(db,route);
 
                 if(!result) {
@@ -723,7 +747,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         return res;
     }
 
-    public ArrayList<Account> getAccountList(DataBaseHandler db, String RouteCode, String mode, String filter) {
+    public ArrayList<Account> getAccountList(DataBaseHandler db, String RouteCode, String mode, String filter,int tag) {
 
         ArrayList<Account> myList = new ArrayList<>();
 
@@ -734,12 +758,28 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String sub = RouteCode.substring(0, 3);
         String routeID = RouteCode.replace(sub, "");
 
-        myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = '" + mode + "'";
+        myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO;
         if(mode.equalsIgnoreCase("Read")) {
-            myQuery = myQuery + " OR ReadStatus = 'Cannot Generate'";
+            myQuery = myQuery + " Where (ReadStatus = '" + mode + "' OR ReadStatus = 'Cannot Generate')";
+        }else{
+            myQuery = myQuery + " Where ReadStatus = '" + mode + "'";
         }
 
         myQuery = myQuery + " AND  RouteNo = '" + routeID + "' ";
+
+        if(tag == 1) {
+            // there is two or more same routeno with tearing of accounts
+            if(MainActivity.selectedRouteList.size() > 0) {
+                if(MainActivity.selectedRouteList.get(0).getDownloadRef().equalsIgnoreCase("0")){
+                    myQuery = myQuery + " AND cast(substr(AccountID,7,4) as unsigned) >= '" + MainActivity.selectedRouteList.get(0).getAccountIDFrom() + "' AND" +
+                            " cast(substr(AccountID,7,4) as unsigned) <= '" + MainActivity.selectedRouteList.get(0).getAccountIDTo()+"' AND Notes1 ='"+MainActivity.selectedRouteList.get(0).getPrimaryKey()+"'";
+                }else{
+                    myQuery = myQuery + " AND cast(SequenceNo as unsigned) >= '" + MainActivity.selectedRouteList.get(0).getSequenceNoFrom() + "' AND" +
+                            " cast(SequenceNo as unsigned) <= '" + MainActivity.selectedRouteList.get(0).getSequenceNoTo()+"' AND Notes1 ='"+MainActivity.selectedRouteList.get(0).getPrimaryKey()+"'";
+                }
+            }
+        }
+
 
         if (mode.equalsIgnoreCase("Printed")) {
             myQuery = myQuery + " Order By DateRead ASC";
@@ -751,6 +791,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             }
         }
 
+        //Log.e(TAG,"here: "+ myQuery);
 
         Cursor c = sql.rawQuery(myQuery, null);
 
@@ -900,7 +941,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
      * tag = 1 comes from Accounts after reading
      * tag = 2 comes from ViewDetails
      */
-    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, int tag) {
+    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno,String routePrimaryKey, int tag) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
 
@@ -909,9 +950,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         if (tag == 0) {
             myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where AccountID = '" + accountid + "' ";
         } else if (tag == 1) {
-            myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo =" + routeno + " Limit 1 ";
+            myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='"+routePrimaryKey +"' Limit 1 ";
         } else if (tag == 2) {
-            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' Limit 1";
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' AND Notes1 = '"+routePrimaryKey +"' Limit 1";
         }
 
         Cursor c = sql.rawQuery(myQuery, null);
@@ -965,12 +1006,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 account.setExportBill(c.getString(c.getColumnIndex(DBInfo.ExportBill)));
                 account.setExportDateCounter(c.getString(c.getColumnIndex(DBInfo.ExportDateCounter)));
                 account.setkWhReading(c.getString(c.getColumnIndex(DBInfo.kWhReading)));
-
+                account.setRoutePrimaryKey(c.getString(c.getColumnIndex(DBInfo.Notes1))); // route primarykey
                 try {
                     JSONObject object = new JSONObject(ave);
-                    //JSONArray arrObject = new JSONArray(arr);
                     account.setAveraging(object);
-                    //account.setArrears(String.valueOf(arrObject));
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e(TAG, "getAccountDetails - ave : " + e.getMessage());
@@ -987,16 +1026,20 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<Account> searchItem(DataBaseHandler db, String item, String mode) {
+    public ArrayList<Account> searchItem(DataBaseHandler db, String item, String mode,String routePrimarykey) {
         ArrayList<Account> myList = new ArrayList<>();
         Gson gson = new GsonBuilder().create();
-        Account account = null;
-        String details = null;
+        Account account;
+        String details;
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select ReadingDetails,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%" + item + "%' Or MeterSerialNo Like '%" + item + "%') And ReadStatus='" + mode + "'";
+        String statement = "Select ReadingDetails,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification,Notes1 From "
+                + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
+                + item + "%' Or MeterSerialNo Like '%" + item + "%') And ReadStatus='" + mode + "' AND Notes1='"+routePrimarykey+"'";
+
+        Log.e(TAG,"search: "+ statement);
         Cursor cursor = sql.rawQuery(statement, null);
-        if (cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
                 try {
                     details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                     account = gson.fromJson(details, Account.class);
@@ -1006,7 +1049,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     account.setAccountStatus(cursor.getString(cursor.getColumnIndex("AccountStatus")));
                     account.setUploadStatus(cursor.getString(cursor.getColumnIndex("UploadStatus")));
                     account.setSubClassification(cursor.getString(cursor.getColumnIndex("SubClassification")));
+                    account.setRoutePrimaryKey(cursor.getString(cursor.getColumnIndex("Notes1"))); // route primary key
                     myList.add(account);
+                    cursor.moveToNext();
                 } catch (JsonSyntaxException e) {
                     Log.e(TAG, "searchItem : " + e.getMessage());
                 }
@@ -1204,9 +1249,16 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public int getDataCountThisRoute(DataBaseHandler db, String routeID) {
         SQLiteDatabase sql = db.getReadableDatabase();
-        String strQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where RouteNo = '" + routeID + "'";
+        String strQuery = "Select Count(_id) as _count From " + DBInfo.TBLACCOUNTINFO + " Where RouteNo = '" + routeID + "'";
         Cursor c = sql.rawQuery(strQuery, null);
-        return c.getCount();
+        int _count = 0;
+        if(c.moveToNext()) {
+            while (!c.isAfterLast()) {
+                _count = c.getInt(c.getColumnIndex("_count"));
+                c.moveToNext();
+            }
+        }
+        return _count;
     }
 
     public int getDataCount(DataBaseHandler db, String status, String tag) {

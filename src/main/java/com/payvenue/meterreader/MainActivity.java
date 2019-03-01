@@ -64,6 +64,7 @@ import Model.Account;
 import Model.Bill;
 import Model.ConnSettings;
 import Model.Reader;
+import Model.Route;
 import Utility.BixolonPrinterClass;
 import Utility.CommonFunc;
 import Utility.GPSTracker;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity  {
     public static TextView tv_name;
     public static String macAddress;
     public static Account selectedAccount;
+    public static ArrayList<Route> selectedRouteList;
     public static DecimalFormat dec;
     public static DecimalFormat dec2;
     public static WebRequest webRequest;

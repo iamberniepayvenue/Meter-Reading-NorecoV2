@@ -267,7 +267,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(), 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 2);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -290,7 +290,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(),originalAccount.getRoutePrimaryKey(), 0);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -407,7 +407,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
 
         if (id == R.id.btnEdit) {
-            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(), 0);
+            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 0);
             int editCount = db.getEditAttemp(db, mAccount.getAccountID());
 
 //            if(editCount == 3) {

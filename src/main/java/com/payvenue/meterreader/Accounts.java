@@ -86,7 +86,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     Button btnGenerate, btnTakePic;
     Context mcontext;
     boolean isOvalCheck = false, isRecycleCheck = false, isStopCheck = false, isChangeCheck = false;
-    boolean isStopMeter = true;
+    boolean isStopMeter = false;
     double maxreadingvalue = 0;
     String strReading = "", strRemarks = "", strDemands = "";
     double rateMultiplier, exportMultiplier;
@@ -1098,7 +1098,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(), 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 2);
                         isSearch = true;
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -1122,7 +1122,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(),originalAccount.getRoutePrimaryKey(), 0);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1259,7 +1259,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 //Intent intent = new Intent(this, BillPreview.class);
 
                 if (isClickGenerate) {
-                    db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(), 1);
+                    db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 1);
                     this.finish();
                     Intent intent = new Intent(this, Accounts.class);
                     startActivity(intent);

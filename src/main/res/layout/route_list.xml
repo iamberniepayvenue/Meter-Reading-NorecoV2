@@ -27,4 +27,16 @@
         android:text="TextView"
         android:textSize="30dp" />
 
+    <TextView
+        android:id="@+id/txtRouteId"
+        android:layout_width="211dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="30dp"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
