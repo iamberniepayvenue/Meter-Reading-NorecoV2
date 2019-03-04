@@ -478,7 +478,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
 
             String currentDBPath = "/data/" + "com.payvenue.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
-            File backupDB = new File(dir, DBInfo.DATABASE_NAME + ".db");
+            File backupDB = new File(dir, DBInfo.DATABASE_NAME);
             File currentDB = new File(sqliteDir, currentDBPath);
 
             try {
