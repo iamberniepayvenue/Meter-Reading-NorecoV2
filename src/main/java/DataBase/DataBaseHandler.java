@@ -185,6 +185,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
+                Log.e(TAG,"db db ");
                 String coopid = c.getString(c.getColumnIndex(DBInfo.COOPID));
                 String readerid = c.getString(c.getColumnIndex(DBInfo.ReaderID));
                 String readername = c.getString(c.getColumnIndex(DBInfo.ReaderName));
@@ -349,18 +350,33 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public void syncSettingsInfo(DataBaseHandler db, Route route) {
 
-        SQLiteDatabase sql = db.getReadableDatabase();
-        ContentValues cv = new ContentValues();
+        if(!isReaderExist(db,route)){
+            SQLiteDatabase sql = db.getReadableDatabase();
+            ContentValues cv = new ContentValues();
 
-        cv.put(DBInfo.COOPID, route.getCoopID());
-        cv.put(DBInfo.ReaderID, route.getReaderID());
-        cv.put(DBInfo.ReaderName, route.getReaderName());
+            cv.put(DBInfo.COOPID, route.getCoopID());
+            cv.put(DBInfo.ReaderID, route.getReaderID());
+            cv.put(DBInfo.ReaderName, route.getReaderName());
 
-        sql.insert(DBInfo.TBLSettings, null, cv);
-
-        sql.close();
-        db.close();
+            sql.insert(DBInfo.TBLSettings, null, cv);
+            sql.close();
+            db.close();
+        }
     }
+
+    public boolean isReaderExist(DataBaseHandler db, Route route) {
+        boolean result = false;
+        SQLiteDatabase sql = db.getReadableDatabase();
+
+        Cursor cursor = sql.query(DBInfo.TBLSettings, null, DBInfo.ReaderID + "=?" , new String[]{route.getReaderID()}, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
 
     public void saveConnection(DataBaseHandler db, String coopid,
                                String hostname, String port) {
