@@ -4,7 +4,7 @@ ActualConsumption(Extra2) = Pres. RDG - Prev. RDG see actual process in Accounts
 strDemands = for higher voltage class see actual process in Accounts class in checkReading()
 senior citizen discount = if 1 - 20 kwh(consumption) for senior seniordiscount = (totallifeline - (totalLifeLine * lifelinerate)) * .05
 
-
+Extra1 in Found Meter means upload status
 Extra1 used for New Meter Serial Number
 Extra2 used for Actual Consumption Regular Bill
 Notes1 used for routeid which is primary key (_id)

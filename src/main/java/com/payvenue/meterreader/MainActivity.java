@@ -68,6 +68,7 @@ import Utility.BixolonPrinterClass;
 import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.MobilePrinter;
+import Utility.MyPreferences;
 import Utility.MyProgressBar;
 import Utility.NorecoBixolonPrinter;
 import Utility.WebRequest;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity  {
     int bixTag = 0;
     private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
     private static NorecoBixolonPrinter bxlPrinter = null;
+    MyPreferences myPreferences;
 
     public interface Modes {
 
@@ -174,6 +176,8 @@ public class MainActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.option);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myPreferences = MyPreferences.getInstance(this);
 
         dec = new DecimalFormat("#,###,###,###.####");
         dec.setMinimumFractionDigits(4);
@@ -579,6 +583,9 @@ public class MainActivity extends AppCompatActivity  {
 //            }
 //        }
 
+        //intentFilter();
+        Log.e(TAG,"onResume");
+
         super.onResume();
 
     }
@@ -622,14 +629,15 @@ public class MainActivity extends AppCompatActivity  {
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-        // Register for broadcasts when a device is discovered
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(mReceiver, filter);
-        // this.unregisterReceiver(mReceiver);
+//        // Register for broadcasts when a device is discovered
+//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        this.registerReceiver(mReceiver, filter);
+//        // this.unregisterReceiver(mReceiver);
+//
+//        // Register for broadcasts when discovery has finished
+//        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
-        // Register for broadcasts when discovery has finished
-        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(mReceiver, filter);
+        intentFilter();
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -656,28 +664,36 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    public void intentFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        this.registerReceiver(mReceiver, filter);
+    }
 
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    //mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                }
-                // When discovery is finished, change the Activity title
+                unregisterReceiver(mReceiver);
+                Log.e(TAG,"device found");
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
-                //setTitle(R.string.select_device);
-                if (mNewDevicesArrayAdapter.getCount() == 0) {
-                    String noDevices = getResources().getText(R.string.none_found).toString();
-                    //mNewDevicesArrayAdapter.add(noDevices);
-                }
+
+            }else if(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
+                //Device is about to disconnect
+                Log.e(TAG,"about to disconnect");
+            }else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Device has disconnected
+                mIsConnected = false;
+                printer.disconnect();
+                unregisterReceiver(mReceiver);
+                Log.e(TAG,"Device has disconnected");
             }
         }
     };
@@ -695,7 +711,7 @@ public class MainActivity extends AppCompatActivity  {
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
-
+            myPreferences.savePrefString("printeradd",address);
             int reVal = 0;
             if(!printerName.toLowerCase().contains("woosim")) {
                 whichPrinter = "bix";
@@ -708,6 +724,7 @@ public class MainActivity extends AppCompatActivity  {
                 reVal = printer.setConnection(address);
             }
 
+            Log.e(TAG,"printer address: " + address);
 
 
             //reVal = printer.setConnection(address);
@@ -933,11 +950,13 @@ public class MainActivity extends AppCompatActivity  {
                     DecimalFormat df = new DecimalFormat("#,###.00");
                     String total = db.getSumConsumption(db);
                     String [] arrString = total.split(":");
-
+                    int foundCount = db.getFoundMeterCount(db);
+                    int normalMeter = db.getDataCount(db, "readprinted", "summ");
+                    int totalCount = normalMeter + foundCount;
                     if(whichPrinter.equalsIgnoreCase("woo")) {
-                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        mp.printText(" Total    " + totalCount + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
                     }else {
-                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        mp.printText(" Total    " + totalCount + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
                         mp.printText("\n");
                         mp.printText("\n");
                         mp.printText("\n");

@@ -1267,6 +1267,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.insert(DBInfo.TBlFound_Meters, null, data);
     }
 
+    public int getFoundMeterCount(DataBaseHandler db) {
+        SQLiteDatabase sql = db.getReadableDatabase();
+        String strQuery = "Select _id From " + DBInfo.TBlFound_Meters + "";
+        Cursor c = sql.rawQuery(strQuery, null);
+        return c.getCount();
+    }
+
     public int getDataCountThisRoute(DataBaseHandler db, String routeID) {
         SQLiteDatabase sql = db.getReadableDatabase();
         String strQuery = "Select Count(_id) as _count From " + DBInfo.TBLACCOUNTINFO + " Where RouteNo = '" + routeID + "'";
@@ -1290,7 +1297,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         if (status.equalsIgnoreCase("read")) {
             if (tag.equalsIgnoreCase("summ")) {
-                strQuery += " Where ReadStatus='Read'";
+                strQuery += " Where ReadStatus='Read' Or ReadStatus='Cannot Generate'";
             } else {
                 strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM'";
             }
@@ -1299,7 +1306,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             strQuery += " Where ReadStatus='Unread'";
         } else if (status.equalsIgnoreCase("printed")) {
             if (tag.equalsIgnoreCase("summ")) {
-                strQuery += " Where ReadStatus='Printed'";
+                strQuery += " Where ReadStatus='Printed' Or ReadStatus='PrintedSM'";
             }
         } else if (status.equalsIgnoreCase("readprinted")) {
             strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='PrintedSM' Or ReadStatus='Cannot Generate'";
@@ -1308,11 +1315,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 strQuery += " Where ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM'";
             }
         } else {
-            if (tag.equalsIgnoreCase("upload"))
+            if (tag.equalsIgnoreCase("upload")){
                 strQuery += " Where UploadStatus='1'";
+            }
         }
 
-        // 2 cg, 1 sm, 3 printed
 
         Cursor c = sql.rawQuery(strQuery, null);
         return c.getCount();
