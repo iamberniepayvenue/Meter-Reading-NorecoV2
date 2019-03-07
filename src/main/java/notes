@@ -28,3 +28,5 @@ Check Meter Type:
                     from billing profile and deduct to net metering payable if positive value.
 
 kWhreading = threshold from billing_profile to determine the consumption wither very low or very high.
+
+PrintedSM = Printed status Stop Meter

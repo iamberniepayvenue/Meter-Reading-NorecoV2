@@ -111,6 +111,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             IsMotherMeter = true;
         }
 
+
+        //Log.e(TAG,"status: "+ mAccount.getReadStatus());
         bp = MainActivity.bp;
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
@@ -295,16 +297,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            callAccounts();
-                            setValues();
+                            try{
+                                callAccounts();
+                                setValues();
 
-                            int searchCloseButtonId = searchView.getContext().getResources()
-                                    .getIdentifier("android:id/search_src_text", null, null);
-                            EditText et = (EditText) findViewById(searchCloseButtonId);
-                            et.setText("");
+                                int searchCloseButtonId = searchView.getContext().getResources()
+                                        .getIdentifier("android:id/search_src_text", null, null);
+                                EditText et = (EditText) findViewById(searchCloseButtonId);
+                                et.setText("");
 
-                            //Clear query
-                            searchView.setQuery("", false);
+                                //Clear query
+                                searchView.setQuery("", false);
+                            }catch (NullPointerException e) {
+                                Log.e(TAG,"closeButton: " + e.getMessage());
+                            }
                         }
                     },1000);
                 }
@@ -1104,7 +1110,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
-        db.updateAccountToPrinted(db,mAccount.getAccountID(), "Printed");
+
+        String stat = "Printed";
+        if(mAccount.getReadStatus().equalsIgnoreCase("PrintedSM")) {
+            stat = "PrintedSM";
+        }
+
+
+        db.updateAccountToPrinted(db,mAccount.getAccountID(), stat);
 
     }
 }

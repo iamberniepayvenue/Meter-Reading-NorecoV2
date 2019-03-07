@@ -761,6 +761,7 @@ public class MainActivity extends AppCompatActivity  {
             mp.printText("Inactive Records : "+ db.getInActiveRecords(db) +" Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
             mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ")+" Missed Records    :   "+ db.MissedAccount(db) + "\n");
             mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ")+ " New Connection    :   "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Stop Records     : "+ db.getDataCount(db,"stopmeter","summ")+"\n");
         }else {
             mp.printText("                      READING STATISTICS                      "+ "\n");
             mp.printText("\n");
@@ -768,6 +769,7 @@ public class MainActivity extends AppCompatActivity  {
             mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
             mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
             mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Stop Records      :   "+ db.getDataCount(db,"stopmeter","summ"), "\n");
         }
 
 

@@ -885,19 +885,21 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         /**Check if Change Meter*/
 
-        final double av = getAveraging();
+
 
         if (mAccount.getIsChangeMeter().equals("1")) {
+            final double av = getAveraging();
             if (av != -2000) {
                 consume = av;
             } else {
-                return;
+                setKwh(0, 1);
             }
         }
 
 
         if(isStopCheck) {
             isStopMeter = true;
+            final double av = getAveraging();
             if (av != -2000) {
                 double _av = av + presReading;
                 mAccount.setReading(String.valueOf(CommonFunc.round(_av, 1)));
@@ -914,6 +916,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        final double av = getAveraging();
                         isStopMeter = true;
                         if (av != -2000) {
                             double _av = av + presReading;
@@ -928,6 +931,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isStopMeter = false;
                         setKwh(0, 1);
                     }
                 });
@@ -1058,7 +1062,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             }
 
             val = finalArray.length() == 3 ? flConsumption / 3 : flConsumption;
-            Log.e(TAG,"consumption:"+ val);
             isNoneAverage = false;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1066,6 +1069,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             val = -2000;
             isNoneAverage = true;
         } catch (NullPointerException e) {
+            isNoneAverage = false;
             showToast(""+e.getMessage());
             Log.e(TAG,"NullPointerException: "+e.getMessage());
         }
@@ -2024,7 +2028,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
-            db.updateAccountToPrinted(db, mAccount.getAccountID(), "Printed");
+
+            String stat = "Printed";
+            if(isStopMeter){
+                stat = "PrintedSM";
+            }
+
+            db.updateAccountToPrinted(db, mAccount.getAccountID(), stat);
 
         } catch (NullPointerException e) {
             Log.e(TAG, "preparePrint : " + e.getMessage());
