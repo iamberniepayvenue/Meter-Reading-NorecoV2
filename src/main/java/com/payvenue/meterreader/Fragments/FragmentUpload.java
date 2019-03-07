@@ -194,7 +194,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
         }
 
         try {
-            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM";
+            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM' or ReadStatus='ReadSM";
             Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, mode);
 
             if (cursor.getCount() == 0) {

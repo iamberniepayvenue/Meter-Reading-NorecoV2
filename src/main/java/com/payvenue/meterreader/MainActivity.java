@@ -855,7 +855,7 @@ public class MainActivity extends AppCompatActivity  {
 
             //ArrayList<Account> list = new ArrayList<>();
             ArrayList<Account> list =  db.summaryDetails(db);
-
+            ArrayList<Account> listOfFound = db.summaryDetailsOfFound(db);
             if(whichPrinter.equalsIgnoreCase("woo")){
                 //woosimPrint(mp);
             }else{
@@ -868,76 +868,11 @@ public class MainActivity extends AppCompatActivity  {
             if(list.size() > 0) {
                 try{
                     for(Account a: list) {
-                        String accountID = a.getAccountID();
-                        String reading = a.getReading();
-                        String kwh = a.getConsume();
-                        String remarks = a.getRemarks();
-                        String status = a.getReadStatus();
-                        Bill bill = a.getBill();
-                        String time = a.getTimeRead();
+                        printHere(a,mp);
+                    }
 
-                        double _amount = 0;
-                        String amount;
-                        if (bill != null) {
-                            amount = MainActivity.dec2.format(bill.getTotalAmount());
-                        }else{
-                            amount = MainActivity.dec2.format(_amount);
-                        }
-
-                        if(time == null) {
-                            time = "";
-                        }
-
-
-                            int padding = 16 - accountID.length() - reading.length();
-                            String spacing = " ";
-                            for (int p = 0; p < padding; p++) {
-                                spacing = spacing.concat(" ");
-                            }
-
-                            String firstString = accountID + spacing + reading;
-
-                            int padding2;
-                            if(whichPrinter.equalsIgnoreCase("woo")){
-                                padding2 = 15 - kwh.length() - amount.length();
-                            }else {
-                                padding2 = 8 - kwh.length() - amount.length();
-                            }
-                            String spacing2 = " ";
-                            for (int p = 0; p < padding2; p++) {
-                                spacing2 = spacing2.concat(" ");
-                            }
-
-                            String secondString = kwh + spacing2 + amount;
-
-                            int padding3 = 15 - time.length() - remarks.length();
-                            String spacing3 = " ";
-                            for (int p = 0; p < padding3; p++) {
-                                spacing3 = spacing3.concat(" ");
-                            }
-                            String thirdString = time + spacing3 + remarks;
-
-                            int finalPadding;
-                            if(whichPrinter.equalsIgnoreCase("woo")) {
-                                finalPadding = 40 - firstString.length() - secondString.length();
-                            }else {
-                                finalPadding = 30 - firstString.length() - secondString.length();
-                            }
-
-                            String finalSpacing = " ";
-                            for (int p = 0; p < finalPadding; p++) {
-                                finalSpacing = finalSpacing.concat(" ");
-                            }
-
-                            String finalString = firstString + finalSpacing + secondString;
-                            String fstring = finalString +"  "+ thirdString;
-                            if(whichPrinter.equalsIgnoreCase("woo")) {
-                                mp.printText(finalString, thirdString + "\n");
-                            }else {
-                                mp.printText(fstring,"\n");
-                                //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                            }
-                        //}
+                    for(Account a: listOfFound) {
+                        printHere(a,mp);
                     }
 
                     if(whichPrinter.equalsIgnoreCase("woo")) {
@@ -981,8 +916,78 @@ public class MainActivity extends AppCompatActivity  {
                     mp.printText("\n");
                 }
             }
+    }
+
+    public void printHere(Account a,MobilePrinter mp){
+        String accountID = a.getAccountID();
+        String reading = a.getReading();
+        String kwh = a.getConsume();
+        String remarks = a.getRemarks();
+        String status = a.getReadStatus();
+        Bill bill = a.getBill();
+        String time = a.getTimeRead();
+
+        double _amount = 0;
+        String amount;
+        if (bill != null) {
+            amount = MainActivity.dec2.format(bill.getTotalAmount());
+        }else{
+            amount = MainActivity.dec2.format(_amount);
+        }
+
+        if(time == null) {
+            time = "";
+        }
 
 
+        int padding = 16 - accountID.length() - reading.length();
+        String spacing = " ";
+        for (int p = 0; p < padding; p++) {
+            spacing = spacing.concat(" ");
+        }
+
+        String firstString = accountID + spacing + reading;
+
+        int padding2;
+        if(whichPrinter.equalsIgnoreCase("woo")){
+            padding2 = 15 - kwh.length() - amount.length();
+        }else {
+            padding2 = 8 - kwh.length() - amount.length();
+        }
+        String spacing2 = " ";
+        for (int p = 0; p < padding2; p++) {
+            spacing2 = spacing2.concat(" ");
+        }
+
+        String secondString = kwh + spacing2 + amount;
+
+        int padding3 = 15 - time.length() - remarks.length();
+        String spacing3 = " ";
+        for (int p = 0; p < padding3; p++) {
+            spacing3 = spacing3.concat(" ");
+        }
+        String thirdString = time + spacing3 + remarks;
+
+        int finalPadding;
+        if(whichPrinter.equalsIgnoreCase("woo")) {
+            finalPadding = 40 - firstString.length() - secondString.length();
+        }else {
+            finalPadding = 30 - firstString.length() - secondString.length();
+        }
+
+        String finalSpacing = " ";
+        for (int p = 0; p < finalPadding; p++) {
+            finalSpacing = finalSpacing.concat(" ");
+        }
+
+        String finalString = firstString + finalSpacing + secondString;
+        String fstring = finalString +"  "+ thirdString;
+        if(whichPrinter.equalsIgnoreCase("woo")) {
+            mp.printText(finalString, thirdString + "\n");
+        }else {
+            mp.printText(fstring,"\n");
+            //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+        }
     }
 
 

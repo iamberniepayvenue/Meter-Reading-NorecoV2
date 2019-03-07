@@ -779,7 +779,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO;
         if (mode.equalsIgnoreCase("Read")) {
-            myQuery = myQuery + " Where (ReadStatus = '" + mode + "' OR ReadStatus = 'Cannot Generate')";
+            myQuery = myQuery + " Where (ReadStatus = '" + mode + "' OR ReadStatus = 'Cannot Generate' OR ReadStatus = 'ReadSM')";
         } else if (mode.equalsIgnoreCase("Printed")) {
             myQuery = myQuery + " Where (ReadStatus = '" + mode + "' OR ReadStatus = 'PrintedSM')";
         } else {
@@ -825,6 +825,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     details = c.getString(c.getColumnIndex("ReadingDetails"));
                     account = gson.fromJson(details.toString(), Account.class);
                     account.setLastName(c.getString(c.getColumnIndex("LastName")));
+                    account.setFirstName(c.getString(c.getColumnIndex("FirstName")));
+                    account.setMiddleName(c.getString(c.getColumnIndex("MiddleName")));
                     account.setAccountID(c.getString(c.getColumnIndex("AccountID")));
                     account.setMeterSerialNo(c.getString(c.getColumnIndex("MeterSerialNo")));
                     account.setAccountStatus(c.getString(c.getColumnIndex("AccountStatus")));
@@ -1296,7 +1298,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         if (status.equalsIgnoreCase("read")) {
             if (tag.equalsIgnoreCase("summ")) {
-                strQuery += " Where ReadStatus='Read' Or ReadStatus='Cannot Generate'";
+                strQuery += " Where ReadStatus='Read' Or ReadStatus='Cannot Generate' Or ReadStatus='ReadSM'";
             } else {
                 strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM'";
             }
@@ -1308,10 +1310,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 strQuery += " Where ReadStatus='Printed' Or ReadStatus='PrintedSM'";
             }
         } else if (status.equalsIgnoreCase("readprinted")) {
-            strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='PrintedSM' Or ReadStatus='Cannot Generate'";
+            strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='PrintedSM' Or ReadStatus='ReadSM' Or ReadStatus='Cannot Generate'";
         } else if (status.equalsIgnoreCase("stopmeter")) {
             if (tag.equalsIgnoreCase("summ")) {
-                strQuery += " Where ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM'";
+                strQuery += " Where ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM' Or ReadStatus='ReadSM'";
             }
         } else {
             if (tag.equalsIgnoreCase("upload")){
@@ -1346,33 +1348,34 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         sql.close();
         db.close();
 
-        ArrayList<Account> _list;
-        _list = summaryDetailsOfFound(db);
-
-        Account _a = new Account();
-        if (_list.size() > 0) {
-            for (Account a : _list) {
-                _a.setAccountID(a.getAccountID());
-                _a.setReading(a.getReading());
-                _a.setRemarks(a.getRemarks());
-                _a.setTimeRead(a.getTimeRead());
-                _a.setConsume(a.getConsume());
-                _a.setReadStatus(a.getReadStatus());
-                list.add(_a);
-            }
-        }
+//        ArrayList<Account> _list;
+//        _list = summaryDetailsOfFound(db);
+//
+//        Account _a = new Account();
+//        if (_list.size() > 0) {
+//            for (Account a : _list) {
+//                _a.setAccountID(a.getAccountID());
+//                _a.setReading(a.getReading());
+//                _a.setRemarks(a.getRemarks());
+//                _a.setTimeRead(a.getTimeRead());
+//                _a.setConsume(a.getConsume());
+//                _a.setReadStatus(a.getReadStatus());
+//                list.add(_a);
+//            }
+//        }
 
         return list;
     }
 
     public ArrayList<Account> summaryDetailsOfFound(DataBaseHandler db) {
         ArrayList<Account> list = new ArrayList<>();
-        Account account = new Account();
+        Account account = null;
         SQLiteDatabase sql = db.getReadableDatabase();
         String statement = "Select MeterSerialNo,Reading,Remarks,Extra2 From found_meters";
         Cursor cursor = sql.rawQuery(statement, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
+                account = new Account();
                 Log.e(TAG, "here");
                 account.setAccountID(".");
                 account.setReading(cursor.getString(cursor.getColumnIndex("Reading")));
@@ -1562,7 +1565,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getReadableDatabase();
         Account account;
         Gson gson = new GsonBuilder().create();
-        String statement = "Select ReadingDetails From accounts Where ReadStatus = 'Read' OR ReadStatus = 'Printed' OR ReadStatus = 'Cannot Generate'";
+        String statement = "Select ReadingDetails From accounts Where ReadStatus = 'Read' OR ReadStatus = 'Printed' OR ReadStatus = 'PrintedSM' OR ReadStatus = 'ReadSM' OR ReadStatus = 'Cannot Generate'";
         Cursor cursor = sql.rawQuery(statement, null);
         float consumption = 0;
         double amount = 0;

@@ -1116,6 +1116,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             stat = "PrintedSM";
         }
 
+        if(mAccount.getReadStatus().equalsIgnoreCase("ReadSM")) {
+            stat = "PrintedSM";
+        }
+
 
         db.updateAccountToPrinted(db,mAccount.getAccountID(), stat);
 

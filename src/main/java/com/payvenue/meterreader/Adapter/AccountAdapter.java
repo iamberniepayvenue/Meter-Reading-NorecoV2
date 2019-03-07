@@ -61,8 +61,38 @@ public class AccountAdapter extends BaseAdapter {
         TextView tvsubclass = convertView.findViewById(R.id.accountsubclass);
         TextView tvaddress = convertView.findViewById(R.id.address);
 
+        String fname = account.getFirstName();
+        String mname = account.getMiddleName();
+        String lname = account.getLastName();
+        String fullname = "";
+        try {
+            if (!fname.equalsIgnoreCase(".")) {
+                if (!fname.equalsIgnoreCase("")) {
+                    fullname = fullname + fname + " ";
+                    if (!mname.equalsIgnoreCase(".")) {
+                        if (!mname.equalsIgnoreCase("")) {
+                            fullname = fullname + mname + " ";
+                            if (!lname.equalsIgnoreCase(".")) {
+                                if (!lname.equalsIgnoreCase("")) {
+                                    fullname = fullname + lname;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(fullname.equalsIgnoreCase("")) {
+                fullname = lname;
+            }
+        }catch (NullPointerException e) {
+            Log.e(TAG,"NullPointerException: "+ e.getMessage());
+        }
+
+
+
         //account.getFirstName() + " "  + account.getMiddleName() + " " + account.getLastName()
-        tvname.setText(account.getLastName());
+        tvname.setText(fullname);
         tvaccount.setText(account.getAccountID());
         tvserial.setText(account.getMeterSerialNo());
         tvaccountstatus.setText(account.getAccountStatus());

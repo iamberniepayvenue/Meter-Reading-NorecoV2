@@ -660,7 +660,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         String stat = "Read";
         if(isStopMeter){
-            stat = "Cannot Generate";
+            stat = "ReadSM";
+            if(isNoneAverage) {
+                stat = "Cannot Generate";
+            }
         }
 
         MainActivity.db.updateReadAccount(MainActivity.db, stat, isStopMeter);
