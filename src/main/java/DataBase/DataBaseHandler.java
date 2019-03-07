@@ -1231,7 +1231,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase sql = db.getReadableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(DBInfo.Extra2, CommonFunc.getDateOnly());
         cv.put(DBInfo.Extra1, "1");
         sql.update(DBInfo.TBlFound_Meters, cv, "_id=" + colid, null);
         sql.close();

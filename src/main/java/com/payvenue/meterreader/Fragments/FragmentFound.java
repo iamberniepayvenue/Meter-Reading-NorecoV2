@@ -31,8 +31,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import DataBase.DataBaseHandler;
+import Model.Route;
 import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.NetworkUtil;
@@ -58,6 +60,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
     EditText etremarks;
     EditText etaccountnumber;
     ImageView ivNoAccounts;
+    ArrayList<Route> routeArrayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -235,6 +238,10 @@ public class FragmentFound extends Fragment implements IVolleyListener {
 
     public void prepareData() {
 
+        getRoutes();
+        String classification = getAccntClass(routeArrayList);
+
+
         Cursor c = db.getFoundMeters(db);
         String columnid,billMonth;
 
@@ -261,7 +268,7 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                     myobj.put("ReaderID", MainActivity.reader.getReaderID());
                     myobj.put("ReadStatus", "Found");
                     myobj.put("Mac",CommonFunc.getMacAddress());
-                    billMonth = MainActivity.db.getBillMonth(MainActivity.db,"Residential");
+                    billMonth = MainActivity.db.getBillMonth(MainActivity.db,classification);
                     myArray.put(myobj);
 
                     columnid = c.getString(0);
@@ -307,6 +314,28 @@ public class FragmentFound extends Fragment implements IVolleyListener {
 
         Toast.makeText(mcontext,"Failed to upload",Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void getRoutes(){
+        routeArrayList.clear();
+        routeArrayList = db.getRoute(db,"0");
+    }
+
+    public String getAccntClass(ArrayList<Route> arrayList) {
+        if(arrayList.size() > 0) {
+            String aclass = arrayList.get(0).getTagClass();
+
+            switch(aclass) {
+                case "0" :
+                    return "Residential";
+                case "1" :
+                    return "Higher Voltage";
+                case "2" :
+                    return "Net Metering";
+            }
+        }
+
+        return "";
     }
 
 }
