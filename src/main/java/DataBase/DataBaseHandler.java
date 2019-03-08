@@ -1310,9 +1310,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             if (tag.equalsIgnoreCase("summ")) {
                 strQuery += " Where ReadStatus='Read' Or ReadStatus='Cannot Generate' Or ReadStatus='ReadSM'";
             } else {
-                strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM'";
+                strQuery += " Where ReadStatus='Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM' Or ReadStatus='ReadSM'";
             }
-
         } else if (status.equalsIgnoreCase("unread")) {
             strQuery += " Where ReadStatus='Unread'";
         } else if (status.equalsIgnoreCase("printed")) {
@@ -1342,7 +1341,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Account account;
         Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select AccountID,ReadingDetails,ReadStatus From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed' Or ReadStatus = 'PrintedSM' Or ReadStatus = 'Cannot Generate' Order By AccountID";
+        String statement = "Select AccountID,ReadingDetails,ReadStatus From accounts Where ReadStatus = 'Read' Or ReadStatus = 'Printed' Or ReadStatus = 'PrintedSM' Or ReadStatus = 'Cannot Generate' Or ReadStatus = 'ReadSM' Order By AccountID";
         Cursor cursor = sql.rawQuery(statement, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {

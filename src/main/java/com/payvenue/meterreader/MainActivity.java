@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -35,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -70,7 +68,6 @@ import Utility.GPSTracker;
 import Utility.MobilePrinter;
 import Utility.MyPreferences;
 import Utility.MyProgressBar;
-import Utility.NorecoBixolonPrinter;
 import Utility.WebRequest;
 import device.scanner.DecodeResult;
 import device.scanner.IScannerService;
@@ -135,8 +132,12 @@ public class MainActivity extends AppCompatActivity  {
 
     int bixTag = 0;
     private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
-    private static NorecoBixolonPrinter bxlPrinter = null;
+    //private static NorecoBixolonPrinter bxlPrinter = null;
     MyPreferences myPreferences;
+
+    ListView pairedListView;
+    ListView newDevicesListView;
+    Menu mMenu;
 
     public interface Modes {
 
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity  {
         gps = new GPSTracker(this);
 
         printer = MobilePrinter.getInstance(this);
-        bxlPrinter = new NorecoBixolonPrinter(this);
-        bp = BixolonPrinterClass.newInstance(getApplicationContext());
+        //bxlPrinter = new NorecoBixolonPrinter(this);
+        //bp = BixolonPrinterClass.newInstance(getApplicationContext());
         mContext = this;
 
 
@@ -478,7 +479,7 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main, menu);
-
+        mMenu = menu;
         return true;
     }
 
@@ -493,8 +494,12 @@ public class MainActivity extends AppCompatActivity  {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.menu_scan:
-                InitializedPrinter();
-                dialog.show();
+                try{
+                    InitializedPrinter();
+                }catch (NullPointerException e) {
+                    Log.e(TAG,"InitializedPrinter: " + e.getMessage());
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -555,7 +560,7 @@ public class MainActivity extends AppCompatActivity  {
         }
         iScanner = null;
 
-        bxlPrinter.printerClose();
+        //bxlPrinter.printerClose();
 
     }
 
@@ -590,16 +595,10 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-    public void onRestart() {
-
-        super.onRestart();
-
-    }
-
     //region printing
 
     public void InitializedPrinter() {
-
+        //mMenu.findItem(R.id.menu_scan).setVisible(false);
         dialog = new Dialog(new ContextThemeWrapper(this,
                 android.R.style.Theme_Holo_Light));
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -608,23 +607,26 @@ public class MainActivity extends AppCompatActivity  {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-
+                Log.e(TAG,"cancel here");
+                dialog.dismiss();
             }
         });
+
 
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this,
                 R.layout.device_name);
         mNewDevicesArrayAdapter = new ArrayAdapter<String>(this,
                 R.layout.device_name);
 
+
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) dialog
+        pairedListView = (ListView) dialog
                 .findViewById(R.id.paired_devices);
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) dialog
+        newDevicesListView = (ListView) dialog
                 .findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
@@ -662,6 +664,9 @@ public class MainActivity extends AppCompatActivity  {
         }catch (NullPointerException e) {
             Log.e(TAG,""+e.getMessage());
         }
+
+        dialog.show();
+
     }
 
     public void intentFilter() {
@@ -670,6 +675,7 @@ public class MainActivity extends AppCompatActivity  {
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
     }
 
@@ -706,8 +712,6 @@ public class MainActivity extends AppCompatActivity  {
             mBtAdapter.cancelDiscovery();
             // Get the device MAC address, which is the last 17 chars in the View
 
-
-
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
@@ -726,6 +730,8 @@ public class MainActivity extends AppCompatActivity  {
 
             Log.e(TAG,"printer address: " + address);
 
+            //newDevicesListView.setEnabled(false);
+            //pairedListView.setEnabled(false);
 
             //reVal = printer.setConnection(address);
             if (reVal == 1) {
@@ -751,6 +757,7 @@ public class MainActivity extends AppCompatActivity  {
                 Log.e(TAG,"here: "+reVal);
             }
 
+            //mMenu.findItem(R.id.menu_scan).setVisible(true);
             dialog.dismiss();
 
         }
@@ -774,10 +781,10 @@ public class MainActivity extends AppCompatActivity  {
         if(bixTag == 1) {
             mp.printText("             READING STATISTICS"+ "\n");
             mp.printText("\n");
-            mp.printText("Total Records    : "+ db.getTotalRecords(db)+" Active Records    :   "+ db.getActiveRecords(db) + "\n");
-            mp.printText("Inactive Records : "+ db.getInActiveRecords(db) +" Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
-            mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ")+" Missed Records    :   "+ db.MissedAccount(db) + "\n");
-            mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ")+ " New Connection    :   "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Total Records    : "+ db.getTotalRecords(db),"  Active Records  : "+ db.getActiveRecords(db) + "\n");
+            mp.printText("Inactive Records : "+ db.getInActiveRecords(db),"Read Records   : "+ db.getDataCount(db,"read","summ") + "\n");
+            mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ"),"Missed Records : "+ db.MissedAccount(db) + "\n");
+            mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ"), "New Connection : "+ db.newConnectionCount(db)  + "\n");
             mp.printText("Stop Records     : "+ db.getDataCount(db,"stopmeter","summ")+"\n");
         }else {
             mp.printText("                      READING STATISTICS                      "+ "\n");
@@ -985,54 +992,26 @@ public class MainActivity extends AppCompatActivity  {
         if(whichPrinter.equalsIgnoreCase("woo")) {
             mp.printText(finalString, thirdString + "\n");
         }else {
-            mp.printText(fstring,"\n");
+            mp.printText(finalString, thirdString + "\n");
+            //mp.printText(fstring,"\n");
             //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         }
     }
 
 
-    public void startConnectionBixolon(final String printername) {
-        mHandler.obtainMessage(0).sendToTarget();
-        boolean res = bxlPrinter.printerOpen(portType,printername,address,true);
-        if (res) {
-            setSuccessConnection();
-        } else {
-            mHandler.obtainMessage(1, 0, 0, "Fail to connect printer!!").sendToTarget();
-        }
-    }
+//    public void startConnectionBixolon(final String printername) {
+//        mHandler.obtainMessage(0).sendToTarget();
+//        boolean res = bxlPrinter.printerOpen(portType,printername,address,true);
+//        if (res) {
+//            setSuccessConnection();
+//        } else {
+//            mHandler.obtainMessage(1, 0, 0, "Fail to connect printer!!").sendToTarget();
+//        }
+//    }
 
     public void setSuccessConnection() {
         Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
         t.show();
         mIsConnected = true;
     }
-    public final Handler mHandler = new Handler(new Handler.Callback() {
-        @SuppressWarnings("unchecked")
-        @Override
-        public boolean handleMessage(Message msg) {
-            Log.e(TAG,"handler: " + msg.what);
-            switch (msg.what) {
-
-                case 0:
-                    //getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    break;
-                case 1:
-                    String data = (String) msg.obj;
-                    if (data != null && data.length() > 0) {
-                        Log.e(TAG,"mHandler: " + data);
-                        Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG).show();
-                    }
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    break;
-            }
-            return false;
-        }
-    });
-
-    public static NorecoBixolonPrinter getPrinterInstance()
-    {
-        return bxlPrinter;
-    }
-
-
 }
