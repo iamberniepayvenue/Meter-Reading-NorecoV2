@@ -257,9 +257,51 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     }
 
     public void setValues() {
+        String fname = "";
+        String mname = "";
+        String lname = "";
+        String fullname = "";
+        try {
+            fname = mAccount.getFirstName();
+            mname = mAccount.getMiddleName();
+            lname = mAccount.getLastName();
+
+            if(fname.equalsIgnoreCase("")) {
+                fname = "";
+            }
+
+            if(fname.equalsIgnoreCase(".")) {
+                fname = "";
+            }
+
+            if(mname.equalsIgnoreCase("")) {
+                mname = "";
+            }
+
+            if(mname.equalsIgnoreCase(".")) {
+                mname = "";
+            }
+
+            if(lname.equalsIgnoreCase("")) {
+                lname = "";
+            }
+
+            if(lname.equalsIgnoreCase(".")) {
+                lname = "";
+            }
+
+            fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+
+        }catch (NullPointerException e) {
+            Log.e(TAG,"NullPointerException: "+ e.getMessage());
+        }
+
+        if(fullname.equalsIgnoreCase("")) {
+            fullname = mAccount.getLastName();
+        }
 
         mSerial.setText(mAccount.getMeterSerialNo());
-        mAccountName.setText(mAccount.getLastName());
+        mAccountName.setText(fullname.trim());
         mAccountID.setText(mAccount.getAccountID());
         mAccountClass.setText(mAccount.getAccountClassification());
         mAccountAddress.setText(mAccount.getAddress());
@@ -410,8 +452,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
 
                 if (isHigherVoltage) {
+                    String _rateComponent = rateSchedule.getRateComponent().trim().toLowerCase();
                     int fixed = 0;
-                    if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                    if (_rateComponent.equalsIgnoreCase("supply retail customer charge") || _rateComponent.equalsIgnoreCase("supply system charge") || _rateComponent.equalsIgnoreCase("metering retail customer charge")) {
                         componentAmount = rateSchedule.getComponentRate();
                         strComponentAmount = String.valueOf((float) componentAmount);
                         fixed = 1;
@@ -420,8 +463,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
                     if (fixed == 0) {
 
-                        String _rateType = rateSchedule.getRateType().toUpperCase();
-                        if (_rateType.equalsIgnoreCase("PERKW") || _rateType.toLowerCase().equalsIgnoreCase("PKW") || _rateType.toLowerCase().equalsIgnoreCase("P/KW")) {
+                        String _rateType = rateSchedule.getRateType().trim().toUpperCase();
+                        if (_rateType.equalsIgnoreCase("PERKW") || _rateType.equalsIgnoreCase("PKW") || _rateType.equalsIgnoreCase("P/KW")) {
                             demandKWMininum = Double.valueOf(mAccount.getDemandKW());
                             demandKWMininum = CommonFunc.roundOff(demandKWMininum, 2);
                             componentAmount = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), demandKWMininum);
@@ -440,36 +483,39 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     }
 
                     if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
-                            rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            rateSchedule.getIsOverUnder().trim().equalsIgnoreCase("Yes")) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
                     if (mAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
-                            rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                            rateSchedule.getIsOverUnder().trim().equalsIgnoreCase("Yes")) {
                         overUnder = overUnder + componentAmount;
                     }
 
                     /**record senior subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                    if (rateSchedule.getRateCode().trim().equalsIgnoreCase("SCS")) {
                         scSubsidy = componentAmount;
                     }
 
                     /**record lifeline subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                    if (rateSchedule.getRateCode().trim().equalsIgnoreCase("SOL")) {
                         sol = componentAmount;
                     }
 
                 } else { // end of higher voltage
                     int fixed = 0;
+                    //Log.e(TAG,"trim: "+ rateSchedule.getRateComponent().trim().toLowerCase());
+                    //Log.e(TAG,"trim: " + "P/KW".trim());
+                    String _rateComponent = rateSchedule.getRateComponent().trim().toLowerCase();
                     if (isLowerVoltage) {
-                        if (rateSchedule.getRateComponent().equalsIgnoreCase("Supply Retail Customer Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Supply System Charge") || rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                        if (_rateComponent.equalsIgnoreCase("supply retail customer charge") || _rateComponent.equalsIgnoreCase("supply system charge") || _rateComponent.equalsIgnoreCase("metering retail customer charge")) {
                             componentAmount = rateSchedule.getComponentRate();
                             strComponentAmount = String.valueOf((float) componentAmount);
                             fixed = 1;
                         }
                     } else {
-                        if (rateSchedule.getRateComponent().equalsIgnoreCase("Metering Retail Customer Charge")) {
+                        if (_rateComponent.equalsIgnoreCase("metering retail customer charge")) {
                             componentAmount = rateSchedule.getComponentRate();
                             strComponentAmount = String.valueOf(componentAmount);
                             fixed = 1;
@@ -486,60 +532,60 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                         componentAmount = CommonFunc.roundOff(Double.valueOf(strComponentAmount), 4);
                     }
 
-                    if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().equalsIgnoreCase("Yes")) {
+                    if (canAvailSCDiscount && rateSchedule.getIsSCDiscount().trim().equalsIgnoreCase("Yes")) {
                         scDiscountedAmount = componentAmount * scPercentage;
                         totalSeniorDiscount = totalSeniorDiscount + scDiscountedAmount;
                     }
 
-                    if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().equalsIgnoreCase("Yes")) {
+                    if (canAvailLifelineDiscount && rateSchedule.getIsLifeline().trim().equalsIgnoreCase("Yes")) {
                         lifelineDiscountAmount = componentAmount * lifelineDiscountRate;
                         totalLifelineComponentAmount = totalLifelineComponentAmount + componentAmount;
                         totalLifelineDiscount = totalLifelineDiscount + lifelineDiscountAmount;
                     }
 
                     /** Under Over Recovery*/
-                    if (mAccount.getUnderOverRecovery().equalsIgnoreCase("0") &&
-                            rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                    if (mAccount.getUnderOverRecovery().trim().equalsIgnoreCase("0") &&
+                            rateSchedule.getIsOverUnder().trim().equalsIgnoreCase("Yes")) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
                     /**Compute Over Under Discount*/
-                    if (mAccount.getUnderOverRecovery().equalsIgnoreCase("1") &&
-                            rateSchedule.getIsOverUnder().equalsIgnoreCase("Yes")) {
+                    if (mAccount.getUnderOverRecovery().trim().equalsIgnoreCase("1") &&
+                            rateSchedule.getIsOverUnder().trim().equalsIgnoreCase("Yes")) {
                         overUnder = overUnder + componentAmount;
                     }
 
-                    if (canAvailLifelineDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                    if (canAvailLifelineDiscount && rateSchedule.getRateCode().trim().equalsIgnoreCase("SOL")) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
-                    if (canAvailLifelineDiscount && (rateSchedule.getRateCode().equalsIgnoreCase("ICCS")
-                            || rateSchedule.getRateCode().equalsIgnoreCase("OLRA")
-                            || rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                    if (canAvailLifelineDiscount && (rateSchedule.getRateCode().trim().equalsIgnoreCase("ICCS")
+                            || rateSchedule.getRateCode().trim().equalsIgnoreCase("OLRA")
+                            || rateSchedule.getRateCode().trim().equalsIgnoreCase("SCS"))) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
-                    if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().equalsIgnoreCase("SCS"))) {
+                    if ((scInvalidDate || isSCOverPolicy) && (rateSchedule.getRateCode().trim().equalsIgnoreCase("SCS"))) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
-                    if (canAvailSCDiscount && rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                    if (canAvailSCDiscount && rateSchedule.getRateCode().trim().equalsIgnoreCase("SCS")) {
                         componentAmount = 0;
                         strComponentAmount = String.valueOf(componentAmount);
                     }
 
 
                     /**record senior subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SCS")) {
+                    if (rateSchedule.getRateCode().trim().equalsIgnoreCase("SCS")) {
                         scSubsidy = componentAmount;
                     }
 
                     /**record lifeline subsidy*/
-                    if (rateSchedule.getRateCode().equalsIgnoreCase("SOL")) {
+                    if (rateSchedule.getRateCode().trim().equalsIgnoreCase("SOL")) {
                         sol = componentAmount;
                     }
                 } /**End If*/
@@ -551,22 +597,22 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 /**FOR NET METERING*/
                 if (isNetMetering.equalsIgnoreCase("1")) {
                     exportMultiplier = Float.valueOf(mAccount.getExportConsume());
-                    if (rateSchedule.getIsExport().equalsIgnoreCase("1") || rateSchedule.getIsExport().equalsIgnoreCase("Yes")) {
+                    if (rateSchedule.getIsExport().trim().equalsIgnoreCase("1") || rateSchedule.getIsExport().trim().equalsIgnoreCase("Yes")) {
                         amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
 
-                        if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("generation system charges")) {
+                        if (rateSchedule.getRateComponent().trim().toLowerCase().equalsIgnoreCase("generation system charges")) {
                             amountDueExport = CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
                         }
 
-                        if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering system charge")) {
+                        if (rateSchedule.getRateComponent().trim().toLowerCase().equalsIgnoreCase("metering system charge")) {
                             amountDueExport = -CommonFunc.calcComponentAmount(Double.parseDouble(Amount), exportMultiplier);
                         }
 
-                        if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("metering retail customer charge")) {
+                        if (rateSchedule.getRateComponent().trim().toLowerCase().equalsIgnoreCase("metering retail customer charge")) {
                             amountDueExport = -rateSchedule.getComponentRate();
                         }
 
-                        if (rateSchedule.getRateComponent().toLowerCase().equalsIgnoreCase("supply retail customer charge")) {
+                        if (rateSchedule.getRateComponent().trim().toLowerCase().equalsIgnoreCase("supply retail customer charge")) {
                             amountDueExport = -rateSchedule.getComponentRate();
                         }
 
@@ -656,7 +702,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         String stat = "Read";
         if(isStopMeter){
-            stat = "Cannot Generate";
+            stat = "ReadSM";
+            if(isNoneAverage) {
+                stat = "Cannot Generate";
+            }
         }
 
         MainActivity.db.updateReadAccount(MainActivity.db, stat, isStopMeter);
@@ -881,18 +930,21 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         /**Check if Change Meter*/
 
+
+
         if (mAccount.getIsChangeMeter().equals("1")) {
-            double av = getAveraging();
+            final double av = getAveraging();
             if (av != -2000) {
                 consume = av;
             } else {
-                return;
+                setKwh(0, 1);
             }
         }
 
-        final double av = getAveraging();
+
         if(isStopCheck) {
             isStopMeter = true;
+            final double av = getAveraging();
             if (av != -2000) {
                 double _av = av + presReading;
                 mAccount.setReading(String.valueOf(CommonFunc.round(_av, 1)));
@@ -909,6 +961,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        final double av = getAveraging();
                         isStopMeter = true;
                         if (av != -2000) {
                             double _av = av + presReading;
@@ -923,6 +976,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isStopMeter = false;
                         setKwh(0, 1);
                     }
                 });
@@ -1029,9 +1083,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     }
 
     public float getAveraging() {
-        float val;
-        String strAveraging = mAccount.getAveraging();
+        float val = -2000;
+
+
         try {
+            //{New=[{DateRead=2/9/2019, Consumption=26}], Old=[{Consumption=25}]}
+            String strAveraging = mAccount.getAveraging();
+            Log.e(TAG,""+ strAveraging);
             float flConsumption = 0;
             JSONObject json = new JSONObject(strAveraging);
             JSONArray jsonArrayNew = json.getJSONArray("New");
@@ -1045,15 +1103,20 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 finalJson = finalArray.getJSONObject(i);
                 String consumption = finalJson.getString("Consumption");
                 flConsumption = flConsumption + Float.valueOf(consumption);
+                Log.e(TAG,"consumption:"+ consumption);
             }
 
             val = finalArray.length() == 3 ? flConsumption / 3 : flConsumption;
             isNoneAverage = false;
         } catch (JSONException e) {
             e.printStackTrace();
-            showToast("No availbale past 3 consumption(averaging)..");
+            showToast("No available past 3 consumption(averaging)..");
             val = -2000;
             isNoneAverage = true;
+        } catch (NullPointerException e) {
+            isNoneAverage = false;
+            showToast(""+e.getMessage());
+            Log.e(TAG,"NullPointerException: "+e.getMessage());
         }
 
 
@@ -2010,7 +2073,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
-            db.updateAccountToPrinted(db, mAccount.getAccountID(), "Printed");
+
+            String stat = "Printed";
+            if(isStopMeter){
+                stat = "PrintedSM";
+            }
+
+            db.updateAccountToPrinted(db, mAccount.getAccountID(), stat);
 
         } catch (NullPointerException e) {
             Log.e(TAG, "preparePrint : " + e.getMessage());

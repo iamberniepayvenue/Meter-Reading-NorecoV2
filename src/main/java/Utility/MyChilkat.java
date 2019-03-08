@@ -21,7 +21,7 @@ public class MyChilkat {
 
     public MyChilkat() {
         String key = CommonFunc.generateSha("CallNative.getInstance().getNative1()");
-        String secretKey = CommonFunc.generateSha("commonFunctions.getDateOnly() + key.toUpperCase()").toUpperCase();
+        String secretKey = CommonFunc.generateSha(CommonFunc.getDateOnly() + key.toUpperCase()).toUpperCase();
         secretKey = secretKey.substring(0, 32);
 
         try {

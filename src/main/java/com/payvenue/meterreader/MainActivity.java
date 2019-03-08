@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -31,12 +30,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -69,8 +66,8 @@ import Utility.BixolonPrinterClass;
 import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.MobilePrinter;
+import Utility.MyPreferences;
 import Utility.MyProgressBar;
-import Utility.NorecoBixolonPrinter;
 import Utility.WebRequest;
 import device.scanner.DecodeResult;
 import device.scanner.IScannerService;
@@ -131,11 +128,16 @@ public class MainActivity extends AppCompatActivity  {
     static final int LINE_CHARS = 62;
     private static final String TAG = "MainActivity";
     private  MyProgressBar myProgressBar;
-
+    public static int OnBackButton = 0;
 
     int bixTag = 0;
     private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
-    private static NorecoBixolonPrinter bxlPrinter = null;
+    //private static NorecoBixolonPrinter bxlPrinter = null;
+    MyPreferences myPreferences;
+
+    ListView pairedListView;
+    ListView newDevicesListView;
+    Menu mMenu;
 
     public interface Modes {
 
@@ -176,6 +178,8 @@ public class MainActivity extends AppCompatActivity  {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.option);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        myPreferences = MyPreferences.getInstance(this);
+
         dec = new DecimalFormat("#,###,###,###.####");
         dec.setMinimumFractionDigits(4);
 
@@ -187,8 +191,8 @@ public class MainActivity extends AppCompatActivity  {
         gps = new GPSTracker(this);
 
         printer = MobilePrinter.getInstance(this);
-        bxlPrinter = new NorecoBixolonPrinter(this);
-        bp = BixolonPrinterClass.newInstance(getApplicationContext());
+        //bxlPrinter = new NorecoBixolonPrinter(this);
+        //bp = BixolonPrinterClass.newInstance(getApplicationContext());
         mContext = this;
 
 
@@ -343,7 +347,10 @@ public class MainActivity extends AppCompatActivity  {
         setConnSettings();
         exportLogo();
 
+
+        Log.e(TAG,"onabckbuttonmain: " + OnBackButton);
     }//end of create
+
 
     private void exportLogo() {
 
@@ -472,7 +479,7 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main, menu);
-
+        mMenu = menu;
         return true;
     }
 
@@ -487,8 +494,12 @@ public class MainActivity extends AppCompatActivity  {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.menu_scan:
-                InitializedPrinter();
-                dialog.show();
+                try{
+                    InitializedPrinter();
+                }catch (NullPointerException e) {
+                    Log.e(TAG,"InitializedPrinter: " + e.getMessage());
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -549,7 +560,7 @@ public class MainActivity extends AppCompatActivity  {
         }
         iScanner = null;
 
-        bxlPrinter.printerClose();
+        //bxlPrinter.printerClose();
 
     }
 
@@ -563,39 +574,31 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
-        Log.e(TAG,"address: " + address);
+//        Log.e(TAG,"address: " + address);
+//        Log.e(TAG,"OnBackButton: " + OnBackButton);
+//        if(OnBackButton == 0) {
+//            if (address != null) {
+//                if(!mIsConnected){
+//                    int res = printer.setConnection(address);
+//                    if (res == 1) {
+//                        mIsConnected = true;
+//                        Toast.makeText(this,"printer connected",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        }
 
-        if(address != null) {
-            int res = printer.setConnection(address);
-            if(res == 1) {
-                mIsConnected = true;
-            }
-        }
+        //intentFilter();
+        Log.e(TAG,"onResume");
 
         super.onResume();
 
     }
 
-    public void onRestart() {
-
-        super.onRestart();
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
     //region printing
 
     public void InitializedPrinter() {
-
+        //mMenu.findItem(R.id.menu_scan).setVisible(false);
         dialog = new Dialog(new ContextThemeWrapper(this,
                 android.R.style.Theme_Holo_Light));
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -604,35 +607,39 @@ public class MainActivity extends AppCompatActivity  {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-
+                Log.e(TAG,"cancel here");
+                dialog.dismiss();
             }
         });
+
 
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this,
                 R.layout.device_name);
         mNewDevicesArrayAdapter = new ArrayAdapter<String>(this,
                 R.layout.device_name);
 
+
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) dialog
+        pairedListView = (ListView) dialog
                 .findViewById(R.id.paired_devices);
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) dialog
+        newDevicesListView = (ListView) dialog
                 .findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-        // Register for broadcasts when a device is discovered
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(mReceiver, filter);
-        // this.unregisterReceiver(mReceiver);
+//        // Register for broadcasts when a device is discovered
+//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        this.registerReceiver(mReceiver, filter);
+//        // this.unregisterReceiver(mReceiver);
+//
+//        // Register for broadcasts when discovery has finished
+//        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
-        // Register for broadcasts when discovery has finished
-        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(mReceiver, filter);
+        intentFilter();
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -657,30 +664,41 @@ public class MainActivity extends AppCompatActivity  {
         }catch (NullPointerException e) {
             Log.e(TAG,""+e.getMessage());
         }
+
+        dialog.show();
+
     }
 
+    public void intentFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        this.registerReceiver(mReceiver, filter);
+    }
 
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    //mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                }
-                // When discovery is finished, change the Activity title
+                unregisterReceiver(mReceiver);
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
-                //setTitle(R.string.select_device);
-                if (mNewDevicesArrayAdapter.getCount() == 0) {
-                    String noDevices = getResources().getText(R.string.none_found).toString();
-                    //mNewDevicesArrayAdapter.add(noDevices);
-                }
+
+            }else if(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)) {
+                //Device is about to disconnect
+                Log.e(TAG,"about to disconnect");
+            }else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Device has disconnected
+                mIsConnected = false;
+                printer.disconnect();
+                bixTag = 0;
+                unregisterReceiver(mReceiver);
             }
         }
     };
@@ -693,12 +711,10 @@ public class MainActivity extends AppCompatActivity  {
             mBtAdapter.cancelDiscovery();
             // Get the device MAC address, which is the last 17 chars in the View
 
-
-
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
-
+            myPreferences.savePrefString("printeradd",address);
             int reVal = 0;
             if(!printerName.toLowerCase().contains("woosim")) {
                 whichPrinter = "bix";
@@ -711,9 +727,8 @@ public class MainActivity extends AppCompatActivity  {
                 reVal = printer.setConnection(address);
             }
 
+            Log.e(TAG,"printer address: " + address);
 
-
-            //reVal = printer.setConnection(address);
             if (reVal == 1) {
                 setSuccessConnection();
             } else if (reVal == -2) {
@@ -737,6 +752,7 @@ public class MainActivity extends AppCompatActivity  {
                 Log.e(TAG,"here: "+reVal);
             }
 
+            //mMenu.findItem(R.id.menu_scan).setVisible(true);
             dialog.dismiss();
 
         }
@@ -744,6 +760,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void woosimPrint(MobilePrinter mp) {
+
         if(bixTag == 1) {
             mp.printText("     Negros Oriental II Electric Cooperative\n");
             mp.printText("             Real St., Dumaguete City\n");
@@ -760,10 +777,11 @@ public class MainActivity extends AppCompatActivity  {
         if(bixTag == 1) {
             mp.printText("             READING STATISTICS"+ "\n");
             mp.printText("\n");
-            mp.printText("Total Records    : "+ db.getTotalRecords(db)+" Active Records    :   "+ db.getActiveRecords(db) + "\n");
-            mp.printText("Inactive Records : "+ db.getInActiveRecords(db) +" Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
-            mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ")+" Missed Records    :   "+ db.MissedAccount(db) + "\n");
-            mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ")+ " New Connection    :   "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Total Records    : "+ db.getTotalRecords(db),"  Active Records  : "+ db.getActiveRecords(db) + "\n");
+            mp.printText("Inactive Records : "+ db.getInActiveRecords(db),"Read Records   : "+ db.getDataCount(db,"read","summ") + "\n");
+            mp.printText("Printed Records  : "+ db.getDataCount(db,"printed","summ"),"Missed Records : "+ db.MissedAccount(db) + "\n");
+            mp.printText("Unread Records   : "+ db.getDataCount(db,"unread","summ"), "New Connection : "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Stop Records     : "+ db.getDataCount(db,"stopmeter","summ")+"\n");
         }else {
             mp.printText("                      READING STATISTICS                      "+ "\n");
             mp.printText("\n");
@@ -771,6 +789,7 @@ public class MainActivity extends AppCompatActivity  {
             mp.printText("Inactive Records  :   "+ db.getInActiveRecords(db),"Read Records       :   "+ db.getDataCount(db,"read","summ") + "\n");
             mp.printText("Printed Records   :   "+ db.getDataCount(db,"printed","summ"),"Missed Records     :   "+ db.MissedAccount(db) + "\n");
             mp.printText("Unread Records    :   "+ db.getDataCount(db,"unread","summ"),"New Connection     :   "+ db.newConnectionCount(db)  + "\n");
+            mp.printText("Stop Records      :   "+ db.getDataCount(db,"stopmeter","summ"), "\n");
         }
 
 
@@ -839,7 +858,7 @@ public class MainActivity extends AppCompatActivity  {
 
             //ArrayList<Account> list = new ArrayList<>();
             ArrayList<Account> list =  db.summaryDetails(db);
-
+            ArrayList<Account> listOfFound = db.summaryDetailsOfFound(db);
             if(whichPrinter.equalsIgnoreCase("woo")){
                 //woosimPrint(mp);
             }else{
@@ -852,76 +871,11 @@ public class MainActivity extends AppCompatActivity  {
             if(list.size() > 0) {
                 try{
                     for(Account a: list) {
-                        String accountID = a.getAccountID();
-                        String reading = a.getReading();
-                        String kwh = a.getConsume();
-                        String remarks = a.getRemarks();
-                        String status = a.getReadStatus();
-                        Bill bill = a.getBill();
-                        String time = a.getTimeRead();
+                        printHere(a,mp);
+                    }
 
-                        double _amount = 0;
-                        String amount;
-                        if (bill != null) {
-                            amount = MainActivity.dec2.format(bill.getTotalAmount());
-                        }else{
-                            amount = MainActivity.dec2.format(_amount);
-                        }
-
-                        if(time == null) {
-                            time = "";
-                        }
-
-
-                            int padding = 16 - accountID.length() - reading.length();
-                            String spacing = " ";
-                            for (int p = 0; p < padding; p++) {
-                                spacing = spacing.concat(" ");
-                            }
-
-                            String firstString = accountID + spacing + reading;
-
-                            int padding2;
-                            if(whichPrinter.equalsIgnoreCase("woo")){
-                                padding2 = 15 - kwh.length() - amount.length();
-                            }else {
-                                padding2 = 8 - kwh.length() - amount.length();
-                            }
-                            String spacing2 = " ";
-                            for (int p = 0; p < padding2; p++) {
-                                spacing2 = spacing2.concat(" ");
-                            }
-
-                            String secondString = kwh + spacing2 + amount;
-
-                            int padding3 = 15 - time.length() - remarks.length();
-                            String spacing3 = " ";
-                            for (int p = 0; p < padding3; p++) {
-                                spacing3 = spacing3.concat(" ");
-                            }
-                            String thirdString = time + spacing3 + remarks;
-
-                            int finalPadding;
-                            if(whichPrinter.equalsIgnoreCase("woo")) {
-                                finalPadding = 40 - firstString.length() - secondString.length();
-                            }else {
-                                finalPadding = 30 - firstString.length() - secondString.length();
-                            }
-
-                            String finalSpacing = " ";
-                            for (int p = 0; p < finalPadding; p++) {
-                                finalSpacing = finalSpacing.concat(" ");
-                            }
-
-                            String finalString = firstString + finalSpacing + secondString;
-                            String fstring = finalString +"  "+ thirdString;
-                            if(whichPrinter.equalsIgnoreCase("woo")) {
-                                mp.printText(finalString, thirdString + "\n");
-                            }else {
-                                mp.printText(fstring,"\n");
-                                //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
-                            }
-                        //}
+                    for(Account a: listOfFound) {
+                        printHere(a,mp);
                     }
 
                     if(whichPrinter.equalsIgnoreCase("woo")) {
@@ -934,11 +888,13 @@ public class MainActivity extends AppCompatActivity  {
                     DecimalFormat df = new DecimalFormat("#,###.00");
                     String total = db.getSumConsumption(db);
                     String [] arrString = total.split(":");
-
+                    int foundCount = db.getFoundMeterCount(db);
+                    int normalMeter = db.getDataCount(db, "readprinted", "summ");
+                    int totalCount = normalMeter + foundCount;
                     if(whichPrinter.equalsIgnoreCase("woo")) {
-                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        mp.printText(" Total    " + totalCount + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
                     }else {
-                        mp.printText(" Total    " + db.getDataCount(db, "readprinted", "summ") + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
+                        mp.printText(" Total    " + totalCount + "      " + df.format(Double.parseDouble(arrString[0])),"Total Amount: "+ df.format(Double.parseDouble(arrString[1])));
                         mp.printText("\n");
                         mp.printText("\n");
                         mp.printText("\n");
@@ -963,53 +919,100 @@ public class MainActivity extends AppCompatActivity  {
                     mp.printText("\n");
                 }
             }
-
-
     }
 
+    public void printHere(Account a,MobilePrinter mp){
+        String accountID = a.getAccountID();
+        String reading = a.getReading();
+        String kwh = a.getConsume();
+        String remarks = a.getRemarks();
+        String status = a.getReadStatus();
+        Bill bill = a.getBill();
+        String time = a.getTimeRead();
 
-    public void startConnectionBixolon(final String printername) {
-        mHandler.obtainMessage(0).sendToTarget();
-        boolean res = bxlPrinter.printerOpen(portType,printername,address,true);
-        if (res) {
-            setSuccessConnection();
-        } else {
-            mHandler.obtainMessage(1, 0, 0, "Fail to connect printer!!").sendToTarget();
+        double _amount = 0;
+        String amount;
+        if (bill != null) {
+            amount = MainActivity.dec2.format(bill.getTotalAmount());
+        }else{
+            amount = MainActivity.dec2.format(_amount);
+        }
+
+        if(time == null) {
+            time = "";
+        }
+
+
+        int padding = 16 - accountID.length() - reading.length();
+        String spacing = " ";
+        for (int p = 0; p < padding; p++) {
+            spacing = spacing.concat(" ");
+        }
+
+        String firstString = accountID + spacing + reading;
+
+        int padding2;
+        if(whichPrinter.equalsIgnoreCase("woo")){
+            padding2 = 15 - kwh.length() - amount.length();
+        }else {
+            padding2 = 8 - kwh.length() - amount.length();
+        }
+        String spacing2 = " ";
+        for (int p = 0; p < padding2; p++) {
+            spacing2 = spacing2.concat(" ");
+        }
+
+        String secondString = kwh + spacing2 + amount;
+
+        int padding3 = 15 - time.length() - remarks.length();
+        String spacing3 = " ";
+        for (int p = 0; p < padding3; p++) {
+            spacing3 = spacing3.concat(" ");
+        }
+
+        if(remarks.length() > 6) {
+            remarks = remarks.substring(0,7);
+        }
+
+        String thirdString = time + spacing3 + remarks;
+
+        int finalPadding;
+        if(whichPrinter.equalsIgnoreCase("woo")) {
+            finalPadding = 40 - firstString.length() - secondString.length();
+        }else {
+            finalPadding = 30 - firstString.length() - secondString.length();
+        }
+
+        String finalSpacing = " ";
+        for (int p = 0; p < finalPadding; p++) {
+            finalSpacing = finalSpacing.concat(" ");
+        }
+
+        String finalString = firstString + finalSpacing + secondString;
+        String fstring = finalString +"  "+ thirdString;
+        if(whichPrinter.equalsIgnoreCase("woo")) {
+            mp.printText(finalString, thirdString + "\n");
+        }else {
+            mp.printText(finalString.trim(), thirdString.trim() + "\n");
+            //mp.printText(fstring.trim(),"\n");
+            //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         }
     }
+
+
+//    public void startConnectionBixolon(final String printername) {
+//        mHandler.obtainMessage(0).sendToTarget();
+//        boolean res = bxlPrinter.printerOpen(portType,printername,address,true);
+//        if (res) {
+//            setSuccessConnection();
+//        } else {
+//            mHandler.obtainMessage(1, 0, 0, "Fail to connect printer!!").sendToTarget();
+//        }
+//    }
 
     public void setSuccessConnection() {
         Toast t = Toast.makeText(getBaseContext(), "SUCCESS CONNECTION!", Toast.LENGTH_SHORT);
         t.show();
         mIsConnected = true;
     }
-    public final Handler mHandler = new Handler(new Handler.Callback() {
-        @SuppressWarnings("unchecked")
-        @Override
-        public boolean handleMessage(Message msg) {
-            Log.e(TAG,"handler: " + msg.what);
-            switch (msg.what) {
-
-                case 0:
-                    //getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    break;
-                case 1:
-                    String data = (String) msg.obj;
-                    if (data != null && data.length() > 0) {
-                        Log.e(TAG,"mHandler: " + data);
-                        Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG).show();
-                    }
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    break;
-            }
-            return false;
-        }
-    });
-
-    public static NorecoBixolonPrinter getPrinterInstance()
-    {
-        return bxlPrinter;
-    }
-
-
 }

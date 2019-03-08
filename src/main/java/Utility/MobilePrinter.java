@@ -237,7 +237,7 @@ public class MobilePrinter {
         byte[] track1Data = new byte[76];
         byte[] track2Data = new byte[37];
         byte[] track3Data = new byte[104];
-
+        Log.e(TAG,"here here Toast");
         int dataLength = woosim.extractCardData(cardData, extractdata);
         int i = 0, j = 0, k = 0;
         if (dataLength == 76) {

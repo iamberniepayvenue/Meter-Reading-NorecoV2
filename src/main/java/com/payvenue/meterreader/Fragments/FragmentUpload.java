@@ -194,7 +194,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
         }
 
         try {
-            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate";
+            String mode = "Read' Or ReadStatus='Printed' Or ReadStatus='Cannot Generate' Or ReadStatus='PrintedSM' or ReadStatus='ReadSM";
             Cursor cursor = MainActivity.db.getAccountList(MainActivity.db, mode);
 
             if (cursor.getCount() == 0) {
@@ -478,7 +478,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
 
             String currentDBPath = "/data/" + "com.payvenue.meterreader" + "/databases/" + DBInfo.DATABASE_NAME;
-            File backupDB = new File(dir, DBInfo.DATABASE_NAME + ".db");
+            File backupDB = new File(dir, DBInfo.DATABASE_NAME);
             File currentDB = new File(sqliteDir, currentDBPath);
 
             try {

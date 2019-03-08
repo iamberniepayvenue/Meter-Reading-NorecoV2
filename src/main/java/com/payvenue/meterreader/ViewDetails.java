@@ -111,6 +111,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             IsMotherMeter = true;
         }
 
+
+        //Log.e(TAG,"status: "+ mAccount.getReadStatus());
         bp = MainActivity.bp;
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
@@ -155,10 +157,49 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             setSnackbar("No results found...");
             snackbar.show();
         }else{
+
+            String fname = "";
+            String mname = "";
+            String lname = "";
+            String fullname = "";
+            try {
+                fname = mAccount.getFirstName();
+                mname = mAccount.getMiddleName();
+                lname = mAccount.getLastName();
+
+                if(fname.equalsIgnoreCase("")) {
+                    fname = "";
+                }
+
+                if(fname.equalsIgnoreCase(".")) {
+                    fname = "";
+                }
+
+                if(mname.equalsIgnoreCase("")) {
+                    mname = "";
+                }
+
+                if(mname.equalsIgnoreCase(".")) {
+                    mname = "";
+                }
+
+                if(lname.equalsIgnoreCase("")) {
+                    lname = "";
+                }
+
+                if(lname.equalsIgnoreCase(".")) {
+                    lname = "";
+                }
+
+                fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+
+            }catch (NullPointerException e) {
+                Log.e(TAG,"NullPointerException: "+ e.getMessage());
+            }
+
             viewacctid.setText(mAccount.getAccountID());
             viewacctserial.setText(mAccount.getMeterSerialNo());
-            //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
-            viewacctname.setText(mAccount.getLastName());
+            viewacctname.setText(fullname.trim());
             viewacctadd.setText(mAccount.getAddress());
             txtclass.setText(mAccount.getAccountClassification());
             txtmeterbrand.setText(mAccount.getMeterBrand());
@@ -176,37 +217,6 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
             mLocation.setText(mAccount.getLatitude() + "," + mAccount.getLongitude());
         }
-
-        //if (!isSearch) {
-
-//        } else {
-//
-//            searchAccount = MainActivity.selectedAccount;
-//            if (searchAccount != null) {
-//                viewacctid.setText(searchAccount.getAccountID());
-//                viewacctserial.setText(searchAccount.getMeterSerialNo());
-//                //mAccount.getFirstName() + " " + mAccount.getMiddleName() + " " + mAccount.getLastName()
-//                viewacctname.setText(searchAccount.getLastName());
-//                viewacctadd.setText(searchAccount.getAddress());
-//                txtclass.setText(searchAccount.getAccountClassification());
-//                txtmeterbrand.setText(searchAccount.getMeterBrand());
-//                mReading.setText(searchAccount.getReading());
-//                mPrevReading.setText(searchAccount.getInitialReading());
-//                mConsume.setText(searchAccount.getConsume());
-//                if (myMode == MainActivity.Modes.MODE_2 || myMode == MainActivity.Modes.MODE_3) {
-//                    if(searchAccount.getBill() == null) {
-//                        db.updateStatus(db,searchAccount.getAccountID());
-//                    }else {
-//                        Bill bill = searchAccount.getBill();
-//                        tvBillAmount.setText("" + bill.getTotalBilledAmount());
-//                    }
-//                }
-//
-//                mLocation.setText(searchAccount.getLatitude() + "," + searchAccount.getLongitude());
-//            } else {
-
-            //}
-        //}
     }
 
     public void displayButton() {
@@ -295,16 +305,20 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            callAccounts();
-                            setValues();
+                            try{
+                                callAccounts();
+                                setValues();
 
-                            int searchCloseButtonId = searchView.getContext().getResources()
-                                    .getIdentifier("android:id/search_src_text", null, null);
-                            EditText et = (EditText) findViewById(searchCloseButtonId);
-                            et.setText("");
+                                int searchCloseButtonId = searchView.getContext().getResources()
+                                        .getIdentifier("android:id/search_src_text", null, null);
+                                EditText et = (EditText) findViewById(searchCloseButtonId);
+                                et.setText("");
 
-                            //Clear query
-                            searchView.setQuery("", false);
+                                //Clear query
+                                searchView.setQuery("", false);
+                            }catch (NullPointerException e) {
+                                Log.e(TAG,"closeButton: " + e.getMessage());
+                            }
                         }
                     },1000);
                 }
@@ -520,6 +534,19 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         return name;
     }
+
+    public void displayNextAfterPrint() {
+
+
+        int tag = MainActivity.myMode == "Read" ? 3 : 4;
+
+        Log.e(TAG,"status: " + MainActivity.myMode + " tag: "+ tag);
+        db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), tag);
+        this.finish();
+        Intent intent = new Intent(this, ViewDetails.class);
+        startActivity(intent);
+    }
+
 //    public void printLogoBix() {
 //
 //        if(bp == null) {
@@ -1104,7 +1131,18 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
-        db.updateAccountToPrinted(db,mAccount.getAccountID(), "Printed");
 
+        String stat = "Printed";
+        if(mAccount.getReadStatus().equalsIgnoreCase("PrintedSM")) {
+            stat = "PrintedSM";
+        }
+
+        if(mAccount.getReadStatus().equalsIgnoreCase("ReadSM")) {
+            stat = "PrintedSM";
+        }
+
+
+        db.updateAccountToPrinted(db,mAccount.getAccountID(), stat);
+        displayNextAfterPrint();
     }
 }

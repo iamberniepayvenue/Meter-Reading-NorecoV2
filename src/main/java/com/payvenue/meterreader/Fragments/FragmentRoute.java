@@ -4,7 +4,6 @@ package com.payvenue.meterreader.Fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -64,13 +63,15 @@ public class FragmentRoute extends Fragment {
 
         listview = view.findViewById(R.id.listView);
         ivNoAccounts = view.findViewById(R.id.iv_no_accounts);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getRoute();
-            }
-        },500);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getRoute();
+//            }
+//        },500);
 
+
+        getRoute();
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -87,6 +88,36 @@ public class FragmentRoute extends Fragment {
         });
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            Log.e(TAG,"here: bernie");
+            MainActivity.OnBackButton = 1;
+        }
+    }
+
+    //    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//
+//
+//        Log.e(TAG,"here back: " + keyCode);
+//        Log.e(TAG,"here back: " + event);
+//        if (keyCode == KeyEvent.KEYCODE_MENU) {
+//
+//        }
+//
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            Log.e(TAG,"here back");
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//
+//
+//
+//    }
 
     public void checkRouteIfHasAccounts() {
         MainActivity.db.removeRoutes(MainActivity.db);
