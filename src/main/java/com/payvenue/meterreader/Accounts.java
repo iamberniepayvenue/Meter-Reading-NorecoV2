@@ -257,9 +257,51 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     }
 
     public void setValues() {
+        String fname = "";
+        String mname = "";
+        String lname = "";
+        String fullname = "";
+        try {
+            fname = mAccount.getFirstName();
+            mname = mAccount.getMiddleName();
+            lname = mAccount.getLastName();
+
+            if(fname.equalsIgnoreCase("")) {
+                fname = "";
+            }
+
+            if(fname.equalsIgnoreCase(".")) {
+                fname = "";
+            }
+
+            if(mname.equalsIgnoreCase("")) {
+                mname = "";
+            }
+
+            if(mname.equalsIgnoreCase(".")) {
+                mname = "";
+            }
+
+            if(lname.equalsIgnoreCase("")) {
+                lname = "";
+            }
+
+            if(lname.equalsIgnoreCase(".")) {
+                lname = "";
+            }
+
+            fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+
+        }catch (NullPointerException e) {
+            Log.e(TAG,"NullPointerException: "+ e.getMessage());
+        }
+
+        if(fullname.equalsIgnoreCase("")) {
+            fullname = mAccount.getLastName();
+        }
 
         mSerial.setText(mAccount.getMeterSerialNo());
-        mAccountName.setText(mAccount.getLastName());
+        mAccountName.setText(fullname.trim());
         mAccountID.setText(mAccount.getAccountID());
         mAccountClass.setText(mAccount.getAccountClassification());
         mAccountAddress.setText(mAccount.getAddress());

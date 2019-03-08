@@ -962,6 +962,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
      * tag = 0 comes from AccountListActivity
      * tag = 1 comes from Accounts after reading
      * tag = 2 comes from ViewDetails
+     * tag = 3 comes from ViewDetails generate soa means from Read Tab
+     * tag = 4 comes from ViewDetails generate soa means from Printed Tab
      */
     public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, String routePrimaryKey, int tag) {
 
@@ -975,6 +977,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
         } else if (tag == 2) {
             myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' AND Notes1 = '" + routePrimaryKey + "' Limit 1";
+        } else if(tag == 3) {
+            String wherecluase = "(ReadStatus = 'Read' Or ReadStatus = 'ReadSM')";
+            myQuery = "Select * From accounts Where "+wherecluase+"  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
+        } else if (tag == 4) {
+            String wherecluase = "(ReadStatus = 'Printed' Or ReadStatus = 'PrintedSM')";
+            myQuery = "Select * From accounts Where "+wherecluase+"  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
         }
 
         Cursor c = sql.rawQuery(myQuery, null);
@@ -984,7 +992,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             c = sql.rawQuery(myQuery, null);
         }
 
-        //Log.e(TAG,"getAccountDetails :" + myQuery);
+        Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 
@@ -1054,11 +1062,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Account account;
         String details;
         SQLiteDatabase sql = db.getReadableDatabase();
-        String statement = "Select ReadingDetails,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification,Notes1 From "
+        String statement = "Select ReadingDetails,FirstName,MiddleName,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification,Notes1 From "
                 + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
                 + item + "%' Or MeterSerialNo Like '%" + item + "%') And ReadStatus='" + mode + "' AND Notes1='" + routePrimarykey + "'";
 
-        Log.e(TAG, "search: " + statement);
+        Log.e(TAG, "searchItem: " + statement);
         Cursor cursor = sql.rawQuery(statement, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -1066,6 +1074,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     details = cursor.getString(cursor.getColumnIndex("ReadingDetails"));
                     account = gson.fromJson(details, Account.class);
                     account.setLastName(cursor.getString(cursor.getColumnIndex("LastName")));
+                    account.setFirstName(cursor.getString(cursor.getColumnIndex("FirstName")));
+                    account.setMiddleName(cursor.getString(cursor.getColumnIndex("MiddleName")));
                     account.setAccountID(cursor.getString(cursor.getColumnIndex("AccountID")));
                     account.setMeterSerialNo(cursor.getString(cursor.getColumnIndex("MeterSerialNo")));
                     account.setAccountStatus(cursor.getString(cursor.getColumnIndex("AccountStatus")));
@@ -1376,7 +1386,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 account = new Account();
-                Log.e(TAG, "here");
+                //Log.e(TAG, "here");
                 account.setAccountID(".");
                 account.setReading(cursor.getString(cursor.getColumnIndex("Reading")));
                 account.setRemarks(cursor.getString(cursor.getColumnIndex("Remarks")));

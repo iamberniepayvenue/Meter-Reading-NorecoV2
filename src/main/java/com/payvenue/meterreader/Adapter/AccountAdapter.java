@@ -61,38 +61,47 @@ public class AccountAdapter extends BaseAdapter {
         TextView tvsubclass = convertView.findViewById(R.id.accountsubclass);
         TextView tvaddress = convertView.findViewById(R.id.address);
 
-        String fname = account.getFirstName();
-        String mname = account.getMiddleName();
-        String lname = account.getLastName();
+        String fname = "";
+        String mname = "";
+        String lname = "";
         String fullname = "";
         try {
-            if (!fname.equalsIgnoreCase(".")) {
-                if (!fname.equalsIgnoreCase("")) {
-                    fullname = fullname + fname + " ";
-                    if (!mname.equalsIgnoreCase(".")) {
-                        if (!mname.equalsIgnoreCase("")) {
-                            fullname = fullname + mname + " ";
-                            if (!lname.equalsIgnoreCase(".")) {
-                                if (!lname.equalsIgnoreCase("")) {
-                                    fullname = fullname + lname;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            fname = account.getFirstName();
+             mname = account.getMiddleName();
+             lname = account.getLastName();
 
-            if(fullname.equalsIgnoreCase("")) {
-                fullname = lname;
-            }
+             if(fname.equalsIgnoreCase("")) {
+                 fname = "";
+             }
+
+             if(fname.equalsIgnoreCase(".")) {
+                 fname = "";
+             }
+
+             if(mname.equalsIgnoreCase("")) {
+                 mname = "";
+             }
+
+             if(mname.equalsIgnoreCase(".")) {
+                 mname = "";
+             }
+
+             if(lname.equalsIgnoreCase("")) {
+                 lname = "";
+             }
+
+             if(lname.equalsIgnoreCase(".")) {
+                 lname = "";
+             }
+
+                fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+
         }catch (NullPointerException e) {
             Log.e(TAG,"NullPointerException: "+ e.getMessage());
         }
 
 
-
-        //account.getFirstName() + " "  + account.getMiddleName() + " " + account.getLastName()
-        tvname.setText(fullname);
+        tvname.setText(fullname.trim());
         tvaccount.setText(account.getAccountID());
         tvserial.setText(account.getMeterSerialNo());
         tvaccountstatus.setText(account.getAccountStatus());
