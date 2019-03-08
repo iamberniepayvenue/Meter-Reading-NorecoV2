@@ -687,7 +687,6 @@ public class MainActivity extends AppCompatActivity  {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 unregisterReceiver(mReceiver);
-                Log.e(TAG,"device found");
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
 
@@ -698,8 +697,8 @@ public class MainActivity extends AppCompatActivity  {
                 //Device has disconnected
                 mIsConnected = false;
                 printer.disconnect();
+                bixTag = 0;
                 unregisterReceiver(mReceiver);
-                Log.e(TAG,"Device has disconnected");
             }
         }
     };
@@ -730,10 +729,6 @@ public class MainActivity extends AppCompatActivity  {
 
             Log.e(TAG,"printer address: " + address);
 
-            //newDevicesListView.setEnabled(false);
-            //pairedListView.setEnabled(false);
-
-            //reVal = printer.setConnection(address);
             if (reVal == 1) {
                 setSuccessConnection();
             } else if (reVal == -2) {
@@ -765,6 +760,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void woosimPrint(MobilePrinter mp) {
+
         if(bixTag == 1) {
             mp.printText("     Negros Oriental II Electric Cooperative\n");
             mp.printText("             Real St., Dumaguete City\n");
@@ -973,6 +969,11 @@ public class MainActivity extends AppCompatActivity  {
         for (int p = 0; p < padding3; p++) {
             spacing3 = spacing3.concat(" ");
         }
+
+        if(remarks.length() > 6) {
+            remarks = remarks.substring(0,7);
+        }
+
         String thirdString = time + spacing3 + remarks;
 
         int finalPadding;
@@ -992,8 +993,8 @@ public class MainActivity extends AppCompatActivity  {
         if(whichPrinter.equalsIgnoreCase("woo")) {
             mp.printText(finalString, thirdString + "\n");
         }else {
-            mp.printText(finalString, thirdString + "\n");
-            //mp.printText(fstring,"\n");
+            mp.printText(finalString.trim(), thirdString.trim() + "\n");
+            //mp.printText(fstring.trim(),"\n");
             //bp.printText(fstring+ "\n",NorecoBixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         }
     }

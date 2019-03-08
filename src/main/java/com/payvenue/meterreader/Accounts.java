@@ -1110,7 +1110,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             isNoneAverage = false;
         } catch (JSONException e) {
             e.printStackTrace();
-            showToast("No availbale past 3 consumption(averaging)..");
+            showToast("No available past 3 consumption(averaging)..");
             val = -2000;
             isNoneAverage = true;
         } catch (NullPointerException e) {
