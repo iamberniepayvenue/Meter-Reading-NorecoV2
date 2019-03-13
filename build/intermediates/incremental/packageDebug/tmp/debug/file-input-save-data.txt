@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Fri Mar 08 17:02:53 PHT 2019
+#Fri Mar 08 17:23:21 PHT 2019
 17.baseType=DIRECTORY
 4.path=lib/armeabi/libzbarjni.so
 22.set=NATIVE_RESOURCE
