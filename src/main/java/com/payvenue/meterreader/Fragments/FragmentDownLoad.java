@@ -355,7 +355,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         //Log.e(TAG,"count: "+ routeArrayList.size());
     }
 
-    public String getAccntClass(ArrayList<Route> arrayList) {
+    public static String getAccntClass(ArrayList<Route> arrayList) {
         if(arrayList.size() > 0) {
             String aclass = arrayList.get(0).getTagClass();
 
@@ -575,6 +575,13 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
     }
 
     public static void downloadAccounts(final Context context, int counter,String rd) {
+
+        if(billMonth == null) {
+            String acclas = getAccntClass(routeArrayList);
+            billMonth = DB.getBillMonth(DB,acclas);
+        }
+
+
         mDialog.setMessage("DownLoading " + Constant.accountssave + " accounts...");
         mDialog.show();
         //Log.e(TAG, "routelist: " + routeArrayList.size());
@@ -618,8 +625,10 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         mDialog.dismiss();
                     }
 
-
-                    DB.errorDownLoad(DB, context, "Accounts");
+                    Constant.accountssize = 0;
+                    Constant.accountssave = 0;
+                    Constant.dupilcateaccounts = 0;
+                    //DB.errorDownLoad(DB, context, "Accounts");
                     setSnackbar("Accounts not completely downloaded...Download again");
                     snackbar.show();
                     mTvView.setText("");
@@ -1646,7 +1655,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             }
                         }
 
-                    } catch (JSONException e) {
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                         if (mDialog.isShowing()) {
                             mDialog.dismiss();
@@ -1654,9 +1664,9 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                         setSnackbar("Accounts, " + e.getMessage());
                         snackbar.show();
                         mTvView.setText("");
+                        Log.e(TAG,"JSONException: " + e.getMessage());
                         mTvView.append(e.getMessage());
                     }
-
                 }
             });
 

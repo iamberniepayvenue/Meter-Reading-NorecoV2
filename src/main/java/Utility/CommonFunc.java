@@ -150,7 +150,7 @@ public class CommonFunc {
         return billmonth;
     }
 
-    private static String getDate() {
+    public static String getDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",
                 Locale.getDefault());
         Date date = new Date();
