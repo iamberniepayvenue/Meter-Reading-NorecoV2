@@ -5,7 +5,7 @@
     <color name="list_background_pressed">#49C057</color>
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
-    <color name="counter_text_color">#c5c4c4</color>
+    <color name="counter_text_color">#C5C4C4</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#49c057</color>
