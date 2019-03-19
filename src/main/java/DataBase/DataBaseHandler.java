@@ -823,7 +823,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             while (c.moveToNext()) {
                 try {
                     details = c.getString(c.getColumnIndex("ReadingDetails"));
-                    account = gson.fromJson(details.toString(), Account.class);
+                    account = gson.fromJson(details, Account.class);
                     account.setLastName(c.getString(c.getColumnIndex("LastName")));
                     account.setFirstName(c.getString(c.getColumnIndex("FirstName")));
                     account.setMiddleName(c.getString(c.getColumnIndex("MiddleName")));
@@ -839,7 +839,6 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 } catch (JsonSyntaxException e) {
                     Log.e(TAG, "jsonexception : " + e.getMessage());
                 }
-
             }
 
         c.close();

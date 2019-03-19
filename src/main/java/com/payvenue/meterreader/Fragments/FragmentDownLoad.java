@@ -598,7 +598,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     + "&offset=0"
                     + "&billmoth=" + billMonth;
 
-            //Log.e(TAG, "Accounts: " + cmdAccounts);
+
             if(rd.equalsIgnoreCase("1")) {
                 cmdAccounts = cmdAccounts + "&rd=1";
             }else {
@@ -609,6 +609,8 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 cmdAccounts = cmdAccounts + "&sequenceNoFrom=" + r.getSequenceNoFrom() + "&sequenceNoTo=" + r.getSequenceNoTo();
             }
 
+
+            Log.e(TAG, "Accounts: " + cmdAccounts);
             new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID(),String.valueOf(r.getPrimaryKey()));
         } else {
             if (mDialog.isShowing()) {
