@@ -483,4 +483,13 @@ public class CommonFunc {
             return null;
         }
     }
+
+    public static String encrypt(String data){
+        MyChilkat myChilkat = new MyChilkat();
+        return myChilkat.encrypString(data);
+    }
+    public static String decrypt(String data) {
+        MyChilkat myChilkat = new MyChilkat();
+        return myChilkat.decryptString(data);
+    }
 }

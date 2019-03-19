@@ -1015,4 +1015,12 @@ public class MainActivity extends AppCompatActivity  {
         t.show();
         mIsConnected = true;
     }
+
+    static {
+        System.loadLibrary("chilkat");
+
+        // Note: If the incorrect library name is passed to System.loadLibrary,
+        // then you will see the following error message at application startup:
+        //"The application <your-application-name> has stopped unexpectedly. Please try again."
+    }
 }

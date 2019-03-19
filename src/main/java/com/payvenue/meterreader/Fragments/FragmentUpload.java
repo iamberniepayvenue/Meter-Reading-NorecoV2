@@ -33,8 +33,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
@@ -178,7 +176,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     public void prepareData() {
 
         PortNumber = txtPort.getText().toString();
-        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=NORECO2&mac=" + CommonFunc.getMacAddress();
+        String strRequest = "http://" + HostName + ":" + PortNumber + "?cmd=uploadData" + "&coopid=NORECO2&mac=" + CommonFunc.encrypt(CommonFunc.getMacAddress());
 
 
         if (PortNumber.trim().length() == 0) {
@@ -324,10 +322,15 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         //Log.e(TAG,"to upload: "+ FinalData.toString());
 
                         String url;
-                        url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8")
-                                + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
-                                + "&BillMonth=" + mBillMonth + "&TotalkWh=" + totalkWh
-                                + "&TotalAmount=" + totalAmount + "&Classification=" + URLEncoder.encode(subclass, "UTF-8");
+//                        url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8")
+//                                + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
+//                                + "&BillMonth=" + mBillMonth + "&TotalkWh=" + totalkWh
+//                                + "&TotalAmount=" + totalAmount + "&Classification=" + URLEncoder.encode(subclass, "UTF-8");
+                        url = strRequest + "&data=" + CommonFunc.encrypt(FinalData.toString())
+                                + "&rates=" + CommonFunc.encrypt(jsonBillSum)
+                                + "&BillMonth=" + CommonFunc.encrypt(mBillMonth.trim())+ "&TotalkWh=" + CommonFunc.encrypt(totalkWh.trim())
+                                + "&TotalAmount=" + CommonFunc.encrypt(totalAmount.trim()) + "&Classification=" + CommonFunc.encrypt(subclass.trim());
+                        Log.e(TAG,"upload: " + url);
                         MainActivity.webRequest.setRequestListener(url, "UploadData", FinalData.toString(), String.valueOf(countToUpload),
                                 new WebRequest.RequestListener() {
                                     @Override
@@ -381,10 +384,12 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                         e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        Log.e(TAG, "UnsupportedEncodingException: " + e.getMessage());
-                    } catch (NullPointerException e) {
+                    }
+//                    catch (UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                        Log.e(TAG, "UnsupportedEncodingException: " + e.getMessage());
+//                    }
+                    catch (NullPointerException e) {
                         if (mDialog.isShowing()) {
                             mDialog.dismiss();
                         }
@@ -398,51 +403,6 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
             Toast.makeText(getContext(), i.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
-
-//    @Override
-//    public void onSuccess(String type, String response,String params,String param2,String param3) {
-//
-//        if(response.equalsIgnoreCase("404")) {
-//            if (mDialog.isShowing()) {
-//                mDialog.dismiss();
-//            }
-//
-//            Toast.makeText(mcontext,"Billing Summary Details table not exist...",Toast.LENGTH_SHORT).show();
-//        }else{
-//            if(Integer.valueOf(param2) == lengthOfData) {
-//                if (mDialog.isShowing()) {
-//                    mDialog.dismiss();
-//                }
-//
-//                lengthOfData = 0;
-//                countToUpload = 0;
-//                Toast.makeText(mcontext,"Data successfully uploaded",Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//
-//
-//        getDataCount();
-//        setValues();
-//
-//    }
-//
-//    @Override
-//    public void onFailed(VolleyError error,String type) {
-//        if (mDialog.isShowing()) {
-//            mDialog.dismiss();
-//        }
-//
-//        if(error.getMessage() == null) {
-//            Toast.makeText(mcontext,"Failed to upload",Toast.LENGTH_SHORT).show();
-//        }else{
-//            Toast.makeText(mcontext,"Error" + error.getMessage(),Toast.LENGTH_SHORT).show();
-//        }
-//
-//        getDataCount();
-//        setValues();
-//    }
 
     public void getDataCount() {
         uploadCount = MainActivity.db.getDataCount(MainActivity.db, "uploaded", "upload");

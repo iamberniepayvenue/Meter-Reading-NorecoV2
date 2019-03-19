@@ -36,6 +36,11 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+    externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
+        }
+    }
 
 }
 
