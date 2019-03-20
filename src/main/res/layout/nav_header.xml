@@ -19,9 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="1.1"
-        android:textColor="@color/counter_text_color"
-        android:textSize="18sp" />
+        android:text="App Version 1.1"
+        android:textColor="@color/colorWhite"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/tv_userid"

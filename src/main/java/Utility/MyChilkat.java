@@ -29,6 +29,9 @@ public class MyChilkat {
             return;
         }
 
+        //Log.e(TAG,"keyhex: " + keyHex);
+        //Log.e(TAG,"ivHex: " + ivHex);
+
         crypt.put_CryptAlgorithm("aes");
         crypt.put_CipherMode("cbc");
         crypt.put_KeyLength(256);

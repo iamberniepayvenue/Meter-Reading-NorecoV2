@@ -9,7 +9,7 @@
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_payvenue_meterreader_Utility_CallNative_getNative1(JNIEnv *env, jobject) {
+Java_Utility_CallNative_getNative1(JNIEnv *env, jobject) {
 
     std::string secretkey = "MRBNORECO2";
     return env->NewStringUTF(secretkey.c_str());

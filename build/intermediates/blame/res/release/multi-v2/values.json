@@ -194,11 +194,11 @@
                 {
                     "source": "/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/src/main/res/values/color.xml",
                     "from": {
-                        "startLines": "-1,-1,-1,-1,-1,7,-1,-1,-1,-1",
-                        "startColumns": "-1,-1,-1,-1,-1,4,-1,-1,-1,-1",
-                        "startOffsets": "-1,-1,-1,-1,-1,307,-1,-1,-1,-1",
-                        "endColumns": "-1,-1,-1,-1,-1,52,-1,-1,-1,-1",
-                        "endOffsets": "-1,-1,-1,-1,-1,355,-1,-1,-1,-1"
+                        "startLines": "-1,-1,-1,8,-1,-1,-1,-1,-1,-1",
+                        "startColumns": "-1,-1,-1,4,-1,-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,-1,-1,360,-1,-1,-1,-1,-1,-1",
+                        "endColumns": "-1,-1,-1,44,-1,-1,-1,-1,-1,-1",
+                        "endOffsets": "-1,-1,-1,400,-1,-1,-1,-1,-1,-1"
                     },
                     "to": {
                         "startLines": "204,205,206,207,208,209,228,229,230,231",
