@@ -211,7 +211,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     db.updateStatus(db,mAccount.getAccountID());
                 }else{
                     Bill bill = mAccount.getBill();
-                    tvBillAmount.setText("" + bill.getTotalBilledAmount());
+                    tvBillAmount.setText("" + bill.getTotalAmount());
                 }
             }
 

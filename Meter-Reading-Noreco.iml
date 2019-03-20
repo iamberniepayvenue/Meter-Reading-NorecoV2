@@ -139,7 +139,6 @@
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:viewmodel:1.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/libs/zbar.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4:27.1.1@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.android.support:multidex-instrumentation:1.0.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:cardview-v7:27.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:design:27.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:runtime:1.1.0@aar" level="project" />
@@ -163,6 +162,9 @@
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.1.3@jar" level="project" />
     <orderEntry type="module" module-name="lib" />
     <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-27" level="project" />
+<<<<<<< HEAD
     <orderEntry type="module" module-name="lib" />
+=======
+>>>>>>> development
   </component>
 </module>

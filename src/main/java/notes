@@ -30,3 +30,7 @@ Check Meter Type:
 kWhreading = threshold from billing_profile to determine the consumption wither very low or very high.
 
 PrintedSM = Printed status Stop Meter
+
+App Version :
+
+ versionName 1.1 - reset classification tag in Accounts.java after searching,avoid wrong calculation, and change Bill amount to total amount in ViewDetails

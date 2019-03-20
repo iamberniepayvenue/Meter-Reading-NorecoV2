@@ -19,9 +19,9 @@ android {
         multiDexEnabled true
         //ADD THIS LINE:
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionName '1'
-        versionNameSuffix 'noreco'
-        versionCode 1
+        versionName '1.1'
+        versionNameSuffix ' noreco'
+        versionCode 2
     }
     buildTypes {
         release {
