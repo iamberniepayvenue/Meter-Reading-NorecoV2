@@ -261,7 +261,12 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     if(billMonth == null) {
                                         String acclas = getAccntClass(routeArrayList);
                                         billMonth = DB.getBillMonth(DB,acclas);
-                                        downloadAccounts(getContext(),0,"1"); //String rd
+                                        if(!billMonth.equalsIgnoreCase("")) {
+                                            downloadAccounts(getContext(),0,"1"); //String rd
+                                        }else{
+                                            setSnackbar("Rates schedule not downloaded...");
+                                            snackbar.show();
+                                        }
                                     }else{
                                         downloadAccounts(getContext(),0,"1"); //String rd
                                     }
@@ -303,20 +308,34 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                         if(billMonth == null) {
                                             String acclas = getAccntClass(routeArrayList);
                                             billMonth = DB.getBillMonth(DB,acclas);
-                                            checkDataNotSuccessfullyDownloaded();
-                                            downloadAccounts(getContext(), 0, "1");
+                                            if(!billMonth.equalsIgnoreCase("")) {
+                                                checkDataNotSuccessfullyDownloaded();
+                                                downloadAccounts(getContext(), 0, "1");
+                                            }else{
+                                                setSnackbar("Rates schedule not downloaded...");
+                                                snackbar.show();
+                                            }
                                         }else{
                                             checkDataNotSuccessfullyDownloaded();
                                             downloadAccounts(getContext(), 0, "1");
                                         }
                                     }
                                 }else if (jsonArray.length() == 0 && routeCount > 0) {
+                                    if (mDialog.isShowing()) {
+                                        mDialog.dismiss();
+                                    }
+
                                     getRoutes();
                                     if(billMonth == null) {
                                         String acclas = getAccntClass(routeArrayList);
                                         billMonth = DB.getBillMonth(DB,acclas);
-                                        checkDataNotSuccessfullyDownloaded();
-                                        downloadAccounts(getContext(), 0, "1");
+                                        if(!billMonth.equalsIgnoreCase("")) {
+                                            checkDataNotSuccessfullyDownloaded();
+                                            downloadAccounts(getContext(), 0, "1");
+                                        }else{
+                                            setSnackbar("Rates schedule not downloaded...");
+                                            snackbar.show();
+                                        }
                                     } else {
                                         checkDataNotSuccessfullyDownloaded();
                                         downloadAccounts(getContext(), 0, "1");
@@ -328,7 +347,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("" + e.getMessage());
                             snackbar.show();
                         }
-
                     }
                 });
 
@@ -599,18 +617,20 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     + "&billmoth=" + billMonth;
 
 
-            if(rd.equalsIgnoreCase("1")) {
-                cmdAccounts = cmdAccounts + "&rd=1";
-            }else {
-                cmdAccounts = cmdAccounts + "&rd=0";
-            }
+//            if(rd.equalsIgnoreCase("1")) {
+//                cmdAccounts = cmdAccounts + "&rd=0";
+//            }else {
+//                cmdAccounts = cmdAccounts + "&rd=0";
+//            }
+
+            cmdAccounts = cmdAccounts + "&rd=0";
 
             if (r.getDownloadRef().equalsIgnoreCase("1")) {
                 cmdAccounts = cmdAccounts + "&sequenceNoFrom=" + r.getSequenceNoFrom() + "&sequenceNoTo=" + r.getSequenceNoTo();
             }
 
 
-            Log.e(TAG, "Accounts: " + cmdAccounts);
+
             new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID(),String.valueOf(r.getPrimaryKey()));
         } else {
             if (mDialog.isShowing()) {
@@ -1542,7 +1562,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 @Override
                 public void onRequestListener(String response, String param) {
 
-                    mTvView.append(response);
+
 
                     if (response.equalsIgnoreCase("500")) {
                         if (mDialog.isShowing()) {
@@ -1634,8 +1654,12 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 String routeIDPrimaryKey = strings[3];
                                 account.setDueDate(dueDate);
                                 account.setRoutePrimaryKey(routeIDPrimaryKey);
-                                saveCount = saveCount + DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
+                                int s = DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
+                                saveCount = saveCount + s;
                                 Constant.decoy_save_account = Constant.decoy_save_account + saveCount;
+                                if(s == 1) {
+                                    mTvView.append(response);
+                                }
                             }
                         } // end loop
 

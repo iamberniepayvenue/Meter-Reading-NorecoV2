@@ -585,6 +585,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         int val = accountIsExist(db, account.getAccountID());
+        //Log.e(TAG,"val:" + val);
         /**rd  means redownload*/
         int count = 0;
         if (val == 0) {
