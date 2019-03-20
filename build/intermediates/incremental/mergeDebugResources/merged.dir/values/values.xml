@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2" xmlns:ns2="http://schemas.android.com/tools">
     <string-array name="array_hosts">
-        <item>192.168.20.254</item>
+        <!--<item>192.168.20.254</item>-->
         <!--192.168.5.240-->
         <!--<item>103.105.212.68</item>-->
-        <!--<item>"dev.teslasuite.com"</item>-->
+        <item>"dev.teslasuite.com"</item>
     </string-array>
     <array name="nav_drawer_icons">
         <item>@drawable/ic_reader</item>

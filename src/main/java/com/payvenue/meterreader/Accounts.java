@@ -164,9 +164,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 
         Log.e(TAG,"_districtID: "+ _districtID);
 
-        /**Initalize Rate Segment*/
-        listRateSegment = db.getRateSegment(db);
-
         if (!MainActivity.gps.canGetLocation()) {
             MainActivity.gps.showSettingAlert();
         }
@@ -185,6 +182,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     }
 
     public void setData() {
+        isHigherVoltage = false;
+        isLowerVoltage = false;
+        isMotherMeter = false;
+        /**Initalize Rate Segment*/
+        listRateSegment = db.getRateSegment(db);
 
         a_class = mAccount.getAccountClassification();
         policiesArrayList.clear();
@@ -1192,7 +1194,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                             isSearch = false;
                             callAccounts();
                             setValues();
-                            Log.e(TAG, "here: " + originalAccount.getAccountID());
                             int searchCloseButtonId = searchView.getContext().getResources()
                                     .getIdentifier("android:id/search_src_text", null, null);
                             EditText et = (EditText) findViewById(searchCloseButtonId);

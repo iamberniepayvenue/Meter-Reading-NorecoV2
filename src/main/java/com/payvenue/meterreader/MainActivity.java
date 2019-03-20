@@ -1,6 +1,7 @@
 package com.payvenue.meterreader;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity  {
     ListView pairedListView;
     ListView newDevicesListView;
     Menu mMenu;
+    public static String versionName = "";
 
     public interface Modes {
 
@@ -347,8 +349,6 @@ public class MainActivity extends AppCompatActivity  {
         setConnSettings();
         exportLogo();
 
-
-        Log.e(TAG,"onabckbuttonmain: " + OnBackButton);
     }//end of create
 
 
@@ -373,16 +373,20 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    @SuppressLint("SetTextI18n")
     public static void setReader() {
 
         db.getReader(db);
         header = navigationView.getHeaderView(0);
         tv_userid = (TextView) header.findViewById(R.id.tv_userid);
         tv_name = (TextView) header.findViewById(R.id.tv_name);
-
+        TextView tv_version = header.findViewById(R.id.tv_version);
 
         if (MainActivity.reader != null) {
             tv_name.setText(reader.getReaderName());
+            String version[] = BuildConfig.VERSION_NAME.split(" ");
+            String txt = "App Version: " + version[0];
+            tv_version.setText(txt);
             tv_userid.setText(reader.getReaderID());
         }
     }
