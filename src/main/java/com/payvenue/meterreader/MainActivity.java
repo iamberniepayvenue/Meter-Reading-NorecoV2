@@ -14,9 +14,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -42,7 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixolon.printer.BixolonPrinter;
-import com.bxl.config.editor.BXLConfigLoader;
 import com.mapswithme.maps.api.MapsWithMeApi;
 import com.payvenue.meterreader.Fragments.FragmentDownLoad;
 import com.payvenue.meterreader.Fragments.FragmentFound;
@@ -51,7 +50,6 @@ import com.payvenue.meterreader.Fragments.FragmentReading;
 import com.payvenue.meterreader.Fragments.FragmentRoute;
 import com.payvenue.meterreader.Fragments.FragmentUpload;
 import com.payvenue.meterreader.Fragments.RatesFragment;
-import com.woosim.bt.WoosimPrinter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,19 +66,13 @@ import Utility.CommonFunc;
 import Utility.GPSTracker;
 import Utility.MobilePrinter;
 import Utility.MyPreferences;
-import Utility.MyProgressBar;
 import Utility.WebRequest;
 import device.scanner.DecodeResult;
 import device.scanner.IScannerService;
 
 
 public class MainActivity extends AppCompatActivity  {
-    private static Thread thread;
-    private static Handler handler;
 
-    // private DataBaseHandler datasource;
-
-    // int prevPosition = 0;
     public CharSequence mTitle;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -121,25 +113,15 @@ public class MainActivity extends AppCompatActivity  {
     public static Context mContext;
 
 
-    static WoosimPrinter woosim;
-    static private byte[] cardData ;
-    //static private byte[] cardData = new byte[113];
-    static private byte[] extractdata = new byte[300];
-    static String EUC_KR = "EUC-KR";
-    static final int LINE_CHARS = 62;
+
     private static final String TAG = "MainActivity";
-    private  MyProgressBar myProgressBar;
     public static int OnBackButton = 0;
 
     int bixTag = 0;
-    private int portType = BXLConfigLoader.DEVICE_BUS_BLUETOOTH;
-    //private static NorecoBixolonPrinter bxlPrinter = null;
     MyPreferences myPreferences;
-
     ListView pairedListView;
     ListView newDevicesListView;
     Menu mMenu;
-    public static String versionName = "";
 
     public interface Modes {
 
@@ -151,11 +133,6 @@ public class MainActivity extends AppCompatActivity  {
         String MODE_5 = "Found";
     }
 
-//    static {
-//        System.loadLibrary("opencv_java");
-//    }
-
-    @SuppressWarnings("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -169,9 +146,6 @@ public class MainActivity extends AppCompatActivity  {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.device_list);
         setResult(Activity.RESULT_CANCELED);
-
-        //woosim = new WoosimPrinter();
-        //woosim.setHandle(acthandler);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -578,26 +552,50 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
-//        Log.e(TAG,"address: " + address);
-//        Log.e(TAG,"OnBackButton: " + OnBackButton);
-//        if(OnBackButton == 0) {
-//            if (address != null) {
-//                if(!mIsConnected){
-//                    int res = printer.setConnection(address);
-//                    if (res == 1) {
-//                        mIsConnected = true;
-//                        Toast.makeText(this,"printer connected",Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        }
-
-        //intentFilter();
+        initiatePrinterConnectionAfterClose();
         Log.e(TAG,"onResume");
 
         super.onResume();
-
     }
+
+    public void initiatePrinterConnectionAfterClose() {
+        new printerConnectAsync(this).execute();
+    }
+
+    public class printerConnectAsync extends AsyncTask<Void,Void,Void> {
+        Context context;
+
+        public printerConnectAsync(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... strings) {
+            intentFilter();
+            if(!mIsConnected) {
+                String add = myPreferences.getPrefString("printeradd");
+                if(add != null) {
+                    whichPrinter = myPreferences.getPrefString("whichPrinter");
+                    if (printer == null) {
+                        Log.e(TAG, "printer is null");
+                        printer = MobilePrinter.getInstance(context);
+                    }
+
+                    int stat = printer.setConnection(add);
+                    if (stat == 1) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setSuccessConnection();
+                            }
+                        });
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
 
     //region printing
 
@@ -688,6 +686,7 @@ public class MainActivity extends AppCompatActivity  {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.e(TAG,"mReceiver: " + action);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 unregisterReceiver(mReceiver);
@@ -718,7 +717,7 @@ public class MainActivity extends AppCompatActivity  {
             String info = ((TextView) v).getText().toString();
             address = info.substring(info.length() - 17);
             String printerName = info.substring(0,info.length()-17);
-            myPreferences.savePrefString("printeradd",address);
+
             int reVal = 0;
             if(!printerName.toLowerCase().contains("woosim")) {
                 whichPrinter = "bix";
@@ -731,7 +730,9 @@ public class MainActivity extends AppCompatActivity  {
                 reVal = printer.setConnection(address);
             }
 
-            Log.e(TAG,"printer address: " + address);
+            myPreferences.savePrefString("printeradd",address);
+            myPreferences.savePrefString("whichPrinter",whichPrinter);
+
 
             if (reVal == 1) {
                 setSuccessConnection();

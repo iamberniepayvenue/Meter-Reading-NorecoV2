@@ -254,7 +254,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         rowObject.put(DBInfo.COOPID, coopName);
                         rowObject.put("DistrictID", districtID);
                         rowObject.put("RouteNo", routeID);
-                        rowObject.put("AccountID", accountID);
+                        rowObject.put("AccountID", accountID.trim());
                         rowObject.put("LastName", cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
                         rowObject.put("FirstName", cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
                         rowObject.put("MiddleName", cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
@@ -305,7 +305,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                         rowObject.put("ExportDateCounter", exportDateCounter);
                         mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
-                        rowObject.put("billmonth", mBillMonth);
+                        rowObject.put("billmonth", mBillMonth.trim());
 
 
                         ArrayList<Components> summary = new ArrayList<>();

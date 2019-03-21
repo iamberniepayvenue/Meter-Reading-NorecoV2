@@ -159,5 +159,6 @@
     <orderEntry type="module" module-name="lib" />
     <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-27" level="project" />
     <orderEntry type="module" module-name="lib" />
+    <orderEntry type="module" module-name="lib" />
   </component>
 </module>
