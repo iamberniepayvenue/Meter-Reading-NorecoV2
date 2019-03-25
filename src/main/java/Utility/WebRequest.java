@@ -71,13 +71,13 @@ public class WebRequest {
                     }
                 }
 
-                if(myType.equalsIgnoreCase("accounts")) {
+                if (myType.equalsIgnoreCase("accounts")) {
                     /***
                      *  param2 = duedate
                      *  params = routeid
                      * */
                     listener.onSuccess(myType, res, params, url, param2);
-                }else {
+                } else {
                     listener.onSuccess(myType, res, params, param2, param3);
                 }
             }
@@ -113,7 +113,7 @@ public class WebRequest {
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 
-    public void sendRequestUpload(String url, final String myType, final String params,final String param2){
+    public void sendRequestUpload(String url, final String myType, final String params, final String param2) {
         /**
          *      params = reading data in json form
          *      param2 = count of data for uploading from cursor
@@ -130,12 +130,12 @@ public class WebRequest {
                                 JSONObject obj = response.getJSONObject(i);
                                 res = obj.getString("result");
                                 if (res.equalsIgnoreCase("404")) {
-                                    requestListener.onRequestListener("404","");
+                                    requestListener.onRequestListener("404", "");
                                 } else {
                                     JSONObject array = new JSONObject(params);
                                     String columnID = array.getString("columnid");
                                     MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
-                                    requestListener.onRequestListener("200",param2);
+                                    requestListener.onRequestListener("200", param2);
                                 }
                             }
                         }
@@ -147,7 +147,7 @@ public class WebRequest {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestListener.onRequestListener("500",error.getMessage());
+                requestListener.onRequestListener("500", error.getMessage());
             }
         });
 
@@ -157,16 +157,16 @@ public class WebRequest {
 
 
     public interface RequestListener {
-        void onRequestListener(String response,String param);
+        void onRequestListener(String response, String param);
     }
 
-    public void setRequestListener(String url,String myType,String params,String param2,RequestListener listener) {
+    public void setRequestListener(String url, String myType, String params, String param2, RequestListener listener) {
         this.requestListener = listener;
         //Log.e(TAG,"upload : " + url);
-        sendRequestUpload(url,myType,params,param2);
+        sendRequestUpload(url, myType, params, param2);
     }
 
-    public void setRequestListenerDownload(String url,RequestListener listener) {
+    public void setRequestListenerDownload(String url, RequestListener listener) {
         this.requestListener = listener;
         download(url);
     }
@@ -176,12 +176,12 @@ public class WebRequest {
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                requestListener.onRequestListener(response.toString(),"");
+                requestListener.onRequestListener(response.toString(), "");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestListener.onRequestListener("500",error.getMessage());
+                requestListener.onRequestListener("500", error.getMessage());
             }
         });
 

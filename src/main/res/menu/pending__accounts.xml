@@ -4,8 +4,8 @@
     app:showAsAction="always">
 
     <item
-        android:id="@+id/filter_account"
-        android:title="Filter by Sequence Number"
+        android:id="@+id/filter_serial_number"
+        android:title="Filter by Serial Number"
         app:showAsAction="never" />
 
 
@@ -13,10 +13,18 @@
         android:id="@+id/filter_name"
         android:title="Filter by Name"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/filter_account_id"
+        android:title="Filter by Account ID"
+        app:showAsAction="never" />
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/turn_off_filter"
+        android:title="Turn Off Filter"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/psearch"
         android:title="Search"
         android:icon="@drawable/ic_search"
         app:showAsAction="collapseActionView|ifRoom"

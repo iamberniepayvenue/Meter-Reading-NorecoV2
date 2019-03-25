@@ -1016,6 +1016,7 @@ id fill
 id fill_horizontal
 id fill_vertical
 id filter_account
+id filter_account_id
 id filter_name
 id fixed
 id forever
@@ -1259,6 +1260,7 @@ id transition_layout_save
 id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
+id turn_off_filter
 id tvExportPrevLabel
 id tvTotalCurrentDue
 id tvUnderOverRecovery
