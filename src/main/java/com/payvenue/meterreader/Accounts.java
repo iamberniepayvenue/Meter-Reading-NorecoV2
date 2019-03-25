@@ -101,7 +101,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     double totalSeniorDiscount;
     double demandKWMininum;
     double totalArrears = 0, arrearsPenalty = 0;
-    boolean canAvailLifelineDiscount = false, canAvailSCDiscount = false;
+    boolean canAvailLifelineDiscount = false;
+    boolean canAvailSCDiscount = false;
     boolean scInvalidDate = false;
     boolean isSCOverPolicy = false;
     ArrayList<Rates> myRates = new ArrayList<>();
@@ -979,6 +980,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isStopMeter = false;
+                        isNoneAverage = false;
                         setKwh(0, 1);
                     }
                 });
@@ -1606,17 +1608,22 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     mp.printText("                   (NORECO2)\n");
                     mp.printText("             STATEMENT OF ACCOUNT\n");
                     mp.printText("================================================\n");
+                    mp.printText("\n");
+                    mp.printextEmphasizedNormalFont("Account No:" + mAccount.getAccountID() + "\n");
+                    mp.printextEmphasizedNormalFont(name + "\n");
                 } else {
+                    mp.setDeviceTag(0);
                     String path = CommonFunc.getPrivateAlbumStorageDir(this, "noreco_logo.bmp").toString();
                     mp.printBitmap(path);
+                    mp.printText("\n");
+                    mp.printextEmphasized("Account No:" + mAccount.getAccountID() + "\n");
+                    mp.printextEmphasized(name + "\n");
                 }
             } else {
                 bp.printBitmap();
             }
 
-            mp.printText("\n");
-            mp.printextEmphasized("Account No:" + mAccount.getAccountID() + "\n");
-            mp.printextEmphasized(name + "\n");
+
             mp.printextEmphasizedNormalFont(mAccount.getAddress() + "\n");
             mp.printText("Meter No:" + mAccount.getMeterSerialNo() + "\n");
             mp.printText("Period Covered: " + CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) + "\n");

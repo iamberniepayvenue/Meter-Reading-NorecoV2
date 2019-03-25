@@ -392,7 +392,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public void checkDataNotSuccessfullyDownloaded() {
 
-        Log.e(TAG,"sulod deri sa?");
         if (myPreferences.getPrefString(Constant.RATE_SCHEDULE_STATUS).equalsIgnoreCase(Constant.NO)) {
             downloadRateSchedule();
         }
@@ -493,7 +492,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadRateCode(Context context) {
         String isDownload = myPreferences.getPrefString(Constant.RATE_CODE_STATUS);
-        Log.e(TAG,"RATE_CODE_STATUS: " + isDownload);
         if(!isDownload.equalsIgnoreCase(Constant.YES)) {
             mDialog.setMessage("DownLoading Data.Please wait.");
             mDialog.show();
@@ -522,7 +520,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadRateComponent(Context context) {
         String isDownload = myPreferences.getPrefString(Constant.RATE_COMPONENT_STATUS);
-        Log.e(TAG,"RATE_COMPONENT_STATUS:" + isDownload);
+
         if(!isDownload.equalsIgnoreCase(Constant.YES)) {
             mDialog.setMessage("DownLoading Data.Please wait.");
             mDialog.show();
@@ -597,6 +595,16 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         if(billMonth == null) {
             String acclas = getAccntClass(routeArrayList);
             billMonth = DB.getBillMonth(DB,acclas);
+
+            if(billMonth == "") {
+                if (mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+                setSnackbar("No Bill Month, please download again...");
+                snackbar.show();
+                return;
+            }
         }
 
 
@@ -737,7 +745,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         @Override
         protected Void doInBackground(String... strings) {
-            Log.e(TAG, "rateschedule: " + strings[0]);
+
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -913,7 +921,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             }
 
                             if (Constant.billingpolicysave > 0 && Constant.billingpolicysize == Constant.billingpolicysave) {
-                                Log.e(TAG, "billingpolicysave: " + Constant.billingpolicysave);
                                 setSnackbar("Billing Policy Completed.");
                                 snackbar.show();
                                 myPreferences.savePrefString(Constant.POLICY_STATUS, Constant.YES);
@@ -1019,7 +1026,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("Rate Code completed...");
                             snackbar.show();
                             myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.YES);
-                            Log.e(TAG,"10000");
                             downloadRateComponent(context);
                         }
 
@@ -1160,7 +1166,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         @Override
         protected Void doInBackground(String... strings) {
 
-            Log.e(TAG,"downloadRateComponentAsync: "+strings[0]);
+
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1224,7 +1230,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
 
                         if (Constant.ratecomponentsave > 0 && Constant.ratecomponentsize == Constant.ratecomponentsave) {
-                            Log.e(TAG, "ratecomponentsave: " + Constant.ratecomponentsave);
                             setSnackbar("Rate Component completed...");
                             snackbar.show();
                             myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS, Constant.YES);

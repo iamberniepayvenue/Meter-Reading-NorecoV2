@@ -644,9 +644,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("                   (NORECO2)\n");
                 mp.printText("             STATEMENT OF ACCOUNT\n");
                 mp.printText("================================================\n");
+                mp.printText("\n");
+                mp.printextEmphasizedNormalFont("Account No:"+ mAccount.getAccountID()+"\n");
+                mp.printextEmphasizedNormalFont(name+"\n");
             }else{
+                mp.setDeviceTag(0);
                 String path = CommonFunc.getPrivateAlbumStorageDir(this, "noreco_logo.bmp").toString();
                 mp.printBitmap(path);
+                mp.printText("\n");
+                mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
+                mp.printextEmphasized(name+"\n");
             }
         } else {
             bp.printBitmap();
@@ -664,9 +671,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        CommonFunc.printingNormal("Consumption:" + mAccount.getActualConsumption(), "BillMonth:" + mAccount.getBillMonth() + "\n", 0, 0, 0, mPrinter);
 
 
-        mp.printText("\n");
-        mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
-        mp.printextEmphasized(name+"\n");
+
         mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
         mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
         mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");

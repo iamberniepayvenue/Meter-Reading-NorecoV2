@@ -71,6 +71,23 @@ public class MobilePrinter {
     };
 
 
+    public void printext(String leftText, String rightText) {
+        int indent_chars = 55;
+        if(device_tag == 1) {
+            indent_chars = 44;
+        }
+
+        int padding = indent_chars - leftText.length() - rightText.length();
+        String paddingChar = " ";
+        for (int i = 0; i < padding; i++) {
+            paddingChar = paddingChar.concat(" ");
+        }
+
+        woosim.saveSpool(EUC_KR, leftText + paddingChar + rightText, 0, false);
+        woosim.printSpool(true);
+
+    }
+
     public void printText(String leftText, String rightText) {
         //byte[] init = {0x1b, '@'};
         //woosim.controlCommand(init, init.length);
@@ -79,6 +96,7 @@ public class MobilePrinter {
 //            LINE_CHARS = 47;
 //        }
 
+        LINE_CHARS = 63;
         if(device_tag == 1) {
             LINE_CHARS = 47;
         }
