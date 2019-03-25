@@ -219,7 +219,7 @@ public class AccountListActivity extends AppCompatActivity {
                 currentfilter = "MeterSerialNo";
                 break;
             case R.id.filter_name:
-                currentfilter = "LastName";
+                currentfilter = "Name";
                 getSearchData(routecode, currentfilter);
                 break;
             case R.id.filter_account_id:

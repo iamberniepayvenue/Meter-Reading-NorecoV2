@@ -1063,16 +1063,18 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         String details;
         SQLiteDatabase sql = db.getReadableDatabase();
         String statement = "Select ReadingDetails,FirstName,MiddleName,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification,Notes1 From "
-                + DBInfo.TBLACCOUNTINFO;
+                + DBInfo.TBLACCOUNTINFO + " Where ReadStatus='" + mode + "' AND Notes1='" + routePrimarykey + "'";
 
-        if(!filter.equalsIgnoreCase("")){
-            statement = statement + " Where " + filter + " Like '%" +item+ "%'";
-        }else {
-            statement = statement + " Where (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
+        if(!filter.equalsIgnoreCase("") && !filter.equalsIgnoreCase("Name")){
+            statement = statement + " And " + filter + " Like '%" +item+ "%'";
+        } else if (filter.equalsIgnoreCase("Name")){
+            statement = statement + " And (LastName Like '%" + item + "%' Or FirstName Like '%" + item + "%' Or MiddleName Like '%" + item + "%')";
+        } else {
+            statement = statement + " And (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
                     + item + "%' Or MeterSerialNo Like '%" + item + "%')";
         }
 
-        statement = statement + " And ReadStatus='" + mode + "' AND Notes1='" + routePrimarykey + "'";
+
 
         Log.e(TAG, "searchItem: " + statement);
         Cursor cursor = sql.rawQuery(statement, null);

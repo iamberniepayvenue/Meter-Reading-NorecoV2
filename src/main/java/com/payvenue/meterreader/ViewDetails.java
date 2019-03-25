@@ -49,13 +49,7 @@ import static com.payvenue.meterreader.MainActivity.whichPrinter;
 public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
 
-    int myPurpose = 0;
-    String _disctrictNo = "";
 
-    Double latitude = 0.00;
-    Double longtitude = 0.00;
-    Double curlat = 0.00;
-    Double curlong = 0.00;
     private static final String TAG = "ViewDetails";
 
     //ConstraintLayout constraintLayout;
@@ -63,6 +57,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     TextView viewacctid, viewacctserial, viewacctname, viewacctadd, txtclass, txtmeterbrand,
             mReading, mPrevReading, mConsume, mLocation, tvBillAmount;
     Button btnViewMap, btnReadAccount, btnNotFound;
+    SearchView searchView;
+    Snackbar snackbar;
+
     ArrayList<RateSegmentModel> listRateSegment = new ArrayList<>();
     public DataBaseHandler db;
     private boolean IsMotherMeter = false;
@@ -72,10 +69,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     ArrayList<String> arrearsBillMonthList = new ArrayList<>();
     ArrayList<String> arrearsPenaltyList = new ArrayList<>();
     ArrayList<String> arrearsBillNumberList = new ArrayList<>();
-
+    int myPurpose = 0;
+    String _disctrictNo = "";
+    Double latitude = 0.00;
+    Double longtitude = 0.00;
+    Double curlat = 0.00;
+    Double curlong = 0.00;
+    String currentfilter = "";
 
     BixolonPrinterClass bp;
-    Snackbar snackbar;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -97,7 +100,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             _disctrictNo = b.getString("disctrictNo");
         }
 
-        Log.e(TAG,"_districtID: "+ _disctrictNo);
+        Log.e(TAG, "_districtID: " + _disctrictNo);
         originalAccount = MainActivity.selectedAccount;
         callAccounts();
         initViews();
@@ -153,10 +156,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
     }
 
     public void setValues() {
-        if(mAccount == null){
+        if (mAccount == null) {
             setSnackbar("No results found...");
             snackbar.show();
-        }else{
+        } else {
 
             String fname = "";
             String mname = "";
@@ -167,34 +170,34 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mname = mAccount.getMiddleName();
                 lname = mAccount.getLastName();
 
-                if(fname.equalsIgnoreCase("")) {
+                if (fname.equalsIgnoreCase("")) {
                     fname = "";
                 }
 
-                if(fname.equalsIgnoreCase(".")) {
+                if (fname.equalsIgnoreCase(".")) {
                     fname = "";
                 }
 
-                if(mname.equalsIgnoreCase("")) {
+                if (mname.equalsIgnoreCase("")) {
                     mname = "";
                 }
 
-                if(mname.equalsIgnoreCase(".")) {
+                if (mname.equalsIgnoreCase(".")) {
                     mname = "";
                 }
 
-                if(lname.equalsIgnoreCase("")) {
+                if (lname.equalsIgnoreCase("")) {
                     lname = "";
                 }
 
-                if(lname.equalsIgnoreCase(".")) {
+                if (lname.equalsIgnoreCase(".")) {
                     lname = "";
                 }
 
-                fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+                fullname = fname.trim() + " " + mname.trim() + " " + lname.trim();
 
-            }catch (NullPointerException e) {
-                Log.e(TAG,"NullPointerException: "+ e.getMessage());
+            } catch (NullPointerException e) {
+                Log.e(TAG, "NullPointerException: " + e.getMessage());
             }
 
             viewacctid.setText(mAccount.getAccountID());
@@ -207,9 +210,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mPrevReading.setText(mAccount.getInitialReading());
             mConsume.setText(mAccount.getConsume());
             if (myMode == MainActivity.Modes.MODE_2 || myMode == MainActivity.Modes.MODE_3) {
-                if(mAccount.getBill() == null) {
-                    db.updateStatus(db,mAccount.getAccountID());
-                }else{
+                if (mAccount.getBill() == null) {
+                    db.updateStatus(db, mAccount.getAccountID());
+                } else {
                     Bill bill = mAccount.getBill();
                     tvBillAmount.setText("" + bill.getTotalAmount());
                 }
@@ -263,7 +266,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.view_details, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
@@ -277,7 +280,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -285,7 +288,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                                 callAccounts();
                                 setValues();
                             }
-                        },1000);
+                        }, 1000);
                     } else if (s.length() == 0) {
                         //TODO: reset the displayed data
                     }
@@ -300,12 +303,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(),originalAccount.getRoutePrimaryKey(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(), originalAccount.getRouteNo(), originalAccount.getRoutePrimaryKey(), 0);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            try{
+                            try {
                                 callAccounts();
                                 setValues();
 
@@ -316,11 +319,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
                                 //Clear query
                                 searchView.setQuery("", false);
-                            }catch (NullPointerException e) {
-                                Log.e(TAG,"closeButton: " + e.getMessage());
+                            } catch (NullPointerException e) {
+                                Log.e(TAG, "closeButton: " + e.getMessage());
                             }
                         }
-                    },1000);
+                    }, 1000);
                 }
             });
         }
@@ -346,9 +349,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 menu.findItem(R.id.btnRead).setVisible(false);
                 menu.findItem(R.id.btnCancel).setVisible(false);
                 break;
-            case MainActivity.Modes.MODE_2://3333
-            case MainActivity.Modes.MODE_3:
+            case MainActivity.Modes.MODE_2://read
+            case MainActivity.Modes.MODE_3://printed
                 menu.findItem(R.id.search).setVisible(false);
+                menu.findItem(R.id.filter_serial_number).setVisible(false);
+                menu.findItem(R.id.filter_name).setVisible(false);
+                menu.findItem(R.id.filter_account_id).setVisible(false);
+                menu.findItem(R.id.turn_off_filter).setVisible(false);
                 if (mAccount.getUploadStatus().equals("1")) {
                     menu.findItem(R.id.btnEdit).setVisible(false);
                     menu.findItem(R.id.btnCancel).setVisible(false);
@@ -357,9 +364,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     menu.findItem(R.id.btnCancel).setVisible(true);
                 }
 
-                if(!mAccount.getReadStatus().equalsIgnoreCase("Cannot Generate")){
+                if (!mAccount.getReadStatus().equalsIgnoreCase("Cannot Generate")) {
                     menu.findItem(R.id.btnGen).setVisible(true);
-                }else{
+                } else {
                     menu.findItem(R.id.btnGen).setVisible(false);
                     setSnackbar("Stop meter...");
                 }
@@ -368,12 +375,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 menu.findItem(R.id.btnRead).setVisible(false);
 
                 break;
-            case MainActivity.Modes.MODE_4://4444
-                menu.findItem(R.id.search).setVisible(false);
+            case MainActivity.Modes.MODE_4://not found
+                //menu.findItem(R.id.search).setVisible(false);
                 menu.findItem(R.id.btnGen).setVisible(false);
                 menu.findItem(R.id.btnEdit).setVisible(false);
                 menu.findItem(R.id.btnRead).setVisible(true);
                 menu.findItem(R.id.btnCancel).setVisible(false);
+
                 break;
         }
 
@@ -388,61 +396,71 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-
-        if (id == R.id.btnGen) {
-
-            if (CommonFunc.toDigit(mAccount.getConsume()) < 0) {
-                Toast.makeText(this,
-                        "Can't Generate Billing for erroneous reading.",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                if (MainActivity.mIsConnected) {
-
-                    //String path = CommonFunc.getPrivateAlbumStorageDir(this, "noreco_logo.bmp").toString();
-
-//                    String data = "Total (inc VAT):  " + "  $8.00\n" +
-//                            "VAT amount (20%): " + "  $1.33\n" +
-//                            "CARD payment:     " + "  $8.00\n" +
-//                            "Change due:       " + "  $0.00\n\n";
-//                    MainActivity.getPrinterInstance().beginTransactionPrint();
-//                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.noreco);
-//                    MainActivity.getPrinterInstance().printImage(bitmap,55, NorecoBixolonPrinter.ALIGNMENT_CENTER,60);
-//                    MainActivity.getPrinterInstance().printText(data, NorecoBixolonPrinter.ALIGNMENT_LEFT,NorecoBixolonPrinter.ATTRIBUTE_NORMAL,1);
-//                    MainActivity.getPrinterInstance().endTransactionPrint();
-                    //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.noreco);
-                    preparePrint();
+        switch (id) {
+            case android.R.id.home:
+                this.finish();
+                break;
+            case R.id.btnGen:
+                if (CommonFunc.toDigit(mAccount.getConsume()) < 0) {
+                    Toast.makeText(this,
+                            "Can't Generate Billing for erroneous reading.",
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
+                    if (MainActivity.mIsConnected) {
+                        preparePrint();
+                    } else {
+                        Toast.makeText(getBaseContext(), "Printer is not connected.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        }
+                break;
 
-        if (id == R.id.btnEdit) {
-            MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 0);
-            int editCount = db.getEditAttemp(db, mAccount.getAccountID());
+            case R.id.btnEdit:
+                MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 0);
+                int editCount = db.getEditAttemp(db, mAccount.getAccountID());
 
 //            if(editCount == 3) {
 //                Toast.makeText(getBaseContext(), "Exceed the maximum count of editing...", Toast.LENGTH_SHORT).show();
 //            }else{
-            Intent intent = new Intent(this, Accounts.class);
-            intent.putExtra("disctrictNo",_disctrictNo);
-            startActivityForResult(intent, 5);
+                Intent intent = new Intent(this, Accounts.class);
+                intent.putExtra("disctrictNo", _disctrictNo);
+                startActivityForResult(intent, 5);
 //            }
+                break;
+
+            case R.id.btnRead:
+                Intent intent1 = new Intent(this, Accounts.class);
+                intent1.putExtra("disctrictNo", _disctrictNo);
+                startActivityForResult(intent1, 5);
+                break;
+
+            case R.id.btnCancel:
+                db.updateStatus(db, mAccount.getAccountID());
+                finish();
+                break;
+
+            case R.id.filter_serial_number:
+                currentfilter = "MeterSerialNo";
+                updateMenuTitle();
+                break;
+
+            case R.id.filter_name:
+                currentfilter = "Name";
+                updateMenuTitle();
+                break;
+
+            case R.id.filter_account_id:
+                currentfilter = "AccountID";
+                updateMenuTitle();
+                break;
+
+            case R.id.turn_off_filter:
+                currentfilter = "";
+                updateMenuTitle();
+                break;
+
+                default:
         }
 
-        if (id == R.id.btnRead) {
-            Intent intent = new Intent(this, Accounts.class);
-            intent.putExtra("disctrictNo",_disctrictNo);
-            startActivityForResult(intent, 5);
-        }
-
-        if (id == R.id.btnCancel) {
-            db.updateStatus(db, mAccount.getAccountID());
-            finish();
-        }
 
         return super.onOptionsItemSelected(item);
 
@@ -493,13 +511,23 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             case R.id.btnReadAccount:
 
                 Intent intent = new Intent(this, Accounts.class);
-                intent.putExtra("disctrictNo",_disctrictNo);
+                intent.putExtra("disctrictNo", _disctrictNo);
                 startActivityForResult(intent, 1);
 
                 break;
 
         }
 
+    }
+
+
+    private void updateMenuTitle() {
+
+        if(!currentfilter.equalsIgnoreCase("")) {
+            searchView.setQueryHint(currentfilter);
+        } else {
+            searchView.setQueryHint("Search");
+        }
     }
 
     private void simplifyArrears() {
@@ -540,8 +568,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         int tag = MainActivity.myMode == "Read" ? 3 : 4;
 
-        Log.e(TAG,"status: " + MainActivity.myMode + " tag: "+ tag);
-        db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), tag);
+        db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), tag);
         this.finish();
         Intent intent = new Intent(this, ViewDetails.class);
         startActivity(intent);
@@ -637,7 +664,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp = MobilePrinter.getInstance(this);
             }
 
-            if(bixTag == 1) {
+            if (bixTag == 1) {
                 mp.setDeviceTag(1);
                 mp.printText("     Negros Oriental II Electric Cooperative\n");
                 mp.printText("             Real St., Dumaguete City\n");
@@ -645,15 +672,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("             STATEMENT OF ACCOUNT\n");
                 mp.printText("================================================\n");
                 mp.printText("\n");
-                mp.printextEmphasizedNormalFont("Account No:"+ mAccount.getAccountID()+"\n");
-                mp.printextEmphasizedNormalFont(name+"\n");
-            }else{
+                mp.printextEmphasizedNormalFont("Account No:" + mAccount.getAccountID() + "\n");
+                mp.printextEmphasizedNormalFont(name + "\n");
+            } else {
                 mp.setDeviceTag(0);
                 String path = CommonFunc.getPrivateAlbumStorageDir(this, "noreco_logo.bmp").toString();
                 mp.printBitmap(path);
                 mp.printText("\n");
-                mp.printextEmphasized("Account No:"+ mAccount.getAccountID()+"\n");
-                mp.printextEmphasized(name+"\n");
+                mp.printextEmphasized("Account No:" + mAccount.getAccountID() + "\n");
+                mp.printextEmphasized(name + "\n");
             }
         } else {
             bp.printBitmap();
@@ -671,20 +698,19 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        CommonFunc.printingNormal("Consumption:" + mAccount.getActualConsumption(), "BillMonth:" + mAccount.getBillMonth() + "\n", 0, 0, 0, mPrinter);
 
 
-
-        mp.printextEmphasizedNormalFont(mAccount.getAddress()+"\n");
-        mp.printText("Meter No:" + mAccount.getMeterSerialNo()+"\n");
-        mp.printText("Period Covered: "+ CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) +"\n");
-        mp.printText("Due Date: "+mAccount.getDueDate()+"\n");//
-        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName()+"\n");
-        mp.printText("Multiplier:" + mAccount.getMultiplier(),"Consumer Type:" + a_class+"\n");
-        mp.printText("Consumption:" + mAccount.getActualConsumption(),"BillMonth:" + mAccount.getBillMonth()+"\n");
+        mp.printextEmphasizedNormalFont(mAccount.getAddress() + "\n");
+        mp.printText("Meter No:" + mAccount.getMeterSerialNo() + "\n");
+        mp.printText("Period Covered: " + CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) + "\n");
+        mp.printText("Due Date: " + mAccount.getDueDate() + "\n");//
+        mp.printText("Meter Reader:" + MainActivity.reader.getReaderName() + "\n");
+        mp.printText("Multiplier:" + mAccount.getMultiplier(), "Consumer Type:" + a_class + "\n");
+        mp.printText("Consumption:" + mAccount.getActualConsumption(), "BillMonth:" + mAccount.getBillMonth() + "\n");
         if (a_class.equalsIgnoreCase("HV")) {
             //CommonFunc.printingNormal("Coreloss:" + mAccount.getCoreloss(), "DemandKW:" + mAccount.getDemandKW() + "\n", 0, 0, 0, mPrinter);
-            mp.printText("Coreloss:" + mAccount.getCoreloss(),"DemandKW:"+mAccount.getDemandKW()+"\n");
+            mp.printText("Coreloss:" + mAccount.getCoreloss(), "DemandKW:" + mAccount.getDemandKW() + "\n");
         } else {
             //CommonFunc.printingNormal("Coreloss:" + mAccount.getCoreloss() + "\n", "", 0, 0, 0, mPrinter);
-            mp.printText("Coreloss:" + mAccount.getCoreloss()+"\n");
+            mp.printText("Coreloss:" + mAccount.getCoreloss() + "\n");
         }
 
         if (mAccount.getIsNetMetering().equalsIgnoreCase("1")) {
@@ -697,10 +723,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             bp.printText("Date          Prev            Pres           KWH" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         } else {
 
-            if(bixTag == 1) {
+            if (bixTag == 1) {
                 mp.printText("------------------------------------------------" + "\n");
                 mp.printText("Date           Prev           Pres           KWH" + "\n");
-            }else {
+            } else {
                 mp.printText("--------------------------------------------------------------" + "\n");
                 mp.printText("Date                Prev                 Pres              KWH" + "\n");
             }
@@ -721,13 +747,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         }
         String strLeft = mAccount.getReading() + _spacing + mAccount.getConsume();
         //CommonFunc.printingNormal(strRight, strLeft + "\n", 0, 0, 0, mPrinter);
-        mp.printText(strRight,strLeft+"\n");
+        mp.printText(strRight, strLeft + "\n");
         if (mPrinter == 1) {
             bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
         } else {
-            if(bixTag == 1) {
+            if (bixTag == 1) {
                 mp.printText("------------------------------------------------" + "\n");
-            }else {
+            } else {
                 mp.printText("--------------------------------------------------------------" + "\n");
             }
 
@@ -778,7 +804,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //                                        vatListCode.add(codeName);
 //                                    }
 //                                } else {
-                                    vatListCode.add(codeName);
+                                vatListCode.add(codeName);
                                 //}
 
                                 vatListValue.add(rightText);
@@ -810,9 +836,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
                                 if (!mAccount.getTotalSCDiscount().equalsIgnoreCase("0.0")) {
                                     //CommonFunc.printingNormal("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n", 0, 0, 0, mPrinter);
-                                    if(bixTag == 1) {
+                                    if (bixTag == 1) {
                                         mp.printText("  SC Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
-                                    }else {
+                                    } else {
                                         mp.printText("  Senior Citizens Discount(R)", "-" + MainActivity.dec2.format(Double.valueOf(mAccount.getTotalSCDiscount())) + "\n");
                                     }
 
@@ -827,9 +853,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                                         }
                                     } else {
                                         //CommonFunc.printingNormal("  " + codeName + rateComponent, rightText + "\n", 0, 0, 0, mPrinter);
-                                        if(bixTag == 1) {
+                                        if (bixTag == 1) {
                                             mp.printText("  SC Subsidy", rightText + "\n");
-                                        }else{
+                                        } else {
                                             mp.printText("  " + codeName, rightText + "\n");
                                         }
                                     }
@@ -853,7 +879,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                                         }
                                     } else {
                                         //CommonFunc.printingNormal("  " + codeName, rightText + "\n", 0, 0, 0, mPrinter);
-                                        if(bixTag == 1) {
+                                        if (bixTag == 1) {
                                             if (codeName.length() > 10) {
                                                 codeName = codeName.substring(0, 13) + "...";
                                             }
@@ -881,8 +907,8 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                                             rateComponentForExport.add(codeName);
                                         }
                                     } else {
-                                        if(bixTag == 1) {
-                                            if(codeName.length() > 10) {
+                                        if (bixTag == 1) {
+                                            if (codeName.length() > 10) {
                                                 codeName = codeName.substring(0, 13) + "...";
                                             }
                                         }
@@ -903,9 +929,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             for (int i = 0; i < vatListCode.size(); i++) {
                 //CommonFunc.printingNormal("  " + vatListCode.get(i), vatListValue.get(i) + "\n", 0, 0, 0, mPrinter);
                 String vatName = vatListCode.get(i);
-                if(bixTag == 1) {
-                    if(vatName.length() > 10) {
-                        vatName = vatName.substring(0,13)+"...";
+                if (bixTag == 1) {
+                    if (vatName.length() > 10) {
+                        vatName = vatName.substring(0, 13) + "...";
                     }
                 }
 
@@ -925,10 +951,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     bp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                     bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 } else {
-                    if(bixTag == 1) {
+                    if (bixTag == 1) {
                         mp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n");
                         mp.printText("------------------------------------------------" + "\n");
-                    }else {
+                    } else {
                         mp.printText("BillingDate        BillNumber         Amount         Surcharge" + "\n");
                         mp.printText("--------------------------------------------------------------" + "\n");
                     }
@@ -954,15 +980,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     }
                     String str2 = amount + _paddingLeft1 + _penalty;
                     //CommonFunc.printingNormal(str1, str2 + "\n", 0, 0, 0, mPrinter);
-                    mp.printText(str1,str2+"\n");
+                    mp.printText(str1, str2 + "\n");
 
                 }
                 if (mPrinter == 1) {
                     bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 } else {
-                    if(bixTag == 1) {
+                    if (bixTag == 1) {
                         mp.printText("------------------------------------------------" + "\n");
-                    }else {
+                    } else {
                         mp.printText("--------------------------------------------------------------" + "\n");
                     }
                 }
@@ -998,11 +1024,11 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 bp.printText("Date         Prev           Pres             KWH" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             } else {
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printTextBoldRight("", "EXPORT BILL" + "\n");
                     mp.printText("------------------------------------------------" + "\n");
                     mp.printText("Date         Prev           Pres             KWH" + "\n");
-                }else{
+                } else {
                     mp.printTextBoldRight("", "EXPORT BILL" + "\n");
                     mp.printText("--------------------------------------------------------------" + "\n");
                     mp.printText("Date                Prev                 Pres              KWH" + "\n");
@@ -1028,13 +1054,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             }
             String strLeft1 = mAccount.getExportReading() + _spacing2 + exportConsume;
             //CommonFunc.printingNormal("" + strRight1, strLeft1 + "\n", 0, 0, 0, mPrinter);
-            mp.printText(strRight1,strLeft1+"\n");
+            mp.printText(strRight1, strLeft1 + "\n");
             if (mPrinter == 1) {
                 bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             } else {
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printText("------------------------------------------------" + "\n");
-                }else{
+                } else {
                     mp.printText("--------------------------------------------------------------" + "\n");
                 }
 
@@ -1045,7 +1071,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("Customer Charge to DU\n");
                 for (int i = 0; i < rateComponentForExport.size(); i++) {
                     //CommonFunc.printingNormal("  " + rateComponentForExport.get(i), exportRateDueAmount.get(i) + "\n", 0, 0, 0, mPrinter);
-                    mp.printText("  " + rateComponentForExport.get(i),  exportRateDueAmount.get(i) + "\n");
+                    mp.printText("  " + rateComponentForExport.get(i), exportRateDueAmount.get(i) + "\n");
                 }
 //                CommonFunc.printingNormal("Amount Export Due", MainActivity.dec2.format(mBill.getTotalAmountDueExport()) + "\n", 1, 0, 0, mPrinter);
 //                CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
@@ -1069,9 +1095,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 mp.printText("\n");
                 mp.printText("\n");
                 mp.printText("\n");
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printText(Constant.DISCONNECTIONNOTICE_BIX + "\n");
-                }else{
+                } else {
                     mp.printText(Constant.DISCONNECTIONNOTICE + "\n");
                 }
 
@@ -1082,9 +1108,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 bp.printText(Constant.OFFICIALRECIEPT_BIX + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 bp.printNextLine(1);
             } else {
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
-                }else{
+                } else {
                     mp.printText(Constant.OFFICIALRECIEPT + "\n");
                 }
 
@@ -1094,9 +1120,9 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             if (mPrinter == 1) {
                 bp.printText("     " + Constant.WARNING + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             } else {
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printText("     " + Constant.WARNING + "\n");
-                }else{
+                } else {
                     mp.printText("                " + Constant.WARNING + "                 " + "\n");
                 }
 
@@ -1109,15 +1135,15 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             mp.printText("\n");
             mp.printText("\n");
             mp.printText("\n");
-            mp.printText(Constant.FOOTERMESSAGE+"\n");
+            mp.printText(Constant.FOOTERMESSAGE + "\n");
             mp.printText("\n");
             //CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
             if (mPrinter == 1) {
                 bp.printText(Constant.OFFICIALRECIEPT_BIX + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
             } else {
-                if(bixTag == 1) {
+                if (bixTag == 1) {
                     mp.printText(Constant.OFFICIALRECIEPT_BIX + "\n");
-                }else {
+                } else {
                     mp.printText(Constant.OFFICIALRECIEPT + "\n");
                 }
             }
@@ -1138,16 +1164,16 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //        CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 
         String stat = "Printed";
-        if(mAccount.getReadStatus().equalsIgnoreCase("PrintedSM")) {
+        if (mAccount.getReadStatus().equalsIgnoreCase("PrintedSM")) {
             stat = "PrintedSM";
         }
 
-        if(mAccount.getReadStatus().equalsIgnoreCase("ReadSM")) {
+        if (mAccount.getReadStatus().equalsIgnoreCase("ReadSM")) {
             stat = "PrintedSM";
         }
 
 
-        db.updateAccountToPrinted(db,mAccount.getAccountID(), stat);
+        db.updateAccountToPrinted(db, mAccount.getAccountID(), stat);
         displayNextAfterPrint();
     }
 }
