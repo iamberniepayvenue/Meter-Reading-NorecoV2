@@ -280,7 +280,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2,currentfilter);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -303,7 +303,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(), originalAccount.getRouteNo(), originalAccount.getRoutePrimaryKey(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(), originalAccount.getRouteNo(), originalAccount.getRoutePrimaryKey(), 0,currentfilter);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -415,7 +415,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 break;
 
             case R.id.btnEdit:
-                MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 0);
+                MainActivity.db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 0,currentfilter);
                 int editCount = db.getEditAttemp(db, mAccount.getAccountID());
 
 //            if(editCount == 3) {
@@ -568,7 +568,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 
         int tag = MainActivity.myMode == "Read" ? 3 : 4;
 
-        db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), tag);
+        db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), tag,currentfilter);
         this.finish();
         Intent intent = new Intent(this, ViewDetails.class);
         startActivity(intent);

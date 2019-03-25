@@ -965,7 +965,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
      * tag = 3 comes from ViewDetails generate soa means from Read Tab
      * tag = 4 comes from ViewDetails generate soa means from Printed Tab
      */
-    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, String routePrimaryKey, int tag) {
+    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, String routePrimaryKey, int tag,String filter) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
 
@@ -976,7 +976,14 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         } else if (tag == 1) {
             myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
         } else if (tag == 2) {
-            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' AND Notes1 = '" + routePrimaryKey + "' Limit 1";
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = 'Unread' AND Notes1 = '" + routePrimaryKey + "'";
+            if(!filter.equalsIgnoreCase("") && !filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And " + filter + " Like '%" +accountid+"%' Limit 1";
+            }else if(filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And (FirstName Like '%" + accountid + "%' Or MiddleName Like '%" + accountid + "%' Or LastName Like '%" + accountid + "%') Limit 1";
+            }else {
+                myQuery = myQuery + " And (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') Limit 1";
+            }
         } else if(tag == 3) {
             String wherecluase = "(ReadStatus = 'Read' Or ReadStatus = 'ReadSM')";
             myQuery = "Select * From accounts Where "+wherecluase+"  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
@@ -992,7 +999,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             c = sql.rawQuery(myQuery, null);
         }
 
-        Log.e(TAG,"getAccountDetails :" + myQuery);
+        //Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 
@@ -1076,7 +1083,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 
 
-        Log.e(TAG, "searchItem: " + statement);
+        //Log.e(TAG, "searchItem: " + statement);
         Cursor cursor = sql.rawQuery(statement, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {

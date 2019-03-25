@@ -72,7 +72,7 @@ public class AccountListActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
                 b.putString("disctrictNo",districtno);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,routePrimarykey,0);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,routePrimarykey,0,"");
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);
