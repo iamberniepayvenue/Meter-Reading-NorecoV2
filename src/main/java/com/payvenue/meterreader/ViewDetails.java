@@ -280,7 +280,12 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2,currentfilter);
+                        if(MainActivity.myMode.equalsIgnoreCase("NotFound")) {
+                            MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 5,currentfilter);
+                        }else{
+                            MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2,currentfilter);
+                        }
+
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
