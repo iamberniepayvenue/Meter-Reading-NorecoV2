@@ -32,9 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import DataBase.DBInfo;
 import Model.Account;
 import Utility.CommonFunc;
@@ -137,7 +134,7 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
         String strRequest = "http://" + MainActivity.connSettings.getHost() + ":"
                 + MainActivity.connSettings.getPort()
                 + "?cmd=uploadData"
-                + "&coopid=" + MainActivity.connSettings.getCoopID() + "&Mac=" + CommonFunc.getMacAddress();
+                + "&coopid=" + MainActivity.connSettings.getCoopID() + "&mac=" + CommonFunc.encrypt(CommonFunc.getMacAddress());
 
         if (cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No Data to upload.", Toast.LENGTH_SHORT).show();
@@ -188,10 +185,6 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
                 rowObject.put("Remarks",account.getRemarks());
                 rowObject.put("DueDate",cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
                 billMonth = MainActivity.db.getBillMonth(MainActivity.db,accountClass);
-//                String []strArray = billMonth.split("/");
-//                String yr = strArray[2];
-//                String month = strArray[0];
-//                billMonth = yr+month;
                 rowObject.put("billmonth",billMonth);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
@@ -213,12 +206,15 @@ public class FragmentNotFound extends Fragment implements IVolleyListener {
 
             String url;
             try {
-                url = strRequest + "&data=" + URLEncoder.encode(FinalData.toString(),"UTF-8")+ "&BillMonth="+billMonth;
-               // Log.e(TAG, "Upload Not Found: " + url);
+                url = strRequest + "&data=" + CommonFunc.encrypt(FinalData.toString())+ "&BillMonth="+CommonFunc.encrypt(billMonth.trim());
+                //Log.e(TAG, "Upload Not Found: " + url);
                 MainActivity.webRequest.sendRequest(url, "NotFound", FinalData.toString(),"","", this);
-            } catch (UnsupportedEncodingException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+//            catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 

@@ -37,6 +37,7 @@ import DataBase.DBInfo;
 import DataBase.DataBaseHandler;
 import Model.Account;
 import Model.Route;
+import Utility.CallNative;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.MyPreferences;
@@ -102,7 +103,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         initViews();
 
         lblMAC.setText(mac);
-        txtPort.setText(Constant.PORT);
+        txtPort.setText(CallNative.getInstance().getNative3());
 
         BtnDownLoad.setOnClickListener(this);
         BtnDelete.setOnClickListener(this);
@@ -178,7 +179,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 baseurl = "http://" + txtHost + ":" + strPort;
 
                 String cmdRoute = baseurl + "?cmd=getRoutes&mac=" + mac;
-                Log.e(TAG, "routes: " + cmdRoute);
+                //Log.e(TAG, "routes: " + cmdRoute);
                 MainActivity.webRequest.setRequestListenerDownload(cmdRoute,  new WebRequest.RequestListener() {
                     @Override
                     public void onRequestListener(String response, String param) {
@@ -261,7 +262,12 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                     if(billMonth == null) {
                                         String acclas = getAccntClass(routeArrayList);
                                         billMonth = DB.getBillMonth(DB,acclas);
-                                        downloadAccounts(getContext(),0,"1"); //String rd
+                                        if(!billMonth.equalsIgnoreCase("")) {
+                                            downloadAccounts(getContext(),0,"1"); //String rd
+                                        }else{
+                                            setSnackbar("Rates schedule not downloaded...");
+                                            snackbar.show();
+                                        }
                                     }else{
                                         downloadAccounts(getContext(),0,"1"); //String rd
                                     }
@@ -303,20 +309,34 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                         if(billMonth == null) {
                                             String acclas = getAccntClass(routeArrayList);
                                             billMonth = DB.getBillMonth(DB,acclas);
-                                            checkDataNotSuccessfullyDownloaded();
-                                            downloadAccounts(getContext(), 0, "1");
+                                            if(!billMonth.equalsIgnoreCase("")) {
+                                                checkDataNotSuccessfullyDownloaded();
+                                                downloadAccounts(getContext(), 0, "1");
+                                            }else{
+                                                setSnackbar("Rates schedule not downloaded...");
+                                                snackbar.show();
+                                            }
                                         }else{
                                             checkDataNotSuccessfullyDownloaded();
                                             downloadAccounts(getContext(), 0, "1");
                                         }
                                     }
                                 }else if (jsonArray.length() == 0 && routeCount > 0) {
+                                    if (mDialog.isShowing()) {
+                                        mDialog.dismiss();
+                                    }
+
                                     getRoutes();
                                     if(billMonth == null) {
                                         String acclas = getAccntClass(routeArrayList);
                                         billMonth = DB.getBillMonth(DB,acclas);
-                                        checkDataNotSuccessfullyDownloaded();
-                                        downloadAccounts(getContext(), 0, "1");
+                                        if(!billMonth.equalsIgnoreCase("")) {
+                                            checkDataNotSuccessfullyDownloaded();
+                                            downloadAccounts(getContext(), 0, "1");
+                                        }else{
+                                            setSnackbar("Rates schedule not downloaded...");
+                                            snackbar.show();
+                                        }
                                     } else {
                                         checkDataNotSuccessfullyDownloaded();
                                         downloadAccounts(getContext(), 0, "1");
@@ -328,7 +348,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("" + e.getMessage());
                             snackbar.show();
                         }
-
                     }
                 });
 
@@ -374,7 +393,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public void checkDataNotSuccessfullyDownloaded() {
 
-        Log.e(TAG,"sulod deri sa?");
         if (myPreferences.getPrefString(Constant.RATE_SCHEDULE_STATUS).equalsIgnoreCase(Constant.NO)) {
             downloadRateSchedule();
         }
@@ -475,7 +493,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadRateCode(Context context) {
         String isDownload = myPreferences.getPrefString(Constant.RATE_CODE_STATUS);
-        Log.e(TAG,"RATE_CODE_STATUS: " + isDownload);
         if(!isDownload.equalsIgnoreCase(Constant.YES)) {
             mDialog.setMessage("DownLoading Data.Please wait.");
             mDialog.show();
@@ -504,7 +521,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
     public static void downloadRateComponent(Context context) {
         String isDownload = myPreferences.getPrefString(Constant.RATE_COMPONENT_STATUS);
-        Log.e(TAG,"RATE_COMPONENT_STATUS:" + isDownload);
+
         if(!isDownload.equalsIgnoreCase(Constant.YES)) {
             mDialog.setMessage("DownLoading Data.Please wait.");
             mDialog.show();
@@ -579,6 +596,16 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         if(billMonth == null) {
             String acclas = getAccntClass(routeArrayList);
             billMonth = DB.getBillMonth(DB,acclas);
+
+            if(billMonth == "") {
+                if (mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+                setSnackbar("No Bill Month, please download again...");
+                snackbar.show();
+                return;
+            }
         }
 
 
@@ -599,18 +626,20 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                     + "&billmoth=" + billMonth;
 
 
-            if(rd.equalsIgnoreCase("1")) {
-                cmdAccounts = cmdAccounts + "&rd=1";
-            }else {
-                cmdAccounts = cmdAccounts + "&rd=0";
-            }
+//            if(rd.equalsIgnoreCase("1")) {
+//                cmdAccounts = cmdAccounts + "&rd=0";
+//            }else {
+//                cmdAccounts = cmdAccounts + "&rd=0";
+//            }
+
+            cmdAccounts = cmdAccounts + "&rd=0";
 
             if (r.getDownloadRef().equalsIgnoreCase("1")) {
                 cmdAccounts = cmdAccounts + "&sequenceNoFrom=" + r.getSequenceNoFrom() + "&sequenceNoTo=" + r.getSequenceNoTo();
             }
 
 
-            Log.e(TAG, "Accounts: " + cmdAccounts);
+
             new downloadAccountsAsync(context, routeArrayList.size(), counter).execute(cmdAccounts, r.getDueDate(), r.getRouteID(),String.valueOf(r.getPrimaryKey()));
         } else {
             if (mDialog.isShowing()) {
@@ -717,7 +746,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
         @Override
         protected Void doInBackground(String... strings) {
-            Log.e(TAG, "rateschedule: " + strings[0]);
+
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -893,7 +922,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             }
 
                             if (Constant.billingpolicysave > 0 && Constant.billingpolicysize == Constant.billingpolicysave) {
-                                Log.e(TAG, "billingpolicysave: " + Constant.billingpolicysave);
                                 setSnackbar("Billing Policy Completed.");
                                 snackbar.show();
                                 myPreferences.savePrefString(Constant.POLICY_STATUS, Constant.YES);
@@ -999,7 +1027,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                             setSnackbar("Rate Code completed...");
                             snackbar.show();
                             myPreferences.savePrefString(Constant.RATE_CODE_STATUS, Constant.YES);
-                            Log.e(TAG,"10000");
                             downloadRateComponent(context);
                         }
 
@@ -1140,7 +1167,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
         @Override
         protected Void doInBackground(String... strings) {
 
-            Log.e(TAG,"downloadRateComponentAsync: "+strings[0]);
+
             MainActivity.webRequest.setRequestListenerDownload(strings[0], new WebRequest.RequestListener() {
                 @Override
                 public void onRequestListener(String response, String param) {
@@ -1204,7 +1231,6 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
 
 
                         if (Constant.ratecomponentsave > 0 && Constant.ratecomponentsize == Constant.ratecomponentsave) {
-                            Log.e(TAG, "ratecomponentsave: " + Constant.ratecomponentsave);
                             setSnackbar("Rate Component completed...");
                             snackbar.show();
                             myPreferences.savePrefString(Constant.RATE_COMPONENT_STATUS, Constant.YES);
@@ -1542,7 +1568,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 @Override
                 public void onRequestListener(String response, String param) {
 
-                    mTvView.append(response);
+
 
                     if (response.equalsIgnoreCase("500")) {
                         if (mDialog.isShowing()) {
@@ -1634,8 +1660,12 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                                 String routeIDPrimaryKey = strings[3];
                                 account.setDueDate(dueDate);
                                 account.setRoutePrimaryKey(routeIDPrimaryKey);
-                                saveCount = saveCount + DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
+                                int s = DB.saveAccount(DB, account, details.toString(), routeID, strArr, "");
+                                saveCount = saveCount + s;
                                 Constant.decoy_save_account = Constant.decoy_save_account + saveCount;
+                                if(s == 1) {
+                                    mTvView.append(response);
+                                }
                             }
                         } // end loop
 

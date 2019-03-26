@@ -96,7 +96,7 @@
                     android:gravity="right"
                     android:imeOptions="actionDone"
                     android:inputType="textUri"
-                    android:maxLength="50"
+                    android:maxLength="60"
                     android:padding="10dp"
                     android:singleLine="true"
                     android:text="8080/noreco_api/billing_api.asp"

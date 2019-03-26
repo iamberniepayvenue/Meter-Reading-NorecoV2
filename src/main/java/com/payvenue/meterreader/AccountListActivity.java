@@ -41,6 +41,7 @@ public class AccountListActivity extends AppCompatActivity {
     ImageView ivNoAccounts;
     private ArrayList<Route> routeList;
     private int routeCount;
+    SearchView searchView;
 
     @SuppressLint("NewApi")
     @Override
@@ -71,7 +72,7 @@ public class AccountListActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putInt("purpose", 2222);
                 b.putString("disctrictNo",districtno);
-                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,routePrimarykey,0);
+                MainActivity.db.getAccountDetails(MainActivity.db, accountid,routecode,routePrimarykey,0,"");
                 Intent intent = new Intent(view.getContext(), ViewDetails.class);
                 intent.putExtras(b);
                 startActivityForResult(intent, 1);
@@ -134,13 +135,14 @@ public class AccountListActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.pending__accounts, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.psearch).getActionView();
+
         if(searchView != null) {
             searchAccount.clear();
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
 
-            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
+            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.psearch), new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
                     return true;
@@ -162,7 +164,7 @@ public class AccountListActivity extends AppCompatActivity {
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s,MainActivity.myMode,routePrimarykey); //add primary key in routemodel during download
+                        searchAccount = MainActivity.db.searchItem(MainActivity.db,s,MainActivity.myMode,routePrimarykey,currentfilter); //add primary key in routemodel during download
                         if(searchAccount.isEmpty()) {
                             setSnackbar("No results found...");
                             snackbar.show();
@@ -185,7 +187,7 @@ public class AccountListActivity extends AppCompatActivity {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e(TAG,"close");
+
                     getSearchData(routecode, currentfilter);
 
                     int searchCloseButtonId = searchView.getContext().getResources()
@@ -208,23 +210,40 @@ public class AccountListActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                getSearchData(routecode, currentfilter);
+                this.finish();
+                break;
+            case R.id.filter_serial_number:
+                currentfilter = "MeterSerialNo";
+                break;
+            case R.id.filter_name:
+                currentfilter = "Name";
+                getSearchData(routecode, currentfilter);
+                break;
+            case R.id.filter_account_id:
+                currentfilter = "AccountID";
+                getSearchData(routecode, currentfilter);
+                break;
 
-        if (id == android.R.id.home) {
-            getSearchData(routecode, currentfilter);
-            this.finish();
+            case R.id.turn_off_filter:
+                currentfilter = "";
+                getSearchData(routecode, currentfilter);
+                break;
         }
 
-        if (id == R.id.filter_account) {
-            currentfilter = "Sequnce Number";
-            getSearchData(routecode, currentfilter);
-        }
-
-        if (id == R.id.filter_name) {
-            currentfilter = "LastName";
-            getSearchData(routecode, currentfilter);
-        }
-
+        updateMenuTitle();
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateMenuTitle() {
+
+        if(!currentfilter.equalsIgnoreCase("")) {
+            searchView.setQueryHint(currentfilter);
+        } else {
+            searchView.setQueryHint("Search");
+        }
     }
 
     @Override

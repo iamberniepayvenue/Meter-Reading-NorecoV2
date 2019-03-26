@@ -41,6 +41,7 @@ import Model.Account;
 import Model.Bill;
 import Model.Components;
 import Model.Rates;
+import Utility.CallNative;
 import Utility.CommonFunc;
 import Utility.Constant;
 import Utility.NetworkUtil;
@@ -120,7 +121,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
 
     public void setValues() {
-        txtPort.setText(Constant.PORT);
+        txtPort.setText(CallNative.getInstance().getNative3());
         cuurmac.setText(CommonFunc.getMacAddress());
         txtreadcount.setText("" + readCount);
         txtunreadcount.setText("" + unreadCount);
@@ -252,7 +253,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         rowObject.put(DBInfo.COOPID, coopName);
                         rowObject.put("DistrictID", districtID);
                         rowObject.put("RouteNo", routeID);
-                        rowObject.put("AccountID", accountID);
+                        rowObject.put("AccountID", accountID.trim());
                         rowObject.put("LastName", cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
                         rowObject.put("FirstName", cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
                         rowObject.put("MiddleName", cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
@@ -303,7 +304,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                         rowObject.put("ExportDateCounter", exportDateCounter);
                         mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
-                        rowObject.put("billmonth", mBillMonth);
+                        rowObject.put("billmonth", mBillMonth.trim());
 
 
                         ArrayList<Components> summary = new ArrayList<>();

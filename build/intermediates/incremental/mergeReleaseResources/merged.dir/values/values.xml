@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2" xmlns:ns2="http://schemas.android.com/tools">
     <string-array name="array_hosts">
-        
-        
-        
+        <!--<item>192.168.20.254</item>-->
+        <!--192.168.5.240-->
+        <!--<item>103.105.212.68</item>-->
         <item>"dev.teslasuite.com"</item>
     </string-array>
     <array name="nav_drawer_icons">
@@ -21,11 +21,11 @@
     </array>
     <array name="nav_drawer_icons_on">
         <item>@drawable/ic_onreader</item>
-        <item>@drawable/ic_onaccounts</item>  
-        <item>@drawable/ic_read_onaccounts</item> 
-        <item>@drawable/ic_onaccounts</item>
-        <item>@drawable/ic_printed</item> 
-        <item>@drawable/ic_read_onaccounts</item> 
+        <item>@drawable/ic_onaccounts</item>  <!-- pending -->
+        <item>@drawable/ic_read_onaccounts</item> <!-- read -->
+        <item>@drawable/ic_onaccounts</item><!-- printed -->
+        <item>@drawable/ic_printed</item> <!-- not found -->
+        <item>@drawable/ic_read_onaccounts</item> <!-- Found -->
         <item>@drawable/ic_ondownload</item>
         <item>@drawable/ic_onupload</item>
         <item>@drawable/ic_oninfo</item>

@@ -30,7 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import DataBase.DataBaseHandler;
@@ -283,9 +282,9 @@ public class FragmentFound extends Fragment implements IVolleyListener {
                         e.printStackTrace();
                     }
 
-                    //String strRequest = "http://" + getResources().getStringArray(R.array.array_hosts)[0] + ":" + Constant.PORT + "?cmd=uploadData" + "&coopid=NORECO2&mac=" + CommonFunc.getMacAddress();
+
                     String url = "http://" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort()
-                            + "?cmd=uploadData" + "&data=" + URLEncoder.encode(FinalData.toString(), "UTF-8") + "&BillMonth="+billMonth;
+                            + "?cmd=uploadData" + "&data=" + CommonFunc.encrypt(FinalData.toString()) + "&BillMonth="+CommonFunc.encrypt(billMonth);
                     //Log.e(TAG, "FM :" + MainActivity.connSettings.getHost() + ":" + MainActivity.connSettings.getPort() + "?cmd=uploadData" + "&data=" + FinalData.toString());
                     MainActivity.webRequest.sendRequest(url, "FM", FinalData.toString(), "", "", this);
 

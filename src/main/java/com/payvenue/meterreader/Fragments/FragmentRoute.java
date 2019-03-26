@@ -53,6 +53,8 @@ public class FragmentRoute extends Fragment {
 
         Log.e(TAG,"Current Page["+mode+"]");
 
+        ((MainActivity)getActivity()).initiatePrinterConnectionAfterClose();
+
         return view;
     }
 

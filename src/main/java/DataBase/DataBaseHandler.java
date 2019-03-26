@@ -585,6 +585,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase sql = db.getWritableDatabase();
         ContentValues cv = new ContentValues();
         int val = accountIsExist(db, account.getAccountID());
+        //Log.e(TAG,"val:" + val);
         /**rd  means redownload*/
         int count = 0;
         if (val == 0) {
@@ -963,8 +964,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
      * tag = 2 comes from ViewDetails
      * tag = 3 comes from ViewDetails generate soa means from Read Tab
      * tag = 4 comes from ViewDetails generate soa means from Printed Tab
+     * tag = 5 comes from ViewDetails status notfound
      */
-    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, String routePrimaryKey, int tag) {
+    public void getAccountDetails(DataBaseHandler db, String accountid, String routeno, String routePrimaryKey, int tag,String filter) {
 
         SQLiteDatabase sql = db.getReadableDatabase();
 
@@ -975,13 +977,29 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         } else if (tag == 1) {
             myQuery = "Select * From accounts Where ReadStatus = 'Unread'  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
         } else if (tag == 2) {
-            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') AND ReadStatus = 'Unread' AND Notes1 = '" + routePrimaryKey + "' Limit 1";
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = 'Unread' AND Notes1 = '" + routePrimaryKey + "'";
+            if(!filter.equalsIgnoreCase("") && !filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And " + filter + " Like '%" +accountid+"%' Limit 1";
+            }else if(filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And (FirstName Like '%" + accountid + "%' Or MiddleName Like '%" + accountid + "%' Or LastName Like '%" + accountid + "%') Limit 1";
+            }else {
+                myQuery = myQuery + " And (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') Limit 1";
+            }
         } else if(tag == 3) {
             String wherecluase = "(ReadStatus = 'Read' Or ReadStatus = 'ReadSM')";
             myQuery = "Select * From accounts Where "+wherecluase+"  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
         } else if (tag == 4) {
             String wherecluase = "(ReadStatus = 'Printed' Or ReadStatus = 'PrintedSM')";
             myQuery = "Select * From accounts Where "+wherecluase+"  And Cast(AccountID As Int) > " + Integer.valueOf(accountid) + " AND RouteNo ='" + routeno + "' AND Notes1 ='" + routePrimaryKey + "' ORDER BY Cast(AccountID As Int) Limit 1 ";
+        } else if (tag == 5) {
+            myQuery = "Select * From " + DBInfo.TBLACCOUNTINFO + " Where ReadStatus = 'NotFound' AND Notes1 = '" + routePrimaryKey + "'";
+            if(!filter.equalsIgnoreCase("") && !filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And " + filter + " Like '%" +accountid+"%' Limit 1";
+            }else if(filter.equalsIgnoreCase("Name")) {
+                myQuery = myQuery + " And (FirstName Like '%" + accountid + "%' Or MiddleName Like '%" + accountid + "%' Or LastName Like '%" + accountid + "%') Limit 1";
+            }else {
+                myQuery = myQuery + " And (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') Limit 1";
+            }
         }
 
         Cursor c = sql.rawQuery(myQuery, null);
@@ -991,7 +1009,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             c = sql.rawQuery(myQuery, null);
         }
 
-        Log.e(TAG,"getAccountDetails :" + myQuery);
+        //Log.e(TAG,"getAccountDetails :" + myQuery);
 
         String details;
 
@@ -1055,17 +1073,27 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<Account> searchItem(DataBaseHandler db, String item, String mode, String routePrimarykey) {
+    public ArrayList<Account> searchItem(DataBaseHandler db, String item, String mode, String routePrimarykey,String filter) {
         ArrayList<Account> myList = new ArrayList<>();
         Gson gson = new GsonBuilder().create();
         Account account;
         String details;
         SQLiteDatabase sql = db.getReadableDatabase();
         String statement = "Select ReadingDetails,FirstName,MiddleName,LastName,AccountID,MeterSerialNo,UploadStatus,AccountStatus,SubClassification,Notes1 From "
-                + DBInfo.TBLACCOUNTINFO + " Where (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
-                + item + "%' Or MeterSerialNo Like '%" + item + "%') And ReadStatus='" + mode + "' AND Notes1='" + routePrimarykey + "'";
+                + DBInfo.TBLACCOUNTINFO + " Where ReadStatus='" + mode + "' AND Notes1='" + routePrimarykey + "'";
 
-        Log.e(TAG, "searchItem: " + statement);
+        if(!filter.equalsIgnoreCase("") && !filter.equalsIgnoreCase("Name")){
+            statement = statement + " And " + filter + " Like '%" +item+ "%'";
+        } else if (filter.equalsIgnoreCase("Name")){
+            statement = statement + " And (LastName Like '%" + item + "%' Or FirstName Like '%" + item + "%' Or MiddleName Like '%" + item + "%')";
+        } else {
+            statement = statement + " And (AccountID Like '%" + item + "%' Or LastName Like '%" + item + "%' Or  AccountClassification Like '%"
+                    + item + "%' Or MeterSerialNo Like '%" + item + "%')";
+        }
+
+
+
+        //Log.e(TAG, "searchItem: " + statement);
         Cursor cursor = sql.rawQuery(statement, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {

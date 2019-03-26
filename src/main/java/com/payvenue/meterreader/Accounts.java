@@ -84,6 +84,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     CheckBox mOval, mCycle, mStop, mChange;
     EditText mReading, mDemand, mRemarks, mReadingCycle;
     Button btnGenerate, btnTakePic;
+    SearchView searchView;
+
     Context mcontext;
     boolean isOvalCheck = false, isRecycleCheck = false, isStopCheck = false, isChangeCheck = false;
     boolean isStopMeter = false;
@@ -101,7 +103,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     double totalSeniorDiscount;
     double demandKWMininum;
     double totalArrears = 0, arrearsPenalty = 0;
-    boolean canAvailLifelineDiscount = false, canAvailSCDiscount = false;
+    boolean canAvailLifelineDiscount = false;
+    boolean canAvailSCDiscount = false;
     boolean scInvalidDate = false;
     boolean isSCOverPolicy = false;
     ArrayList<Rates> myRates = new ArrayList<>();
@@ -132,7 +135,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     private boolean iskeyboardsearch = false;
     private boolean isClickGenerate = true;
     private boolean isNoneAverage = false;
-
+    String currentfilter = "";
     BixolonPrinterClass bp;
 
 
@@ -158,11 +161,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         mcontext = this;
 
         Intent intent = getIntent();
-        if(intent != null) {
+        if (intent != null) {
             _districtID = intent.getStringExtra("disctrictNo");
         }
 
-        Log.e(TAG,"_districtID: "+ _districtID);
+        Log.e(TAG, "_districtID: " + _districtID);
 
         if (!MainActivity.gps.canGetLocation()) {
             MainActivity.gps.showSettingAlert();
@@ -268,37 +271,37 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             mname = mAccount.getMiddleName();
             lname = mAccount.getLastName();
 
-            if(fname.equalsIgnoreCase("")) {
+            if (fname.equalsIgnoreCase("")) {
                 fname = "";
             }
 
-            if(fname.equalsIgnoreCase(".")) {
+            if (fname.equalsIgnoreCase(".")) {
                 fname = "";
             }
 
-            if(mname.equalsIgnoreCase("")) {
+            if (mname.equalsIgnoreCase("")) {
                 mname = "";
             }
 
-            if(mname.equalsIgnoreCase(".")) {
+            if (mname.equalsIgnoreCase(".")) {
                 mname = "";
             }
 
-            if(lname.equalsIgnoreCase("")) {
+            if (lname.equalsIgnoreCase("")) {
                 lname = "";
             }
 
-            if(lname.equalsIgnoreCase(".")) {
+            if (lname.equalsIgnoreCase(".")) {
                 lname = "";
             }
 
-            fullname = fname.trim() + " " + mname.trim()+" "+ lname.trim();
+            fullname = fname.trim() + " " + mname.trim() + " " + lname.trim();
 
-        }catch (NullPointerException e) {
-            Log.e(TAG,"NullPointerException: "+ e.getMessage());
+        } catch (NullPointerException e) {
+            Log.e(TAG, "NullPointerException: " + e.getMessage());
         }
 
-        if(fullname.equalsIgnoreCase("")) {
+        if (fullname.equalsIgnoreCase("")) {
             fullname = mAccount.getLastName();
         }
 
@@ -703,9 +706,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         mAccount.setBillMonth(billmonth);
 
         String stat = "Read";
-        if(isStopMeter){
+        if (isStopMeter) {
             stat = "ReadSM";
-            if(isNoneAverage) {
+            if (isNoneAverage) {
                 stat = "Cannot Generate";
             }
         }
@@ -864,7 +867,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     isStopCheck = false;
                 }
 
-                Log.e(TAG,"isStopCheck:"+isStopCheck);
+                Log.e(TAG, "isStopCheck:" + isStopCheck);
                 break;
             case R.id.mChange:
                 if (!isChangeCheck) {
@@ -933,7 +936,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         /**Check if Change Meter*/
 
 
-
         if (mAccount.getIsChangeMeter().equals("1")) {
             final double av = getAveraging();
             if (av != -2000) {
@@ -944,7 +946,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         }
 
 
-        if(isStopCheck) {
+        if (isStopCheck) {
             isStopMeter = true;
             final double av = getAveraging();
             if (av != -2000) {
@@ -954,7 +956,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             } else {
                 setKwh(0, 1);
             }
-        }else {
+        } else {
             if (initialRead.equalsIgnoreCase(mAccount.getReading())) {
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -979,6 +981,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isStopMeter = false;
+                        isNoneAverage = false;
                         setKwh(0, 1);
                     }
                 });
@@ -1091,7 +1094,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         try {
             //{New=[{DateRead=2/9/2019, Consumption=26}], Old=[{Consumption=25}]}
             String strAveraging = mAccount.getAveraging();
-            Log.e(TAG,""+ strAveraging);
+            Log.e(TAG, "" + strAveraging);
             float flConsumption = 0;
             JSONObject json = new JSONObject(strAveraging);
             JSONArray jsonArrayNew = json.getJSONArray("New");
@@ -1105,7 +1108,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 finalJson = finalArray.getJSONObject(i);
                 String consumption = finalJson.getString("Consumption");
                 flConsumption = flConsumption + Float.valueOf(consumption);
-                Log.e(TAG,"consumption:"+ consumption);
+                Log.e(TAG, "consumption:" + consumption);
             }
 
             val = finalArray.length() == 3 ? flConsumption / 3 : flConsumption;
@@ -1117,8 +1120,8 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             isNoneAverage = true;
         } catch (NullPointerException e) {
             isNoneAverage = false;
-            showToast(""+e.getMessage());
-            Log.e(TAG,"NullPointerException: "+e.getMessage());
+            showToast("" + e.getMessage());
+            Log.e(TAG, "NullPointerException: " + e.getMessage());
         }
 
 
@@ -1137,7 +1140,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.account_details, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
@@ -1163,7 +1166,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 public boolean onQueryTextChange(String s) {
                     //NOTE: doing anything here is optional, onNewIntent is the important bit
                     if (s.length() > 1) {
-                        MainActivity.db.getAccountDetails(MainActivity.db, s,mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 2);
+                        MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 2,currentfilter);
                         isSearch = true;
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -1187,7 +1190,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(),originalAccount.getRouteNo(),originalAccount.getRoutePrimaryKey(), 0);
+                    MainActivity.db.getAccountDetails(MainActivity.db, originalAccount.getAccountID(), originalAccount.getRouteNo(), originalAccount.getRoutePrimaryKey(), 0,currentfilter);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1212,26 +1215,55 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        if (id == R.id.menu_scanner) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    showToast("You declined to allow the app to access your camera");
-                    return true;
-                }
-            }
 
-            if (isCameraAvailable()) {
-                Intent intent = new Intent(this, ZBarScannerActivity.class);
-                startActivityForResult(intent, ZBAR_SCANNER_REQUEST);
-            } else {
-                showToast("Rear Facing Camera Unavailable");
-            }
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_scanner:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        showToast("You declined to allow the app to access your camera");
+                        return true;
+                    }
+                }
+
+                if (isCameraAvailable()) {
+                    Intent intent = new Intent(this, ZBarScannerActivity.class);
+                    startActivityForResult(intent, ZBAR_SCANNER_REQUEST);
+                } else {
+                    showToast("Rear Facing Camera Unavailable");
+                }
+                break;
+            case R.id.filter_serial_number:
+                currentfilter = "MeterSerialNo";
+                updateMenuTitle();
+                break;
+            case R.id.filter_name:
+                currentfilter = "Name";
+                updateMenuTitle();
+                break;
+            case R.id.filter_account_id:
+                currentfilter = "AccountID";
+                updateMenuTitle();
+                break;
+
+            case R.id.turn_off_filter:
+                currentfilter = "";
+                updateMenuTitle();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateMenuTitle() {
+
+        if(!currentfilter.equalsIgnoreCase("")) {
+            searchView.setQueryHint(currentfilter);
+        } else {
+            searchView.setQueryHint("Search");
+        }
     }
 
     public boolean isCameraAvailable() {
@@ -1285,9 +1317,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 calculateBill();
                 /**PRINTING SOA*/
                 if (MainActivity.mIsConnected) {
-                    if(isNoneAverage){
+                    if (isNoneAverage) {
                         showToast("Cannot generate SOA, please verify to main office...");
-                    }else{
+                    } else {
                         preparePrint();
                     }
                 } else {
@@ -1295,10 +1327,9 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                      *  isClickGenerate only tagging for toast message isClickGenerate can be false during calculateBill function
                      *  this will turn to false if reader input none in reading textbox..
                      */
-                    if(isNoneAverage){
+                    if (isNoneAverage) {
                         showToast("Cannot generate SOA, please verify to main office...");
-                    }
-                    else if (isClickGenerate) {
+                    } else if (isClickGenerate) {
                         showToast("Printer is not connected.");
                     }
                 }
@@ -1323,7 +1354,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                 //Intent intent = new Intent(this, BillPreview.class);
 
                 if (isClickGenerate) {
-                    db.getAccountDetails(MainActivity.db, mAccount.getAccountID(),mAccount.getRouteNo(),mAccount.getRoutePrimaryKey(), 1);
+                    db.getAccountDetails(MainActivity.db, mAccount.getAccountID(), mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 1,currentfilter);
                     this.finish();
                     Intent intent = new Intent(this, Accounts.class);
                     startActivity(intent);
@@ -1606,17 +1637,22 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     mp.printText("                   (NORECO2)\n");
                     mp.printText("             STATEMENT OF ACCOUNT\n");
                     mp.printText("================================================\n");
+                    mp.printText("\n");
+                    mp.printextEmphasizedNormalFont("Account No:" + mAccount.getAccountID() + "\n");
+                    mp.printextEmphasizedNormalFont(name + "\n");
                 } else {
+                    mp.setDeviceTag(0);
                     String path = CommonFunc.getPrivateAlbumStorageDir(this, "noreco_logo.bmp").toString();
                     mp.printBitmap(path);
+                    mp.printText("\n");
+                    mp.printextEmphasized("Account No:" + mAccount.getAccountID() + "\n");
+                    mp.printextEmphasized(name + "\n");
                 }
             } else {
                 bp.printBitmap();
             }
 
-            mp.printText("\n");
-            mp.printextEmphasized("Account No:" + mAccount.getAccountID() + "\n");
-            mp.printextEmphasized(name + "\n");
+
             mp.printextEmphasizedNormalFont(mAccount.getAddress() + "\n");
             mp.printText("Meter No:" + mAccount.getMeterSerialNo() + "\n");
             mp.printText("Period Covered: " + CommonFunc.changeDateFormat(mAccount.getLastReadingDate()) + " to " + CommonFunc.changeDateFormat(dateRead) + "\n");
@@ -2076,7 +2112,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 
             String stat = "Printed";
-            if(isStopMeter){
+            if (isStopMeter) {
                 stat = "PrintedSM";
             }
 
