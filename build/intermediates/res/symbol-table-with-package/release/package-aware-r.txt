@@ -1015,9 +1015,9 @@ id expanded_menu
 id fill
 id fill_horizontal
 id fill_vertical
-id filter_account
 id filter_account_id
 id filter_name
+id filter_serial_number
 id fixed
 id forever
 id found
@@ -1130,6 +1130,7 @@ id pin
 id printedacct
 id progress_circular
 id progress_horizontal
+id psearch
 id radio
 id rates
 id readacct

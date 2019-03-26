@@ -178,7 +178,7 @@ public class FragmentDownLoad extends Fragment implements OnClickListener { //, 
                 baseurl = "http://" + txtHost + ":" + strPort;
 
                 String cmdRoute = baseurl + "?cmd=getRoutes&mac=" + mac;
-                Log.e(TAG, "routes: " + cmdRoute);
+                //Log.e(TAG, "routes: " + cmdRoute);
                 MainActivity.webRequest.setRequestListenerDownload(cmdRoute,  new WebRequest.RequestListener() {
                     @Override
                     public void onRequestListener(String response, String param) {
