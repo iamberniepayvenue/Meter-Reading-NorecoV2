@@ -1219,7 +1219,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         switch (id) {
             case android.R.id.home:
                 finish();
-                break;
+                return true;
             case R.id.menu_scanner:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

@@ -983,7 +983,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             }else if(filter.equalsIgnoreCase("Name")) {
                 myQuery = myQuery + " And (FirstName Like '%" + accountid + "%' Or MiddleName Like '%" + accountid + "%' Or LastName Like '%" + accountid + "%') Limit 1";
             }else {
-                myQuery = myQuery + " And (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%') Limit 1";
+                myQuery = myQuery + " And (AccountID Like '%" + accountid + "%' Or MeterSerialNo Like '%" + accountid + "%' Or FirstName Like '%" + accountid + "%' Or MiddleName Like '%" + accountid + "%' Or LastName Like '%" + accountid + "%') Limit 1";
             }
         } else if(tag == 3) {
             String wherecluase = "(ReadStatus = 'Read' Or ReadStatus = 'ReadSM')";

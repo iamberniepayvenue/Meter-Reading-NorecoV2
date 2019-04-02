@@ -100,7 +100,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             _disctrictNo = b.getString("disctrictNo");
         }
 
-        Log.e(TAG, "_districtID: " + _disctrictNo);
+
         originalAccount = MainActivity.selectedAccount;
         callAccounts();
         initViews();
@@ -280,6 +280,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.length() > 1) {
+
                         if(MainActivity.myMode.equalsIgnoreCase("NotFound")) {
                             MainActivity.db.getAccountDetails(MainActivity.db, s, mAccount.getRouteNo(), mAccount.getRoutePrimaryKey(), 5,currentfilter);
                         }else{
@@ -404,7 +405,7 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
         switch (id) {
             case android.R.id.home:
                 this.finish();
-                break;
+                return true;
             case R.id.btnGen:
                 if (CommonFunc.toDigit(mAccount.getConsume()) < 0) {
                     Toast.makeText(this,
