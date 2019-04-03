@@ -215,7 +215,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
             String jsonBillSum = null;
 
             Account account;
-            String coopName, accountID, mBillMonth = null, accountClass, totalkWh, totalAmount = null, subclass;
+            String coopName, accountID, mBillMonth, accountClass, totalkWh, totalAmount = "0", subclass;
             GsonBuilder gsonBuilder = new GsonBuilder();
             gson = gsonBuilder.create();
 
@@ -327,11 +327,33 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 //                                + "&rates=" + URLEncoder.encode(jsonBillSum, "UTF-8")
 //                                + "&BillMonth=" + mBillMonth + "&TotalkWh=" + totalkWh
 //                                + "&TotalAmount=" + totalAmount + "&Classification=" + URLEncoder.encode(subclass, "UTF-8");
+
+
+                        if(totalkWh.contains(",")) {
+                            totalkWh = totalkWh.replace(",","");
+                        }
+
+                        if(totalAmount.contains(",")) {
+                            totalAmount = totalAmount.replace(",","");
+                        }
+
+                        mBillMonth = CommonFunc.encrypt(mBillMonth);
+                        totalkWh = CommonFunc.encrypt(totalkWh);
+                        totalAmount = CommonFunc.encrypt(totalAmount);
+                        subclass = CommonFunc.encrypt(subclass.trim());
+
                         url = strRequest + "&data=" + CommonFunc.encrypt(FinalData.toString())
                                 + "&rates=" + CommonFunc.encrypt(jsonBillSum)
-                                + "&BillMonth=" + CommonFunc.encrypt(mBillMonth.trim())+ "&TotalkWh=" + CommonFunc.encrypt(totalkWh.trim())
-                                + "&TotalAmount=" + CommonFunc.encrypt(totalAmount.trim()) + "&Classification=" + CommonFunc.encrypt(subclass.trim());
-                        Log.e(TAG,"upload: " + url);
+                                + "&BillMonth=" + mBillMonth
+                                + "&TotalkWh=" + totalkWh
+                                + "&TotalAmount=" + totalAmount
+                                + "&Classification=" + subclass;
+                        //Log.e(TAG,"upload: " + url);
+//                        Log.e(TAG,"BillMonth: " + mBillMonth.trim());
+//                        Log.e(TAG,"TotalkWh: " + totalkWh.trim());
+//                        Log.e(TAG,"TotalAmount: " + totalAmount.trim());
+//                        Log.e(TAG,"Classification: " + subclass.trim());
+
                         MainActivity.webRequest.setRequestListener(url, "UploadData", FinalData.toString(), String.valueOf(countToUpload),
                                 new WebRequest.RequestListener() {
                                     @Override
@@ -375,6 +397,9 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                                                 return;
                                             default:
+                                                if (mDialog.isShowing()) {
+                                                    mDialog.dismiss();
+                                                }
                                         }
 
 

@@ -7,6 +7,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.payvenue.meterreader.Interface.IVolleyListener;
@@ -119,7 +120,7 @@ public class WebRequest {
          *      param2 = count of data for uploading from cursor
          *
          * */
-        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 String res;
@@ -147,11 +148,12 @@ public class WebRequest {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                VolleyLog.e(TAG,"error : " + error.getMessage());
                 requestListener.onRequestListener("500", error.getMessage());
             }
         });
 
-        request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 
@@ -162,7 +164,7 @@ public class WebRequest {
 
     public void setRequestListener(String url, String myType, String params, String param2, RequestListener listener) {
         this.requestListener = listener;
-        //Log.e(TAG,"upload : " + url);
+        Log.e(TAG,"upload : " + url);
         sendRequestUpload(url, myType, params, param2);
     }
 
