@@ -954,14 +954,14 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
             if (arrearsBillMonthList.size() > 0) {
 
                 if (mPrinter == 1) {
-                    bp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
+                    bp.printText("BillingDate   BillNumber    Surcharge     Amount" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                     bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                 } else {
                     if (bixTag == 1) {
-                        mp.printText("BillingDate   BillNumber    Amount     Surcharge" + "\n");
+                        mp.printText("BillingDate   BillNumber    Surcharge     Amount" + "\n");
                         mp.printText("------------------------------------------------" + "\n");
                     } else {
-                        mp.printText("BillingDate        BillNumber         Amount         Surcharge" + "\n");
+                        mp.printText("BillingDate        BillNumber         Surcharge         Amount" + "\n");
                         mp.printText("--------------------------------------------------------------" + "\n");
                     }
                 }
@@ -979,12 +979,13 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
                     }
                     String str1 = str[0] + paddingChar1 + billnumber;
 
-                    int p2 = 20 - amount.length() - _penalty.length();
+                    int p2 = 20 - _penalty.length() - amount.length();
                     String _paddingLeft1 = " ";
                     for (int p = 0; p < p2; p++) {
                         _paddingLeft1 = _paddingLeft1.concat(" ");
                     }
-                    String str2 = amount + _paddingLeft1 + _penalty;
+
+                    String str2 = _penalty + _paddingLeft1 + amount;
                     //CommonFunc.printingNormal(str1, str2 + "\n", 0, 0, 0, mPrinter);
                     mp.printText(str1, str2 + "\n");
 
@@ -1010,12 +1011,10 @@ public class ViewDetails extends AppCompatActivity implements OnClickListener {
 //            CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 //            CommonFunc.printingNormal("\n", "", 0, 0, 0, mPrinter);
 
-            mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
             mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
+            mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
             mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
             mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
-
-
         }
 
 

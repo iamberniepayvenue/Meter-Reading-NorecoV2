@@ -1,0 +1,19 @@
+com.mapwithme.maps.api
+drawable background_pattern
+drawable btn_back_gray
+drawable btn_back_gray_active
+drawable btn_back_green
+drawable btn_back_green_active
+drawable btn_gray_selector
+drawable btn_green_selector
+drawable gray
+drawable green
+drawable overflow
+drawable pattern
+drawable shadow
+id btn_pro
+layout dlg_install_mwm
+string down_pro
+string mwm_should_be_installed
+string url_pro
+style promoButton

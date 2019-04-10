@@ -61,6 +61,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
     Spinner spinHost;
     int lengthOfData = 0;
     int countToUpload = 0;
+    int countUploaded = 0;
 
     Button btnExtract;
     Button btnRestUpload;
@@ -358,6 +359,9 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                 new WebRequest.RequestListener() {
                                     @Override
                                     public void onRequestListener(String response, String param) {
+                                        if(param != null) {
+                                            countUploaded = countUploaded + Integer.valueOf(param);
+                                        }
 
                                         switch (response) {
                                             case "200":
@@ -366,11 +370,13 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                                         mDialog.dismiss();
                                                     }
 
-                                                    Log.e(TAG,"count upload:"+param);
                                                     lengthOfData = 0;
                                                     countToUpload = 0;
+                                                    countUploaded = 0;
                                                     Toast.makeText(mcontext, "Data successfully uploaded", Toast.LENGTH_SHORT).show();
                                                 }
+
+
                                                 break;
                                             case "404":
                                                 if (mDialog.isShowing()) {
@@ -389,8 +395,13 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                                     mDialog.dismiss();
                                                 }
 
+
                                                 if (param == null) {
-                                                    Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
+                                                    if(countUploaded > 1) {
+                                                        Toast.makeText(mcontext, "Some data failed to upload, upload again...", Toast.LENGTH_SHORT).show();
+                                                    }else {
+                                                        Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 } else {
                                                     Toast.makeText(mcontext, "Error: " + param, Toast.LENGTH_SHORT).show();
                                                 }
