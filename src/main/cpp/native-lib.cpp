@@ -28,8 +28,8 @@ JNIEXPORT jstring
 JNICALL
 Java_Utility_CallNative_getNative3(JNIEnv *env,jobject) {
 
-    std::string secretkey = "8080/noreco_api/billing_api.asp"; // dev
-    //std::string secretkey = "8080/noreco_api/billing_api.v2.asp"; // prod
+    //std::string secretkey = "8080/noreco_api/billing_api.asp"; // dev
+    std::string secretkey = "8080/teslaclient/noreco_api/billing_api.asp"; // prod
     return env->NewStringUTF(secretkey.c_str());
 }
 

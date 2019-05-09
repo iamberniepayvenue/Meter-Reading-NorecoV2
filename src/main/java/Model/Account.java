@@ -85,7 +85,7 @@ public class Account extends Person {
     private String BillNumber;
     private String ExportBill;
     private String ExportDateCounter;
-    private String kWhReading;
+    private String kWhReading; //previous consumption
     private String TimeRead;
     private String RoutePrimaryKey;
 

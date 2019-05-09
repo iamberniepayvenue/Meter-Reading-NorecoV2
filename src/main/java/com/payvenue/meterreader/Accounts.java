@@ -933,19 +933,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         }
 
 
-        /**Check if Change Meter*/
-
-
-        if (mAccount.getIsChangeMeter().equals("1")) {
-            final double av = getAveraging();
-            if (av != -2000) {
-                consume = av;
-            } else {
-                setKwh(0, 1);
-            }
-        }
-
-
         if (isStopCheck) {
             isStopMeter = true;
             final double av = getAveraging();
@@ -1006,6 +993,11 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         }
 
         kwh = consumption * multiplier + Float.valueOf(coreLoss);
+
+        /**Check if Change Meter*/
+        if (mAccount.getIsChangeMeter().equals("1")) {
+            kwh = kwh + Double.parseDouble(mAccount.getkWhReading());
+        }
 
         boolean showAlert = false;
         float kWhRead = Float.valueOf(mAccount.getkWhReading());

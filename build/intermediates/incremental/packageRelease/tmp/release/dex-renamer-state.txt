@@ -1,4 +1,4 @@
-#Wed Apr 10 09:58:01 PHT 2019
+#Thu Apr 11 10:29:22 PHT 2019
 base.0=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/dex/release/mergeDexRelease/out
 path.1=classes2.dex
 renamed.1=classes2.dex
