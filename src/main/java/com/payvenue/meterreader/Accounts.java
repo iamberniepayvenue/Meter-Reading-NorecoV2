@@ -649,7 +649,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             }
 
             totalComponent = totalComponent - (totalLifelineDiscount + totalSeniorDiscount);
-            billedAmount = totalComponent + totalArrears + arrearsPenalty;
+            billedAmount = totalComponent + totalArrears;// + arrearsPenalty;
 
             /** Not included */
             /*
@@ -1903,10 +1903,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                         bp.printText("------------------------------------------------" + "\n", BixolonPrinter.TEXT_SIZE_HORIZONTAL1);
                     } else {
                         if (bixTag == 1) {
-                            mp.printText("BillingDate   BillNumber    Surcharge     Amount" + "\n");
+                            mp.printText("BillingDate           BillNumber          Amount" + "\n");
                             mp.printText("------------------------------------------------" + "\n");
                         } else {
-                            mp.printText("BillingDate        BillNumber         Surcharge         Amount" + "\n");
+                            mp.printText("BillingDate                 BillNumber                  Amount" + "\n");
                             mp.printText("--------------------------------------------------------------" + "\n");
                         }
                     }
@@ -1918,21 +1918,31 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                         String _penalty = arrearsPenaltyList.get(i);
                         String[] str = billdate.split(" ");
 
-                        int p1 = 20 - str[0].length() - billnumber.length();
+                        int p1 = 40 - str[0].length() - billnumber.length();
+
+                        if (bixTag == 1) {
+                            p1 = 30 - str[0].length() - billnumber.length();
+                        }
+
                         String paddingChar1 = " ";
                         for (int p = 0; p < p1; p++) {
                             paddingChar1 = paddingChar1.concat(" ");
                         }
                         String str1 = str[0] + paddingChar1 + billnumber;
 
-                        int p2 = 20 - _penalty.length() - amount.length();
+                        int p2 = 20 - amount.length(); // - _penalty.length();
+
+                        if (bixTag == 1) {
+                            p2 = 15 - amount.length();
+                        }
+
                         String _paddingLeft1 = " ";
                         for (int p = 0; p < p2; p++) {
                             _paddingLeft1 = _paddingLeft1.concat(" ");
                         }
 
-                        String str2 = _penalty + _paddingLeft1 + amount;
-                        mp.printText(str1, str2 + "\n");
+                        String str2 = str1 + _paddingLeft1 + amount;
+                        mp.printText(str2, "" + "\n");
                         //CommonFunc.printingNormal(str1,str2+"\n",0,0,0,mPrinter);
                     }
 
@@ -1958,7 +1968,7 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
 //                CommonFunc.printingNormal("\n","",0,0,0,mPrinter);
 
                 mp.printText("Arrears:", MainActivity.dec2.format(Double.valueOf(mAccount.getPrevBilling())) + "\n");
-                mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
+                //mp.printText("Add:SURCHARGE:", MainActivity.dec2.format(Double.valueOf(penalty)) + "\n");
                 mp.printText("Less:Advance Payment:", MainActivity.dec2.format(Double.valueOf(mAccount.getAdvancePayment())) + "\n");
                 mp.printTextEmphasized1("TOTAL AMOUNT PAYABLE", MainActivity.dec2.format(mBill.getTotalBilledAmount()));
             }
@@ -2044,9 +2054,13 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
                     mp.printText("\n");
                     mp.printText("\n");
                     if (bixTag == 1) {
+                        mp.printText(Constant.ADJUSTMENT_BIX + "\n\n");
                         mp.printText(Constant.DISCONNECTIONNOTICE_BIX + "\n");
+
                     } else {
+                        mp.printText(Constant.ADJUSTMENT + "\n\n");
                         mp.printText(Constant.DISCONNECTIONNOTICE + "\n");
+
                     }
 
                     mp.printText("\n");

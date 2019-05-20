@@ -67,6 +67,9 @@ public class Constant {
             "\n \nIn connection hereto, please pay the \naforementioned bills within forty eight (48) \nhours from receipt hereof,otherwise, we will be constrained to disconnect your electric service without further notice." +
             "\n \nPlease disregard this Notice of Disconnection if you have already paid.";
 
+    public static String ADJUSTMENT = "Subject to Adjustments for surcharge, interest and penalties, as may be applicable.";
+    public static String ADJUSTMENT_BIX = "Subject to Adjustments for surcharge, interest \nand penalties, as may be applicable.";
+
     public static String OFFICIALRECIEPT = "This is not an Official Receipt. Payment of this bill does not   mean payment of previous delinquencies if any.";
     public static String OFFICIALRECIEPT_BIX = "This is not an Official Receipt. Payment of this bill does not mean payment of previous \n delinquencies if any.";
 

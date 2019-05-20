@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Apr 10 09:19:30 PHT 2019
+#Mon May 20 14:06:41 PHT 2019
 17.baseType=DIRECTORY
 4.path=lib/armeabi/libiconv.so
 25.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
@@ -47,7 +47,7 @@ count=28
 12.baseType=DIRECTORY
 6.set=NATIVE_RESOURCE
 27.baseType=DIRECTORY
-20.path=lib/x86/libopencv_java4.so
+20.path=lib/arm64-v8a/libiconv.so
 16.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
 8.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
 15.path=lib/armeabi/libzbarjni.so
@@ -92,7 +92,7 @@ count=28
 12.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
 4.set=NATIVE_RESOURCE
 9.path=classes.dex
-18.path=lib/arm64-v8a/libiconv.so
+18.path=lib/armeabi-v7a/libopencv_java.so
 4.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
 11.path=lib/x86_64/libzbarjni.so
 23.set=NATIVE_RESOURCE
@@ -108,7 +108,7 @@ count=28
 17.set=NATIVE_RESOURCE
 13.baseType=DIRECTORY
 13.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
-19.path=lib/armeabi-v7a/libopencv_java.so
+19.path=lib/x86/libopencv_java4.so
 15.baseType=DIRECTORY
 3.set=NATIVE_RESOURCE
 5.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
