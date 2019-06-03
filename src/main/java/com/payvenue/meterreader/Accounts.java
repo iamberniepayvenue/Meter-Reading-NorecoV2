@@ -143,8 +143,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_details);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Log.e(TAG, TAG);
@@ -165,7 +167,6 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
             _districtID = intent.getStringExtra("disctrictNo");
         }
 
-        Log.e(TAG, "_districtID: " + _districtID);
 
         if (!MainActivity.gps.canGetLocation()) {
             MainActivity.gps.showSettingAlert();
@@ -188,6 +189,10 @@ public class Accounts extends AppCompatActivity implements View.OnClickListener,
         isHigherVoltage = false;
         isLowerVoltage = false;
         isMotherMeter = false;
+        canAvailLifelineDiscount = false;
+        canAvailSCDiscount = false;
+        scInvalidDate = false;
+        isSCOverPolicy = false;
         /**Initalize Rate Segment*/
         listRateSegment = db.getRateSegment(db);
 

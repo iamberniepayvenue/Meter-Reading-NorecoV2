@@ -19,6 +19,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.payvenue.meterreader.MainActivity;
@@ -33,8 +40,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import DataBase.DBInfo;
 import Model.Account;
@@ -43,9 +53,8 @@ import Model.Components;
 import Model.Rates;
 import Utility.CallNative;
 import Utility.CommonFunc;
-import Utility.Constant;
 import Utility.NetworkUtil;
-import Utility.WebRequest;
+import Utility.VolleySingleton;
 
 import static com.payvenue.meterreader.R.id.btnResetUpload;
 
@@ -349,75 +358,130 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                                 + "&TotalkWh=" + totalkWh
                                 + "&TotalAmount=" + totalAmount
                                 + "&Classification=" + subclass;
-                        //Log.e(TAG,"upload: " + url);
-//                        Log.e(TAG,"BillMonth: " + mBillMonth.trim());
-//                        Log.e(TAG,"TotalkWh: " + totalkWh.trim());
-//                        Log.e(TAG,"TotalAmount: " + totalAmount.trim());
-//                        Log.e(TAG,"Classification: " + subclass.trim());
 
-                        MainActivity.webRequest.setRequestListener(url, "UploadData", FinalData.toString(), String.valueOf(countToUpload),
-                                new WebRequest.RequestListener() {
-                                    @Override
-                                    public void onRequestListener(String response, String param) {
-                                        if(param != null) {
-                                            countUploaded = countUploaded + Integer.valueOf(param);
-                                        }
-
-                                        switch (response) {
-                                            case "200":
-                                                if (Integer.valueOf(param) == lengthOfData) {
-                                                    if (mDialog.isShowing()) {
-                                                        mDialog.dismiss();
-                                                    }
-
-                                                    lengthOfData = 0;
-                                                    countToUpload = 0;
-                                                    countUploaded = 0;
-                                                    Toast.makeText(mcontext, "Data successfully uploaded", Toast.LENGTH_SHORT).show();
-                                                }
+                        JSONArray mJsonArray = new JSONArray();
+                        JSONObject mJsonobject = new JSONObject();
+                        mJsonobject.put("data",CommonFunc.encrypt(FinalData.toString()));
+                        mJsonobject.put("rates",CommonFunc.encrypt(jsonBillSum));
+                        mJsonobject.put("BillMonth",mBillMonth);
+                        mJsonobject.put("TotalkWh",totalkWh);
+                        mJsonobject.put("TotalAmount",totalAmount);
+                        mJsonobject.put("Classification",subclass);
+                        mJsonArray.put(mJsonobject);
 
 
-                                                break;
-                                            case "404":
-                                                if (mDialog.isShowing()) {
-                                                    mDialog.dismiss();
-                                                }
+                        String myurl = "http://dev.teslasuite.com:8080/noreco_api/billing_api.asp?";
+                        final Map<String,String> params = new HashMap<>();
+                        params.put("data",CommonFunc.encrypt(FinalData.toString()));
+                        params.put("rates",CommonFunc.encrypt(jsonBillSum));
+                        params.put("BillMonth",mBillMonth);
+                        params.put("TotalkWh",totalkWh);
+                        params.put("TotalAmount",totalAmount);
+                        params.put("Classification",subclass);
+                        params.put("cmd","uploadData");
+                        params.put("coopid","NORECO2");
+                        params.put("mac",CommonFunc.encrypt(CommonFunc.getMacAddress()));
 
-                                                Constant.COUNT_404 = Constant.COUNT_404 + 1;
-                                                if (Constant.COUNT_404 < 2) {
-                                                    Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
-                                                }
+                        final JsonArrayRequest request = new JsonArrayRequest(myurl, new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                Log.e(TAG,"response: "+ response);
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e(TAG,"error: "+ error.getMessage());
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
 
-                                                return;
+                                return params;
+                            }
 
-                                            case "500":
-                                                if (mDialog.isShowing()) {
-                                                    mDialog.dismiss();
-                                                }
+                            @Override
+                            protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+                                try {
+                                    String jsonString = new String(response.data,
+                                            HttpHeaderParser
+                                                    .parseCharset(response.headers));
+                                    return Response.success(new JSONArray(jsonString),
+                                            HttpHeaderParser
+                                                    .parseCacheHeaders(response));
+                                } catch (UnsupportedEncodingException e) {
+                                    return Response.error(new ParseError(e));
+                                } catch (JSONException je) {
+                                    return Response.error(new ParseError(je));
+                                }
+                            }
+                        };
 
+                        Log.e(TAG,"request: "+ request);
+                        VolleySingleton.getInstance(getActivity()).addToRequestQueue(request);
 
-                                                if (param == null) {
-                                                    if(countUploaded > 1) {
-                                                        Toast.makeText(mcontext, "Some data failed to upload, upload again...", Toast.LENGTH_SHORT).show();
-                                                    }else {
-                                                        Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                } else {
-                                                    Toast.makeText(mcontext, "Error: " + param, Toast.LENGTH_SHORT).show();
-                                                }
-
-                                                return;
-                                            default:
-                                                if (mDialog.isShowing()) {
-                                                    mDialog.dismiss();
-                                                }
-                                        }
-
-
-                                        getDataCount();
-                                        setValues();
-                                    }
-                                });
+//                        MainActivity.webRequest.setRequestListener(strRequest,mJsonArray,"UploadData", FinalData.toString(), String.valueOf(countToUpload),
+//                                new WebRequest.RequestListener() {
+//                                    @Override
+//                                    public void onRequestListener(String response, String param) {
+//                                        if(param != null && param != "") {
+//                                            countUploaded = countUploaded + Integer.valueOf(param);
+//                                        }
+//
+//                                        switch (response) {
+//                                            case "200":
+//                                                if (Integer.valueOf(param) == lengthOfData) {
+//                                                    if (mDialog.isShowing()) {
+//                                                        mDialog.dismiss();
+//                                                    }
+//
+//                                                    lengthOfData = 0;
+//                                                    countToUpload = 0;
+//                                                    countUploaded = 0;
+//                                                    Toast.makeText(mcontext, "Data successfully uploaded", Toast.LENGTH_SHORT).show();
+//                                                }
+//
+//
+//                                                break;
+//                                            case "404":
+//                                                if (mDialog.isShowing()) {
+//                                                    mDialog.dismiss();
+//                                                }
+//
+//                                                Constant.COUNT_404 = Constant.COUNT_404 + 1;
+//                                                if (Constant.COUNT_404 < 2) {
+//                                                    Toast.makeText(mcontext, "Billing Summary Details table not exist...", Toast.LENGTH_SHORT).show();
+//                                                }
+//
+//                                                return;
+//
+//                                            case "500":
+//                                                if (mDialog.isShowing()) {
+//                                                    mDialog.dismiss();
+//                                                }
+//
+//
+//                                                if (param == null) {
+//                                                    if(countUploaded > 1) {
+//                                                        Toast.makeText(mcontext, "Some data failed to upload, upload again...", Toast.LENGTH_SHORT).show();
+//                                                    }else {
+//                                                        Toast.makeText(mcontext, "Failed to upload", Toast.LENGTH_SHORT).show();
+//                                                    }
+//                                                } else {
+//                                                    Toast.makeText(mcontext, "Error: " + param, Toast.LENGTH_SHORT).show();
+//                                                }
+//
+//                                                return;
+//                                            default:
+//                                                if (mDialog.isShowing()) {
+//                                                    mDialog.dismiss();
+//                                                }
+//                                        }
+//
+//
+//                                        getDataCount();
+//                                        setValues();
+//                                    }
+//                                });
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
                         e.printStackTrace();

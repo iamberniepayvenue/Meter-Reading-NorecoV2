@@ -114,13 +114,48 @@ public class WebRequest {
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
 
-    public void sendRequestUpload(String url, final String myType, final String params, final String param2) {
+    public void sendRequestUpload(String url,JSONArray jsonRequest, final String myType, final String params, final String param2) {
         /**
          *      params = reading data in json form
          *      param2 = count of data for uploading from cursor
          *
          * */
-        final JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+
+
+//        final JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                String res;
+//                if (myType.equalsIgnoreCase("uploadData")) {
+//                    try {
+//                        if (response.length() > 0) {
+//                            for (int i = 0; i < response.length(); i++) {
+//                                JSONObject obj = response.getJSONObject(i);
+//                                res = obj.getString("result");
+//                                if (res.equalsIgnoreCase("404")) {
+//                                    requestListener.onRequestListener("404", "");
+//                                } else {
+//                                    JSONObject array = new JSONObject(params);
+//                                    String columnID = array.getString("columnid");
+//                                    MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
+//                                    requestListener.onRequestListener("200", param2);
+//                                }
+//                            }
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                VolleyLog.e(TAG,"error : " + error.getMessage());
+//                requestListener.onRequestListener("500", error.getMessage());
+//            }
+//        });
+
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 String res;
@@ -138,6 +173,8 @@ public class WebRequest {
                                     MainActivity.db.updateUploadStaus(MainActivity.db, columnID, "Uploaded", "1");
                                     requestListener.onRequestListener("200", param2);
                                 }
+
+                                Log.e(TAG,"response: "+ res);
                             }
                         }
                     } catch (JSONException e) {
@@ -153,6 +190,7 @@ public class WebRequest {
             }
         });
 
+        Log.e(TAG,"requset: "+ request);
         //request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(c).addToRequestQueue(request);
     }
@@ -162,10 +200,10 @@ public class WebRequest {
         void onRequestListener(String response, String param);
     }
 
-    public void setRequestListener(String url, String myType, String params, String param2, RequestListener listener) {
+    public void setRequestListener(String url,JSONArray jsonRequest, String myType, String params, String param2, RequestListener listener) {
         this.requestListener = listener;
         //Log.e(TAG,"upload : " + url);
-        sendRequestUpload(url, myType, params, param2);
+        sendRequestUpload(url,jsonRequest, myType, params, param2);
     }
 
     public void setRequestListenerDownload(String url, RequestListener listener) {

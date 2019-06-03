@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Mon May 20 14:06:41 PHT 2019
+#Fri May 31 14:20:41 PHT 2019
 17.baseType=DIRECTORY
 4.path=lib/armeabi/libiconv.so
 25.base=/Users/johnrychristianpaduhilao/Desktop/Android Gitlab Project/Meter-Reading-Noreco/build/intermediates/transforms/stripDebugSymbol/debug/0
