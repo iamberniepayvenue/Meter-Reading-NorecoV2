@@ -20,12 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.payvenue.meterreader.MainActivity;
@@ -40,7 +38,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,32 +255,32 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                     coopName = cursor.getString(cursor.getColumnIndex(DBInfo.COOPID));
                     totalkWh = cursor.getString(cursor.getColumnIndex("Extra2"));
                     try {
-                        rowObject.put(DBInfo.DateSync, cursor.getString(cursor.getColumnIndex(DBInfo.DateSync)));
-                        rowObject.put(DBInfo.DateRead, arrDateRead[0]);
+                        rowObject.put(DBInfo.DateSync, CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.DateSync))));
+                        rowObject.put(DBInfo.DateRead, CommonFunc.encrypt(arrDateRead[0]));
                         rowObject.put(DBInfo.COOPID, coopName);
-                        rowObject.put("DistrictID", districtID);
-                        rowObject.put("RouteNo", routeID);
-                        rowObject.put("AccountID", accountID.trim());
-                        rowObject.put("LastName", cursor.getString(cursor.getColumnIndex(DBInfo.LastName)));
-                        rowObject.put("FirstName", cursor.getString(cursor.getColumnIndex(DBInfo.FirstName)));
-                        rowObject.put("MiddleName", cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName)));
+                        rowObject.put("DistrictID", CommonFunc.encrypt(districtID));
+                        rowObject.put("RouteNo", CommonFunc.encrypt(routeID));
+                        rowObject.put("AccountID", CommonFunc.encrypt(accountID.trim()));
+                        rowObject.put("LastName", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.LastName))));
+                        rowObject.put("FirstName", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.FirstName))));
+                        rowObject.put("MiddleName", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.MiddleName))));
                         rowObject.put("Address", account.getAddress());
-                        rowObject.put("MeterSerialNo", cursor.getString(cursor.getColumnIndex(DBInfo.MeterSerialNo)));
-                        rowObject.put("PrevReading", account.getInitialReading());
-                        rowObject.put("NewReading", account.getReading());
-                        rowObject.put("Consume", account.getConsume());
-                        rowObject.put("Latitude", account.getLatitude());
-                        rowObject.put("Longitude", account.getLongitude());
+                        rowObject.put("MeterSerialNo", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.MeterSerialNo))));
+                        rowObject.put("PrevReading", CommonFunc.encrypt(account.getInitialReading()));
+                        rowObject.put("NewReading", CommonFunc.encrypt(account.getReading()));
+                        rowObject.put("Consume", CommonFunc.encrypt(account.getConsume()));
+                        rowObject.put("Latitude", CommonFunc.encrypt(account.getLatitude()));
+                        rowObject.put("Longitude", CommonFunc.encrypt(account.getLongitude()));
                         rowObject.put("ReaderID", reader);
-                        rowObject.put("ReadStatus", readStatus);
+                        rowObject.put("ReadStatus", CommonFunc.encrypt(readStatus));
                         rowObject.put("Remarks", account.getRemarks());
                         rowObject.put("DueDate", cursor.getString(cursor.getColumnIndex(DBInfo.DueDate)));
-                        rowObject.put("NewMeterSerial", cursor.getString(cursor.getColumnIndex(DBInfo.Extra1)));
-                        rowObject.put("ExportReading", account.getExportReading());
+                        rowObject.put("NewMeterSerial", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex(DBInfo.Extra1))));
+                        rowObject.put("ExportReading", CommonFunc.encrypt(account.getExportReading()));
                         rowObject.put("IsExport", account.getIsNetMetering());
-                        rowObject.put("PrevExportReading", account.getExportPreviousReading());
-                        rowObject.put("ExportConsumption", account.getExportConsume());
-                        rowObject.put("ActualConsumption", cursor.getString(cursor.getColumnIndex("Extra2")));
+                        rowObject.put("PrevExportReading", CommonFunc.encrypt(account.getExportPreviousReading()));
+                        rowObject.put("ExportConsumption", CommonFunc.encrypt(account.getExportConsume()));
+                        rowObject.put("ActualConsumption", CommonFunc.encrypt(cursor.getString(cursor.getColumnIndex("Extra2"))));
                         //add billmonth from rate schedule date_from
                         Bill mBill = account.getBill();
 
@@ -295,17 +292,17 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                             totalAmount = String.valueOf(MainActivity.dec2.format(mBill.getTotalAmount()));
                         }
 
-                        rowObject.put("ExportBillAmount", exportBillAmount);
-                        rowObject.put("BillAmount", billAmount);
+                        rowObject.put("ExportBillAmount", CommonFunc.encrypt(String.valueOf(exportBillAmount)));
+                        rowObject.put("BillAmount", CommonFunc.encrypt(String.valueOf(billAmount)));
                         float lifelineDiscount = Float.valueOf(account.getTotalLifeLineDiscount());
-                        rowObject.put("LifelineDiscount", String.valueOf(-lifelineDiscount));
-                        rowObject.put("LifelineSubsidy", account.getLifeLineSubsidy());
-                        rowObject.put("SCDiscount", account.getTotalSCDiscount());
-                        rowObject.put("SCSubsidy", account.getSeniorSubsidy());
-                        rowObject.put("UORDiscount", account.getOverUnderDiscount());
+                        rowObject.put("LifelineDiscount", CommonFunc.encrypt(String.valueOf(-lifelineDiscount)));
+                        rowObject.put("LifelineSubsidy", CommonFunc.encrypt(account.getLifeLineSubsidy()));
+                        rowObject.put("SCDiscount", CommonFunc.encrypt(account.getTotalSCDiscount()));
+                        rowObject.put("SCSubsidy", CommonFunc.encrypt(account.getSeniorSubsidy()));
+                        rowObject.put("UORDiscount", CommonFunc.encrypt(account.getOverUnderDiscount()));
                         rowObject.put("IsCheckSubMeterType", cursor.getString(cursor.getColumnIndex(DBInfo.IsCheckSubMeterType)));
-                        rowObject.put("DemandKWReading", account.getDemandKW());
-                        rowObject.put("ExportBill", account.getExportBill());
+                        rowObject.put("DemandKWReading", CommonFunc.encrypt(account.getDemandKW()));
+                        rowObject.put("ExportBill", CommonFunc.encrypt(account.getExportBill()));
 
                         String exportDateCounter = "0";
                         if (account.getExportDateCounter() != null) {
@@ -314,7 +311,7 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
 
                         rowObject.put("ExportDateCounter", exportDateCounter);
                         mBillMonth = MainActivity.db.getBillMonth(MainActivity.db, accountClass);
-                        rowObject.put("billmonth", mBillMonth.trim());
+                        rowObject.put("billmonth", CommonFunc.encrypt(mBillMonth.trim()));
 
 
                         ArrayList<Components> summary = new ArrayList<>();
@@ -352,12 +349,12 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         totalAmount = CommonFunc.encrypt(totalAmount);
                         subclass = CommonFunc.encrypt(subclass.trim());
 
-                        url = strRequest + "&data=" + CommonFunc.encrypt(FinalData.toString())
-                                + "&rates=" + CommonFunc.encrypt(jsonBillSum)
-                                + "&BillMonth=" + mBillMonth
-                                + "&TotalkWh=" + totalkWh
-                                + "&TotalAmount=" + totalAmount
-                                + "&Classification=" + subclass;
+//                        url = strRequest + "&data=" + FinalData.toString()
+//                                + "&rates=" + CommonFunc.encrypt(jsonBillSum)
+//                                + "&BillMonth=" + mBillMonth
+//                                + "&TotalkWh=" + totalkWh
+//                                + "&TotalAmount=" + totalAmount
+//                                + "&Classification=" + subclass;
 
                         JSONArray mJsonArray = new JSONArray();
                         JSONObject mJsonobject = new JSONObject();
@@ -369,53 +366,55 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
                         mJsonobject.put("Classification",subclass);
                         mJsonArray.put(mJsonobject);
 
-
-                        String myurl = "http://dev.teslasuite.com:8080/noreco_api/billing_api.asp?";
-                        final Map<String,String> params = new HashMap<>();
-                        params.put("data",CommonFunc.encrypt(FinalData.toString()));
+                        url = strRequest + "&BillMonth=" + mBillMonth
+                                + "&TotalkWh=" + totalkWh
+                                + "&TotalAmount=" + totalAmount
+                                + "&Classification=" + subclass;
+                        String myurl = "http://dev.teslasuite.com:8080/noreco_api/billing_api.asp?cmd=uploadData";
+                        final Map<String, String> params = new HashMap<String, String>();
+                        params.put("data",FinalData.toString());
                         params.put("rates",CommonFunc.encrypt(jsonBillSum));
-                        params.put("BillMonth",mBillMonth);
-                        params.put("TotalkWh",totalkWh);
-                        params.put("TotalAmount",totalAmount);
-                        params.put("Classification",subclass);
-                        params.put("cmd","uploadData");
-                        params.put("coopid","NORECO2");
-                        params.put("mac",CommonFunc.encrypt(CommonFunc.getMacAddress()));
+//                        params.put("BillMonth",mBillMonth);
+//                        params.put("TotalkWh",totalkWh);
+//                        params.put("TotalAmount",totalAmount);
+//                        params.put("Classification",subclass);
+//                        params.put("coopid","NORECO2");
+//                        params.put("mac",CommonFunc.encrypt(CommonFunc.getMacAddress()));
+//                        final String requestBody = params.toString();
+//                       final String strFinalData = FinalData.toString();
+//                       final String strJsonBillSum = CommonFunc.encrypt(jsonBillSum);
+//                       final String strBillMonth = mBillMonth;
+//                       final String strTotalKwh = totalkWh;
+//                       final String strTotalAmount = totalAmount;
+//                       final String strsubclass = subclass;
+                        mDialog.dismiss();
 
-                        final JsonArrayRequest request = new JsonArrayRequest(myurl, new Response.Listener<JSONArray>() {
+                        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                             @Override
-                            public void onResponse(JSONArray response) {
+                            public void onResponse(String response) {
                                 Log.e(TAG,"response: "+ response);
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e(TAG,"error: "+ error.getMessage());
+
                             }
-                        }) {
+                        }){
+
                             @Override
                             protected Map<String, String> getParams() throws AuthFailureError {
-
+                                //<String, String> params = new HashMap<String, String>();
+                                //params.put("data",strFinalData);
+                                //params.put("rates",strJsonBillSum);
+                                //params.put("BillMonth",strBillMonth);
+                                //params.put("TotalkWh",strTotalKwh);
+                                //params.put("TotalAmount",strTotalAmount);
+                                //params.put("Classification",strsubclass);
+                                //params.put("coopid","NORECO2");
+                                //params.put("mac",CommonFunc.encrypt(CommonFunc.getMacAddress()));
                                 return params;
                             }
-
-                            @Override
-                            protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
-                                try {
-                                    String jsonString = new String(response.data,
-                                            HttpHeaderParser
-                                                    .parseCharset(response.headers));
-                                    return Response.success(new JSONArray(jsonString),
-                                            HttpHeaderParser
-                                                    .parseCacheHeaders(response));
-                                } catch (UnsupportedEncodingException e) {
-                                    return Response.error(new ParseError(e));
-                                } catch (JSONException je) {
-                                    return Response.error(new ParseError(je));
-                                }
-                            }
                         };
-
                         Log.e(TAG,"request: "+ request);
                         VolleySingleton.getInstance(getActivity()).addToRequestQueue(request);
 
@@ -559,6 +558,14 @@ public class FragmentUpload extends Fragment { //implements IVolleyListener
         } else {
             Toast.makeText(mcontext, "sd card not found", Toast.LENGTH_LONG).show();
         }
+    }
+
+    static {
+        System.loadLibrary("chilkat");
+
+        // Note: If the incorrect library name is passed to System.loadLibrary,
+        // then you will see the following error message at application startup:
+        //"The application <your-application-name> has stopped unexpectedly. Please try again."
     }
 }
 
